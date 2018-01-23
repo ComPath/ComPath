@@ -3,14 +3,12 @@
 from __future__ import print_function
 
 import logging
-import os
 
 import click
 
+from bio2bel_kegg.manager import Manager as KeggManager
+from bio2bel_reactome.manager import Manager as ReactomeManager
 from compath.constants import DEFAULT_CACHE_CONNECTION
-from bio2bel_reactome.manager import Manager
-from bio2bel_reactome.to_belns import deploy_to_arty
-from bio2bel_reactome.utils import dict_to_pandas_df
 
 log = logging.getLogger(__name__)
 
@@ -29,7 +27,7 @@ def set_debug_param(debug):
 
 @click.group()
 def main():
-    """Reactome to BEL"""
+    """ComPath"""
     logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
@@ -39,17 +37,24 @@ def main():
 @click.option('-d', '--delete_first', is_flag=True)
 @click.option('-only-human', '--only_human', help="Set --only_human=True to store only human proteins in the DB.")
 def populate(debug, connection, delete_first, only_human):
-    """Build the local version of the full Reactome."""
+    """Build the local version of Reactome/KEGG."""
 
     set_debug_param(debug)
 
-    m = Manager(connection=connection)
+    reactome_manager = ReactomeManager(connection=connection)
+    kegg_manager = KeggManager(connection=connection)
 
-    if delete_first or click.confirm('Drop first the database?'):
-        m.drop_all()
-        m.create_all()
+    if delete_first or click.confirm('Drop first the Reactome database?'):
+        reactome_manager.drop_all()
+        reactome_manager.create_all()
 
-    m.populate(only_human=only_human)
+    reactome_manager.populate(only_human=only_human)
+
+    if delete_first or click.confirm('Drop first the KEGG database?'):
+        kegg_manager.drop_all()
+        kegg_manager.create_all()
+
+    kegg_manager.populate()
 
 
 @main.command()
@@ -57,36 +62,19 @@ def populate(debug, connection, delete_first, only_human):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(debug, yes, connection):
-    """Drop the Reactome database."""
+    """Drop the Reactome/KEGG database."""
 
     set_debug_param(debug)
 
-    if yes or click.confirm('Do you really want to delete the database?'):
-        m = Manager(connection=connection)
+    if yes or click.confirm('Do you really want to delete the Reactome database?'):
+        reactome_manager = ReactomeManager(connection=connection)
         click.echo("drop db")
-        m.drop_all()
+        reactome_manager.drop_all()
 
-
-@main.command()
-@click.option('--force', is_flag=True, help="Force knowledge to be uploaded even if not new namespace")
-def deploy(force):
-    """Deploy to Artifactory"""
-    deploy_to_arty(not force)
-
-
-@main.command()
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def export(connection):
-    """Export all pathway - gene info to a excel file"""
-    m = Manager(connection=connection)
-
-    log.info("Querying the database")
-
-    genesets = dict_to_pandas_df(m.export_genesets())
-
-    log.info("Geneset exported to '{}/genesets.csv'".format(os.getcwd()))
-
-    genesets.to_csv('genesets.csv', index=False)
+    if yes or click.confirm('Do you really want to delete the KEGG database?'):
+        kegg_manager = KeggManager(connection=connection)
+        click.echo("drop db")
+        kegg_manager.drop_all()
 
 
 @main.command()
@@ -97,7 +85,7 @@ def web(debug, connection):
 
     set_debug_param(debug)
 
-    from bio2bel_reactome.web import create_app
+    from compath.web import create_app
     app = create_app(connection=connection)
     app.run(host='0.0.0.0', port=5000)
 

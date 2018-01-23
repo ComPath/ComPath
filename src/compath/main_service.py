@@ -17,7 +17,7 @@ ui_blueprint = Blueprint('ui', __name__)
 
 @ui_blueprint.route('/', methods=['GET', 'POST'])
 def home():
-    """ComPathTool home page
+    """ComPath home page
     """
     return render_template('home.html')
 
