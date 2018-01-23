@@ -29,7 +29,7 @@ def imprint():
     return render_template('imprint.html')
 
 
-@ui_blueprint.route('/about', methods=['GET', 'POST'])
+@ui_blueprint.route('/about', mbio2belethods=['GET', 'POST'])
 def about():
     """About page
     """

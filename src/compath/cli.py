@@ -35,8 +35,7 @@ def main():
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('-d', '--delete_first', is_flag=True)
-@click.option('-only-human', '--only_human', help="Set --only_human=True to store only human proteins in the DB.")
-def populate(debug, connection, delete_first, only_human):
+def populate(debug, connection, delete_first):
     """Build the local version of Reactome/KEGG."""
 
     set_debug_param(debug)
@@ -48,7 +47,8 @@ def populate(debug, connection, delete_first, only_human):
         reactome_manager.drop_all()
         reactome_manager.create_all()
 
-    reactome_manager.populate(only_human=only_human)
+    # Only human genes are used
+    reactome_manager.populate(only_human=True)
 
     if delete_first or click.confirm('Drop first the KEGG database?'):
         kegg_manager.drop_all()
