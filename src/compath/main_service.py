@@ -6,8 +6,8 @@ import logging
 
 from flask import Blueprint, render_template, send_file
 
-from bio2bel_reactome.manager import Manager as ReactomeManager
 from bio2bel_kegg.manager import Manager as KeggManager
+from bio2bel_reactome.manager import Manager as ReactomeManager
 from compath.utils import dict_to_pandas_df
 
 log = logging.getLogger(__name__)
@@ -41,11 +41,11 @@ def export_reactome():
     """Export Reactome gene sets to excel
     """
 
-    m = ReactomeManager()
+    reactome_manager = ReactomeManager()
 
     log.info("Querying the database")
 
-    genesets = dict_to_pandas_df(m.export_genesets())
+    genesets = dict_to_pandas_df(reactome_manager.export_genesets())
 
     return send_file(
         genesets.to_csv('genesets.csv', index=False),
@@ -60,11 +60,11 @@ def export_kegg():
     """Export KEGG gene sets to excel
     """
 
-    m = KeggManager()
+    kegg_manager = KeggManager()
 
     log.info("Querying the database")
 
-    genesets = dict_to_pandas_df(m.export_genesets())
+    genesets = dict_to_pandas_df(kegg_manager.export_genesets())
 
     return send_file(
         genesets.to_csv('kegg_genesets.csv', index=False),
