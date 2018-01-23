@@ -1,0 +1,84 @@
+/* from charlie */
+nav div.container-fluid {
+    padding-left: 45px;
+    padding-right: 45px;
+}
+
+/* from https://codepen.io/bootstrapped/pen/KwYGwq */
+
+.navbar-brand {
+    padding: 0;
+}
+
+.navbar-brand {
+    height: 50px;
+}
+
+.nav > li > a:hover, .navbar-brand:hover {
+    background-color: rgba(0, 150, 127, 0.11);
+}
+
+.navbar-brand > img {
+    height: 100%;
+    padding: 10px;
+    width: auto;
+}
+
+.navbar {
+    border-bottom: rgba(0, 150, 127, 0.11) solid 1px;
+}
+
+.nav > li > a {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
+
+.navbar-toggle {
+    padding: 10px;
+    margin: 25px 15px 25px 0;
+    background-color: #eeeeee;
+}
+
+.navbar-toggle > .icon-bar {
+    background-color: #00967f;
+}
+
+#nav-scai-logo {
+    padding: 10px;
+    /*border-left: 1px solid rgba(0, 150, 127, 0.11);*/
+    margin-left: 5px;
+}
+
+#nav-scai-logo > img {
+    height: 30px;
+}
+
+.btn-primary {
+    background-color: #00967f;
+}
+
+.btn-primary:active, .btn-primary:hover, .btn-primary:focus {
+    background-color: #006e57 !important;
+    color: white !important;
+}
+
+div.navbar-header button.navbar-toggle {
+    margin-top: 6px;
+    margin-bottom: 6px;
+}
+
+.nav-center-tabs > li, .nav-center-pills > li {
+    float: none;
+    display: inline-block;
+    *display: inline; /* ie7 fix */
+    zoom: 1; /* hasLayout ie7 trigger */
+}
+
+.nav-center-tabs, .nav-center-pills {
+    text-align: center;
+}
+
+.nav-padding-reduced {
+    padding-left: 7px !important;
+    padding-right: 7px !important;
+}

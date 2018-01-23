@@ -1,0 +1,64 @@
+<nav class="navbar navbar-static-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button aria-controls="navbar" aria-expanded="false" class="navbar-toggle collapsed"
+                    data-target="#485848c5cd0b7dabdf24f858e4f3abbf21fdb984" data-toggle="collapse" type="button">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="{{ url_for('ui.home') }}">
+                <img alt="Bio2BEL" src="{{ url_for('static', filename='img/bio2bel-logo-100.png') }}"></a>
+        </div>
+        <div class="navbar-collapse collapse" id="485848c5cd0b7dabdf24f858e4f3abbf21fdb984">
+            <ul class="nav navbar-nav">
+                <li class="dropdown">
+                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">SCAI Resources <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li><a class="nav-header"
+                               href="http://belief.scai.fraunhofer.de/BeliefDashboard">BELIEF</a></li>
+                        <li><a class="nav-header" href="http://neurommsig.scai.fraunhofer.de/">NeuroMMSigDB</a></li>
+                        <li><a class="nav-header" href="https://arty.scai.fraunhofer.de/artifactory/bel/">BEL
+                            Resources</a>
+                        </li>
+                        <li><a class="nav-header" href="http://psychodb.scai.fraunhofer.de/">PsychoDB</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="http://academia.scaiview.com/academia/">SCAIView</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="http://api.scaiview.com/">SCAIView Play</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="http://epad.scai.fraunhofer.de/">Study Viewer</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Getting Started <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="nav-header" href="{{ url_for('ui.imprint') }}">Imprint</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="{{ url_for('ui.about') }}">About ComPathTool</a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <ul class="nav navbar-nav navbar-right no-collapse">
+                <li>
+                    <a id="nav-scai-logo"
+                       href="https://www.scai.fraunhofer.de/en/business-research-areas/bioinformatics.html">
+                        <img alt="Fraunhofer SCAI"
+                             src="{{ url_for('static', filename='img/scai_logo.svg') }}">
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
