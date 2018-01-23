@@ -45,7 +45,7 @@ def export_reactome():
 
     log.info("Querying the database")
 
-    genesets = dict_to_pandas_df(reactome_manager.export_genesets())
+    genesets = dict_to_pandas_df(reactome_manager.export_genesets(species='Homo sapiens'))
 
     return send_file(
         genesets.to_csv('genesets.csv', index=False),
