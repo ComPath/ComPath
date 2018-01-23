@@ -1,5 +1,4 @@
 click
-pybel>=0.10.1
 sqlalchemy==1.1.15
 bio2bel_kegg
 bio2bel_reactome

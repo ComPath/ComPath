@@ -11,7 +11,6 @@ PACKAGES = setuptools.find_packages(where='src')
 META_PATH = os.path.join('src', MODULE, '__init__.py')
 INSTALL_REQUIRES = [
     'click',
-    'pybel>=0.10.1',
     'sqlalchemy==1.1.15',
     'pandas',
     'tqdm',
