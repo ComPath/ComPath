@@ -7,88 +7,92 @@
 {% block title %}ComPath{% endblock %}xz
 
 {% block scripts %}
-    {{ super() }}
-    <script type="text/javascript">
-        var maxHeight = 0;
-        $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").each(function (idx, item) {
-            var height = $(item).height();
-            maxHeight = maxHeight > height ? maxHeight : height;
-        });
-        $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").height(maxHeight);
-    </script>
-    <script>
-        $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
-    </script>
+{{ super() }}
+<script type="text/javascript">
+    var maxHeight = 0;
+    $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").each(function (idx, item) {
+        var height = $(item).height();
+        maxHeight = maxHeight > height ? maxHeight : height;
+    });
+    $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").height(maxHeight);
+</script>
+<script>
+    $(function () {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 {% endblock %}
 
 {% block content %}
-    <div class="container" style="margin-top: 50px">
-        {{ util.flashed_messages(dismissible=True, container=False) }}
+<div class="container" style="margin-top: 50px">
+    {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        <div class="jumbotron">
-            <h1>ComPath (Comparative Pathways Tool)</h1>
-            <p>A web application for exploring and comparing the overlaps across pathway resources.
-            </p>
-        </div>
+    <div class="jumbotron">
+        <h1>ComPath (Comparative Pathways Tool)</h1>
+        <p>A web application for exploring and comparing the overlaps across pathway resources.
+        </p>
+    </div>
 
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <div class="row">
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="row">
 
-                    <div class="col-sm-6 col-md-4">
-                        <div class="thumbnail home-link">
-                            <div class="caption">
-                                <h3>Build Geneset Query</h3>
-                                <p>Build a gene set query using the loaded resources.</p>
-                                <p>
-                                    <a href="" class="btn btn-primary btn-block">
-                                        Query
-                                    </a>
-                                </p>
-                            </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail home-link">
+                        <div class="caption">
+                            <h3>Pathway Enrichment</h3>
+                            <p>Submit a geneset to retrieve the enriched pathways matching to it.</p>
+                            <p>
+                                <a href="" class="btn btn-primary btn-block">
+                                    Query
+                                </a>
+                            </p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-6 col-md-4">
-                        <div class="thumbnail home-link">
-                            <div class="caption">
-                                <h3>...</h3>
-                                <p>
-                                    blabla
-                                </p>
-                                <p>
-                                    <a href="" class="btn btn-primary btn-block">
-                                        ...
-                                    </a>
-                                </p>
-                            </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail home-link">
+                        <div class="caption">
+                            <h3>Pathway Similarity</h3>
+                            <p>
+                                Explore the similarity across patwhays from different resources according to their
+                                geneset overlap. Compare the geneset similarity to the literature-based mapping.
+                            </p>
+                            <p>
+                                <a href="" class="btn btn-primary">
+                                    Similarity Matrix
+                                </a>
+                                <a href="" class="btn btn-primary">
+                                    Manual Mapping
+                                </a>
+                            </p>
                         </div>
                     </div>
+                </div>
 
-                    <div class="col-sm-6 col-md-4">
-                        <div class="thumbnail">
-                            <div class="caption home-link">
-                                <h3>Export Genesets</h3>
-                                <p>
-                                    Export gene sets coming from Reactome/KEGG to excel sheets for programmatic use.
-                                </p>
-                                <p>
-                                    <a href="{{ url_for('ui.export_reactome') }}" class="btn btn-primary">
-                                        Export Reactome
-                                    </a>
-                                    <a href="{{ url_for('ui.export_kegg') }}" class="btn btn-primary">
-                                        Export KEGG
-                                    </a>
-                                </p>
-                            </div>
+                <div class="col-sm-6 col-md-4">
+                    <div class="thumbnail">
+                        <div class="caption home-link">
+                            <h3>Export Genesets</h3>
+                            <p>
+                                Export gene sets coming from Reactome/KEGG to excel sheets for programmatic use.
+                            </p>
+                            <p>
+                                <a href="{{ url_for('ui.export_reactome') }}" class="btn btn-primary">
+                                    Export Reactome
+                                </a>
+                                <a href="{{ url_for('ui.export_kegg') }}" class="btn btn-primary">
+                                    Export KEGG
+                                </a>
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    {% include "footer.html" %}
+{% include "footer.html" %}
 {% endblock %}
