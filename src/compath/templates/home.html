@@ -43,7 +43,7 @@
                             <h3>Pathway Enrichment</h3>
                             <p>Submit a geneset to retrieve the enriched pathways matching to it.</p>
                             <p>
-                                <a href="" class="btn btn-primary btn-block">
+                                <a href="{{ url_for('ui.query') }}" class="btn btn-primary btn-block">
                                     Query
                                 </a>
                             </p>
@@ -79,10 +79,12 @@
                                 Export gene sets coming from Reactome/KEGG to excel sheets for programmatic use.
                             </p>
                             <p>
-                                <a href="{{ url_for('static', filename='img/scai_logo.svg') }}" class="btn btn-primary">
+                                <a href="{{ url_for('static', filename='excel/reactome_genesets.csv') }}"
+                                   class="btn btn-primary">
                                     Export Reactome
                                 </a>
-                                <a href="{{ url_for('static', filename='excel/scai_logo.svg') }}" class="btn btn-primary">
+                                <a href="{{ url_for('static', filename='excel/kegg_genesets.csv') }}"
+                                   class="btn btn-primary">
                                     Export KEGG
                                 </a>
                             </p>

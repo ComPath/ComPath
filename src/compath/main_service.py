@@ -36,6 +36,14 @@ def about():
     return render_template('about.html')
 
 
+@ui_blueprint.route('/query', methods=['GET', 'POST'])
+def query():
+    """Query page
+    """
+    return render_template('query.html')
+
+
+
 @ui_blueprint.route('/reactome/export', methods=['GET', 'POST'])
 def export_reactome():
     """Export Reactome gene sets to excel
