@@ -38,13 +38,31 @@
                     <h3 class="panel-title">Submission Form</h3>
                 </div>
                 <div class="panel-body">
-                    <p>
-                       Paste here your genesets separated by commas and click in Submit.
-                    </p>
-                </div>
-                <div class="form-group">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <p>
+                            Choose an input file to upload with the gene set in csv file format. If you have a weighted
+                            gene set, the weight of each gene can follow each gene symbol. The membership level is a
+                            number. This tool accepts number between 0.0 and 1.0, where the weight of 0.0 will
+                            completely discard the gene from the enrichment analysis and the weight of 1.0 is the
+                            maximum.
+                        </p>
+
+                        <input name="file" id="file-chooser" type="file">
+
+                    </div>
+
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="form-group">
+                            <label style="font-weight: normal;" for="geneset-input">Or paste your gene set row wise or
+                                comma separated. Click <a
+                                        href="#" id="geneset-example" onclick="return insertExample();">
+                                    here</a> to see an example. </label>
+                            <textarea class="form-control" rows="5" id="geneset-input"></textarea>
+                        </div>
+                    </div>
 
                 </div>
+
             </div>
 
 
