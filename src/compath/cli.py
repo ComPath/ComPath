@@ -2,19 +2,16 @@
 
 from __future__ import print_function
 
+import click
 import logging
 
-import click
-
-from bio2bel_kegg.manager import Manager as KeggManager
-from bio2bel_reactome.manager import Manager as ReactomeManager
+from compath import managers
 from compath.constants import DEFAULT_CACHE_CONNECTION
 
 log = logging.getLogger(__name__)
 
 
 def set_debug(level):
-    logging.basicConfig(level=level, format="%(asctime)s - %(levelname)s - %(message)s")
     log.setLevel(level=level)
 
 
@@ -28,35 +25,34 @@ def set_debug_param(debug):
 @click.group()
 def main():
     """ComPath"""
-    logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(message)s")
+    logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+
+
+@main.command()
+def ls():
+    """List registered managers"""
+    for manager in managers:
+        click.echo(manager)
 
 
 @main.command()
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-@click.option('-d', '--delete_first', is_flag=True)
+@click.option('-d', '--delete-first', is_flag=True)
 def populate(debug, connection, delete_first):
-    """Build the local version of Reactome/KEGG."""
-
-    #TODO: Load with entry points
-
+    """Populate all databases"""
     set_debug_param(debug)
 
-    reactome_manager = ReactomeManager(connection=connection)
-    kegg_manager = KeggManager(connection=connection)
+    for name, Manager in managers.items():
+        m = Manager(connection=connection)
 
-    if delete_first or click.confirm('Drop first the Reactome database?'):
-        reactome_manager.drop_all()
-        reactome_manager.create_all()
+        if delete_first:
+            click.echo('deleting {}'.format(name))
+            m.drop_all()
+            m.create_all()
 
-    # Only human genes are used
-    reactome_manager.populate(only_human=True)
-
-    if delete_first or click.confirm('Drop first the KEGG database?'):
-        kegg_manager.drop_all()
-        kegg_manager.create_all()
-
-    kegg_manager.populate()
+        click.echo('populating {}'.format(name))
+        m.populate()
 
 
 @main.command()
@@ -64,27 +60,21 @@ def populate(debug, connection, delete_first):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(debug, yes, connection):
-    """Drop the Reactome/KEGG database."""
-
+    """Drop all databases"""
     set_debug_param(debug)
 
-    if yes or click.confirm('Do you really want to delete the Reactome database?'):
-        reactome_manager = ReactomeManager(connection=connection)
-        click.echo("drop db")
-        reactome_manager.drop_all()
-
-    if yes or click.confirm('Do you really want to delete the KEGG database?'):
-        kegg_manager = KeggManager(connection=connection)
-        click.echo("drop db")
-        kegg_manager.drop_all()
+    if yes or click.confirm('Do you really want to delete the databases for {}?'.format(', '.join(managers))):
+        for name, Manager in managers.items():
+            m = Manager(connection=connection)
+            click.echo('deleting {}'.format(name))
+            m.drop_all()
 
 
 @main.command()
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def web(debug, connection):
-    """Run web"""
-
+    """Run web service"""
     set_debug_param(debug)
 
     from compath.web import create_app
