@@ -15,7 +15,7 @@ log = logging.getLogger(__name__)
 bootstrap = Bootstrap()
 
 
-def create_app(connection=None, url=None):
+def create_app(connection=None):
     """Creates a Flask application
 
     :type connection: Optional[str]
@@ -25,6 +25,7 @@ def create_app(connection=None, url=None):
     t = time.time()
 
     app = Flask(__name__)
+    app.config['COMPATH_CONNECTION'] = connection
 
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'
     app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
@@ -39,5 +40,5 @@ def create_app(connection=None, url=None):
 
 
 if __name__ == '__main__':
-    app = create_app()
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    app_ = create_app()
+    app_.run(debug=True, host='0.0.0.0', port=5000)
