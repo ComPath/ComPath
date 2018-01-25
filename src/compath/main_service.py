@@ -5,32 +5,32 @@
 import logging
 
 from flask import Blueprint, render_template, send_file, flash, redirect
-import pandas as pd
+
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
-from compath.utils import dict_to_pandas_df
-from compath.forms import GeneSetForm, GeneSetFileForm
+from compath.forms import GeneSetForm
+from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set
 
 log = logging.getLogger(__name__)
 
 ui_blueprint = Blueprint('ui', __name__)
 
 
-@ui_blueprint.route('/', methods=['GET', 'POST'])
+@ui_blueprint.route('/', methods=['GET'])
 def home():
     """ComPath home page
     """
     return render_template('home.html')
 
 
-@ui_blueprint.route('/imprint', methods=['GET', 'POST'])
+@ui_blueprint.route('/imprint', methods=['GET'])
 def imprint():
     """Imprint page
     """
     return render_template('imprint.html')
 
 
-@ui_blueprint.route('/about', methods=['GET', 'POST'])
+@ui_blueprint.route('/about', methods=['GET'])
 def about():
     """About page
     """
@@ -49,14 +49,22 @@ def query():
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])
-def process_geneset():
+def process_gene_set():
     """Process the gene set POST form
     """
     form = GeneSetForm()
-    if form.validate_on_submit():
-        flash('Not valid geneset')
-        return redirect('/index')
-    pass
+
+    if not form.validate_on_submit():
+        flash('The submitted gene set is not valid')
+        return redirect('/query')
+
+    gene_sets = process_form_gene_set(form.geneset.data)
+
+    enrichment_results = query_gene_set([ReactomeManager(), KeggManager()], gene_sets)
+
+    print(enrichment_results)
+
+    return redirect('/query')
 
 
 # @ui_blueprint.route('/query/upload', methods=('GET', 'POST'))

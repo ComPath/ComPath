@@ -38,6 +38,8 @@ def main():
 def populate(debug, connection, delete_first):
     """Build the local version of Reactome/KEGG."""
 
+    #TODO: Load with entry points
+
     set_debug_param(debug)
 
     reactome_manager = ReactomeManager(connection=connection)
