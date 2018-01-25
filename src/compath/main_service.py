@@ -4,11 +4,12 @@
 
 import logging
 
-from flask import Blueprint, render_template, send_file
-
+from flask import Blueprint, render_template, send_file, flash, redirect
+import pandas as pd
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
 from compath.utils import dict_to_pandas_df
+from compath.forms import GeneSetForm, GeneSetFileForm
 
 log = logging.getLogger(__name__)
 
@@ -36,12 +37,50 @@ def about():
     return render_template('about.html')
 
 
+"""Query views"""
+
+
 @ui_blueprint.route('/query', methods=['GET', 'POST'])
 def query():
     """Query page
     """
-    return render_template('query.html')
+    form = GeneSetForm()
+    return render_template('query.html', form=form)
 
+
+@ui_blueprint.route('/query/process', methods=['POST'])
+def process_geneset():
+    """Process the gene set POST form
+    """
+    form = GeneSetForm()
+    if form.validate_on_submit():
+        flash('Not valid geneset')
+        return redirect('/index')
+    pass
+
+
+# @ui_blueprint.route('/query/upload', methods=('GET', 'POST'))
+# def process_geneset_file():
+#     """Process uploaded submission"""
+#
+#     form = GeneSetFileForm()
+#
+#     if not form.validate_on_submit():
+#         return render_template('query.html', form=form)
+#
+#     df = pd.read_csv(form.file.data)
+#
+#     gene_column = form.gene_symbol_column.data
+#     data_column = form.log_fold_change_column.data
+#
+#     if gene_column not in df.columns:
+#         raise ValueError('{} not a column in document'.format(gene_column))
+#
+#     if data_column not in df.columns:
+#         raise ValueError('{} not a column in document'.format(data_column))
+#
+
+"""Export views"""
 
 
 @ui_blueprint.route('/reactome/export', methods=['GET', 'POST'])

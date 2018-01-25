@@ -13,8 +13,12 @@ INSTALL_REQUIRES = [
     'click',
     'sqlalchemy==1.1.15',
     'pandas',
-    'tqdm',
     'bio2bel',
+    'wtforms',
+    'flask_wtf',
+    'flask',
+    'flask-bootstrap',
+    'flask_admin',
 ]
 ENTRY_POINTS = {
     'bio2bel': [

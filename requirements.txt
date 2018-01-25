@@ -1,10 +1,13 @@
 click
 sqlalchemy==1.1.15
+bio2bel
 bio2bel_kegg
 bio2bel_reactome
 pandas
-tqdm
 flask
 flask-bootstrap
 flask_admin
-bio2bel
+wtforms
+flask_wtf
+
+

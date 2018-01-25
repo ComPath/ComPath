@@ -23,6 +23,11 @@
     </script>
 {% endblock %}
 
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/query.css') }}">
+{% endblock %}
+
 {% block content %}
     <div class="container">
         <div class="page-header">
@@ -31,45 +36,48 @@
 
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        <form id="query-form" method="post" action="">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Submission Form</h3>
+            </div>
+            <div class="panel-body">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <p>
+                        Choose an input file to upload with the gene set in csv file format. If you have a weighted
+                        gene set, the weight of each gene can follow each gene symbol. The membership level is a
+                        number. This tool accepts number between 0.0 and 1.0, where the weight of 0.0 will
+                        completely discard the gene from the enrichment analysis and the weight of 1.0 is the
+                        maximum.
+                    </p>
 
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">Submission Form</h3>
+                    <input name="file" id="file-chooser" type="file">
+
                 </div>
-                <div class="panel-body">
-                    <div class="col-lg-6 col-md-6 col-sm-6">
-                        <p>
-                            Choose an input file to upload with the gene set in csv file format. If you have a weighted
-                            gene set, the weight of each gene can follow each gene symbol. The membership level is a
-                            number. This tool accepts number between 0.0 and 1.0, where the weight of 0.0 will
-                            completely discard the gene from the enrichment analysis and the weight of 1.0 is the
-                            maximum.
-                        </p>
 
-                        <input name="file" id="file-chooser" type="file">
+                <div class="col-lg-6 col-md-6 col-sm-6">
 
-                    </div>
-
-                    <div class="col-lg-6 col-md-6 col-sm-6">
+                    <form action="{{ url_for('ui.process_geneset') }}" method="post">
                         <div class="form-group">
+
+                            {{ form.hidden_tag() }}
                             <label style="font-weight: normal;" for="geneset-input">Or paste your gene set row wise or
                                 comma separated. Click <a
                                         href="#" id="geneset-example" onclick="return insertExample();">
                                     here</a> to see an example. </label>
-                            <textarea class="form-control" rows="5" id="geneset-input"></textarea>
-                        </div>
-                    </div>
+                            {{ form.geneset(rows="5", class="form-control")|safe }}
 
+                            <div class="text-center" style="margin-top: 20px">
+                                {{ form.submit(class="btn btn-primary btn-lg") }}
+                            </div>
+                        </div>
+
+                    </form>
                 </div>
 
             </div>
 
+        </div>
 
-            <div class="text-center" style="margin-bottom: 20px">
-                <input class="btn btn-primary btn-lg" id="submit-query" placeholder="Submit" type="submit">
-            </div>
-        </form>
     </div>
 
     {% include "footer.html" %}
