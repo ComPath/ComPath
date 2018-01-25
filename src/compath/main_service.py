@@ -96,13 +96,13 @@ def process_gene_set():
 
 """Export views"""
 
+# TODO switch to export/<name> then look up the manager
+
 
 @ui_blueprint.route('/reactome/export', methods=['GET', 'POST'])
 def export_reactome():
-    """Export Reactome gene sets to excel
-    """
-
-    reactome_manager = ReactomeManager()
+    """Export Reactome gene sets to excel"""
+    reactome_manager = ReactomeManager(connection=app.config.get('COMPATH_CONNECTION'))
 
     log.info("Querying the database")
 
@@ -118,10 +118,8 @@ def export_reactome():
 
 @ui_blueprint.route('/kegg/export', methods=['GET', 'POST'])
 def export_kegg():
-    """Export KEGG gene sets to excel
-    """
-
-    kegg_manager = KeggManager()
+    """Export KEGG gene sets to excel"""
+    kegg_manager = KeggManager(connection=app.config.get('COMPATH_CONNECTION'))
 
     log.info("Querying the database")
 
