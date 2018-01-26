@@ -25,6 +25,7 @@ def create_app(connection=None):
     t = time.time()
 
     app = Flask(__name__)
+
     app.config['COMPATH_CONNECTION'] = connection
 
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'

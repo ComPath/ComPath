@@ -1,10 +1,14 @@
 # -*- coding: utf-8 -*-
 
+import logging
+from compath.constants import MODULE_NAME
 from pkg_resources import VersionConflict, iter_entry_points
+
+log = logging.getLogger(__name__)
 
 managers = {}
 
-for entry_point in iter_entry_points(group='compath', name=None):
+for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
     entry = entry_point.name
 
     try:
@@ -18,7 +22,6 @@ for entry_point in iter_entry_points(group='compath', name=None):
     except Exception:
         log.warning('%s does not have a top-level Manager class', entry)
         continue
-
 
 __version__ = '0.0.1-dev'
 

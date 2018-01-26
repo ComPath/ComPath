@@ -4,7 +4,7 @@
 
 import logging
 
-from flask import Blueprint, render_template, send_file, flash, redirect
+from flask import Blueprint, render_template, send_file, flash, redirect, current_app
 
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
@@ -62,7 +62,7 @@ def process_gene_set():
     gene_sets = process_form_gene_set(form.geneset.data)
 
     manager_instances = [
-        Manager(connection=app.config.get('COMPATH_CONNECTION'))
+        Manager(connection=current_app.config.get('COMPATH_CONNECTION'))
         for Manager in managers.values()
     ]
 
@@ -102,7 +102,7 @@ def process_gene_set():
 @ui_blueprint.route('/reactome/export', methods=['GET', 'POST'])
 def export_reactome():
     """Export Reactome gene sets to excel"""
-    reactome_manager = ReactomeManager(connection=app.config.get('COMPATH_CONNECTION'))
+    reactome_manager = ReactomeManager(connection=current_app.config.get('COMPATH_CONNECTION'))
 
     log.info("Querying the database")
 
@@ -119,7 +119,7 @@ def export_reactome():
 @ui_blueprint.route('/kegg/export', methods=['GET', 'POST'])
 def export_kegg():
     """Export KEGG gene sets to excel"""
-    kegg_manager = KeggManager(connection=app.config.get('COMPATH_CONNECTION'))
+    kegg_manager = KeggManager(connection=current_app.config.get('COMPATH_CONNECTION'))
 
     log.info("Querying the database")
 
