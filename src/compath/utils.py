@@ -45,3 +45,9 @@ def query_gene_set(manager_list, gene_set):
 
     return results
 
+def parse_pathway_mapping_file(file_path):
+    """Parse the pathway mapping file located in resources
+
+    :param str file_path: file path
+    :return:
+    """
