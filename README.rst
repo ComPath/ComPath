@@ -22,7 +22,7 @@ Running locally
 
 1. Load KEGG and Reactome in database. :code:`python3 -m compath populate`
 
-2. Run the web app (by default in port `5000 <http://localhost:5000/`_). :code:`python3 -m compath web`
+2. Run the web app (by default in port `5000 <http://localhost:5000/>`_). :code:`python3 -m compath web`
 
 
 .. |build| image:: https://travis-ci.org/bio2bel/reactome.svg?branch=master
