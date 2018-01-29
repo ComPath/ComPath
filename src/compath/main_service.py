@@ -9,12 +9,14 @@ from flask import Blueprint, render_template, send_file, flash, redirect, curren
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
 from compath.forms import GeneSetForm
-from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set
+from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set, parse_pathway_mapping_file
 from compath import managers
 
 log = logging.getLogger(__name__)
 
 ui_blueprint = Blueprint('ui', __name__)
+
+data_table = parse_pathway_mapping_file()
 
 
 @ui_blueprint.route('/', methods=['GET'])
@@ -47,6 +49,13 @@ def query():
     """
     form = GeneSetForm()
     return render_template('query.html', form=form)
+
+
+@ui_blueprint.route('/pathway_overview', methods=['GET', 'POST'])
+def pathway_overview():
+    """Pathway Overview
+    """
+    return render_template('pathway_comparison_overview.html')
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])

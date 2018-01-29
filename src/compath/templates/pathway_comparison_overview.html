@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}ComPath{% endblock %}xz
+
+{% block scripts %}
+    {{ super() }}
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+    {% include "footer.html" %}
+{% endblock %}
