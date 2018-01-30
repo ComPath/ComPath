@@ -6,6 +6,7 @@ So far, this packages wraps the following packages:
 
 - `Bio2BEL KEGG <https://github.com/bio2bel/kegg>`_
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
+- `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
 
 Requirements
 ------------
@@ -20,7 +21,10 @@ has been already installed and populated. The following steps are needed to inst
 Running locally
 ---------------
 
-1. Load KEGG and Reactome in database. :code:`python3 -m compath populate`
+1. Load KEGG and Reactome in database. :code:`python3 -m compath populate`.
+For an optimal use of this application, we recommend to have installed all three Bio2BEL mentioned above.
+To check if these packages are installed in your Python installation, please run: :code:`python3 -m compath ls`.
+This commands will display all of these three repos currently installed.
 
 2. Run the web app (by default in port `5000 <http://localhost:5000/>`_). :code:`python3 -m compath web`
 
