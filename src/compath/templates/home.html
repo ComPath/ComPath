@@ -16,10 +16,15 @@
         });
         $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").height(maxHeight);
     </script>
-    <script>
+    <script type="text/javascript">
+        // Initialize popover in buttons
         $(function () {
-            $('[data-toggle="tooltip"]').tooltip()
-        })
+            $('[data-toggle="popover"]').popover({
+                placement: 'top',
+                trigger: 'hover'
+            })
+        });
+
     </script>
 {% endblock %}
 
@@ -29,7 +34,7 @@
 
         <div class="jumbotron">
             <h1>ComPath (Comparative Pathways Tool)</h1>
-            <p>A web application for exploring and comparing the overlaps across pathway resources.
+            <p>A web application for exploring and comparing the overlaps across public pathway repositories.
             </p>
         </div>
 
@@ -56,15 +61,14 @@
                             <div class="caption">
                                 <h3>Pathway Similarity</h3>
                                 <p>
-                                    Explore the similarity across patwhays from different resources according to their
-                                    geneset overlap. Compare the geneset similarity to the literature-based mapping.
+                                    Explore the similarity across patwhays from different resources according to
+                                    different approaches.
                                 </p>
                                 <p>
-                                    <a href="" class="btn btn-primary">
+                                    <a href="" class="btn btn-primary btn-block" data-toggle="popover"
+                                       title="Pathway Similarity" data-content="Compare the similarity across pathways
+                                        from different database repositories based on different approaches.">
                                         Similarity Matrix
-                                    </a>
-                                    <a href="" class="btn btn-primary">
-                                        Manual Mapping
                                     </a>
                                 </p>
                             </div>
@@ -80,11 +84,13 @@
                                 </p>
                                 <p>
                                     <a href="{{ url_for('static', filename='resources/excel/reactome_gene_sets.csv') }}"
-                                       class="btn btn-primary">
+                                       class="btn btn-primary" data-toggle="popover" title="Export Reactome"
+                                       data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
                                         Export Reactome
                                     </a>
                                     <a href="{{ url_for('static', filename='resources/excel/kegg_gene_sets.csv') }}"
-                                       class="btn btn-primary">
+                                       class="btn btn-primary" data-toggle="popover" title="Export KEGG"
+                                       data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
                                         Export KEGG
                                     </a>
                                 </p>
