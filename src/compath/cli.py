@@ -30,7 +30,7 @@ def main():
 
 @main.command()
 def ls():
-    """List registered managers"""
+    """Display registered Bio2BEL pathway managers"""
     for manager in managers:
         click.echo(manager)
 
@@ -40,7 +40,7 @@ def ls():
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('-d', '--delete-first', is_flag=True)
 def populate(debug, connection, delete_first):
-    """Populate all databases"""
+    """Populate all registered Bio2BEL pathway packages"""
     set_debug_param(debug)
 
     for name, Manager in managers.items():
