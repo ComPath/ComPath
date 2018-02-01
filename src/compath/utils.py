@@ -32,8 +32,8 @@ def process_form_gene_set(form_field):
     }
 
 def query_gene_set(manager_list, gene_set):
-
     """
+
     :param list manager_list: list of managers
     :param set[str] gene_set: gene set queried
     :return:
@@ -44,6 +44,16 @@ def query_gene_set(manager_list, gene_set):
         results = manager.query_gene_set(gene_set)
 
     return results
+
+
+def get_genes_without_assigned_pathways(manager_list, gene_set):
+    """Returns the genes without any known pathway assigned
+
+    :param list manager_list: list of managers
+    :param set[str] gene_set: gene set queried
+    :return:
+    """
+    NotImplemented
 
 def parse_pathway_mapping_file(file_path):
     """Parse the pathway mapping file located in resources
