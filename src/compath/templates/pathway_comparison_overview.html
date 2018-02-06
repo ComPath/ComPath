@@ -16,9 +16,33 @@
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-    <div class="panel panel-default">
+        <div class="panel panel-default">
+            <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-               Here there should be statistics about the web server
+                <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap.</p>
+                <div class="row">
+                    <div class="col-sm-4 text-center">
+                        <input type="text" name="kegg" placeholder="Select the KEGG pathway to compare"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <input type="text" name="reactome" placeholder="Select the Reactome pathway to compare"
+                               class="form-control"/>
+                    </div>
+                    <div class="col-sm-4 text-center">
+                        <input type="text" name="wikipathways" placeholder="Select the WikiPathways pathway to compare"
+                               class="form-control"/>
+                    </div>
+                </div>
+                <button id="venn-diagram" type="submit"></button>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Pathway overview</div>
+            <div class="panel-body">
+                <p></p>
+
             </div>
         </div>
     </div>
