@@ -4,10 +4,10 @@
 
 import logging
 
-from flask import Blueprint, render_template, send_file, flash, redirect, current_app
-
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
+from flask import Blueprint, render_template, send_file, flash, redirect, current_app
+
 from compath import managers
 from compath.forms import GeneSetForm
 from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set
@@ -16,8 +16,8 @@ log = logging.getLogger(__name__)
 
 ui_blueprint = Blueprint('ui', __name__)
 
+"""Main Views"""
 
-# data_table = parse_pathway_mapping_file()
 
 @ui_blueprint.route('/', methods=['GET'])
 def home():
@@ -28,34 +28,40 @@ def home():
 
 @ui_blueprint.route('/imprint', methods=['GET'])
 def imprint():
-    """Imprint page
-    """
+    """Renders the Imprint page"""
     return render_template('imprint.html')
 
 
 @ui_blueprint.route('/about', methods=['GET'])
 def about():
-    """About page
-    """
+    """Renders About page"""
     return render_template('about.html')
+
+
+@ui_blueprint.route('/pathway_overview', methods=['GET'])
+def pathway_overview():
+    """Renders the Pathway Overview page"""
+    return render_template('pathway_comparison_overview.html')
 
 
 """Query views"""
 
 
-@ui_blueprint.route('/query', methods=['GET', 'POST'])
+@ui_blueprint.route('/query', methods=['GET'])
 def query():
-    """Query page
-    """
+    """Returns the Query page"""
+
     form = GeneSetForm()
     return render_template('query.html', form=form)
 
 
-@ui_blueprint.route('/pathway_overview', methods=['GET', 'POST'])
-def pathway_overview():
-    """Pathway Overview
-    """
-    return render_template('pathway_comparison_overview.html')
+@ui_blueprint.route('/query/overlap', methods=['GET'])
+def calculate_overlap():
+    """Returns the overlap between different pathways in order to generate a Venn diagram"""
+
+    # TODO: Get the 3 pathway names from the request and calculate gene overlap
+
+    NotImplemented
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])
@@ -109,7 +115,7 @@ def process_gene_set():
 # TODO switch to export/<name> then look up the manager
 
 
-@ui_blueprint.route('/reactome/export', methods=['GET', 'POST'])
+@ui_blueprint.route('/reactome/export', methods=['GET'])
 def export_reactome():
     """Export Reactome gene sets to excel"""
     reactome_manager = ReactomeManager(connection=current_app.config.get('COMPATH_CONNECTION'))
@@ -126,7 +132,7 @@ def export_reactome():
     )
 
 
-@ui_blueprint.route('/kegg/export', methods=['GET', 'POST'])
+@ui_blueprint.route('/kegg/export', methods=['GET'])
 def export_kegg():
     """Export KEGG gene sets to excel"""
     kegg_manager = KeggManager(connection=current_app.config.get('COMPATH_CONNECTION'))
