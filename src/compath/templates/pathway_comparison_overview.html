@@ -9,6 +9,8 @@
 {% block scripts %}
     {{ super() }}
 
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/overview_controller.js', version='20180501') }}"></script>
 
 {% endblock %}
 
@@ -19,22 +21,25 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap.</p>
-                <div class="row">
-                    <div class="col-sm-4 text-center">
-                        <input type="text" name="kegg" placeholder="Select the KEGG pathway to compare"
-                               class="form-control"/>
+                <form id="render-venn-diagram">
+                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap.</p>
+                    <div class="row">
+                        <div class="col-sm-4 text-center">
+                            <input type="text" name="kegg" placeholder="Select the KEGG pathway to compare"
+                                   class="form-control"/>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <input type="text" name="reactome" placeholder="Select the Reactome pathway to compare"
+                                   class="form-control"/>
+                        </div>
+                        <div class="col-sm-4 text-center">
+                            <input type="text" name="wikipathways"
+                                   placeholder="Select the WikiPathways pathway to compare"
+                                   class="form-control"/>
+                        </div>
                     </div>
-                    <div class="col-sm-4 text-center">
-                        <input type="text" name="reactome" placeholder="Select the Reactome pathway to compare"
-                               class="form-control"/>
-                    </div>
-                    <div class="col-sm-4 text-center">
-                        <input type="text" name="wikipathways" placeholder="Select the WikiPathways pathway to compare"
-                               class="form-control"/>
-                    </div>
-                </div>
-                <button id="venn-diagram" type="submit"></button>
+                    <button class="btn btn-primary" type="submit">Render Plot</button>
+                </form>
             </div>
         </div>
 

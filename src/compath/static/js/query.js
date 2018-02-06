@@ -1,3 +1,8 @@
+/** This JS controls the query page of ComPath
+ **
+ * @requires: jquery
+ */
+
 /* Counter for how many analysis has been done */
 function geneCount() {
     $.get('txt/gene_symbols.txt', function (data) {

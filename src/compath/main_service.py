@@ -6,7 +6,7 @@ import logging
 
 from bio2bel_kegg.manager import Manager as KeggManager
 from bio2bel_reactome.manager import Manager as ReactomeManager
-from flask import Blueprint, render_template, send_file, flash, redirect, current_app
+from flask import Blueprint, render_template, send_file, flash, redirect, current_app, request
 
 from compath import managers
 from compath.forms import GeneSetForm
@@ -59,7 +59,9 @@ def query():
 def calculate_overlap():
     """Returns the overlap between different pathways in order to generate a Venn diagram"""
 
-    # TODO: Get the 3 pathway names from the request and calculate gene overlap
+    print(request.args)
+
+    # https://github.com/benfred/venn.js/
 
     NotImplemented
 
