@@ -6,9 +6,38 @@
 
 {% block title %}ComPath{% endblock %}
 
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+    <style>
+        [data-role="dynamic-fields"] > .form-inline + .form-inline {
+            margin-top: 0.5em;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline [data-role="add"] {
+            display: none;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
+            display: inline-block;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
+            display: none;
+        }
+    </style>
+    }
+{% endblock %}
+
 {% block scripts %}
     {{ super() }}
-
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script type="text/javascript"
+            src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/overview_controller.js', version='20180501') }}"></script>
 
@@ -21,24 +50,30 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <form id="render-venn-diagram">
+                <form id="venn-diagram-form">
                     <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap.</p>
-                    <div class="row">
-                        <div class="col-sm-4 text-center">
-                            <input type="text" name="kegg" placeholder="Select the KEGG pathway to compare"
-                                   class="form-control"/>
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <input type="text" name="reactome" placeholder="Select the Reactome pathway to compare"
-                                   class="form-control"/>
-                        </div>
-                        <div class="col-sm-4 text-center">
-                            <input type="text" name="wikipathways"
-                                   placeholder="Select the WikiPathways pathway to compare"
-                                   class="form-control"/>
-                        </div>
+                    <div data-role="dynamic-fields">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="sr-only" for="pathway">Pathways</label>
+                                <input type="text" class="form-control" name="pathways[]" id="first-pathway-input"
+                                       placeholder="Select the Pathway to compare"
+                                       style=" min-width: 500px;">
+                                <input type="text" class="form-control" name="resources[]" id="first-resource-input"
+                                       placeholder="Select one of the three pathway resources listed (KEGG, Reactome, or WikiPathways)"
+                                       style=" min-width: 500px;">
+                            </div>
+                            <button class="btn btn-danger" data-role="remove">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            <button class="btn btn-primary" data-role="add">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>  <!-- /div.form-inline -->
+                    </div> <!-- /div[data-role="dynamic-fields"] -->
+                    <div class="text-center" style="margin-top: 20px">
+                        <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
                     </div>
-                    <button class="btn btn-primary" type="submit">Render Plot</button>
                 </form>
             </div>
         </div>

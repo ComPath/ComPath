@@ -4,11 +4,19 @@
 
 import logging
 
-from bio2bel_kegg.manager import Manager as KeggManager
-from bio2bel_reactome.manager import Manager as ReactomeManager
-from flask import Blueprint, render_template, send_file, flash, redirect, current_app, request
+from io import StringIO
+from flask import (
+    Blueprint,
+    render_template,
+    make_response,
+    flash,
+    redirect,
+    current_app,
+    request,
+    jsonify,
+    abort
+)
 
-from compath import managers
 from compath.forms import GeneSetForm
 from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set
 
@@ -44,9 +52,6 @@ def pathway_overview():
     return render_template('pathway_comparison_overview.html')
 
 
-"""Query views"""
-
-
 @ui_blueprint.route('/query', methods=['GET'])
 def query():
     """Returns the Query page"""
@@ -55,15 +60,21 @@ def query():
     return render_template('query.html', form=form)
 
 
+"""Query views"""
+
+
 @ui_blueprint.route('/query/overlap', methods=['GET'])
 def calculate_overlap():
     """Returns the overlap between different pathways in order to generate a Venn diagram"""
 
-    print(request.args)
+    pathways_list = request.args.getlist('pathways[]')
+    resources_list = request.args.getlist('resources[]')
+
+    pathways = zip(pathways_list, resources_list)
 
     # https://github.com/benfred/venn.js/
 
-    NotImplemented
+    return None
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])
@@ -78,12 +89,7 @@ def process_gene_set():
 
     gene_sets = process_form_gene_set(form.geneset.data)
 
-    manager_instances = [
-        Manager(connection=current_app.config.get('COMPATH_CONNECTION'))
-        for Manager in managers.values()
-    ]
-
-    enrichment_results = query_gene_set(manager_instances, gene_sets)
+    enrichment_results = query_gene_set(current_app.manager_dict, gene_sets)
 
     print(enrichment_results)
 
@@ -117,35 +123,55 @@ def process_gene_set():
 # TODO switch to export/<name> then look up the manager
 
 
-@ui_blueprint.route('/reactome/export', methods=['GET'])
-def export_reactome():
-    """Export Reactome gene sets to excel"""
-    reactome_manager = ReactomeManager(connection=current_app.config.get('COMPATH_CONNECTION'))
+@ui_blueprint.route('/export/<resource>', methods=['GET'])
+def export_reactome(resource):
+    """Export gene set to excel"""
+
+    resource_manager = current_app.manager_dict.get(resource)
+
+    if not resource_manager:
+        return abort(404, '{} resource not found'.format(resource))
 
     log.info("Querying the database")
 
-    genesets = dict_to_pandas_df(reactome_manager.export_genesets(species='Homo sapiens'))
+    if resource == 'reactome':
+        genesets = dict_to_pandas_df(resource_manager.export_genesets(species='Homo sapiens'))
 
-    return send_file(
-        genesets.to_csv('genesets.csv', index=False),
-        mimetype='text/csv',
-        attachment_filename='reactome_genesets.csv',
-        as_attachment=True
-    )
+    else:
+        genesets = dict_to_pandas_df(resource_manager.export_genesets())
+
+    sio = StringIO()
+
+    genesets.to_csv(sio)
+
+    output = make_response(sio.getvalue())
+    output.headers["Content-Disposition"] = "attachment; filename={}_gene_sets.csv".format(resource)
+    output.headers["Content-type"] = "text/csv"
+    return output
 
 
-@ui_blueprint.route('/kegg/export', methods=['GET'])
-def export_kegg():
-    """Export KEGG gene sets to excel"""
-    kegg_manager = KeggManager(connection=current_app.config.get('COMPATH_CONNECTION'))
+"""Autocompletion"""
 
-    log.info("Querying the database")
 
-    genesets = dict_to_pandas_df(kegg_manager.export_genesets())
+@ui_blueprint.route('/api/autocompletion/pathway_name', methods=['GET'])
+def api_resource_autocompletion():
+    """Autocompletion for pathway name"""
 
-    return send_file(
-        genesets.to_csv('kegg_genesets.csv', index=False),
-        mimetype='text/csv',
-        attachment_filename='genesets.csv',
-        as_attachment=True
-    )
+    q = request.args.get('q')
+    resource = request.args.get('resource')
+
+    if not q or not resource:
+        return jsonify([])
+
+    resource = resource.lower()
+
+    manager = current_app.manager_dict.get(resource)
+
+    if not manager:
+        return jsonify([])
+
+    return jsonify(list({
+        pathway.name
+        for pathway in manager.query_pathway_by_name(q, 10)  # Limits the results returned to 10
+        if pathway
+    }))

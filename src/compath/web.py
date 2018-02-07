@@ -9,6 +9,7 @@ from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_wtf.csrf import CSRFProtect
 from compath.main_service import ui_blueprint
+from compath import managers
 
 log = logging.getLogger(__name__)
 
@@ -34,6 +35,11 @@ def create_app(connection=None):
     csrf = CSRFProtect(app)
     bootstrap.init_app(app)
     app.register_blueprint(ui_blueprint)
+
+    app.manager_dict = {
+        name: Manager(connection=connection)
+        for name, Manager in managers.items()
+    }
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
 

@@ -31,19 +31,27 @@ def process_form_gene_set(form_field):
         for gene in line.split(',')
     }
 
+
 def query_gene_set(manager_list, gene_set):
     """
 
-    :param list manager_list: list of managers
+    :param dict manager_list: list of managers
     :param set[str] gene_set: gene set queried
     :return:
     """
 
-    for manager in manager_list:
-
+    for manager in manager_list.values():
         results = manager.query_gene_set(gene_set)
 
     return results
+
+
+def calculate_pathway_overlap(pathways):
+
+    for pathway, resource in pathways:
+
+        print(pathway, resource)
+
 
 
 def get_genes_without_assigned_pathways(manager_list, gene_set):
@@ -54,6 +62,7 @@ def get_genes_without_assigned_pathways(manager_list, gene_set):
     :return:
     """
     NotImplemented
+
 
 def parse_pathway_mapping_file(file_path):
     """Parse the pathway mapping file located in resources
