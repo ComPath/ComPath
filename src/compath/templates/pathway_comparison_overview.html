@@ -35,9 +35,13 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
     <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script type="text/javascript"
             src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript"
+            src="https://benfred.github.io/venn.js/venn.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/overview_controller.js', version='20180501') }}"></script>
 
@@ -74,6 +78,7 @@
                     <div class="text-center" style="margin-top: 20px">
                         <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
                     </div>
+                    <div id="overlap-venn-diagram"></div>
                 </form>
             </div>
         </div>

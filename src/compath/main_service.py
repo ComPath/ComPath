@@ -3,8 +3,8 @@
 """ This module contains the common views across all pathway bio2bel repos"""
 
 import logging
-
 from io import StringIO
+
 from flask import (
     Blueprint,
     render_template,
@@ -18,7 +18,13 @@ from flask import (
 )
 
 from compath.forms import GeneSetForm
-from compath.utils import dict_to_pandas_df, process_form_gene_set, query_gene_set
+from compath.utils import (
+    dict_to_pandas_df,
+    process_form_gene_set,
+    query_gene_set,
+    get_gene_sets_from_pathway_names,
+    process_overlap_for_venn_diagram
+)
 
 log = logging.getLogger(__name__)
 
@@ -70,11 +76,16 @@ def calculate_overlap():
     pathways_list = request.args.getlist('pathways[]')
     resources_list = request.args.getlist('resources[]')
 
-    pathways = zip(pathways_list, resources_list)
+    pathways = list(zip(pathways_list, resources_list))
 
-    # https://github.com/benfred/venn.js/
+    if len(pathways) < 2:
+        return abort(500, 'Only one set given')
 
-    return None
+    gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
+
+    processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
+
+    return jsonify(processed_venn_diagram)
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])

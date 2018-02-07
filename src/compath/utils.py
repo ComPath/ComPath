@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pandas import DataFrame, Series
+from itertools import combinations
 
 
 # modified from https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths
@@ -46,12 +47,55 @@ def query_gene_set(manager_list, gene_set):
     return results
 
 
-def calculate_pathway_overlap(pathways):
+def get_gene_sets_from_pathway_names(app, pathways):
+    """Returns the gene sets for a given pathway/resource tuple
 
-    for pathway, resource in pathways:
+    :param flask.Flask app: current app
+    :param list[tuple[str,str] pathways: pathway/resource tuples
+    :rtype: dict
+    :return: gene sets
+    """
 
-        print(pathway, resource)
+    gene_sets = {}
 
+    for name, resource in pathways:
+
+        manager = app.manager_dict.get(resource.lower())
+
+        pathway = manager.get_pathway_by_name(name)
+
+        # Ensure no duplicates are passed
+        if name in gene_sets:
+            name = "{}_{}".format(name, resource)
+
+        gene_sets[name] = {
+            protein.hgnc_symbol
+            for protein in pathway.proteins
+        }
+
+    return gene_sets
+
+
+def process_overlap_for_venn_diagram(gene_sets):
+    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
+
+    :param dict[list]: pathway to gene sets dictionary
+    :return: list[dict]
+    """
+
+    # Creates future js array with gene sets' lengths
+    overlaps_venn_diagram = [
+        {'sets': [name], 'size': len(gene_sets)}
+        for name, gene_sets in gene_sets.items()
+    ]
+
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
+        overlaps_venn_diagram.append(
+            {'sets': [set_1_name, set_2_name],
+             'size': len(set_1_values.intersection(set_2_values))}
+        )
+
+    return overlaps_venn_diagram
 
 
 def get_genes_without_assigned_pathways(manager_list, gene_set):

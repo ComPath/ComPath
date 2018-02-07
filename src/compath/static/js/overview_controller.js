@@ -102,8 +102,11 @@ $(document).ready(function () {
                 url: "/query/overlap?" + form.serialize(),
                 type: 'GET',
                 dataType: "json",
-                success: function (dataOverlap) {
-                    console.log(dataOverlap)
+                success: function (sets) {
+                    console.log(sets);
+
+                    var chart = venn.VennDiagram();
+                    d3.select("#overlap-venn-diagram").datum(sets).call(chart);
                 },
                 error: function (request) {
                     alert(request.responseText);
