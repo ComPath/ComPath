@@ -55,7 +55,7 @@ def about():
 @ui_blueprint.route('/pathway_overview', methods=['GET'])
 def pathway_overview():
     """Renders the Pathway Overview page"""
-    return render_template('pathway_comparison_overview.html')
+    return render_template('pathway_comparison_overview.html', managers=current_app.manager_dict.keys())
 
 
 @ui_blueprint.route('/query', methods=['GET'])

@@ -64,9 +64,13 @@
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
                                 <select type="text" class="form-control" name="resources[]">
+
+                                    {% for manager in managers %}
+                                    {{ manager }}
                                     <option value="reactome">Volvo</option>
                                     <option value="kegg">Saab</option>
                                     <option value="mercedes">Mercedes</option>
+                                     {% endfor %}
                                 </select>
                             </div>
                             <button class="btn btn-danger" data-role="remove">
