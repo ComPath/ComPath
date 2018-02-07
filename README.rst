@@ -8,6 +8,8 @@ So far, this packages wraps the following packages:
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
 - `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
 
+New pathway/gene sets resources can be added by using the following `template <https://github.com/bio2bel/compath_template>`_ 
+
 Requirements
 ------------
 
