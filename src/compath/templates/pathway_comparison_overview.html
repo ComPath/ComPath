@@ -63,9 +63,11 @@
                                 <input type="text" class="form-control" name="pathways[]" id="first-pathway-input"
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
-                                <input type="text" class="form-control" name="resources[]" id="first-resource-input"
-                                       placeholder="Select one of the three pathway resources listed (KEGG, Reactome, or WikiPathways)"
-                                       style=" min-width: 500px;">
+                                <select type="text" class="form-control" name="resources[]">
+                                    <option value="reactome">Volvo</option>
+                                    <option value="kegg">Saab</option>
+                                    <option value="mercedes">Mercedes</option>
+                                </select>
                             </div>
                             <button class="btn btn-danger" data-role="remove">
                                 <span class="glyphicon glyphicon-remove"></span>
