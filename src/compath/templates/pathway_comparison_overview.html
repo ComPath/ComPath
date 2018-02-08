@@ -30,6 +30,12 @@
             display: none;
         }
 
+        /* Gene Sets in table info */
+
+        td {
+            overflow: scroll;
+        }
+
         /* VennDiagram CSS */
 
         svg path {
@@ -53,7 +59,7 @@
         svg text {
             fill: white;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 18px !important;
+            font-size: 14px !important;
         }
 
     </style>
@@ -84,7 +90,8 @@
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
                 <form id="venn-diagram-form">
-                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap.</p>
+                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap. Double
+                        click in the circles to see information about the pathways and their overlap.</p>
                     <div data-role="dynamic-fields">
                         <div class="form-inline">
                             <div class="form-group">
@@ -106,10 +113,13 @@
                             </button>
                         </div>  <!-- /div.form-inline -->
                     </div> <!-- /div[data-role="dynamic-fields"] -->
-                    <div class="text-center" style="margin-top: 20px">
+                    <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
                         <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
                     </div>
                     <div id="overlap-venn-diagram"></div>
+                    <div class="panel panel-default" id="info-table-container">
+                        <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
+                    </div>
                 </form>
             </div>
         </div>

@@ -101,7 +101,8 @@ def process_overlap_for_venn_diagram(pathway_gene_sets):
     index = 0
 
     for name, gene_set in pathway_gene_sets.items():
-        overlaps_venn_diagram.append({'sets': [index], 'size': len(gene_set), 'label': name})
+        overlaps_venn_diagram.append(
+            {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)})
 
         pathway_to_index[name] = index
 
@@ -110,7 +111,10 @@ def process_overlap_for_venn_diagram(pathway_gene_sets):
     for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(pathway_gene_sets.items(), r=2):
         overlaps_venn_diagram.append(
             {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-             'size': len(set_1_values.intersection(set_2_values))}
+             'size': len(set_1_values.intersection(set_2_values)),
+             'gene_set': list(set_1_values.intersection(set_2_values)),
+             'label': set_1_name + ' &#8745 ' + set_2_name
+             }
         )
 
     return overlaps_venn_diagram
