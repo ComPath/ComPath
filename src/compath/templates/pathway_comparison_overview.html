@@ -79,7 +79,16 @@
             fill: brown;
         }
 
-
+        .toolTip {
+            position: absolute;
+            display: none;
+            min-width: 80px;
+            height: auto;
+            background: none repeat scroll 0 0 #ffffff;
+            border: 1px solid #6F257F;
+            padding: 14px;
+            text-align: center;
+        }
     </style>
 {% endblock %}
 
@@ -129,6 +138,8 @@
                     height = +svg.attr("height") - margin.top - margin.bottom,
                     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
+                var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
                 var x = d3.scaleLinear()
                     .domain(d3.extent(histogramData))
                     .rangeRound([0, width]);
@@ -151,6 +162,16 @@
                     .attr("class", "bar")
                     .attr("transform", function (d) {
                         return "translate(" + x(d.x0) + "," + y(d.length) + ")";
+                    })
+                    .on("mousemove", function (d) {
+                        tooltip
+                            .style("left", d3.event.pageX - 50 + "px")
+                            .style("top", d3.event.pageY - 70 + "px")
+                            .style("display", "inline-block")
+                            .html((d.length) + "<br>" + "Pathways");
+                    })
+                    .on("mouseout", function (d) {
+                        tooltip.style("display", "none");
                     });
 
                 bar.append("rect")
@@ -173,6 +194,8 @@
                     .attr("class", "axis axis--x")
                     .attr("transform", "translate(0," + height + ")")
                     .call(d3.axisBottom(x));
+
+
 
 
             {% endfor %}
@@ -225,9 +248,10 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Pathway size distribution</div>
+            <div class="panel-heading">Pathway Size Distribution</div>
             <div class="panel-body">
-                <p>Explore the distribution of the pathway sizes across different resources.</p>
+                <p>Explore the distribution of the pathway sizes across different resources. Each histogram contains 40
+                    bins each one in the range from 0 to 50, 50 to 100... </p>
 
                 {% for manager in manager_distribution_dict.keys() %}
 
