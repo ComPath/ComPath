@@ -1,5 +1,5 @@
-ComPath (Comparative Pathways Tool) |build| |coverage| |docs|
-=============================================================
+ComPath: an interactive and modular application for comparative analysis across pathway databases |build| |coverage| |docs|
+===========================================================================================================================
 
 A web application for exploring and comparing the overlaps across pathway resources.
 So far, this packages wraps the following packages:
