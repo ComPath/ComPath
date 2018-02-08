@@ -55,7 +55,11 @@ def about():
 @ui_blueprint.route('/pathway_overview', methods=['GET'])
 def pathway_overview():
     """Renders the Pathway Overview page"""
-    return render_template('pathway_comparison_overview.html', managers=current_app.manager_dict.keys())
+    return render_template(
+        'pathway_comparison_overview.html',
+        managers=current_app.manager_dict.keys(),
+        distributions=current_app.resource_distributions
+    )
 
 
 @ui_blueprint.route('/query', methods=['GET'])
@@ -86,16 +90,6 @@ def calculate_overlap():
     processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 
     return jsonify(processed_venn_diagram)
-
-
-@ui_blueprint.route('/query/pathtway_distribution/<string:resource>', methods=['GET'])
-def pathway_size_distribution(resource):
-    manager = current_app.manager_dict.get(resource)
-
-    if not manager:
-        return jsonify([])
-
-    return jsonify(manager.get_pathway_size_distribution())
 
 
 @ui_blueprint.route('/query/process', methods=['POST'])

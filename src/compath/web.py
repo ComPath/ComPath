@@ -41,6 +41,11 @@ def create_app(connection=None):
         for name, Manager in managers.items()
     }
 
+    app.resource_distributions = {
+        name: Manager(connection=connection).get_pathway_size_distribution()
+        for name, Manager in managers.items()
+    }
+
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
 
     return app
