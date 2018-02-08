@@ -11,6 +11,9 @@
     {{ super() }}
     <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
     <style>
+
+        /* Fuse dynamic field buttons */
+
         [data-role="dynamic-fields"] > .form-inline + .form-inline {
             margin-top: 0.5em;
         }
@@ -26,8 +29,34 @@
         [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
             display: none;
         }
+
+        /* VennDiagram CSS */
+
+        svg path {
+            stroke: white;
+            stroke-width: 2px;
+        }
+
+        .venntooltip {
+            position: absolute;
+            text-align: center;
+            width: 128px;
+            height: 25px;
+            background: #333;
+            color: #ddd;
+            padding: 2px;
+            border: 0px;
+            border-radius: 8px;
+            opacity: 0;
+        }
+
+        svg text {
+            fill: white;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 18px !important;
+        }
+
     </style>
-    }
 {% endblock %}
 
 {% block scripts %}
@@ -63,7 +92,7 @@
                                 <input type="text" class="form-control" name="pathways[]" id="pathway-name-1"
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
-                                <select type="text" class="form-control" name="resources[]" id="select-1" >
+                                <select type="text" class="form-control" name="resources[]" id="select-1">
                                     {% for manager in managers %}
                                         <option value="{{ manager }}">{{ manager|upper }}</option>
                                     {% endfor %}
