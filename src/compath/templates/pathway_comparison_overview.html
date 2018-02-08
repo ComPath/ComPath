@@ -60,17 +60,13 @@
                         <div class="form-inline">
                             <div class="form-group">
                                 <label class="sr-only" for="pathway">Pathways</label>
-                                <input type="text" class="form-control" name="pathways[]" id="first-pathway-input"
+                                <input type="text" class="form-control" name="pathways[]" id="pathway-name-1"
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
-                                <select type="text" class="form-control" name="resources[]">
-
+                                <select type="text" class="form-control" name="resources[]" id="select-1" >
                                     {% for manager in managers %}
-                                    {{ manager }}
-                                    <option value="reactome">Volvo</option>
-                                    <option value="kegg">Saab</option>
-                                    <option value="mercedes">Mercedes</option>
-                                     {% endfor %}
+                                        <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                             <button class="btn btn-danger" data-role="remove">

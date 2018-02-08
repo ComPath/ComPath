@@ -4,27 +4,17 @@
  */
 
 
-/**
- * * Resource list
- */
-var resourceList = ["KEGG", "WikiPathways", "Reactome"];
-
-firstResourceInput = $('#first-resource-input');
+// Counter for the dynamic form
+var counter = 1;
 
 // Autocompletion in the first input
-firstResourceInput.autocomplete({
-    source: resourceList
-});
-
-
-// Autocompletion in the first input
-$('#first-pathway-input').autocomplete({
+$('#pathway-name-1').autocomplete({
     source: function (request, response) {
         $.ajax({
             url: "/api/autocompletion/pathway_name",
             dataType: "json",
             data: {
-                resource: firstResourceInput.val(),
+                resource: $('#select-1').find(":selected").val(),
                 q: request.term
             },
             success: function (data) {
@@ -56,14 +46,12 @@ $(function () {
             var container = $(this).closest('[data-role="dynamic-fields"]');
             var new_field_group = container.children().filter('.form-inline:first-child').clone();
 
-            pathwayNameInput = $(new_field_group.find('input')[0]);
-            resourceInput = $(new_field_group.find('input')[1]);
+            pathwayNameInput = $(new_field_group.find('input')[0]); // get input
+            resourceSelect = $(new_field_group.find('select')[0]); // get select
 
+            // Empty current value and start autocompletion
             pathwayNameInput[0].value = '';
-            resourceInput[0].value = '';
-
-            pathwayNameInput.value = ''; // Empty current value and start autocompletion
-            resourceInput.value = ''; // Empty current value and start autocompletion
+            resourceSelect[0].value = '';
 
             pathwayNameInput.autocomplete({
                 source: function (request, response) {
@@ -71,7 +59,7 @@ $(function () {
                         url: "/api/autocompletion/pathway_name",
                         dataType: "json",
                         data: {
-                            resource: resourceInput.val(),
+                            resource: resourceSelect.val(),
                             q: request.term
                         },
                         success: function (data) {
@@ -79,9 +67,6 @@ $(function () {
                         }
                     });
                 }, minLength: 2
-            });
-            resourceInput.autocomplete({
-                source: resourceList
             });
 
             container.append(new_field_group);
