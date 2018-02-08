@@ -2,6 +2,9 @@
 
 from pandas import DataFrame, Series
 from itertools import combinations
+import logging
+
+log = logging.getLogger(__name__)
 
 
 # modified from https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths
@@ -64,9 +67,17 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
         pathway = manager.get_pathway_by_name(name)
 
+        if not pathway:
+            log.warning('{} pathway not found'.format(name))
+            continue
+
         # Ensure no duplicates are passed
         if name in gene_sets:
             name = "{}_{}".format(name, resource)
+
+        # Check if pathway has no genes
+        if not pathway.proteins:
+            continue
 
         gene_sets[name] = {
             protein.hgnc_symbol
@@ -76,22 +87,29 @@ def get_gene_sets_from_pathway_names(app, pathways):
     return gene_sets
 
 
-def process_overlap_for_venn_diagram(gene_sets):
+def process_overlap_for_venn_diagram(pathway_gene_sets):
     """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
 
-    :param dict[list]: pathway to gene sets dictionary
+    :param dict[set] pathway_gene_sets: pathway to gene sets dictionary
     :return: list[dict]
     """
 
     # Creates future js array with gene sets' lengths
-    overlaps_venn_diagram = [
-        {'sets': [name], 'size': len(gene_sets)}
-        for name, gene_sets in gene_sets.items()
-    ]
+    overlaps_venn_diagram = []
 
-    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
+    pathway_to_index = {}
+    index = 0
+
+    for name, gene_set in pathway_gene_sets.items():
+        overlaps_venn_diagram.append({'sets': [index], 'size': len(gene_set), 'label': name})
+
+        pathway_to_index[name] = index
+
+        index += 1
+
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(pathway_gene_sets.items(), r=2):
         overlaps_venn_diagram.append(
-            {'sets': [set_1_name, set_2_name],
+            {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
              'size': len(set_1_values.intersection(set_2_values))}
         )
 

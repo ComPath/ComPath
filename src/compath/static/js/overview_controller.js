@@ -93,7 +93,7 @@ $(document).ready(function () {
 
                     var Venndiv = d3.select("#overlap-venn-diagram");
 
-                    Venndiv.attr("align","center"); // Align center the diagram
+                    Venndiv.attr("align", "center"); // Align center the diagram
 
                     var geneOverlap = venn.VennDiagram(); // Plot the Venn Diagram
                     Venndiv.datum(data).call(geneOverlap); // Stick data
