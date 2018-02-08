@@ -41,6 +41,8 @@ def create_app(connection=None):
         for name, Manager in managers.items()
     }
 
+    log.info('Loading resource distributions')
+
     app.resource_distributions = {
         name: Manager(connection=connection).get_pathway_size_distribution()
         for name, Manager in managers.items()

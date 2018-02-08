@@ -57,8 +57,7 @@ def pathway_overview():
     """Renders the Pathway Overview page"""
     return render_template(
         'pathway_comparison_overview.html',
-        managers=current_app.manager_dict.keys(),
-        distributions=current_app.resource_distributions
+        manager_distribution_dict=current_app.resource_distributions
     )
 
 

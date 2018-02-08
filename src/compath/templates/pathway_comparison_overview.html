@@ -56,11 +56,27 @@
             opacity: 0;
         }
 
-        svg text {
+        #overlap-venn-diagram svg text {
             fill: white;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px !important;
         }
+
+        /* Histogram CSS */
+
+        .bar rect {
+            fill: steelblue;
+        }
+
+        .bar text {
+            fill: #fff;
+            font: 10px sans-serif;
+        }
+
+        .bar:hover {
+            fill: brown;
+        }
+
 
     </style>
 {% endblock %}
@@ -84,24 +100,34 @@
 
         $(document).ready(function () {
 
-            {% for manager, distributions in managers.items() %}
+
+
+            {% for manager, distribution_data in manager_distribution_dict.items() %}
+
+                var data = {{ distribution_data|safe }};
 
                 var formatCount = d3.format(",.0f");
 
                 var svg = d3.select("#{{ manager|safe }}" + "-histogram"),
-                    margin = {top: 10, right: 30, bottom: 30, left: 30},
+                    margin = {
+                        top: 10,
+                        right: 30,
+                        bottom: 30,
+                        left: 30
+                    },
                     width = +svg.attr("width") - margin.left - margin.right,
                     height = +svg.attr("height") - margin.top - margin.bottom,
                     g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
                 var x = d3.scaleLinear()
+                    .domain(d3.extent(data))
                     .rangeRound([0, width]);
 
-
-                var bins = d3.histogram()
+                var histogram = d3.histogram()
                     .domain(x.domain())
-                    .thresholds(x.ticks(20))
-                    (distributions);
+                    .thresholds(x.ticks(40));
+
+                var bins = histogram(data);
 
                 var y = d3.scaleLinear()
                     .domain([0, d3.max(bins, function (d) {
@@ -138,6 +164,7 @@
                     .attr("transform", "translate(0," + height + ")")
                     .call(d3.axisBottom(x));
 
+
             {% endfor %}
         });
     </script>
@@ -163,7 +190,7 @@
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
                                 <select type="text" class="form-control" name="resources[]" id="select-1">
-                                    {% for manager in managers %}
+                                    {% for manager in manager_distribution_dict.keys() %}
                                         <option value="{{ manager }}">{{ manager|upper }}</option>
                                     {% endfor %}
                                 </select>
@@ -192,21 +219,23 @@
             <div class="panel-body">
                 <p>Explore the distribution of the pathway sizes across different resources.</p>
 
-                <h4>KEGG</h4>
+                <h3 class="text-center">KEGG</h3>
                 <svg id="kegg-histogram" width="960" height="500"></svg>
 
                 <hr>
 
-                <h4>Reactome</h4>
+                <h3 class="text-center">Reactome</h3>
                 <svg id="reactome-histogram" width="960" height="500"></svg>
 
                 <hr>
 
-                <h4>WikiPathways</h4>
+                <h3 class="text-center">WikiPathways</h3>
                 <svg id="wikipathways-histogram" width="960" height="500"></svg>
 
 
             </div>
+
+            Show here the top 10 pathways for each repo
         </div>
     </div>
     {% include "footer.html" %}
