@@ -88,6 +88,16 @@ def calculate_overlap():
     return jsonify(processed_venn_diagram)
 
 
+@ui_blueprint.route('/query/pathtway_distribution/<string:resource>', methods=['GET'])
+def pathway_size_distribution(resource):
+    manager = current_app.manager_dict.get(resource)
+
+    if not manager:
+        return jsonify([])
+
+    return jsonify(manager.get_pathway_size_distribution())
+
+
 @ui_blueprint.route('/query/process', methods=['POST'])
 def process_gene_set():
     """Process the gene set POST form
