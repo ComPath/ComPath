@@ -60,6 +60,7 @@ def pathway_overlap():
         manager_distribution_dict=current_app.resource_distributions
     )
 
+
 @ui_blueprint.route('/pathway_distribution', methods=['GET'])
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
@@ -93,6 +94,9 @@ def calculate_overlap():
         return abort(500, 'Only one set given')
 
     gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
+
+    if len(gene_sets) < 2:
+        return abort(500, 'Only one valid set given')
 
     processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 

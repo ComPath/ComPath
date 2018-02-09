@@ -71,8 +71,6 @@ $(function () {
                             q: request.term
                         },
                         success: function (data) {
-                            console.log($('#select-' + currentCounter).find(":selected").val());
-
                             response(data); // functionName
                         }
                     });
@@ -151,9 +149,6 @@ $(document).ready(function () {
                 success: function (data) {
 
                     // Adapted from https://github.com/benfred/venn.js/
-
-                    console.log(form.serialize())
-                    console.log(data)
 
                     var Venndiv = d3.select("#overlap-venn-diagram");
 
