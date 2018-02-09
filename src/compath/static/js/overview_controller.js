@@ -3,29 +3,33 @@
  * @requires: jquery, d3
  */
 
+$(document).ready(function () {
 
-
-// Autocompletion in the first input
-$('#pathway-name-1').autocomplete({
-    source: function (request, response) {
-        $.ajax({
-            url: "/api/autocompletion/pathway_name",
-            dataType: "json",
-            data: {
-                resource: $('#select-1').find(":selected").val(),
-                q: request.term
-            },
-            success: function (data) {
-                response(data); // functionName
-            }
-        });
-    }, minLength: 2
+    // Autocompletion in the first input
+    $('#input-1').autocomplete({
+        source: function (request, response) {
+            $.ajax({
+                url: "/api/autocompletion/pathway_name",
+                dataType: "json",
+                data: {
+                    resource: $('#select-1').find(":selected").val(),
+                    q: request.term
+                },
+                success: function (data) {
+                    response(data); // functionName
+                }
+            });
+        }, minLength: 2
+    });
 });
 
 /**
  * * Dynamically adds/deletes pathways inputs
  */
 $(function () {
+
+    var cloneCount = 1; // Avoid duplicate ids
+
     // Remove button click
     $(document).on(
         'click',
@@ -47,7 +51,13 @@ $(function () {
             pathwayNameInput = $(new_field_group.find('input')[0]); // get input
             resourceSelect = $(new_field_group.find('select')[0]); // get select
 
-            // Empty current value and start autocompletion
+            // Increment the counter and save the variable to change the id of the cloned form
+            cloneCount++;
+            var currentCounter = cloneCount;
+
+            // Empty current value and id to set up auto completion
+            pathwayNameInput.attr('id', 'input-' + currentCounter);
+            resourceSelect.attr('id', 'select-' + currentCounter);
             pathwayNameInput[0].value = '';
             resourceSelect[0].value = '';
 
@@ -57,10 +67,12 @@ $(function () {
                         url: "/api/autocompletion/pathway_name",
                         dataType: "json",
                         data: {
-                            resource: resourceSelect.val(),
+                            resource: $('#select-' + currentCounter).find(":selected").val(),
                             q: request.term
                         },
                         success: function (data) {
+                            console.log($('#select-' + currentCounter).find(":selected").val());
+
                             response(data); // functionName
                         }
                     });
@@ -144,14 +156,6 @@ $(document).ready(function () {
                     console.log(data)
 
                     var Venndiv = d3.select("#overlap-venn-diagram");
-
-                    // console.log($("#overlap-venn-diagram").find("svg"))
-                    //
-                    // var svg = $("#overlap-venn-diagram").find("svg")
-                    //
-                    // svg.width();
-                    // svg.height('500px');
-
 
                     Venndiv.attr("align", "center"); // Align center the diagram
 
