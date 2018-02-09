@@ -29,12 +29,15 @@ class Mapping(Base):
 
     id = Column(Integer, primary_key=True)
 
-    service_1_name = Column(String(255))
-    service_1_pathway_id = Column(String(255))
-    service_2_name = Column(String(255))
-    service_2_pathway_id = Column(String(255))
+    service_1_name = Column(String(255), doc='service name (e.g., KEGG or Reactome')
+    service_1_pathway_id = Column(String(255), doc='pathway 1 id')
+    service_1_pathway_name = Column(String(255), doc='pathway 1 name')
 
-    accepted = Column(Boolean)
+    service_2_name = Column(String(255), doc='service name (e.g., KEGG or Reactome')
+    service_2_pathway_id = Column(String(255), doc='pathway 2 id')
+    service_2_pathway_name = Column(String(255), doc='pathway 2 name')
+
+    accepted = Column(Boolean, doc='canonical mapping')
     creator_id = Column(Integer, ForeignKey(User.id), nullable=False)
     creator = relationship(User, backref=backref('mappings'))
 
@@ -46,6 +49,8 @@ class Vote(Base):
     id = Column(Integer, primary_key=True)
     mapping_id = Column(Integer, ForeignKey(Mapping.id), nullable=False)
     mapping = relationship(Mapping, backref=backref('votes'))
+
+    type = Column(Boolean, default=True, nullable=False, doc='Type of vote, by default is up-vote')
 
     user_id = Column(Integer, ForeignKey(User.id), nullable=False)
     user = relationship(User, backref=backref('votes'))
