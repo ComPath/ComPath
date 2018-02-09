@@ -82,6 +82,35 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(Vote.id == vote_id).one_or_none()
 
+    def get_vote(self, user, mapping):
+        """Gets a vote
+
+        :param User user: User instance
+        :param Mapping mapping: Mapping instance
+        :rtype: Optional[Vote]
+        """
+        return self.session.query(Vote).filter(Vote.user == user, Vote.mapping == mapping).one_or_none()
+
+    def get_or_create_vote(self, user, mapping):
+        """Gets or create vote
+
+        :param User user: User instance
+        :param Mapping mapping: Mapping instance
+        :rtype: Vote
+        """
+
+        vote = self.get_vote(user, mapping)
+
+        if vote is None:
+            vote = Vote(
+                user=user,
+                mapping=mapping
+            )
+            self.session.add(vote)
+            self.session.commit()
+
+        return vote
+
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
         """Query mapping in the database
 

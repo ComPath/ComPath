@@ -2,7 +2,7 @@
 """ This module contains tests for the data model of ComPath"""
 
 from compath.models import User, Vote, Mapping
-from .constants import DatabaseMixin, REACTOME, KEGG
+from tests.constants import DatabaseMixin, REACTOME, KEGG
 
 
 class TestMapping(DatabaseMixin):
@@ -72,7 +72,8 @@ class TestMapping(DatabaseMixin):
         )
 
         self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
-        self.assertEqual(mapping_2.creator, user_2)
+        self.assertNotEqual(mapping_2.creator, user_2)
+        self.assertEqual(mapping_2.creator, user_1)
 
     def test_vote_up(self):
         current_user = User()
@@ -87,7 +88,7 @@ class TestMapping(DatabaseMixin):
             current_user
         )
 
-        vote = Vote(user=current_user, mapping=mapping_1)
+        vote = self.manager.get_or_create_vote(user=current_user, mapping=mapping_1)
 
         self.assertEqual(1, self.manager.count_votes(), msg='Vote was not created')
 
