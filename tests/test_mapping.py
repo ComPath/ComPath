@@ -78,12 +78,12 @@ class TestMapping(DatabaseMixin):
             user_2
         )
 
-        self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
-        self.assertNotEqual(mapping_2.creator, user_2)
-        self.assertEqual(mapping_2.creator, user_1)
+        self.assertEqual(2, self.manager.count_mappings(), msg='Wrong number of mappings')
+        self.assertEqual(mapping_1.creator, user_1)
+        self.assertEqual(mapping_2.creator, user_2)
 
     def test_double_mapping(self):
-        """Test voting"""
+        """Test double mapping"""
 
         current_user_1 = User()
         current_user_2 = User()

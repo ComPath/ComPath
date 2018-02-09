@@ -76,5 +76,5 @@ class TestVotingSystem(DatabaseMixin):
         vote_2 = self.manager.get_or_create_vote(user=current_user_2, mapping=mapping_2)
 
         self.assertEqual(2, self.manager.count_votes(), msg='Problem with votes')
-        self.assertEqual(False, vote_1, msg='First vote type is wrong')
-        self.assertEqual(True, vote_2, msg='Second vote type is wrong')
+        self.assertEqual(False, vote_1.type, msg='First vote type is wrong')
+        self.assertEqual(True, vote_2.type, msg='Second vote type is wrong')

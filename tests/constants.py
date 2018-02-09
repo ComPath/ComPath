@@ -12,8 +12,7 @@ REACTOME = 'reactome'
 
 
 class DatabaseMixin(unittest.TestCase):
-    @classmethod
-    def setUpClass(cls):
+    def setUp(cls):
         """Create temporary file"""
 
         cls.fd, cls.path = tempfile.mkstemp()
@@ -22,8 +21,7 @@ class DatabaseMixin(unittest.TestCase):
         # create temporary database
         cls.manager = Manager(cls.connection)
 
-    @classmethod
-    def tearDownClass(cls):
+    def tearDown(cls):
         """Closes the connection in the manager and deletes the temporary database"""
         cls.manager.drop_all()
         cls.manager.session.close()

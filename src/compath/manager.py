@@ -114,7 +114,8 @@ class Manager(object):
 
         return vote
 
-    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
+    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
+                    user):
         """Query mapping in the database
 
         :param str service_1_name: manager name of the service 1
@@ -123,6 +124,7 @@ class Manager(object):
         :param str service_2_name: manager name of the service 1
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
+        :param str User: user
         :rtype: Optional[Mapping]
         """
         return self.session.query(Mapping).filter(
@@ -131,7 +133,8 @@ class Manager(object):
             Mapping.service_1_pathway_name == pathway_1_name,
             Mapping.service_2_name == service_2_name,
             Mapping.service_2_pathway_id == pathway_2_id,
-            Mapping.service_2_pathway_name == pathway_2_name
+            Mapping.service_2_pathway_name == pathway_2_name,
+            Mapping.creator == user
         ).one_or_none()
 
     def get_or_create_mapping(
@@ -173,12 +176,13 @@ class Manager(object):
             raise ValueError('Manager does not exist for {}'.format(service_2_name))
 
         mapping = self.get_mapping(
-            service_1_name,
-            pathway_1_id,
-            pathway_1_name,
-            service_2_name,
-            pathway_2_id,
-            pathway_2_name
+            service_1_name=service_1_name,
+            pathway_1_id=pathway_1_id,
+            pathway_1_name=pathway_1_name,
+            service_2_name=service_2_name,
+            pathway_2_id=pathway_2_id,
+            pathway_2_name=pathway_2_name,
+            user=user
         )
 
         if mapping is None:
