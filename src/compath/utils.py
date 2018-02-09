@@ -113,7 +113,7 @@ def process_overlap_for_venn_diagram(pathway_gene_sets):
             {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
              'size': len(set_1_values.intersection(set_2_values)),
              'gene_set': list(set_1_values.intersection(set_2_values)),
-             'label': set_1_name + ' &#8745 ' + set_2_name
+             'intersection': set_1_name + ' &#8745 ' + set_2_name
              }
         )
 

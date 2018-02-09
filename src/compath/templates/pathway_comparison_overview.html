@@ -258,7 +258,7 @@
                 {% for manager in manager_distribution_dict.keys() %}
 
                     <h3 class="text-center">{{ manager|upper }}</h3>
-                    <svg id="{{ manager }}-histogram" width="960" height="500"></svg>
+                    <svg id="{{ manager }}-histogram"></svg>
 
                     {% if not loop.last %}
                         <hr>

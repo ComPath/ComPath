@@ -104,9 +104,16 @@ function populateInfoTable(data) {
 
     var tableObject = {};
 
-    tableObject["Gene Set"] = data["gene_set"];
-    tableObject["Pathway(s)"] = data["label"];
+
+    if ("intersection" in data) {
+        tableObject["Pathway(s)"] = data["intersection"];
+    }
+    else {
+        tableObject["Pathway(s)"] = data["label"];
+    }
+
     tableObject["Gene Set Size"] = data["size"];
+    tableObject["Gene Set"] = data["gene_set"].join(', ');
 
 
     var row = 0;
@@ -133,10 +140,17 @@ $(document).ready(function () {
 
                     // Adapted from https://github.com/benfred/venn.js/
 
+                    console.log(form.serialize())
+                    console.log(data)
+
                     var Venndiv = d3.select("#overlap-venn-diagram");
 
-                    $("#overlap-venn-diagram").width();
-                    $("#overlap-venn-diagram").height('400px');
+                    // console.log($("#overlap-venn-diagram").find("svg"))
+                    //
+                    // var svg = $("#overlap-venn-diagram").find("svg")
+                    //
+                    // svg.width();
+                    // svg.height('500px');
 
 
                     Venndiv.attr("align", "center"); // Align center the diagram
