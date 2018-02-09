@@ -82,6 +82,26 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(Vote.id == vote_id).one_or_none()
 
+    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
+        """Query mapping in the database
+
+        :param str service_1_name: manager name of the service 1
+        :param str pathway_1_name: pathway 1 name
+        :param str pathway_1_id: pathway 1 id
+        :param str service_2_name: manager name of the service 1
+        :param str pathway_2_name: pathway 2 name
+        :param str pathway_2_id: pathway 2 id
+        :rtype: Optional[Mapping]
+        """
+        return self.session.query(Mapping).filter(
+            Mapping.service_1_name == service_1_name,
+            Mapping.service_1_pathway_id == pathway_1_id,
+            Mapping.service_1_pathway_name == pathway_1_name,
+            Mapping.service_2_name == service_2_name,
+            Mapping.service_2_pathway_id == pathway_2_id,
+            Mapping.service_2_pathway_name == pathway_2_name
+        ).one_or_none()
+
     def get_or_create_mapping(
             self,
             service_1_name,
@@ -89,7 +109,8 @@ class Manager(object):
             pathway_1_name,
             service_2_name,
             pathway_2_id,
-            pathway_2_name
+            pathway_2_name,
+            user
     ):
         """Gets or create mapping
 
@@ -109,7 +130,8 @@ class Manager(object):
                 pathway_2_name,
                 service_1_name,
                 pathway_1_id,
-                pathway_1_name
+                pathway_1_name,
+                user
             )
 
         if service_1_name not in managers:
@@ -118,11 +140,26 @@ class Manager(object):
         if service_2_name not in managers:
             raise ValueError('Manager does not exist for {}'.format(service_2_name))
 
-        return self.session.query(Mapping).filter(
-            Mapping.service_1_name == service_1_name,
-            Mapping.service_1_pathway_id == pathway_1_id,
-            Mapping.service_1_pathway_name == pathway_1_name,
-            Mapping.service_2_name == service_1_name,
-            Mapping.service_2_pathway_id == pathway_2_id,
-            Mapping.service_2_pathway_name == pathway_2_name
-        ).one_or_none()
+        mapping = self.get_mapping(
+            service_1_name,
+            pathway_1_id,
+            pathway_1_name,
+            service_2_name,
+            pathway_2_id,
+            pathway_2_name
+        )
+
+        if mapping is None:
+            mapping = Mapping(
+                service_1_name=service_1_name,
+                service_1_pathway_id=pathway_1_id,
+                service_1_pathway_name=pathway_1_name,
+                service_2_name=service_2_name,
+                service_2_pathway_id=pathway_2_id,
+                service_2_pathway_name=pathway_2_name,
+                creator=user
+            )
+            self.session.add(mapping)
+            self.session.commit()
+
+        return mapping
