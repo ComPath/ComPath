@@ -3,17 +3,28 @@
 """ This module contains the flask-admin application to visualize the db"""
 
 import logging
+import os
 import time
 
 from flask import Flask
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
 from flask_bootstrap import Bootstrap
+from flask_security import SQLAlchemyUserDatastore, Security
+from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from compath.main_service import ui_blueprint
-from compath import managers
+
+from . import managers
+from .constants import DEFAULT_CACHE_CONNECTION
+from .main_service import ui_blueprint
+from .manager import Manager
+from .models import Base, Mapping, Role, User, Vote
 
 log = logging.getLogger(__name__)
 
 bootstrap = Bootstrap()
+security = Security()
+db = SQLAlchemy()
 
 
 def create_app(connection=None):
@@ -22,30 +33,69 @@ def create_app(connection=None):
     :type connection: Optional[str]
     :rtype: flask.Flask
     """
-
     t = time.time()
 
     app = Flask(__name__)
 
-    app.config['COMPATH_CONNECTION'] = connection
+    app.config['SQLALCHEMY_DATABASE_URI'] = connection or DEFAULT_CACHE_CONNECTION
+
+    app.config.update(
+        SECURITY_REGISTERABLE=True,
+        SECURITY_CONFIRMABLE=False,
+        SECURITY_SEND_REGISTER_EMAIL=False,
+        SECURITY_RECOVERABLE=True,
+        #: What hash algorithm should we use for passwords
+        SECURITY_PASSWORD_HASH='pbkdf2_sha512',
+        #: What salt should we use to hash passwords? DEFINITELY CHANGE THIS
+        SECURITY_PASSWORD_SALT=os.environ.get('COMPATH_SECURITY_PASSWORD_SALT', 'compath_not_default_salt1234567890')
+    )
 
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'
     app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
 
     csrf = CSRFProtect(app)
     bootstrap.init_app(app)
+
+    db.init_app(app)
+
+    class WebManager(Manager):
+        def __init__(self):
+            self.session = db.session
+            self.engine = db.session
+
+    manager = WebManager()
+
+    with app.app_context():
+        Base.metadata.bind = db.engine
+        Base.query = db.session.query_property()
+
+        try:
+            manager.create_all()
+        except Exception:
+            log.exception('Failed to create all')
+
+    user_datastore = SQLAlchemyUserDatastore(manager, User, Role)
+
+    security.init_app(app, user_datastore)
+
+    admin = Admin(app, template_mode='bootstrap3')
+    admin.add_view(ModelView(User, manager.session))
+    admin.add_view(ModelView(Role, manager.session))
+    admin.add_view(ModelView(Mapping, manager.session))
+    admin.add_view(ModelView(Vote, manager.session))
+
     app.register_blueprint(ui_blueprint)
 
     app.manager_dict = {
-        name: Manager(connection=connection)
-        for name, Manager in managers.items()
+        name: ExternalManager(connection=connection)
+        for name, ExternalManager in managers.items()
     }
 
     log.info('Loading resource distributions')
 
     app.resource_distributions = {
-        name: Manager(connection=connection).get_pathway_size_distribution()
-        for name, Manager in managers.items()
+        name: manager.get_pathway_size_distribution()
+        for name, manager in app.manager_dict.items()
     }
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)

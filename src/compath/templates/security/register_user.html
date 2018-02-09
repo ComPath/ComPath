@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+{% from "security/_macros.html" import render_field_with_errors, render_field %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>ComPath Registration</h1>
+        </div>
+
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                {{ wtf.quick_form(register_user_form, form_type='horizontal', action=url_for_security('register'), button_map={'submit_button': 'btn btn-primary'}) }}
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}

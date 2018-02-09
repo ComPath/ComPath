@@ -51,6 +51,21 @@
             </ul>
 
             <ul class="nav navbar-nav navbar-right no-collapse">
+                {% if current_user.is_authenticated %}
+                    <li class="dropdown">
+                        <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button"
+                           aria-haspopup="true"
+                           aria-expanded="false">{{ current_user.email }} <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            {% if current_user.is_admin %}
+                                <li><a class="nav-header" href="{{ url_for('admin.index') }}">Admin</a></li>
+                            {% endif %}
+                            <li><a href="{{ url_for('security.logout') }}">Log Out</a></li>
+                        </ul>
+                    </li>
+                {% else %}
+                    <li><a href="{{ url_for('security.login') }}">Log In</a></li>
+                {% endif %}
                 <li>
                     <a id="nav-scai-logo"
                        href="https://www.scai.fraunhofer.de/en/business-research-areas/bioinformatics.html">

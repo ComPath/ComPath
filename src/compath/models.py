@@ -2,9 +2,10 @@
 
 """ComPath database model"""
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Boolean
+from flask_security import RoleMixin, SQLAlchemyUserDatastore, Security, UserMixin, login_required
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import backref, relationship
 
 from .constants import MODULE_NAME
 
@@ -14,13 +15,37 @@ TABLE_PREFIX = MODULE_NAME
 MAPPING_TABLE_NAME = '{}_mapping'.format(TABLE_PREFIX)
 VOTE_TABLE_NAME = '{}_vote'.format(TABLE_PREFIX)
 USER_TABLE_NAME = '{}_user'.format(TABLE_PREFIX)
+ROLE_TABLE_NAME = '{}_role'.format(TABLE_PREFIX)
+
+roles_users = Table(
+    'roles_users',
+    Base.metadata,
+    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME))),
+    Column('role_id', Integer(), ForeignKey('{}.id'.format(ROLE_TABLE_NAME)))
+)
 
 
-class User(Base):
+class User(Base, UserMixin):
     """User table"""
-    __tablename__ = USER_TABLE_NAME
-
+    __tablename__ = ROLE_TABLE_NAME
     id = Column(Integer, primary_key=True)
+    email = Column(String(255), unique=True)
+    password = Column(String(255))
+    active = Column(Boolean())
+    confirmed_at = Column(DateTime())
+    roles = relationship('Role', secondary=roles_users, backref=backref('users', lazy='dynamic'))
+
+    @property
+    def is_admin(self):
+        """Is this user an administrator?"""
+        return self.has_role('admin')
+
+
+class Role(Base, RoleMixin):
+    __tablename__ = USER_TABLE_NAME
+    id = Column(Integer, primary_key=True)
+    name = Column(String(255), unique=True)
+    description = Column(String(255))
 
 
 class Mapping(Base):

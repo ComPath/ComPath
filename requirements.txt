@@ -9,5 +9,5 @@ flask-bootstrap
 flask_admin
 wtforms
 flask_wtf
-
-
+flask_security
+flask_sqlalchemy

@@ -19,6 +19,8 @@ INSTALL_REQUIRES = [
     'flask',
     'flask-bootstrap',
     'flask_admin',
+    'flask_security',
+    'flask_sqlalchemy',
 ]
 ENTRY_POINTS = {
     'bio2bel': [

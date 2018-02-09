@@ -5,8 +5,8 @@ from __future__ import print_function
 import click
 import logging
 
-from compath import managers
-from compath.constants import DEFAULT_CACHE_CONNECTION
+from . import managers
+from .constants import DEFAULT_CACHE_CONNECTION
 
 log = logging.getLogger(__name__)
 
@@ -22,9 +22,8 @@ def set_debug_param(debug):
         set_debug(10)
 
 
-@click.group()
+@click.group(help='ComPath at {}'.format(DEFAULT_CACHE_CONNECTION))
 def main():
-    """ComPath"""
     logging.basicConfig(level=10, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 
@@ -45,6 +44,7 @@ def populate(debug, connection, delete_first):
 
     for name, Manager in managers.items():
         m = Manager(connection=connection)
+        log.info('populating %s at %s', name, m.engine.url)
 
         if delete_first:
             click.echo('deleting {}'.format(name))
