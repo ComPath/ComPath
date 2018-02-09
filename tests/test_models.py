@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 """ This module contains tests for the data model of ComPath"""
 
-from compath.models import User
+from compath.models import User, Vote, Mapping
 from .constants import DatabaseMixin, REACTOME, KEGG
 
 
-class TestModels(DatabaseMixin):
+class TestMapping(DatabaseMixin):
 
     def test_create_mapping(self):
         current_user = User()
@@ -72,3 +72,22 @@ class TestModels(DatabaseMixin):
         )
 
         self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
+        self.assertEqual(mapping_2.creator, user_2)
+
+    def test_vote_up(self):
+        current_user = User()
+
+        mapping_1 = self.manager.get_or_create_mapping(
+            KEGG,
+            '1',
+            'kegg pathway',
+            REACTOME,
+            '2',
+            'reactome pathway',
+            current_user
+        )
+
+        vote = Vote(user=current_user, mapping=mapping_1)
+
+        self.assertEqual(1, self.manager.count_votes(), msg='Vote was not created')
+
