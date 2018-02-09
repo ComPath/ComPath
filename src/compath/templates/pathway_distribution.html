@@ -9,60 +9,9 @@
 
 {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
 
     <style>
-
-        /* Fuse dynamic field buttons */
-
-        [data-role="dynamic-fields"] > .form-inline + .form-inline {
-            margin-top: 0.5em;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline [data-role="add"] {
-            display: none;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
-            display: inline-block;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
-            display: none;
-        }
-
-        /* Gene Sets in table info */
-
-        td {
-            overflow: scroll;
-        }
-
-        /* VennDiagram CSS */
-
-        svg path {
-            stroke: white;
-            stroke-width: 2px;
-        }
-
-        .venntooltip {
-            position: absolute;
-            text-align: center;
-            width: 128px;
-            height: 25px;
-            background: #333;
-            color: #ddd;
-            padding: 2px;
-            border: 0px;
-            border-radius: 8px;
-            opacity: 0;
-        }
-
-        #overlap-venn-diagram svg text {
-            fill: white;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            font-size: 14px !important;
-        }
 
         /* Histogram CSS */
 
@@ -101,11 +50,7 @@
     <script type="text/javascript"
             src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script type="text/javascript"
             src="https://benfred.github.io/venn.js/venn.js"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/overview_controller.js', version='20180501') }}"></script>
     <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
     <script>
@@ -195,9 +140,6 @@
                     .attr("transform", "translate(0," + height + ")")
                     .call(d3.axisBottom(x));
 
-
-
-
             {% endfor %}
         });
     </script>
@@ -209,41 +151,6 @@
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        <div class="panel panel-default">
-            <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
-            <div class="panel-body">
-                <form id="venn-diagram-form">
-                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap. Double
-                        click in the circles to see information about the pathways and their overlap.</p>
-                    <div data-role="dynamic-fields">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="pathway">Pathways</label>
-                                <input type="text" class="form-control" name="pathways[]" id="pathway-name-1"
-                                       placeholder="Select the Pathway to compare"
-                                       style=" min-width: 500px;">
-                                <select type="text" class="form-control" name="resources[]" id="select-1">
-                                    {% for manager in manager_distribution_dict.keys() %}
-                                        <option value="{{ manager }}">{{ manager|upper }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button class="btn btn-danger" data-role="remove">
-                            <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            <button class="btn btn-primary" data-role="add">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </div>  <!-- /div.form-inline -->
-                    </div> <!-- /div[data-role="dynamic-fields"] -->
-                    <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                        <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
-                    </div>
-                    <div id="overlap-venn-diagram"></div>
-                </form>
-            </div>
-            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
-        </div>
 
         <div class="panel panel-default">
             <div class="panel-heading">Pathway Size Distribution</div>
@@ -256,7 +163,7 @@
                 {% for manager in manager_distribution_dict.keys() %}
 
                     <h3 class="text-center">{{ manager|upper }}</h3>
-                    <div id="{{ manager }}-histogram"></div>
+                    <svg id="{{ manager }}-histogram" width="960" height="500"></svg>
 
                     {% if not loop.last %}
                         <hr>

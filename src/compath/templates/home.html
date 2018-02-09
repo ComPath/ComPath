@@ -59,14 +59,17 @@
                     <div class="col-sm-6 col-md-4">
                         <div class="thumbnail home-link">
                             <div class="caption">
-                                <h3>Pathway Overlap Overview</h3>
+                                <h3>Pathway Overview</h3>
                                 <p>
                                     Compare the similarity across pathways from different database repositories based on
                                     different approaches.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.pathway_overview') }}" class="btn btn-primary btn-block">
-                                        Explore
+                                    <a href="{{ url_for('ui.pathway_overlap') }}" class="btn btn-primary">
+                                        Overlaps
+                                    </a>
+                                    <a href="{{ url_for('ui.pathway_distribution') }}" class="btn btn-primary">
+                                        Size Distributions
                                     </a>
                                 </p>
                             </div>

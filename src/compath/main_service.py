@@ -52,11 +52,19 @@ def about():
     return render_template('about.html')
 
 
-@ui_blueprint.route('/pathway_overview', methods=['GET'])
-def pathway_overview():
-    """Renders the Pathway Overview page"""
+@ui_blueprint.route('/pathway_overlap', methods=['GET'])
+def pathway_overlap():
+    """Renders the Pathway Overlap page"""
     return render_template(
-        'pathway_comparison_overview.html',
+        'pathway_overlap.html',
+        manager_distribution_dict=current_app.resource_distributions
+    )
+
+@ui_blueprint.route('/pathway_distribution', methods=['GET'])
+def pathway_distribution():
+    """Renders the Pathway Size distribution page"""
+    return render_template(
+        'pathway_distribution.html',
         manager_distribution_dict=current_app.resource_distributions
     )
 
