@@ -91,11 +91,12 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(Vote.user == user, Vote.mapping == mapping).one_or_none()
 
-    def get_or_create_vote(self, user, mapping):
+    def get_or_create_vote(self, user, mapping, vote_type=True):
         """Gets or create vote
 
         :param User user: User instance
         :param Mapping mapping: Mapping instance
+        :param Optional[Vote.type] vote_type: vote type
         :rtype: Vote
         """
 
@@ -104,8 +105,10 @@ class Manager(object):
         if vote is None:
             vote = Vote(
                 user=user,
-                mapping=mapping
+                mapping=mapping,
+                type=vote_type
             )
+
             self.session.add(vote)
             self.session.commit()
 

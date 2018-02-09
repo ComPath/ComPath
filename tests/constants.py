@@ -22,7 +22,6 @@ class DatabaseMixin(unittest.TestCase):
         # create temporary database
         cls.manager = Manager(cls.connection)
 
-
     @classmethod
     def tearDownClass(cls):
         """Closes the connection in the manager and deletes the temporary database"""
