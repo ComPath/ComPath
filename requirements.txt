@@ -3,6 +3,8 @@ sqlalchemy==1.1.15
 bio2bel
 bio2bel_kegg
 bio2bel_reactome
+bio2bel_wikipathways
+bio2bel_hgnc
 pandas
 flask
 flask-bootstrap
