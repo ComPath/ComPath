@@ -1,4 +1,4 @@
-ComPath: an interactive and modular application for comparative analysis across pathway databases |build| |coverage| |docs|
+ComPath: an interactive and extensible application for comparative analysis across pathway databases |build| |coverage| |docs|
 ===========================================================================================================================
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default packages:
