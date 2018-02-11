@@ -6,6 +6,7 @@ import logging
 import os
 import time
 
+from bio2bel_hgnc.manager import Manager as HgncManager
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -97,6 +98,20 @@ def create_app(connection=None):
         name: manager.get_pathway_size_distribution()
         for name, manager in app.manager_dict.items()
     }
+
+    app.resource_genesets = {
+        name: manager.get_all_genes()
+        for name, manager in app.manager_dict.items()
+    }
+
+    # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
+    hgnc_manager = HgncManager()
+
+    app.resource_genesets['gene_universe'] = hgnc_manager.get_all_hgcn_symbols()
+
+    hgnc_manager.session.close()
+
+    # TODO: Add here all genes from PyHGNC
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
 
