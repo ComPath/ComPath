@@ -69,6 +69,19 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/overlap_controller.js', version='20180501') }}"></script>
 
+    <script>
+
+        var data = {{ managers_overlap|safe }};
+
+        var coverageVenn = d3.select("#coverage-venn-diagram");
+
+        coverageVenn.attr("align", "center"); // Align center the diagram
+
+        var ignorome = venn.VennDiagram(); // Plot the Venn Diagram
+        coverageVenn.datum(data).call(ignorome); // Stick data
+
+    </script>
+
 {% endblock %}
 
 {% block content %}
@@ -89,7 +102,7 @@
                                        placeholder="Select the Pathway to compare"
                                        style=" min-width: 500px;">
                                 <select type="text" class="form-control" name="resources[]" id="select-1">
-                                    {% for manager in manager_distribution_dict.keys() %}
+                                    {% for manager in manager_names %}
                                         <option value="{{ manager }}">{{ manager|upper }}</option>
                                     {% endfor %}
                                 </select>
@@ -107,6 +120,17 @@
                     </div>
                     <div id="overlap-venn-diagram"></div>
                 </form>
+            </div>
+            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Genomic Coverage Overview and Ignorome</div>
+            <div class="panel-body">
+                <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
+                <div id="coverage-venn-diagram">
+                </div>
             </div>
             <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
         </div>

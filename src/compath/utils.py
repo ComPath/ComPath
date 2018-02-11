@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from pandas import DataFrame, Series
-from itertools import combinations
 import logging
+from itertools import combinations
+
+from pandas import DataFrame, Series
 
 log = logging.getLogger(__name__)
 
@@ -87,10 +88,11 @@ def get_gene_sets_from_pathway_names(app, pathways):
     return gene_sets
 
 
-def process_overlap_for_venn_diagram(pathway_gene_sets):
+def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
     """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
 
-    :param dict[set] pathway_gene_sets: pathway to gene sets dictionary
+    :param dict[set] gene_sets: pathway to gene sets dictionary
+    :param bool skip_gene_set_info: include gene set overlap data
     :return: list[dict]
     """
 
@@ -100,22 +102,42 @@ def process_overlap_for_venn_diagram(pathway_gene_sets):
     pathway_to_index = {}
     index = 0
 
-    for name, gene_set in pathway_gene_sets.items():
-        overlaps_venn_diagram.append(
-            {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)})
+    for name, gene_set in gene_sets.items():
+
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(gene_set), 'label': name}
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)}
+            )
 
         pathway_to_index[name] = index
 
         index += 1
 
-    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(pathway_gene_sets.items(), r=2):
-        overlaps_venn_diagram.append(
-            {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-             'size': len(set_1_values.intersection(set_2_values)),
-             'gene_set': list(set_1_values.intersection(set_2_values)),
-             'intersection': set_1_name + ' &#8745 ' + set_2_name
-             }
-        )
+    # Perform intersection calculations
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                 'size': len(set_1_values.intersection(set_2_values)),
+                 }
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append(
+                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                 'size': len(set_1_values.intersection(set_2_values)),
+                 'gene_set': list(set_1_values.intersection(set_2_values)),
+                 'intersection': set_1_name + ' &#8745 ' + set_2_name
+                 }
+            )
 
     return overlaps_venn_diagram
 

@@ -57,7 +57,8 @@ def pathway_overlap():
     """Renders the Pathway Overlap page"""
     return render_template(
         'pathway_overlap.html',
-        manager_distribution_dict=current_app.resource_distributions
+        manager_names=current_app.resource_distributions.keys(),
+        managers_overlap=current_app.manager_overlap
     )
 
 
