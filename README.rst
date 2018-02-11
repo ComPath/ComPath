@@ -28,7 +28,7 @@ These packages should be already installed in your Python environment. You can c
 2. Start the web app (runs by default in port `5000 <http://localhost:5000/>`_). :code:`python3 -m compath web`
 
 
-.. |build| image:: https://travis-ci.org/bio2bel/reactome.svg?branch=master
+.. |build| image:: https://travis-ci.org/bio2bel/ComPath.svg?branch=master
     :target: https://travis-ci.org/bio2bel/compath
     :alt: Build Status
 
