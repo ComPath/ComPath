@@ -1,20 +1,19 @@
 ComPath: an interactive and modular application for comparative analysis across pathway databases |build| |coverage| |docs|
 ===========================================================================================================================
 
-A web application for exploring and comparing the overlaps across pathway resources.
-So far, this packages wraps the following packages:
+This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default packages:
 
 - `Bio2BEL KEGG <https://github.com/bio2bel/kegg>`_
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
 - `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
 
-New pathway/gene sets resources can be added by using the following `template <https://github.com/bio2bel/compath_template>`_. 
+New pathway/gene signatures resources can be added by using the following `template package <https://github.com/bio2bel/compath_template>`_. 
 
 Requirements
 ------------
 
-In order to load the gene sets from both packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
-has been already installed and populated. The following steps are needed to install Bio2BEL HGNC:
+In order to load the gene sets from default packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
+has been already installed and populated. This package is required to perform the mapping from multiple Protein/Gene identifiers to HGNC symbols. The following steps are needed to install Bio2BEL HGNC:
 
 1. :code:`python3 -m pip install bio2bel_hgnc`
 
@@ -23,12 +22,10 @@ has been already installed and populated. The following steps are needed to inst
 Running locally
 ---------------
 
-1. Load KEGG and Reactome in database. :code:`python3 -m compath populate`.
-For an optimal use of this application, we recommend to have installed all three Bio2BEL mentioned above.
-To check if these packages are installed in your Python installation, please run: :code:`python3 -m compath ls`.
-Running this commands will display all of these three repos currently installed.
+1. Load KEGG, Reactome, and WikiPathways in the Bio2BEL database instance. :code:`python3 -m compath populate`.
+These packages should be already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running : :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, or :code:`python3 -m bio2bel_wikipathways populate`.
 
-2. Run the web app (by default in port `5000 <http://localhost:5000/>`_). :code:`python3 -m compath web`
+2. Start the web app (runs by default in port `5000 <http://localhost:5000/>`_). :code:`python3 -m compath web`
 
 
 .. |build| image:: https://travis-ci.org/bio2bel/reactome.svg?branch=master
