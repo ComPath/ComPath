@@ -3,8 +3,8 @@ Comparative Pathways Tool |build| |coverage| |docs|
 An interactive and extensible application for comparative analysis across pathway databases
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
- analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
- packages:
+analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
+packages:
 
 - `Bio2BEL KEGG <https://github.com/bio2bel/kegg>`_
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
