@@ -17,14 +17,15 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
     <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+            src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
     <script type="text/javascript"
             src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/clustergrammer.js', version='20181602') }}"></script>
 
     <script>
-
         d3.json('/static/json/kegg_clustergrammer.json', function (network_data) {
 
                 var args = {
@@ -35,7 +36,6 @@
                 var cgm = Clustergrammer(args);
             }
         );
-
     </script>
 
 {% endblock %}
