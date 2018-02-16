@@ -107,11 +107,10 @@ def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
         # Only minimum info is returned
         if skip_gene_set_info:
             overlaps_venn_diagram.append(
-                {'sets': [index], 'size': len(gene_set), 'label': name}
+                {'sets': [index], 'size': len(gene_set), 'label': name.upper()}
             )
         # Returns gene set overlap/intersection information as well
         else:
-
             overlaps_venn_diagram.append(
                 {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)}
             )
