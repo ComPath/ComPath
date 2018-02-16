@@ -1,6 +1,6 @@
-Comparative Pathways Tool |build| |coverage| |docs|
-===================================================
-An interactive and extensible application for comparative analysis across pathway databases
+ComPath |build| |coverage| |docs|
+=================================
+An interactive and extensible web application for comparative analysis across pathway databases
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
