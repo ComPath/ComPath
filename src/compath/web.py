@@ -109,14 +109,14 @@ def create_app(connection=None):
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
-
-    hgnc_manager = HgncManager()
-
-    resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
-
+    #TODO Uncomment later
+    # hgnc_manager = HgncManager()
+    #
+    # resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
+    #
     app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_genesets, skip_gene_set_info=True)
-
-    hgnc_manager.session.close()
+    #
+    # hgnc_manager.session.close()
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
 

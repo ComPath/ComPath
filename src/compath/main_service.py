@@ -62,6 +62,14 @@ def pathway_overlap():
     )
 
 
+@ui_blueprint.route('/pathway_matrix', methods=['GET'])
+def pathway_matrices():
+    """Renders the Pathway Matrix page powered by Clustergrammer"""
+    return render_template(
+        'overlap_matrix.html'
+    )
+
+
 @ui_blueprint.route('/pathway_distribution', methods=['GET'])
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
