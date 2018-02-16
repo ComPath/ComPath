@@ -46,7 +46,7 @@
                         <div class="thumbnail home-link">
                             <div class="caption">
                                 <h3>Pathway Enrichment</h3>
-                                <p>Submit a geneset to retrieve the enriched pathways matching to it.</p>
+                                <p>Submit a geneset and get their enriched pathways.</p>
                                 <p>
                                     <a href="{{ url_for('ui.query') }}" class="btn btn-primary btn-block">
                                         Query
@@ -59,22 +59,68 @@
                     <div class="col-sm-6 col-md-4">
                         <div class="thumbnail home-link">
                             <div class="caption">
-                                <h3>Pathway Overview</h3>
+                                <h3>Pathway Size Distribution</h3>
                                 <p>
-                                    Compare the similarity across pathways from different database repositories based on
-                                    different approaches.
+                                    Analyze the pathway population size.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.pathway_overlap') }}" class="btn btn-primary">
-                                        Explore overlaps
+                                    <a href="{{ url_for('ui.pathway_distribution') }}"
+                                       class="btn btn-primary btn-block">
+                                        Explore Distribution
                                     </a>
-                                    <a href="{{ url_for('ui.pathway_distribution') }}" class="btn btn-primary">
-                                        Size Distributions
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail home-link">
+                            <div class="caption">
+                                <h3>Curation Interface</h3>
+                                <p>
+                                    Visualize and curate mappings across pathways.
+                                </p>
+                                <p>
+                                    <a href=""
+                                       class="btn btn-primary btn-block">
+                                        TODO
                                     </a>
-                                    <a href="{{ url_for('ui.pathway_matrices') }}" class="btn btn-primary">
-                                        Overview of the Overlaps
+
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail home-link">
+                            <div class="caption">
+                                <h3>Pathway Overlap</h3>
+                                <p>Explore and visualize the overlap between different pathways.</p>
+                                <p>
+                                    <a href="{{ url_for('ui.pathway_overlap') }}" class="btn btn-primary btn-block">
+                                        Explore Overlaps
                                     </a>
                                 </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-sm-6 col-md-4">
+                        <div class="thumbnail home-link">
+                            <div class="caption">
+                                <h3>Pathway Similarity</h3>
+                                <p>
+                                    Visualize and cluster pathways according to their gene set similarity.
+                                </p>
+                                <p>
+                                    <a href="{{ url_for('ui.pathway_matrices') }}" class="btn btn-primary btn-block">
+                                        Pathway Similarity
+                                    </a>
+                                </p>
+
                             </div>
                         </div>
                     </div>
