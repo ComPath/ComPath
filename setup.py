@@ -27,9 +27,6 @@ INSTALL_REQUIRES = [
     'flask_sqlalchemy',
 ]
 ENTRY_POINTS = {
-    'bio2bel': [
-        '{mname} = {mname}'.format(mname=MODULE),
-    ],
     'console_scripts': [
         '{mname} = {mname}.cli:main'.format(mname=MODULE),
     ]
