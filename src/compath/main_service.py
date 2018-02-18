@@ -4,6 +4,8 @@
 
 import logging
 from io import StringIO
+import sys
+import datetime
 
 from flask import (
     Blueprint,
@@ -27,7 +29,7 @@ from compath.utils import (
 )
 
 log = logging.getLogger(__name__)
-
+time_instantiated = str(datetime.datetime.now())
 ui_blueprint = Blueprint('ui', __name__)
 
 """Main Views"""
@@ -49,7 +51,12 @@ def imprint():
 @ui_blueprint.route('/about', methods=['GET'])
 def about():
     """Renders About page"""
-    return render_template('about.html')
+    metadata = [
+        ('Python Version', sys.version),
+        ('Deployed', time_instantiated)
+    ]
+
+    return render_template('about.html', metadata=metadata)
 
 
 @ui_blueprint.route('/pathway_overlap', methods=['GET'])

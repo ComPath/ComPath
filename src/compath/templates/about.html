@@ -165,5 +165,18 @@
                 </div>
             </div>
         </div>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Application Metadata</h3>
+            </div>
+            <div class="list-group">
+                {% for key, value in metadata %}
+                    <div class="list-group-item">
+                        <h4 class="list-group-item-heading">{{ key }}</h4>
+                        <p class="list-group-item-text">{{ value }}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 {% endblock %}
