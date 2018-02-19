@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from compath import managers
 from .constants import MODULE_NAME
-from .models import Base, Vote, Mapping, User
+from .models import Base, Mapping, User, Vote
 
 __all__ = [
     'Manager'
@@ -97,7 +97,6 @@ class Manager(object):
         :param Optional[Vote.type] vote_type: vote type
         :rtype: Vote
         """
-
         vote = self.get_vote(user, mapping)
 
         if vote is None:
@@ -122,7 +121,7 @@ class Manager(object):
         :param str service_2_name: manager name of the service 1
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
-        :param str User: user
+        :param User user: the user
         :rtype: Optional[Mapping]
         """
         return self.session.query(Mapping).filter(
@@ -153,9 +152,9 @@ class Manager(object):
         :param str service_2_name: manager name of the service 1
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
+        :param User user: the user
         :rtype: Mapping
         """
-
         if sorted([service_1_name, service_2_name]) == [service_2_name, service_1_name]:
             return self.get_or_create_mapping(
                 service_2_name,

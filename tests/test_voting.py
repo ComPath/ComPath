@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
 """ This module contains tests for the data model of ComPath"""
 
 from compath.models import User
-from tests.constants import DatabaseMixin, REACTOME, KEGG
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestVotingSystem(DatabaseMixin):
@@ -54,7 +55,7 @@ class TestVotingSystem(DatabaseMixin):
         vote = self.manager.get_or_create_vote(user=current_user, mapping=mapping_1, vote_type=False)
 
         self.assertEqual(1, self.manager.count_votes(), msg='Vote was not created')
-        self.assertEqual(False, vote.type, msg='Vote type is wrong')
+        self.assertFalse(vote.type, msg='Vote type is wrong')
 
     def test_double_voting(self):
         """Test voting"""
@@ -86,5 +87,5 @@ class TestVotingSystem(DatabaseMixin):
         vote_2 = self.manager.get_or_create_vote(user=current_user_2, mapping=mapping_2)
 
         self.assertEqual(2, self.manager.count_votes(), msg='Problem with votes')
-        self.assertEqual(False, vote_1.type, msg='First vote type is wrong')
-        self.assertEqual(True, vote_2.type, msg='Second vote type is wrong')
+        self.assertFalse(vote_1.type, msg='First vote type is wrong')
+        self.assertTrue(vote_2.type, msg='Second vote type is wrong')

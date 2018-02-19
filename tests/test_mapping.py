@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
+
 """ This module contains tests for the data model of ComPath"""
 
 from compath.models import User
-from tests.constants import DatabaseMixin, REACTOME, KEGG
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestMapping(DatabaseMixin):
