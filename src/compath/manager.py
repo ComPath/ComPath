@@ -4,7 +4,7 @@
 import logging
 
 from bio2bel.utils import get_connection
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import sessionmaker
 
 from compath import managers
@@ -87,7 +87,7 @@ class Manager(object):
         :param Mapping mapping: Mapping instance
         :rtype: Optional[Vote]
         """
-        return self.session.query(Vote).filter(Vote.user == user, Vote.mapping == mapping).one_or_none()
+        return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
     def get_or_create_vote(self, user, mapping, vote_type=True):
         """Gets or create vote
@@ -124,7 +124,7 @@ class Manager(object):
         :param User user: the user
         :rtype: Optional[Mapping]
         """
-        return self.session.query(Mapping).filter(
+        mapping_filter = and_(
             Mapping.service_1_name == service_1_name,
             Mapping.service_1_pathway_id == pathway_1_id,
             Mapping.service_1_pathway_name == pathway_1_name,
@@ -132,19 +132,13 @@ class Manager(object):
             Mapping.service_2_pathway_id == pathway_2_id,
             Mapping.service_2_pathway_name == pathway_2_name,
             Mapping.creator == user
-        ).one_or_none()
+        )
 
-    def get_or_create_mapping(
-            self,
-            service_1_name,
-            pathway_1_id,
-            pathway_1_name,
-            service_2_name,
-            pathway_2_id,
-            pathway_2_name,
-            user
-    ):
-        """Gets or create mapping
+        return self.session.query(Mapping).filter(mapping_filter).one_or_none()
+
+    def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
+                              pathway_2_name, user):
+        """Gets or creates a mapping
 
         :param str service_1_name: manager name of the service 1
         :param str pathway_1_name: pathway 1 name
