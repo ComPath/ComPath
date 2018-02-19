@@ -8,6 +8,16 @@ from tests.constants import DatabaseMixin, REACTOME, KEGG
 class TestVotingSystem(DatabaseMixin):
     """Test Voting"""
 
+    def test_missing_manager_1(self):
+        """Test that the mapping can't be created if the first manager can't be looked up"""
+        with self.assertRaises(ValueError):
+            self.manager.get_or_create_mapping('missing manager 1', '', '', REACTOME, '', '', '')
+
+    def test_missing_manager_2(self):
+        """Test that the mapping can't be created if the second manager can't be looked up"""
+        with self.assertRaises(ValueError):
+            self.manager.get_or_create_mapping(REACTOME, '', '', '' 'missing manager 2', '', '', '')
+
     def test_vote_up(self):
         """Test if votes are adding"""
         current_user = User()
