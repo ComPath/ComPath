@@ -1,0 +1,10 @@
+coverage:
+  precision: 2
+  round: down
+  range: "60...100"
+
+  ignore:
+    - "tests/*"
+    - "src/compath/__main__.py"
+    - "src/compath/cli.py"
+

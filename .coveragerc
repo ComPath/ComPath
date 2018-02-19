@@ -1,0 +1,20 @@
+[run]
+branch = True
+source = compath
+omit =
+    src/compath/__main__.py
+    src/compath/cli.py
+    tests/*
+    docs/*
+    notebooks/*
+
+[paths]
+source =
+    src/compath
+    .tox/*/lib/python*/site-packages/compath
+
+[report]
+show_missing = True
+exclude_lines =
+    def __str__
+    def __repr__
