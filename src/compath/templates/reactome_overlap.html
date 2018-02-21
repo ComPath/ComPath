@@ -55,7 +55,7 @@
 
             cgm = Clustergrammer(args);
 
-            d3.select(cgm.params.root + ' .wait_message').remove();
+            $(".wait_message").remove();
 
         });
 
@@ -92,9 +92,11 @@
 {% block content %}
     {{ util.flashed_messages(dismissible=True, container=False) }}
 
+    <h1 class='wait_message'>Please wait ...</h1>
     <div class="text-center">
         <h3>Reactome Overlap Heatmap</h3>
-        <p>This Heatmap only contains the 500 Reactome pathways with most overlaps</p>
+        <p>Note that this visualization does not contain the full set of Reactome pathways but only the 300 Reactome
+            pathways with most overlaps</p>
         <div id="reactome-matrix"></div>
     </div>
     {% include "footer.html" %}

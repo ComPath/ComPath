@@ -14547,7 +14547,7 @@ var Clustergrammer =
 	        var orig_value = String(d.value_orig.toFixed(3));
 	        tooltip_string = '<p>' + d.row_name + ' and ' + d.col_name + '</p>' + '<p> normalized value: ' + inst_value + '</p>' + '<div> original value: ' + orig_value + '</div>';
 	      } else {
-	        tooltip_string = '<p>' + d.row_name + ' and ' + d.col_name + '</p>' + '<div> value: ' + inst_value + '</div>';
+	        tooltip_string = '<p>' + d.row_name + ' and ' + d.col_name + '</p>' + '<div> Gene Set Similarity: ' + inst_value*100 + '%</div>';
 	      }
 
 	      return tooltip_string;

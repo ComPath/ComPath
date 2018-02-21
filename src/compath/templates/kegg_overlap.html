@@ -55,7 +55,7 @@
 
             cgm = Clustergrammer(args);
 
-            d3.select(cgm.params.root + ' .wait_message').remove();
+            $(".wait_message").remove();
 
         });
 
@@ -92,6 +92,7 @@
 {% block content %}
     {{ util.flashed_messages(dismissible=True, container=False) }}
 
+    <h1 class='wait_message'>Please wait ...</h1>
     <div class="text-center">
         <h3>KEGG Overlap Heatmap</h3>
 
