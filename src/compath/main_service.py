@@ -69,37 +69,40 @@ def pathway_overlap():
     )
 
 
+"""Cytoscape view"""
+
+
+@ui_blueprint.route('/similarity_network', methods=['GET'])
+def similarity_network():
+    """Renders the Similarity network powered by Cytoscape"""
+    return render_template('similarity_network.html')
+
+
+"""Clustergrammer views"""
+
+
 @ui_blueprint.route('/kegg_overlap', methods=['GET'])
 def kegg_matrix():
     """Renders the KEGG Matrix page powered by Clustergrammer"""
-    return render_template(
-        'kegg_overlap.html'
-    )
-
-
-@ui_blueprint.route('/wikipathways_overlap', methods=['GET'])
-def wikipathways_matrix():
-    """Renders the WikiPathways Matrix page powered by Clustergrammer"""
-    return render_template(
-        'wikipathways_overlap.html'
-    )
+    return render_template('kegg_overlap.html')
 
 
 @ui_blueprint.route('/reactome_overlap', methods=['GET'])
 def reactome_matrix():
     """Renders the Reactome Matrix page powered by Clustergrammer"""
-    return render_template(
-        'reactome_overlap.html'
-    )
+    return render_template('reactome_overlap.html')
+
+
+@ui_blueprint.route('/wikipathways_overlap', methods=['GET'])
+def wikipathways_matrix():
+    """Renders the WikiPathways Matrix page powered by Clustergrammer"""
+    return render_template('wikipathways_overlap.html')
 
 
 @ui_blueprint.route('/pathway_distribution', methods=['GET'])
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
-    return render_template(
-        'pathway_distribution.html',
-        manager_distribution_dict=current_app.resource_distributions
-    )
+    return render_template('pathway_distribution.html', manager_distribution_dict=current_app.resource_distributions)
 
 
 @ui_blueprint.route('/query', methods=['GET'])

@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Similarity Network{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+
+    <style>
+        #network {
+            height: 100%;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script type="text/javascript"
+            src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.9/cytoscape.min.js"></script>
+
+
+    <script>
+
+        $(document).ready(function () {
+            $.getJSON("static/json/similarity_network.json", function (data) {
+
+                var cy = cytoscape({
+                    container: document.getElementById('network'),
+
+                    boxSelectionEnabled: false,
+                    autounselectify: true,
+
+                    {#style: cytoscape.stylesheet()#}
+                    {#    .selector('node')#}
+                    {#    .css({#}
+                    {#        'content': 'data(name)',#}
+                    {#        'text-valign': 'center',#}
+                    {#        'color': 'white',#}
+                    {#        'text-outline-width': 2,#}
+                    {#        'text-outline-color': '#888',#}
+                    {#        'background-color': '#888'#}
+                    {#    })#}
+                    {#    .selector(':selected')#}
+                    {#    .css({#}
+                    {#        'background-color': 'black',#}
+                    {#        'line-color': 'black',#}
+                    {#        'target-arrow-color': 'black',#}
+                    {#        'source-arrow-color': 'black',#}
+                    {#        'text-outline-color': 'black'#}
+                    {#    }),#}
+
+                    elements: data,
+                    layout: {
+                        name: 'breadthfirst'
+                    },
+
+                    // so we can see the ids
+                    style: [
+                        {
+                            selector: 'node',
+                            style: {
+                                'content': 'data(id)'
+                            }
+                        }
+                    ]
+                });
+                {##}
+                {#cy.on('tap', 'node', function () {#}
+                {#    try { // your browser may block popups#}
+                {#        window.open(this.data('href'));#}
+                {#    } catch (e) { // fall back on url change#}
+                {#        window.location.href = this.data('href');#}
+                {#    }#}
+                {#});
+            #}
+
+        });
+        })
+        ;
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+    <div id="network"></div>
+    {% include "footer.html" %}
+{% endblock %}

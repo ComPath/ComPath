@@ -1,0 +1,1202 @@
+{
+  "edges": [
+    {
+      "data": {
+        "source": 0,
+        "target": 7,
+        "id": 0,
+        "similarity": 0.9795918367346939
+      }
+    },
+    {
+      "data": {
+        "source": 1,
+        "target": 54,
+        "id": 1,
+        "similarity": 0.9736842105263158
+      }
+    },
+    {
+      "data": {
+        "source": 2,
+        "target": 24,
+        "id": 2,
+        "similarity": 0.9310344827586207
+      }
+    },
+    {
+      "data": {
+        "source": 2,
+        "target": 7,
+        "id": 3,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 3,
+        "target": 7,
+        "id": 4,
+        "similarity": 0.925
+      }
+    },
+    {
+      "data": {
+        "source": 4,
+        "target": 26,
+        "id": 5,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 4,
+        "target": 53,
+        "id": 6,
+        "similarity": 0.9
+      }
+    },
+    {
+      "data": {
+        "source": 4,
+        "target": 7,
+        "id": 7,
+        "similarity": 0.9741379310344828
+      }
+    },
+    {
+      "data": {
+        "source": 5,
+        "target": 14,
+        "id": 8,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 5,
+        "target": 7,
+        "id": 9,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 6,
+        "target": 7,
+        "id": 10,
+        "similarity": 0.9629629629629629
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 64,
+        "id": 11,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 8,
+        "id": 12,
+        "similarity": 0.96
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 11,
+        "id": 13,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 14,
+        "id": 14,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 13,
+        "id": 15,
+        "similarity": 0.9354838709677419
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 12,
+        "id": 16,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 15,
+        "id": 17,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 16,
+        "id": 18,
+        "similarity": 0.967741935483871
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 17,
+        "id": 19,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 20,
+        "id": 20,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 21,
+        "id": 21,
+        "similarity": 0.900990099009901
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 23,
+        "id": 22,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 25,
+        "id": 23,
+        "similarity": 0.9428571428571428
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 26,
+        "id": 24,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 27,
+        "id": 25,
+        "similarity": 0.9016393442622951
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 28,
+        "id": 26,
+        "similarity": 0.9722222222222222
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 30,
+        "id": 27,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 33,
+        "id": 28,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 34,
+        "id": 29,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 38,
+        "id": 30,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 40,
+        "id": 31,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 41,
+        "id": 32,
+        "similarity": 0.9705882352941176
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 42,
+        "id": 33,
+        "similarity": 0.96875
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 43,
+        "id": 34,
+        "similarity": 0.9387755102040817
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 46,
+        "id": 35,
+        "similarity": 0.9323308270676691
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 47,
+        "id": 36,
+        "similarity": 0.9722222222222222
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 49,
+        "id": 37,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 50,
+        "id": 38,
+        "similarity": 0.967741935483871
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 51,
+        "id": 39,
+        "similarity": 0.9565217391304348
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 52,
+        "id": 40,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 53,
+        "id": 41,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 55,
+        "id": 42,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 59,
+        "id": 43,
+        "similarity": 0.95
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 56,
+        "id": 44,
+        "similarity": 0.9642857142857143
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 9,
+        "id": 45,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 68,
+        "id": 46,
+        "similarity": 0.967741935483871
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 65,
+        "id": 47,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 66,
+        "id": 48,
+        "similarity": 0.9047619047619048
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 67,
+        "id": 49,
+        "similarity": 0.9333333333333333
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 69,
+        "id": 50,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 70,
+        "id": 51,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 74,
+        "id": 52,
+        "similarity": 0.9166666666666666
+      }
+    },
+    {
+      "data": {
+        "source": 7,
+        "target": 75,
+        "id": 53,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 10,
+        "target": 54,
+        "id": 54,
+        "similarity": 0.9436619718309859
+      }
+    },
+    {
+      "data": {
+        "source": 14,
+        "target": 23,
+        "id": 55,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 18,
+        "target": 54,
+        "id": 56,
+        "similarity": 0.9545454545454546
+      }
+    },
+    {
+      "data": {
+        "source": 19,
+        "target": 54,
+        "id": 57,
+        "similarity": 0.9403973509933775
+      }
+    },
+    {
+      "data": {
+        "source": 20,
+        "target": 59,
+        "id": 58,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 20,
+        "target": 63,
+        "id": 59,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 20,
+        "target": 43,
+        "id": 60,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 21,
+        "target": 50,
+        "id": 61,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 22,
+        "target": 54,
+        "id": 62,
+        "similarity": 0.9482758620689655
+      }
+    },
+    {
+      "data": {
+        "source": 23,
+        "target": 40,
+        "id": 63,
+        "similarity": 0.9444444444444444
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 57,
+        "id": 64,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 47,
+        "id": 65,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 71,
+        "id": 66,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 31,
+        "id": 67,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 73,
+        "id": 68,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 34,
+        "id": 69,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 26,
+        "target": 68,
+        "id": 70,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 29,
+        "target": 44,
+        "id": 71,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 32,
+        "target": 64,
+        "id": 72,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 33,
+        "target": 37,
+        "id": 73,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 35,
+        "target": 54,
+        "id": 74,
+        "similarity": 0.9230769230769231
+      }
+    },
+    {
+      "data": {
+        "source": 36,
+        "target": 54,
+        "id": 75,
+        "similarity": 0.9215686274509803
+      }
+    },
+    {
+      "data": {
+        "source": 39,
+        "target": 54,
+        "id": 76,
+        "similarity": 0.989247311827957
+      }
+    },
+    {
+      "data": {
+        "source": 45,
+        "target": 62,
+        "id": 77,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 48,
+        "target": 50,
+        "id": 78,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 54,
+        "target": 60,
+        "id": 79,
+        "similarity": 0.9866666666666667
+      }
+    },
+    {
+      "data": {
+        "source": 54,
+        "target": 61,
+        "id": 80,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 54,
+        "target": 72,
+        "id": 81,
+        "similarity": 1.0
+      }
+    },
+    {
+      "data": {
+        "source": 54,
+        "target": 58,
+        "id": 82,
+        "similarity": 1.0
+      }
+    }
+  ],
+  "nodes": [
+    {
+      "data": {
+        "name": "N-Glycan biosynthesis",
+        "resource": "KEGG",
+        "id": 0
+      }
+    },
+    {
+      "data": {
+        "name": "Melanoma",
+        "resource": "KEGG",
+        "id": 1
+      }
+    },
+    {
+      "data": {
+        "name": "Linoleic acid metabolism",
+        "resource": "KEGG",
+        "id": 2
+      }
+    },
+    {
+      "data": {
+        "name": "Tryptophan metabolism",
+        "resource": "KEGG",
+        "id": 3
+      }
+    },
+    {
+      "data": {
+        "name": "Carbon metabolism",
+        "resource": "KEGG",
+        "id": 4
+      }
+    },
+    {
+      "data": {
+        "name": "Cysteine and methionine metabolism",
+        "resource": "KEGG",
+        "id": 5
+      }
+    },
+    {
+      "data": {
+        "name": "Ascorbate and aldarate metabolism",
+        "resource": "KEGG",
+        "id": 6
+      }
+    },
+    {
+      "data": {
+        "name": "Metabolic pathways",
+        "resource": "KEGG",
+        "id": 7
+      }
+    },
+    {
+      "data": {
+        "name": "alpha-Linolenic acid metabolism",
+        "resource": "KEGG",
+        "id": 8
+      }
+    },
+    {
+      "data": {
+        "name": "Nicotinate and nicotinamide metabolism",
+        "resource": "KEGG",
+        "id": 9
+      }
+    },
+    {
+      "data": {
+        "name": "Glioma",
+        "resource": "KEGG",
+        "id": 10
+      }
+    },
+    {
+      "data": {
+        "name": "Glycosphingolipid biosynthesis - ganglio series",
+        "resource": "KEGG",
+        "id": 11
+      }
+    },
+    {
+      "data": {
+        "name": "Glycosaminoglycan degradation",
+        "resource": "KEGG",
+        "id": 12
+      }
+    },
+    {
+      "data": {
+        "name": "beta-Alanine metabolism",
+        "resource": "KEGG",
+        "id": 13
+      }
+    },
+    {
+      "data": {
+        "name": "Valine, leucine and isoleucine biosynthesis",
+        "resource": "KEGG",
+        "id": 14
+      }
+    },
+    {
+      "data": {
+        "name": "Thiamine metabolism",
+        "resource": "KEGG",
+        "id": 15
+      }
+    },
+    {
+      "data": {
+        "name": "Mucin type O-glycan biosynthesis",
+        "resource": "KEGG",
+        "id": 16
+      }
+    },
+    {
+      "data": {
+        "name": "Biotin metabolism",
+        "resource": "KEGG",
+        "id": 17
+      }
+    },
+    {
+      "data": {
+        "name": "Non-small cell lung cancer",
+        "resource": "KEGG",
+        "id": 18
+      }
+    },
+    {
+      "data": {
+        "name": "Breast cancer",
+        "resource": "KEGG",
+        "id": 19
+      }
+    },
+    {
+      "data": {
+        "name": "D-Arginine and D-ornithine metabolism",
+        "resource": "KEGG",
+        "id": 20
+      }
+    },
+    {
+      "data": {
+        "name": "Pyrimidine metabolism",
+        "resource": "KEGG",
+        "id": 21
+      }
+    },
+    {
+      "data": {
+        "name": "Endometrial cancer",
+        "resource": "KEGG",
+        "id": 22
+      }
+    },
+    {
+      "data": {
+        "name": "Biosynthesis of amino acids",
+        "resource": "KEGG",
+        "id": 23
+      }
+    },
+    {
+      "data": {
+        "name": "Arachidonic acid metabolism",
+        "resource": "KEGG",
+        "id": 24
+      }
+    },
+    {
+      "data": {
+        "name": "Alanine, aspartate and glutamate metabolism",
+        "resource": "KEGG",
+        "id": 25
+      }
+    },
+    {
+      "data": {
+        "name": "Neomycin, kanamycin and gentamicin biosynthesis",
+        "resource": "KEGG",
+        "id": 26
+      }
+    },
+    {
+      "data": {
+        "name": "Glycerolipid metabolism",
+        "resource": "KEGG",
+        "id": 27
+      }
+    },
+    {
+      "data": {
+        "name": "Tyrosine metabolism",
+        "resource": "KEGG",
+        "id": 28
+      }
+    },
+    {
+      "data": {
+        "name": "Synthesis and degradation of ketone bodies",
+        "resource": "KEGG",
+        "id": 29
+      }
+    },
+    {
+      "data": {
+        "name": "Arginine biosynthesis",
+        "resource": "KEGG",
+        "id": 30
+      }
+    },
+    {
+      "data": {
+        "name": "Type II diabetes mellitus",
+        "resource": "KEGG",
+        "id": 31
+      }
+    },
+    {
+      "data": {
+        "name": "Phenylalanine metabolism",
+        "resource": "KEGG",
+        "id": 32
+      }
+    },
+    {
+      "data": {
+        "name": "Phosphonate and phosphinate metabolism",
+        "resource": "KEGG",
+        "id": 33
+      }
+    },
+    {
+      "data": {
+        "name": "Glycolysis / Gluconeogenesis",
+        "resource": "KEGG",
+        "id": 34
+      }
+    },
+    {
+      "data": {
+        "name": "Chronic myeloid leukemia",
+        "resource": "KEGG",
+        "id": 35
+      }
+    },
+    {
+      "data": {
+        "name": "Gastric cancer",
+        "resource": "KEGG",
+        "id": 36
+      }
+    },
+    {
+      "data": {
+        "name": "Glycerophospholipid metabolism",
+        "resource": "KEGG",
+        "id": 37
+      }
+    },
+    {
+      "data": {
+        "name": "Vitamin B6 metabolism",
+        "resource": "KEGG",
+        "id": 38
+      }
+    },
+    {
+      "data": {
+        "name": "Small cell lung cancer",
+        "resource": "KEGG",
+        "id": 39
+      }
+    },
+    {
+      "data": {
+        "name": "2-Oxocarboxylic acid metabolism",
+        "resource": "KEGG",
+        "id": 40
+      }
+    },
+    {
+      "data": {
+        "name": "Pentose and glucuronate interconversions",
+        "resource": "KEGG",
+        "id": 41
+      }
+    },
+    {
+      "data": {
+        "name": "Propanoate metabolism",
+        "resource": "KEGG",
+        "id": 42
+      }
+    },
+    {
+      "data": {
+        "name": "Arginine and proline metabolism",
+        "resource": "KEGG",
+        "id": 43
+      }
+    },
+    {
+      "data": {
+        "name": "Butanoate metabolism",
+        "resource": "KEGG",
+        "id": 44
+      }
+    },
+    {
+      "data": {
+        "name": "Autophagy - other",
+        "resource": "KEGG",
+        "id": 45
+      }
+    },
+    {
+      "data": {
+        "name": "Oxidative phosphorylation",
+        "resource": "KEGG",
+        "id": 46
+      }
+    },
+    {
+      "data": {
+        "name": "Starch and sucrose metabolism",
+        "resource": "KEGG",
+        "id": 47
+      }
+    },
+    {
+      "data": {
+        "name": "Purine metabolism",
+        "resource": "KEGG",
+        "id": 48
+      }
+    },
+    {
+      "data": {
+        "name": "Caffeine metabolism",
+        "resource": "KEGG",
+        "id": 49
+      }
+    },
+    {
+      "data": {
+        "name": "RNA polymerase",
+        "resource": "KEGG",
+        "id": 50
+      }
+    },
+    {
+      "data": {
+        "name": "Drug metabolism - other enzymes",
+        "resource": "KEGG",
+        "id": 51
+      }
+    },
+    {
+      "data": {
+        "name": "Riboflavin metabolism",
+        "resource": "KEGG",
+        "id": 52
+      }
+    },
+    {
+      "data": {
+        "name": "Citrate cycle (TCA cycle)",
+        "resource": "KEGG",
+        "id": 53
+      }
+    },
+    {
+      "data": {
+        "name": "Pathways in cancer",
+        "resource": "KEGG",
+        "id": 54
+      }
+    },
+    {
+      "data": {
+        "name": "Taurine and hypotaurine metabolism",
+        "resource": "KEGG",
+        "id": 55
+      }
+    },
+    {
+      "data": {
+        "name": "Glyoxylate and dicarboxylate metabolism",
+        "resource": "KEGG",
+        "id": 56
+      }
+    },
+    {
+      "data": {
+        "name": "Amino sugar and nucleotide sugar metabolism",
+        "resource": "KEGG",
+        "id": 57
+      }
+    },
+    {
+      "data": {
+        "name": "Basal cell carcinoma",
+        "resource": "KEGG",
+        "id": 58
+      }
+    },
+    {
+      "data": {
+        "name": "Glycine, serine and threonine metabolism",
+        "resource": "KEGG",
+        "id": 59
+      }
+    },
+    {
+      "data": {
+        "name": "Pancreatic cancer",
+        "resource": "KEGG",
+        "id": 60
+      }
+    },
+    {
+      "data": {
+        "name": "Colorectal cancer",
+        "resource": "KEGG",
+        "id": 61
+      }
+    },
+    {
+      "data": {
+        "name": "Autophagy - animal",
+        "resource": "KEGG",
+        "id": 62
+      }
+    },
+    {
+      "data": {
+        "name": "Peroxisome",
+        "resource": "KEGG",
+        "id": 63
+      }
+    },
+    {
+      "data": {
+        "name": "Phenylalanine, tyrosine and tryptophan biosynthesis",
+        "resource": "KEGG",
+        "id": 64
+      }
+    },
+    {
+      "data": {
+        "name": "Mannose type O-glycan biosynthesis",
+        "resource": "KEGG",
+        "id": 65
+      }
+    },
+    {
+      "data": {
+        "name": "Porphyrin and chlorophyll metabolism",
+        "resource": "KEGG",
+        "id": 66
+      }
+    },
+    {
+      "data": {
+        "name": "Pentose phosphate pathway",
+        "resource": "KEGG",
+        "id": 67
+      }
+    },
+    {
+      "data": {
+        "name": "Galactose metabolism",
+        "resource": "KEGG",
+        "id": 68
+      }
+    },
+    {
+      "data": {
+        "name": "Lipoic acid metabolism",
+        "resource": "KEGG",
+        "id": 69
+      }
+    },
+    {
+      "data": {
+        "name": "Glycosphingolipid biosynthesis - lacto and neolacto series",
+        "resource": "KEGG",
+        "id": 70
+      }
+    },
+    {
+      "data": {
+        "name": "Insulin signaling pathway",
+        "resource": "KEGG",
+        "id": 71
+      }
+    },
+    {
+      "data": {
+        "name": "Thyroid cancer",
+        "resource": "KEGG",
+        "id": 72
+      }
+    },
+    {
+      "data": {
+        "name": "Central carbon metabolism in cancer",
+        "resource": "KEGG",
+        "id": 73
+      }
+    },
+    {
+      "data": {
+        "name": "Valine, leucine and isoleucine degradation",
+        "resource": "KEGG",
+        "id": 74
+      }
+    },
+    {
+      "data": {
+        "name": "Fatty acid biosynthesis",
+        "resource": "KEGG",
+        "id": 75
+      }
+    }
+  ]
+}
