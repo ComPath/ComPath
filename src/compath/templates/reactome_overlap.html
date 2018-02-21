@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Reactome Overlap{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/clustergrammer.css') }}">
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css">
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.17/d3.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.2/underscore-min.js"></script>
+    <script type="text/javascript"
+            src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/clustergrammer.js', version='20181602') }}"></script>
+
+    <script>
+
+        var about_string = 'Zoom, scroll, and click buttons to interact with the clustergram.';
+
+        d3.json('/static/json/reactome_clustergrammer.json', function (network_data) {
+
+            // define arguments object
+            var args = {
+                root: '#reactome-matrix',
+                'network_data': network_data,
+                'about': about_string,
+                'col_tip_callback': test_col_callback,
+                'tile_tip_callback': test_tile_callback,
+                'cat_update_callback': cat_update_callback,
+                'sidebar_width': 150,
+                // 'ini_view':{'N_row_var':20}
+                // 'ini_expand':true
+            };
+
+            resize_container(args);
+
+            d3.select(window).on('resize', function () {
+                resize_container(args);
+                cgm.resize_viz();
+            });
+
+            cgm = Clustergrammer(args);
+
+            d3.select(cgm.params.root + ' .wait_message').remove();
+
+        });
+
+
+        function cat_update_callback() {
+            console.log('callback to run after cats are updated');
+        }
+
+        function test_tile_callback(tile_data) {
+            var row_name = tile_data.row_name;
+            var col_name = tile_data.col_name;
+
+        }
+
+        function test_col_callback(col_data) {
+            var col_name = col_data.name;
+        }
+
+        function resize_container(args) {
+
+            var screen_width = window.innerWidth;
+            var screen_height = window.innerHeight - 20;
+
+            d3.select(args.root)
+                .style('width', screen_width + 'px')
+                .style('height', screen_height + 'px');
+        }
+
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    {{ util.flashed_messages(dismissible=True, container=False) }}
+
+    <div class="text-center">
+        <h3>Reactome Overlap Heatmap</h3>
+        <p>This Heatmap only contains the 500 Reactome pathways with most overlaps</p>
+        <div id="reactome-matrix"></div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}
+

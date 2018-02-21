@@ -116,11 +116,16 @@
                                     Visualize and cluster pathways according to their gene set similarity.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.pathway_matrices') }}" class="btn btn-primary btn-block">
-                                        Pathway Similarity
+                                    <a href="{{ url_for('ui.kegg_matrix') }}" class="btn btn-primary">
+                                        KEGG
+                                    </a>
+                                    <a href="{{ url_for('ui.reactome_matrix') }}" class="btn btn-primary">
+                                        Reactome
+                                    </a>
+                                    <a href="{{ url_for('ui.wikipathways_matrix') }}" class="btn btn-primary">
+                                        WikiPathways
                                     </a>
                                 </p>
-
                             </div>
                         </div>
                     </div>
@@ -134,15 +139,15 @@
                                     programmatic use.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('static', filename='resources/excel/reactome_gene_sets.csv') }}"
-                                       class="btn btn-primary" data-toggle="popover" title="Export Reactome"
-                                       data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
-                                        Reactome
-                                    </a>
                                     <a href="{{ url_for('static', filename='resources/excel/kegg_gene_sets.csv') }}"
                                        class="btn btn-primary" data-toggle="popover" title="Export KEGG"
                                        data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
                                         KEGG
+                                    </a>
+                                    <a href="{{ url_for('static', filename='resources/excel/reactome_gene_sets.csv') }}"
+                                       class="btn btn-primary" data-toggle="popover" title="Export Reactome"
+                                       data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
+                                        Reactome
                                     </a>
                                     <a href="{{ url_for('static', filename='resources/excel/wikipathways_gene_sets.csv') }}"
                                        class="btn btn-primary" data-toggle="popover" title="Export WikiPathways"

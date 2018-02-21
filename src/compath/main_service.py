@@ -69,11 +69,27 @@ def pathway_overlap():
     )
 
 
-@ui_blueprint.route('/pathway_matrix', methods=['GET'])
-def pathway_matrices():
-    """Renders the Pathway Matrix page powered by Clustergrammer"""
+@ui_blueprint.route('/kegg_overlap', methods=['GET'])
+def kegg_matrix():
+    """Renders the KEGG Matrix page powered by Clustergrammer"""
     return render_template(
-        'overlap_matrix.html'
+        'kegg_overlap.html'
+    )
+
+
+@ui_blueprint.route('/wikipathways_overlap', methods=['GET'])
+def wikipathways_matrix():
+    """Renders the WikiPathways Matrix page powered by Clustergrammer"""
+    return render_template(
+        'wikipathways_overlap.html'
+    )
+
+
+@ui_blueprint.route('/reactome_overlap', methods=['GET'])
+def reactome_matrix():
+    """Renders the Reactome Matrix page powered by Clustergrammer"""
+    return render_template(
+        'reactome_overlap.html'
     )
 
 
