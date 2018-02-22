@@ -75,7 +75,10 @@ def pathway_overlap():
 @ui_blueprint.route('/similarity_network', methods=['GET'])
 def similarity_network():
     """Renders the Similarity network powered by Cytoscape"""
-    return render_template('similarity_network.html')
+    return render_template(
+        'similarity_network.html',
+        manager_names=current_app.resource_distributions.keys(),
+    )
 
 
 """Clustergrammer views"""

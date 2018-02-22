@@ -96,10 +96,17 @@
 
 {% endblock %}
 
+
+
 {% block content %}
     <div class="text-center">
         <h2>Pathway Similarity Network</h2>
     </div>
+    <select type="text" class="form-control" name="resources[]" id="select-1">
+        {% for manager in manager_names %}
+            <option value="{{ manager }}">{{ manager|upper }}</option>
+        {% endfor %}
+    </select>
     <div style="text-align: center" id="network"></div>
     {% include "footer.html" %}
 {% endblock %}
