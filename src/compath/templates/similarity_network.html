@@ -103,6 +103,7 @@
         <h2>Pathway Similarity Network</h2>
     </div>
     <select type="text" class="form-control" name="resources[]" id="select-1">
+            <option value="all">All resources</option>
         {% for manager in manager_names %}
             <option value="{{ manager }}">{{ manager|upper }}</option>
         {% endfor %}
