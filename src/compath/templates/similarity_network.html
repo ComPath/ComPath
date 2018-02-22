@@ -11,11 +11,17 @@
     {{ super() }}
 
     <style>
+
         #network {
-            width: 500px;
-            height: 500px;
             display: block;
+            height: 584px;
+            border: 1px solid black;
+            margin-left: 30px;
+            margin-bottom: 30px;
+            margin-top: 30px;
+            margin-right: 30px;
         }
+
 
     </style>
 {% endblock %}
@@ -33,6 +39,7 @@
     <script>
 
         $(document).ready(function () {
+
             $.getJSON("static/json/similarity_network.json", function (data) {
 
                 var cy = cytoscape({
@@ -40,33 +47,10 @@
 
                     boxSelectionEnabled: false,
                     autounselectify: true,
-
-                    {#TODO: Add zooming max and minimum#}
-                    {#style: cytoscape.stylesheet()#}
-                    {#    .selector('node')#}
-                    {#    .css({#}
-                    {#        'content': 'data(name)',#}
-                    {#        'text-valign': 'center',#}
-                    {#        'color': 'white',#}
-                    {#        'text-outline-width': 2,#}
-                    {#        'text-outline-color': '#888',#}
-                    {#        'background-color': '#888'#}
-                    {#    })#}
-                    {#    .selector(':selected')#}
-                    {#    .css({#}
-                    {#        'background-color': 'black',#}
-                    {#        'line-color': 'black',#}
-                    {#        'target-arrow-color': 'black',#}
-                    {#        'source-arrow-color': 'black',#}
-                    {#        'text-outline-color': 'black'#}
-                    {#    }),#}
-
                     elements: data,
                     layout: {
                         name: 'grid'
                     },
-
-                    // so we can see the ids
                     style: [
                         {
                             selector: 'node',
@@ -76,6 +60,27 @@
                         }
                     ]
                 });
+
+                {#TODO: Add zooming max and minimum#}
+                {#style: cytoscape.stylesheet()#}
+                {#    .selector('node')#}
+                {#    .css({#}
+                {#        'content': 'data(name)',#}
+                {#        'text-valign': 'center',#}
+                {#        'color': 'white',#}
+                {#        'text-outline-width': 2,#}
+                {#        'text-outline-color': '#888',#}
+                {#        'background-color': '#888'#}
+                {#    })#}
+                {#    .selector(':selected')#}
+                {#    .css({#}
+                {#        'background-color': 'black',#}
+                {#        'line-color': 'black',#}
+                {#        'target-arrow-color': 'black',#}
+                {#        'source-arrow-color': 'black',#}
+                {#        'text-outline-color': 'black'#}
+                {#    }),#}
+                // so we can see the ids
                 {##}
                 {#cy.on('tap', 'node', function () {#}
                 {#    try { // your browser may block popups#}
@@ -83,10 +88,7 @@
                 {#    } catch (e) { // fall back on url change#}
                 {#        window.location.href = this.data('href');#}
                 {#    }#}
-                {#});
-            #}
-
-        });
+            });
         })
         ;
     </script>
@@ -95,6 +97,9 @@
 {% endblock %}
 
 {% block content %}
-    <div id="network"></div>
+    <div class="text-center">
+        <h2>Pathway Similarity Network</h2>
+    </div>
+    <div style="text-align: center" id="network"></div>
     {% include "footer.html" %}
 {% endblock %}
