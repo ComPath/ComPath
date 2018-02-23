@@ -77,7 +77,7 @@ def similarity_network():
     """Renders the Similarity network powered by Cytoscape"""
     return render_template(
         'similarity_network.html',
-        manager_names=current_app.resource_distributions.keys(),
+        manager_names=current_app.manager_dict.keys(),
     )
 
 
