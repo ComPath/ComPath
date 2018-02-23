@@ -10,6 +10,11 @@
 {% block styles %}
     {{ super() }}
 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css">
+
     <style>
 
         #network {
@@ -22,18 +27,58 @@
             margin-right: 30px;
         }
 
+        .param {
+            margin-bottom: 1em;
+        }
+
+        .preamble {
+            margin-bottom: 2em;
+        }
+
+        p {
+            margin: 0.5em 0;
+            font-size: 0.8em;
+        }
+
+        .param button {
+            width: 3em;
+            margin-right: 0.25em;
+        }
+
+        .slider {
+            display: block;
+        }
+
+        @media (max-width: 600px) {
+            #network {
+                right: 0;
+            }
+        }
+
 
     </style>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-    <script type="text/javascript"
-            src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fastclick/1.0.6/fastclick.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.0/lodash.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/bootstrap-slider.min.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.6.0/cola.js"></script>
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.2.9/cytoscape.min.js"></script>
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.7.0/cytoscape-qtip.js"></script>
+    <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.6.0/cytoscape-cola.js"></script>
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
+    <script type="text/javascript" src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
+
 
 
     <script>
@@ -42,52 +87,130 @@
 
             $.getJSON("static/json/similarity_network.json", function (data) {
 
-                var cy = cytoscape({
-                    container: document.getElementById('network'),
 
-                    boxSelectionEnabled: false,
-                    autounselectify: true,
-                    elements: data,
-                    layout: {
-                        name: 'grid'
-                    },
-                    style: [
-                        {
-                            selector: 'node',
-                            style: {
-                                'content': 'data(id)'
-                            }
-                        }
-                    ]
+                var cy = window.cy = cytoscape({
+                    container: document.getElementById('network'),
+                    elements: data
                 });
 
-                {#TODO: Add zooming max and minimum#}
-                {#style: cytoscape.stylesheet()#}
-                {#    .selector('node')#}
-                {#    .css({#}
-                {#        'content': 'data(name)',#}
-                {#        'text-valign': 'center',#}
-                {#        'color': 'white',#}
-                {#        'text-outline-width': 2,#}
-                {#        'text-outline-color': '#888',#}
-                {#        'background-color': '#888'#}
-                {#    })#}
-                {#    .selector(':selected')#}
-                {#    .css({#}
-                {#        'background-color': 'black',#}
-                {#        'line-color': 'black',#}
-                {#        'target-arrow-color': 'black',#}
-                {#        'source-arrow-color': 'black',#}
-                {#        'text-outline-color': 'black'#}
-                {#    }),#}
-                // so we can see the ids
-                {##}
-                {#cy.on('tap', 'node', function () {#}
-                {#    try { // your browser may block popups#}
-                {#        window.open(this.data('href'));#}
-                {#    } catch (e) { // fall back on url change#}
-                {#        window.location.href = this.data('href');#}
-                {#    }#}
+                var params = {
+                    name: 'cola',
+                    nodeSpacing: 5,
+                    edgeLengthVal: 45,
+                    animate: true,
+                    randomize: false,
+                    maxSimulationTime: 1500
+                };
+                var layout = makeLayout();
+                var running = false;
+
+                cy.on('layoutstart', function () {
+                    running = true;
+                }).on('layoutstop', function () {
+                    running = false;
+                });
+
+                layout.run();
+
+                var $config = $('#config');
+                var $btnParam = $('<div class="param"></div>');
+                $config.append($btnParam);
+
+                var sliders = [
+                    {
+                        label: 'Edge length',
+                        param: 'edgeLengthVal',
+                        min: 1,
+                        max: 200
+                    },
+
+                    {
+                        label: 'Node spacing',
+                        param: 'nodeSpacing',
+                        min: 1,
+                        max: 50
+                    }
+                ];
+
+                var buttons = [
+                    {
+                        label: '<i class="fa fa-random"></i>',
+                        layoutOpts: {
+                            randomize: true,
+                            flow: null
+                        }
+                    },
+                    {
+                        label: '<i class="fa fa-long-arrow-down"></i>',
+                        layoutOpts: {
+                            flow: {axis: 'y', minSeparation: 30}
+                        }
+                    }
+                ];
+
+                sliders.forEach(makeSlider);
+
+                buttons.forEach(makeButton);
+
+                function makeLayout(opts) {
+                    params.randomize = false;
+                    params.edgeLength = function (e) {
+                        return params.edgeLengthVal / e.data('weight');
+                    };
+
+                    for (var i in opts) {
+                        params[i] = opts[i];
+                    }
+
+                    return cy.layout(params);
+                }
+
+                function makeSlider(opts) {
+                    var $input = $('<input class="col-lg-10"></input>');
+                    var $param = $('<div class="param"></div>');
+
+                    $param.append('<span class="label label-default">' + opts.label + '</span>');
+                    $param.append($input);
+
+                    $config.append($param);
+
+                    var p = $input.slider({
+                        min: opts.min,
+                        max: opts.max,
+                        value: params[opts.param]
+                    }).on('slide', _.throttle(function () {
+                        params[opts.param] = p.getValue();
+
+                        layout.stop();
+                        layout = makeLayout();
+                        layout.run();
+                    }, 16)).data('slider');
+                }
+
+                function makeButton(opts) {
+                    var $button = $('<button class="btn btn-default">' + opts.label + '</button>');
+
+                    $btnParam.append($button);
+
+                    $button.on('click', function () {
+                        layout.stop();
+
+                        if (opts.fn) {
+                            opts.fn();
+                        }
+
+                        layout = makeLayout(opts.layoutOpts);
+                        layout.run();
+                    });
+                }
+
+                $('#config-toggle').on('click', function () {
+                    $('body').toggleClass('config-closed');
+
+                    cy.resize();
+                });
+
+
             });
         })
         ;
@@ -95,8 +218,6 @@
 
 
 {% endblock %}
-
-
 
 {% block content %}
     <div class="text-center">
@@ -109,5 +230,96 @@
         {% endfor %}
     </select>
     <div style="text-align: center" id="network"></div>
+    <div class="row">
+        <div class="col-lg-8">
+            <div style="text-align: center" id="network"></div>
+        </div>
+        <div class="panel panel-default col-lg-4">
+
+            <!-- Nav tabs -->
+            <ul class="nav nav-tabs nav-center-tabs">
+                <li class="active">
+                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#network-panel"><i
+                            class="fa fa-filter" aria-hidden="true"></i> Modify Network</a>
+                </li>
+                <li>
+                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#nodes-panel"><i
+                            class="fa fa-circle-o" aria-hidden="true"></i>
+                        Nodes
+                    </a>
+                </li>
+                <li>
+                    <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#edges-panel"><i
+                            class="fa fa-long-arrow-right" aria-hidden="true"></i> Edges</a>
+                </li>
+            </ul>
+            <!-- Tab panes -->
+            <div class="tab-content">
+                <div class="tab-pane active" id="network-panel" role="tabpanel">
+
+
+                    <div id="config" class="config">
+
+                        <div class="preamble">
+                            <p>
+                                Data by <a href="http://genemania.org">GeneMANIA</a><br>
+                                Visualisation by <a href="http://js.cytoscape.org">Cytoscape.js</a><br>
+                                Layout by <a href="http://marvl.infotech.monash.edu/webcola/">Cola.js</a>
+                            </p>
+                        </div>
+
+                        <div class="param">
+                        </div>
+                    </div>
+
+                    <button type="button" id="refresh-network" data-toggle="popover"
+                            title="Render the Network"
+                            data-content="Renders the Network using the selected filtering. Note that the Network
+                                will not be rendered if it contains more than 1500 nodes to avoid crashing your browser."
+                            class="btn btn-primary not-rounded width-50 pull-left">
+                        Refresh Network
+                    </button>
+                    <button type="button" id="collapse-tree"
+                            class="btn btn-primary not-rounded width-50 pull-right">
+                        Collapse Annotations
+                    </button>
+                </div>
+                <div class="tab-pane not-rounded" id="nodes-panel" role="tabpanel">
+                    <button class='btn btn-primary not-rounded full-width' id='get-checked-nodes'>Show
+                        Selected Nodes
+                    </button>
+                    <div class="input-group">
+                                <span class="input-group-addon not-rounded2" id="sizing-addon"><i
+                                        class="fa fa-connectdevelop fa-0.5x"></i></span>
+                        <input placeholder="Search nodes" id="node-search"
+                               class="wide form-control not-rounded"
+                               aria-describedby="sizing-addon1" type="text"/>
+                    </div>
+                    <div class="not-rounded2" id="node-list"
+                         style="max-height: 450px;height: 450px; overflow:auto;"></div>
+                </div>
+                <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
+                    <p class="text-center" style="margin-top: 10px;"><b> Modify Links Length</b></p>
+                    <input id="link-slider" style="width: 80%; margin-bottom: 10px; margin-top: 10px;
+                         margin-left: 10%; margin-right: 10%;"
+                           class="text-center" type="range" min="0" max="1" step="any" value="0.7">
+                    <button class='btn btn-primary not-rounded full-width' id='get-checked-edges'>Show
+                        Selected Edges
+                    </button>
+                    <div class="input-group">
+                                <span class="input-group-addon not-rounded2" id="sizing-addon"><i
+                                        class="fa fa-connectdevelop fa-0.5x"></i></span>
+                        <input placeholder="Search edges" id="edge-search"
+                               class="wide form-control not-rounded"
+                               aria-describedby="sizing-addon1" type="text"/>
+                    </div>
+                    <div id="edge-list" class="not-rounded2"
+                         style="max-height: 390px;height: 390px; overflow:auto;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     {% include "footer.html" %}
 {% endblock %}
