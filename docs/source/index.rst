@@ -1,5 +1,5 @@
-Comparative Pathways Tool
-=========================
+ComPath
+=======
 .. automodule:: compath
 
 .. toctree::
