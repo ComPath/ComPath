@@ -82,24 +82,33 @@
 
 
     <script>
+
+        var colours_resource = { // Object resource name -> colour
+            reactome: "blue",
+            kegg: "red",
+            wikipathways: "green"
+        };
+
+
         function getProperty(o, prop) {
             if (o[prop] !== undefined) return o[prop];
             else return "grey";
         }
-        function generateNetwork() {
-            var path;
-            if (document.getElementById("select-1").value == 'similarity_network') { // Network of all resources (no range argument (select-2)
-                path = "static/json/similarity_network.json"
-            }
-            else {  // Network in function of range (select-2) argument and resource (select-1).
-                path = "static/json/" + document.getElementById("select-1").value + "/" + document.getElementById("select-1").value + "_" + document.getElementById("select-2").value + ".json"
-            }
-            $.getJSON(path, function (data) {
-                    var colours_resource = { // Dict resource -> colour
-                        reactome: "blue",Reactome: "blue",KEGG: "red",
-                        kegg: "red", wikipathways: "green", WikiPathways: "green"
-                    }; // create an empty array
 
+        function generateNetwork() {
+
+            var resource = $("#resource-input").val();
+
+            // Define the path of the json file according to the selection
+            var path;
+            if (resource === "all-resources") { // All resources vs all resources
+                path = "static/json/wikipathways/wikipathways_90.json"
+            }
+            else {  // resource + range
+                path = "static/json/" + resource + "/" + resource + "_" + $("#similarity-range").val() + ".json"
+            }
+
+            $.getJSON(path, function (data) {
 
                     var cy = window.cy = cytoscape({
                         container: document.getElementById('network'),
@@ -243,7 +252,7 @@
 
             generateNetwork(); // Generate the default Network
 
-// When click on refresh network button.
+            // When click on refresh network button.
             $('#refresh-network').click(function () {
 
                 $('.param').remove(); //Remove the parameter sliders.
@@ -290,28 +299,25 @@
 
                     <div class="preamble">
                         <p>
-                            Data by <a href="http://genemania.org">GeneMANIA</a><br>
-                            Visualisation by <a href="http://js.cytoscape.org">Cytoscape.js</a><br>
-                            Layout by <a href="http://marvl.infotech.monash.edu/webcola/">Cola.js</a>
+                            Explanation here
                         </p>
                     </div>
                     <div id="config" class="config">
-                        <form class="form-inline well">
+                        <form class="form-inline">
+                            <label for="resource-input">Source</label>
 
-                            <label for="select-1">Source</label>
-
-                            <select type="text" class="form-control" name="resources[]" id="select-1">
+                            <select type="text" class="form-control" id="resource-input">
 
                                 <option value="similarity_network" selected>All resources</option>
                                 {#                                # TODO change to automatic from resource query. (con lo que habia no salian las resources)#}
 
                                 <option value="reactome">Reactome</option>
-                                <option value="kegg" selected>Kegg</option>
-                                <option value="wikipathways">Wikipathways</option>
+                                <option value="kegg">KEGG</option>
+                                <option value="wikipathways" selected>Wikipathways</option>
+                                <label for="similarity-range">Threshold</label>
                             </select>
-                            <label for="select-2">Threshold</label>
 
-                            <select type="text" class="form-control" name="resources[]" id="select-2">
+                            <select type="text" class="form-control" id="similarity-range">
 
                                 <option>10</option>
                                 <option>20</option>
@@ -320,6 +326,7 @@
                                 <option>50</option>
                                 <option>60</option>
                                 <option>70</option>
+                                <option>80</option>
                                 <option selected>90</option>
                                 <option>100</option>
                             </select>
