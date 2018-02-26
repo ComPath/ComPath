@@ -82,138 +82,175 @@
 
 
     <script>
+        function getProperty(o, prop) {
+            if (o[prop] !== undefined) return o[prop];
+            else return "grey";
+        }
+        function generateNetwork() {
+            var path;
+            if (document.getElementById("select-1").value == 'similarity_network') { // Network of all resources (no range argument (select-2)
+                path = "static/json/similarity_network.json"
+            }
+            else {  // Network in function of range (select-2) argument and resource (select-1).
+                path = "static/json/" + document.getElementById("select-1").value + "/" + document.getElementById("select-1").value + "_" + document.getElementById("select-2").value + ".json"
+            }
+            $.getJSON(path, function (data) {
+                    var colours_resource = { // Dict resource -> colour
+                        reactome: "blue",Reactome: "blue",KEGG: "red",
+                        kegg: "red", wikipathways: "green", WikiPathways: "green"
+                    }; // create an empty array
+
+
+                    var cy = window.cy = cytoscape({
+                        container: document.getElementById('network'),
+                        elements: data,
+                        style: cytoscape.stylesheet()
+                            .selector('node')
+
+                            // Set colour in function of the resource.
+                            .style({
+                                'background-color': function (e) {
+                                    console.log(colours_resource[e.data('resource')]);
+                                    return (getProperty(colours_resource, e.data('resource')))
+                                }
+                            })
+
+                    });
+
+                    var params = {
+                        name: 'cola',
+                        nodeSpacing: 5,
+                        edgeLengthVal: 45,
+                        animate: true,
+                        randomize: false,
+                        maxSimulationTime: 1500
+                    };
+                    var layout = makeLayout();
+                    var running = false;
+
+                    cy.on('layoutstart', function () {
+                        running = true;
+                    }).on('layoutstop', function () {
+                        running = false;
+                    });
+
+                    layout.run();
+
+                    var $config = $('#config');
+                    var $btnParam = $('<div class="param"></div>');
+                    $config.append($btnParam);
+
+                    var sliders = [
+                        {
+                            label: 'Edge length',
+                            param: 'edgeLengthVal',
+                            min: 1,
+                            max: 200
+                        },
+
+                        {
+                            label: 'Node spacing',
+                            param: 'nodeSpacing',
+                            min: 1,
+                            max: 50
+                        }
+                    ];
+
+                    var buttons = [
+                        {
+                            label: '<i class="fa fa-random"></i>',
+                            layoutOpts: {
+                                randomize: true,
+                                flow: null
+                            }
+                        },
+                        {
+                            label: '<i class="fa fa-long-arrow-down"></i>',
+                            layoutOpts: {
+                                flow: {axis: 'y', minSeparation: 30}
+                            }
+                        }
+                    ];
+
+                    sliders.forEach(makeSlider);
+
+                    buttons.forEach(makeButton);
+
+                    function makeLayout(opts) {
+                        params.randomize = false;
+                        params.edgeLength = function (e) {
+                            return params.edgeLengthVal / e.data('weight');
+                        };
+
+                        for (var i in opts) {
+                            params[i] = opts[i];
+                        }
+
+                        return cy.layout(params);
+                    }
+
+                    function makeSlider(opts) {
+                        var $input = $('<input class="col-lg-10"></input>');
+                        var $param = $('<div class="param"></div>');
+
+                        $param.append('<span class="label label-default">' + opts.label + '</span>');
+                        $param.append($input);
+
+                        $config.append($param);
+
+                        var p = $input.slider({
+                            min: opts.min,
+                            max: opts.max,
+                            value: params[opts.param]
+                        }).on('slide', _.throttle(function () {
+                            params[opts.param] = p.getValue();
+
+                            layout.stop();
+                            layout = makeLayout();
+                            layout.run();
+                        }, 16)).data('slider');
+                    }
+
+                    function makeButton(opts) {
+                        var $button = $('<button class="btn btn-default">' + opts.label + '</button>');
+
+                        $btnParam.append($button);
+
+                        $button.on('click', function () {
+                            layout.stop();
+
+                            if (opts.fn) {
+                                opts.fn();
+                            }
+
+                            layout = makeLayout(opts.layoutOpts);
+                            layout.run();
+                        });
+                    }
+
+                    $('#config-toggle').on('click', function () {
+                        $('body').toggleClass('config-closed');
+
+                        cy.resize();
+                    });
+
+
+                }
+            );
+        }
 
         $(document).ready(function () {
 
-            $.getJSON("static/json/similarity_network.json", function (data) {
+            generateNetwork(); // Generate the default Network
 
+// When click on refresh network button.
+            $('#refresh-network').click(function () {
 
-                var cy = window.cy = cytoscape({
-                    container: document.getElementById('network'),
-                    elements: data
-                });
-
-                var params = {
-                    name: 'cola',
-                    nodeSpacing: 5,
-                    edgeLengthVal: 45,
-                    animate: true,
-                    randomize: false,
-                    maxSimulationTime: 1500
-                };
-                var layout = makeLayout();
-                var running = false;
-
-                cy.on('layoutstart', function () {
-                    running = true;
-                }).on('layoutstop', function () {
-                    running = false;
-                });
-
-                layout.run();
-
-                var $config = $('#config');
-                var $btnParam = $('<div class="param"></div>');
-                $config.append($btnParam);
-
-                var sliders = [
-                    {
-                        label: 'Edge length',
-                        param: 'edgeLengthVal',
-                        min: 1,
-                        max: 200
-                    },
-
-                    {
-                        label: 'Node spacing',
-                        param: 'nodeSpacing',
-                        min: 1,
-                        max: 50
-                    }
-                ];
-
-                var buttons = [
-                    {
-                        label: '<i class="fa fa-random"></i>',
-                        layoutOpts: {
-                            randomize: true,
-                            flow: null
-                        }
-                    },
-                    {
-                        label: '<i class="fa fa-long-arrow-down"></i>',
-                        layoutOpts: {
-                            flow: {axis: 'y', minSeparation: 30}
-                        }
-                    }
-                ];
-
-                sliders.forEach(makeSlider);
-
-                buttons.forEach(makeButton);
-
-                function makeLayout(opts) {
-                    params.randomize = false;
-                    params.edgeLength = function (e) {
-                        return params.edgeLengthVal / e.data('weight');
-                    };
-
-                    for (var i in opts) {
-                        params[i] = opts[i];
-                    }
-
-                    return cy.layout(params);
-                }
-
-                function makeSlider(opts) {
-                    var $input = $('<input class="col-lg-10"></input>');
-                    var $param = $('<div class="param"></div>');
-
-                    $param.append('<span class="label label-default">' + opts.label + '</span>');
-                    $param.append($input);
-
-                    $config.append($param);
-
-                    var p = $input.slider({
-                        min: opts.min,
-                        max: opts.max,
-                        value: params[opts.param]
-                    }).on('slide', _.throttle(function () {
-                        params[opts.param] = p.getValue();
-
-                        layout.stop();
-                        layout = makeLayout();
-                        layout.run();
-                    }, 16)).data('slider');
-                }
-
-                function makeButton(opts) {
-                    var $button = $('<button class="btn btn-default">' + opts.label + '</button>');
-
-                    $btnParam.append($button);
-
-                    $button.on('click', function () {
-                        layout.stop();
-
-                        if (opts.fn) {
-                            opts.fn();
-                        }
-
-                        layout = makeLayout(opts.layoutOpts);
-                        layout.run();
-                    });
-                }
-
-                $('#config-toggle').on('click', function () {
-                    $('body').toggleClass('config-closed');
-
-                    cy.resize();
-                });
-
-
+                $('.param').remove(); //Remove the parameter sliders.
+                generateNetwork(); // Generate new Network with new parameters.
             });
-        })
-        ;
+
+        });
     </script>
 
 
@@ -223,12 +260,6 @@
     <div class="text-center">
         <h2>Pathway Similarity Network</h2>
     </div>
-    <select type="text" class="form-control" name="resources[]" id="select-1">
-            <option value="all">All resources</option>
-        {% for manager in manager_names %}
-            <option value="{{ manager }}">{{ manager|upper }}</option>
-        {% endfor %}
-    </select>
     <div style="text-align: center"></div>
     <div class="row">
         <div class="col-lg-8">
@@ -257,16 +288,43 @@
             <div class="tab-content">
                 <div class="tab-pane active" id="network-panel" role="tabpanel">
 
-
+                    <div class="preamble">
+                        <p>
+                            Data by <a href="http://genemania.org">GeneMANIA</a><br>
+                            Visualisation by <a href="http://js.cytoscape.org">Cytoscape.js</a><br>
+                            Layout by <a href="http://marvl.infotech.monash.edu/webcola/">Cola.js</a>
+                        </p>
+                    </div>
                     <div id="config" class="config">
+                        <form class="form-inline well">
 
-                        <div class="preamble">
-                            <p>
-                                Data by <a href="http://genemania.org">GeneMANIA</a><br>
-                                Visualisation by <a href="http://js.cytoscape.org">Cytoscape.js</a><br>
-                                Layout by <a href="http://marvl.infotech.monash.edu/webcola/">Cola.js</a>
-                            </p>
-                        </div>
+                            <label for="select-1">Source</label>
+
+                            <select type="text" class="form-control" name="resources[]" id="select-1">
+
+                                <option value="similarity_network" selected>All resources</option>
+                                {#                                # TODO change to automatic from resource query. (con lo que habia no salian las resources)#}
+
+                                <option value="reactome">Reactome</option>
+                                <option value="kegg" selected>Kegg</option>
+                                <option value="wikipathways">Wikipathways</option>
+                            </select>
+                            <label for="select-2">Threshold</label>
+
+                            <select type="text" class="form-control" name="resources[]" id="select-2">
+
+                                <option>10</option>
+                                <option>20</option>
+                                <option>30</option>
+                                <option>40</option>
+                                <option>50</option>
+                                <option>60</option>
+                                <option>70</option>
+                                <option selected>90</option>
+                                <option>100</option>
+                            </select>
+                        </form>
+
 
                         <div class="param">
                         </div>
