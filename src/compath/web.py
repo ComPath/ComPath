@@ -102,10 +102,14 @@ def create_app(connection=None):
 
     log.info('Loading overlap across pathway databases')
 
-    resource_genesets = {
-        name: manager.get_all_hgnc_symbols()
-        for name, manager in app.manager_dict.items()
-    }
+    resource_genesets = {}
+
+    for name, manager in app.manager_dict.items():
+
+        if name == 'compath_hgnc':
+            name = 'hgnc families'
+
+        resource_genesets[name] = manager.get_all_hgnc_symbols()
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
