@@ -125,7 +125,7 @@
         function startCy(urlPath) {
             $.getJSON(urlPath, function (data) {
 
-                    // TODO: Define Max zoom, add names and urls
+                    // TODO: Define Max zoom, add names and urls, link width defined by similarity
 
 
                     var cy = window.cy = cytoscape({
@@ -146,7 +146,7 @@
 
                     var params = {
                         name: 'cola',
-                        nodeSpacing: 5,
+                        nodeSpacing: 30,
                         edgeLengthVal: 45,
                         animate: true,
                         randomize: false,
