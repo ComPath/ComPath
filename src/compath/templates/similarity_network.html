@@ -169,14 +169,12 @@
 
                     var sliders = [
                         {
-                            label: 'Edge length',
                             param: 'edgeLengthVal',
                             min: 1,
                             max: 200
                         },
 
                         {
-                            label: 'Node spacing',
                             param: 'nodeSpacing',
                             min: 1,
                             max: 50
@@ -218,10 +216,11 @@
                     }
 
                     function makeSlider(opts, divId) {
-                        var $input = $('<input class="col-lg-10 col-md-10 col-xs-10"></input>');
+                        var $input = $('<input style="width: 80%"></input>');
                         var $targetId = $('#' + divId);
 
-                        $targetId.append('<span class="label label-default">' + opts.label + '</span>');
+                        // TODO: Center the sliders
+                        $targetId.append('<span class="label label-default"></span>');
                         $targetId.append($input);
 
                         var p = $input.slider({
