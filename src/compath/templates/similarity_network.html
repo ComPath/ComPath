@@ -102,7 +102,11 @@
             else return "grey";
         }
 
-        function generateNetwork() {
+        /**
+         * Returns the url of the json file needed to render cytsocape js visualization
+         * @returns {str} url
+         */
+        function getJsonPath() {
 
             var resource = $("#resource-input").val();
 
@@ -115,7 +119,11 @@
                 path = "static/json/" + resource + "/" + resource + "_" + $("#similarity-range").val() + ".json"
             }
 
-            $.getJSON(path, function (data) {
+            return path
+        }
+
+        function startCy(urlPath) {
+            $.getJSON(urlPath, function (data) {
 
                     var cy = window.cy = cytoscape({
                         container: document.getElementById('network'),
@@ -253,17 +261,18 @@
 
                 }
             );
+
         }
+
 
         $(document).ready(function () {
 
-            generateNetwork(); // Generate the default Network
+            startCy(getJsonPath()); // Generate the default Network
 
             // When click on refresh network button.
             $('#refresh-network').click(function () {
-
                 $('.param').remove(); //Remove the parameter sliders.
-                generateNetwork(); // Generate new Network with new parameters.
+                startCy(getJsonPath()); // Generate new Network with new parameters.
             });
 
         });
@@ -309,8 +318,11 @@
                             </p>
                         </div>
                         <div id="config" class="config">
+                            <button type="button" id="refresh-network" class="btn btn-primary not-rounded full-width">
+                                Refresh Network
+                            </button>
                             <form class="form-inline">
-                                <label for="resource-input">Source</label>
+                                <label for="resource-input">Resource</label>
 
                                 <select type="text" class="form-control" id="resource-input">
 
@@ -342,18 +354,6 @@
                             <div class="param">
                             </div>
                         </div>
-
-                        <button type="button" id="refresh-network" data-toggle="popover"
-                                title="Render the Network"
-                                data-content="Renders the Network using the selected filtering. Note that the Network
-                                will not be rendered if it contains more than 1500 nodes to avoid crashing your browser."
-                                class="btn btn-primary not-rounded width-50 pull-left">
-                            Refresh Network
-                        </button>
-                        <button type="button" id="collapse-tree"
-                                class="btn btn-primary not-rounded width-50 pull-right">
-                            Collapse Annotations
-                        </button>
                     </div>
                     <div class="tab-pane not-rounded" id="nodes-panel" role="tabpanel">
                         <p class="text-center" style="margin-top: 10px;"><b> Modify Node Spacing</b></p>
