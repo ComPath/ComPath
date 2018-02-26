@@ -125,6 +125,9 @@
         function startCy(urlPath) {
             $.getJSON(urlPath, function (data) {
 
+                    // TODO: Define Max zoom, add names and urls
+
+
                     var cy = window.cy = cytoscape({
                         container: document.getElementById('network'),
                         elements: data,
@@ -271,7 +274,11 @@
 
             // When click on refresh network button.
             $('#refresh-network').click(function () {
-                $('.param').remove(); //Remove the parameter sliders.
+
+                //Remove the parameter sliders.
+                $('.param').remove();
+                $('#edge-slider').empty();
+                $('#node-slider').empty();
                 startCy(getJsonPath()); // Generate new Network with new parameters.
             });
 
