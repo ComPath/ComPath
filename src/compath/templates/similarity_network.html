@@ -15,6 +15,8 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link href="http://cdnjs.cloudflare.com/ajax/libs/qtip2/2.2.0/jquery.qtip.min.css" rel="stylesheet" type="text/css">
 
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/legend.css') }}">
+
     <style>
 
         #network {
@@ -134,7 +136,6 @@
                         elements: data,
                         style: cytoscape.stylesheet()
                             .selector('node')
-
                             // Set colour in function of the resource.
                             .style({
                                 'background-color': function (e) {
@@ -203,6 +204,19 @@
 
                     buttons.forEach(makeButton);
 
+                    var nodes = cy.filter('node');
+                    var nodeNames = [];
+
+                    // Create node list
+                    $.each(nodes, function (key, e) {
+                        var name = e.data('name');
+                        nodeNames.push(name);
+
+                        $("#node-list").append("<li class='list-group-item'><input class='node-checkbox' type='checkbox'>" +
+                            "<div class='circle " + e.data('resource') + "'>" + // Set circle colour
+                            "</div><span class='node-" + name + "'>" + name + "</span></li>");
+                    });
+
                     function makeLayout(opts) {
                         params.randomize = false;
                         params.edgeLength = function (e) {
@@ -237,6 +251,7 @@
                             layout.run();
                         }, 16)).data('slider');
                     }
+
 
                     function makeButton(opts) {
                         var $button = $('<button class="btn btn-default">' + opts.label + '</button>');
@@ -277,6 +292,8 @@
 
                 //Remove the parameter sliders.
                 $('.param').remove();
+
+                $('#node-list').empty(); // Clear node list.
                 $('#edge-slider').empty();
                 $('#node-slider').empty();
                 startCy(getJsonPath()); // Generate new Network with new parameters.
@@ -377,7 +394,10 @@
                                    aria-describedby="sizing-addon1" type="text"/>
                         </div>
                         <div class="not-rounded2" id="node-list"
-                             style="max-height: 450px;height: 450px; overflow:auto;"></div>
+                             style="max-height: 450px;height: 450px; overflow:auto;">
+
+
+                        </div>
                     </div>
                     <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
                         <p class="text-center" style="margin-top: 10px;"><b> Modify Links Length</b></p>
