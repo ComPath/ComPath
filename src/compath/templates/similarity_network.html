@@ -124,6 +124,85 @@
             return path
         }
 
+        /**
+         * Resets default styles for nodes/edges/text
+         */
+        function resetAttributes() {
+            // Reset visibility and opacity
+            cy.filter('edge', 'node').forEach().style("opacity", "1");
+
+            // Show node names
+            {#            cy.filter('edge', 'node').forEach().style("opacity", "1");#}
+        }
+
+        /**
+         * Highlights nodes from array using property as filter and changes the opacity of the rest of nodes
+         * @param {array} nodeArray
+         * @param {string} property of the edge to filter
+         */
+        function highlightNodes(nodeArray, property) {
+
+            // Filter not mapped nodes to change opacity
+            var nodesNotInArray = svg.selectAll(".node").filter(function (el) {
+                return nodeArray.indexOf(el[property]) < 0;
+            });
+
+            // Not mapped links
+            var notMappedEdges = g.selectAll(".link").filter(function (el) {
+                // Source and target should be present in the edge
+                return !(nodeArray.indexOf(el.source[property]) >= 0 || nodeArray.indexOf(el.target[property]) >= 0);
+            });
+
+            nodesNotInArray.style("opacity", "0.1");
+            notMappedEdges.style("opacity", "0.1");
+        }
+        /**
+         * Changes the opacity to 0.1 of edges that are not in array
+         * @param {array} edgeArray
+         * @param {string} property of the edge to filter
+         */
+        function highlightEdges(edgeArray, property) {
+
+            // Array with names of the nodes in the selected edge
+            var nodesInEdges = [];
+
+            // Filtered not selected links
+            var edgesNotInArray = g.selectAll(".link").filter(function (edgeObject) {
+
+                if (edgeArray.indexOf(edgeObject.source[property] + " " + edgeObject.relation + " " + edgeObject.target[property]) >= 0) {
+                    nodesInEdges.push(edgeObject.source[property]);
+                    nodesInEdges.push(edgeObject.target[property]);
+                }
+                else return edgeObject;
+            });
+
+            var nodesNotInEdges = node.filter(function (nodeObject) {
+                return nodesInEdges.indexOf(nodeObject[property]) < 0;
+            });
+
+            nodesNotInEdges.style("opacity", "0.1");
+            edgesNotInArray.style("opacity", "0.1");
+
+        }
+
+        /**
+         * Resets default styles for nodes/edges/text on double click
+         */
+        function resetAttributesDoubleClick() {
+
+            // On double click reset attributes (Important disabling the zoom behavior of dbl click because it interferes with this)
+            svg.on("dblclick", function () {
+                // SET default color
+                svg.selectAll(".link").style("stroke", defaultLinkColor);
+                // SET default attributes //
+                svg.selectAll(".link, .node").style("visibility", "visible")
+                    .style("opacity", "1");
+                // Show node names
+                svg.selectAll(".node-name").style("visibility", "visible").style("opacity", "1");
+            });
+
+        }
+
         function startCy(urlPath) {
             $.getJSON(urlPath, function (data) {
 
@@ -269,6 +348,38 @@
                             layout.run();
                         });
                     }
+
+
+                    $("#get-checked-nodes").on("click", function (event) {
+
+                        var checkedItems = [];
+                        $(".node-checkbox:checked").each(function (idx, li) {
+                            checkedItems.push(li);
+                            console.log(li);
+
+{#                            li.style("opacity", "0.5");#}
+                        });
+                        console.log(checkedItems);
+                        resetAttributes();
+
+                        {#                        highlightNodes(checkedItems, 'id');#}
+
+
+                        {#                        resetAttributesDoubleClick();#}
+                    });
+
+                    $("#get-checked-edges").on("click", function (event) {
+
+                        var checkedItems = [];
+                        $(".edge-checkbox:checked").forEach().style("opacity", "0.5");
+
+                        resetAttributes();
+                        {#                        highlightEdges(checkedItems, 'name');#}
+
+                        {##}
+                        {#                        resetAttributesDoubleClick();#}
+                    });
+
 
                     $('#config-toggle').on('click', function () {
                         $('body').toggleClass('config-closed');
