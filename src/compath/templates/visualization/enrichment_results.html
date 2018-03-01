@@ -15,6 +15,14 @@
     <div class="container">
         <div class="page-header">
             <h1>Query Results</h1>
+            <p>Submitted HGNC gene symbols:
+
+                {% for hgnc_symbol in submitted_gene_set %}
+                    <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
+                    {{ "," if not loop.last }}
+                {% endfor %}
+
+            </p>
         </div>
 
         {{ util.flashed_messages(dismissible=True, container=False) }}

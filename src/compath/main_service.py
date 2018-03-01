@@ -2,10 +2,10 @@
 
 """ This module contains the common views across all pathway bio2bel repos"""
 
-import logging
-from io import StringIO
-import sys
 import datetime
+import logging
+import sys
+from io import StringIO
 
 from flask import (
     Blueprint,
@@ -155,7 +155,11 @@ def process_gene_set():
 
     enrichment_results = get_enriched_pathways(current_app.manager_dict, gene_sets)
 
-    return render_template('visualization/enrichment_results.html', query_results=enrichment_results)
+    return render_template(
+        'visualization/enrichment_results.html',
+        query_results=enrichment_results,
+        submitted_gene_set=gene_sets
+    )
 
 
 # @ui_blueprint.route('/query/upload', methods=('GET', 'POST'))
