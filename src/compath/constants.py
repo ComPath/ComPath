@@ -22,6 +22,4 @@ KEGG_GENE_SET = os.path.join(EXCEL_FOLDER, 'reactome_gene_sets.csv')
 BLACK_LIST = {
     'hgnc',
     'compath_hgnc',
-    'neurommsig_ad',
-    'neurommsig_pd'
 }

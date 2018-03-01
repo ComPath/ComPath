@@ -42,7 +42,7 @@ def get_enriched_pathways(manager_list, gene_set):
 
     :param dict[str, Manager] manager_list: list of managers
     :param set[str] gene_set: gene set queried
-    :rtype: dict{str,list[dict]]
+    :rtype: dict[str,list[dict]]
     """
     return {
         manager_name: instance.query_gene_set(gene_set)
@@ -56,7 +56,7 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
     :param flask.Flask app: current app
     :param list[tuple[str,str] pathways: pathway/resource tuples
-    :rtype: dict
+    :rtype: dict[str,str]
     :return: gene sets
     """
 
