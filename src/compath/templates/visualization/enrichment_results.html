@@ -1,10 +1,78 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends "base.html" %}
 
-</body>
-</html>
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Enriched Pathways{% endblock %}xz
+
+{% block scripts %}
+    {{ super() }}
+
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="page-header">
+            <h1>Query Results</h1>
+        </div>
+
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        {% for resouce_name, enriched_pathways in query_results.items() %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ resouce_name|upper }}</h3>
+                </div>
+                <div class="panel-body">
+
+                    <table class="table table-hover table-responsive table-striped">
+                        <thead>
+                        <tr>
+                            <th>Pathway Name</th>
+                            <th>Resource Identifier</th>
+                            <th>Number of Genes Mapped</th>
+                            <th>Pathway Size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for enriched_pathway in enriched_pathways %}
+                            <tr>
+                                <td>
+                                    {{ enriched_pathway["pathway_name"] }}
+                                </td>
+                                <td>
+                                    {% if resouce_name == "reactome" %}
+                                        <a href="https://reactome.org/PathwayBrowser/#/{{ enriched_pathway["pathway_id"] }}">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% elif resouce_name == "kegg" %}
+                                        <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ enriched_pathway["pathway_id"]|remove_prefix('path:hsa') }}&show_description=show">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% elif resouce_name == "wikipathways" %}
+                                        <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% else %}
+                                        {{ enriched_pathway["pathway_id"] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["mapped_proteins"] }}
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["pathway_size"] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% include "footer.html" %}
+{% endblock %}

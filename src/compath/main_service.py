@@ -23,7 +23,7 @@ from compath.forms import GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
     process_form_gene_set,
-    query_gene_set,
+    get_enriched_pathways,
     get_gene_sets_from_pathway_names,
     process_overlap_for_venn_diagram
 )
@@ -63,7 +63,7 @@ def about():
 def pathway_overlap():
     """Renders the Pathway Overlap page"""
     return render_template(
-        'pathway_overlap.html',
+        'visualization/clustergrammer/pathway_overlap.html',
         manager_names=current_app.resource_distributions.keys(),
         managers_overlap=current_app.manager_overlap
     )
@@ -76,7 +76,7 @@ def pathway_overlap():
 def similarity_network():
     """Renders the Similarity network powered by Cytoscape"""
     return render_template(
-        'similarity_network.html',
+        'visualization/similarity_network.html',
         manager_names=current_app.manager_dict.keys(),
     )
 
@@ -87,25 +87,26 @@ def similarity_network():
 @ui_blueprint.route('/kegg_overlap', methods=['GET'])
 def kegg_matrix():
     """Renders the KEGG Matrix page powered by Clustergrammer"""
-    return render_template('kegg_overlap.html')
+    return render_template('visualization/clustergrammer/kegg_overlap.html')
 
 
 @ui_blueprint.route('/reactome_overlap', methods=['GET'])
 def reactome_matrix():
     """Renders the Reactome Matrix page powered by Clustergrammer"""
-    return render_template('reactome_overlap.html')
+    return render_template('visualization/clustergrammer/reactome_overlap.html')
 
 
 @ui_blueprint.route('/wikipathways_overlap', methods=['GET'])
 def wikipathways_matrix():
     """Renders the WikiPathways Matrix page powered by Clustergrammer"""
-    return render_template('wikipathways_overlap.html')
+    return render_template('visualization/clustergrammer/wikipathways_overlap.html')
 
 
 @ui_blueprint.route('/pathway_distribution', methods=['GET'])
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
-    return render_template('pathway_distribution.html', manager_distribution_dict=current_app.resource_distributions)
+    return render_template('visualization/pathway_distribution.html',
+                           manager_distribution_dict=current_app.resource_distributions)
 
 
 @ui_blueprint.route('/query', methods=['GET'])
@@ -141,10 +142,9 @@ def calculate_overlap():
     return jsonify(processed_venn_diagram)
 
 
-@ui_blueprint.route('/query/process', methods=['POST'])
+@ui_blueprint.route('/query/results', methods=['POST'])
 def process_gene_set():
-    """Process the gene set POST form
-    """
+    """Process the gene set POST form"""
     form = GeneSetForm()
 
     if not form.validate_on_submit():
@@ -153,11 +153,9 @@ def process_gene_set():
 
     gene_sets = process_form_gene_set(form.geneset.data)
 
-    enrichment_results = query_gene_set(current_app.manager_dict, gene_sets)
+    enrichment_results = get_enriched_pathways(current_app.manager_dict, gene_sets)
 
-    print(enrichment_results)
-
-    return redirect('/query')
+    return render_template('visualization/enrichment_results.html', query_results=enrichment_results)
 
 
 # @ui_blueprint.route('/query/upload', methods=('GET', 'POST'))

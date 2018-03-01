@@ -2,7 +2,7 @@
 
 import logging
 from itertools import combinations
-
+from .constants import BLACK_LIST
 from pandas import DataFrame, Series
 
 log = logging.getLogger(__name__)
@@ -37,18 +37,18 @@ def process_form_gene_set(form_field):
     }
 
 
-def query_gene_set(manager_list, gene_set):
-    """
+def get_enriched_pathways(manager_list, gene_set):
+    """Return the results of the queries for every registered manager
 
-    :param dict manager_list: list of managers
+    :param dict[str, Manager] manager_list: list of managers
     :param set[str] gene_set: gene set queried
-    :return:
+    :rtype: dict{str,list[dict]]
     """
-
-    for manager in manager_list.values():
-        results = manager.query_gene_set(gene_set)
-
-    return results
+    return {
+        manager_name: instance.query_gene_set(gene_set)
+        for manager_name, instance in manager_list.items()
+        if manager_name not in BLACK_LIST
+    }
 
 
 def get_gene_sets_from_pathway_names(app, pathways):
