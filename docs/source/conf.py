@@ -16,7 +16,7 @@ extensions = [
 templates_path = ['_templates']
 source_suffix = '.rst'
 master_doc = 'index'
-project = 'Comparative Pathways Tool'
+project = 'ComPath - An interactive and extensible web application for comparative analysis of pathway databases'
 copyright = '2018, Daniel Domingo-Fernández and Charles Tapley Hoyt'
 author = 'Daniel Domingo-Fernández and Charles Tapley Hoyt'
 
@@ -40,13 +40,13 @@ html_static_path = []
 htmlhelp_basename = 'compathdoc'
 latex_elements = {}
 latex_documents = [
-    (master_doc, 'compath.tex', 'Comparative Pathways Tool Documentation', 'Daniel Domingo-Fernández and Charles Tapley Hoyt', 'manual'),
+    (master_doc, 'compath.tex', 'ComPath Documentation', 'Daniel Domingo-Fernández and Charles Tapley Hoyt', 'manual'),
 ]
 man_pages = [
-    (master_doc, 'compath', 'Comparative Pathways Tool Documentation', [author], 1)
+    (master_doc, 'compath', 'Compath Documentation', [author], 1)
 ]
 texinfo_documents = [
-    (master_doc, 'Comparative Pathways Tool', 'Comparative Pathways Tool Documentation', author, 'Comparative Pathways Tool', 'Comparative Pathways Tool', 'Miscellaneous'),
+    (master_doc, 'Compath Tool', 'CompathDocumentation', author, 'Compath Tool', 'Compath Tool', 'Miscellaneous'),
 ]
 
 # Example configuration for intersphinx: refer to the Python standard library.

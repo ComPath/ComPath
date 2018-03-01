@@ -38,7 +38,7 @@ Running locally
     :alt: Coverage Status
 
 .. |docs| image:: http://readthedocs.org/projects/compath/badge/?version=latest
-    :target: http://bio2bel.readthedocs.io/projects/compath/en/latest/?badge=latest
+    :target: https://compath.readthedocs.io/en/latest/
     :alt: Documentation Status
 
 
