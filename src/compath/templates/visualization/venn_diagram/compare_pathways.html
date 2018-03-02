@@ -1,0 +1,186 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Pathway Overlap Comparison{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+
+    <style>
+
+        /* Fuse dynamic field buttons */
+
+        [data-role="dynamic-fields"] > .form-inline + .form-inline {
+            margin-top: 0.5em;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline [data-role="add"] {
+            display: none;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
+            display: inline-block;
+        }
+
+        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
+            display: none;
+        }
+
+        /* Gene Sets in table info */
+
+        td {
+            overflow: scroll;
+        }
+
+        /* VennDiagram CSS */
+
+        svg path {
+            stroke: white;
+            stroke-width: 2px;
+        }
+
+        #overlap-venn-diagram svg text {
+            fill: white;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-size: 14px !important;
+        }
+
+        .venntooltip {
+            position: absolute;
+            text-align: center;
+            width: 128px;
+            height: 25px;
+            background: #333;
+            color: #ddd;
+            padding: 2px;
+            border: 0px;
+            border-radius: 8px;
+            opacity: 0;
+        }
+
+
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript"
+            src="https://benfred.github.io/venn.js/venn.js"></script>
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/overlap_controller.js', version='20180501') }}"></script>
+
+    <script>
+
+        var data = {{ managers_overlap|safe }};
+
+        var coverageVenn = d3.select("#coverage-venn-diagram");
+
+        coverageVenn.attr("align", "center"); // Align center the diagram
+
+        var ignorome = venn.VennDiagram(); // Plot the Venn Diagram
+        coverageVenn.datum(data).call(ignorome); // Stick data
+
+        // add a tooltip
+        var tooltip = d3.select("body").append("div")
+            .attr("class", "venntooltip");
+
+        // add listeners to all the groups to display tooltip on mouseover
+        coverageVenn.selectAll("g")
+            .on("mouseover", function (d, i) {
+                // sort all the areas relative to the current item
+                venn.sortAreas(coverageVenn, d);
+
+                // Display a tooltip with the current size
+                tooltip.transition().duration(400).style("opacity", .9);
+                tooltip.text(d.size + " genes");
+
+                // highlight the current path
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                    .style("stroke-width", 3)
+                    .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
+                    .style("stroke-opacity", 1);
+            })
+
+            .on("mousemove", function () {
+                tooltip.style("left", (d3.event.pageX) + "px")
+                    .style("top", (d3.event.pageY - 28) + "px");
+            })
+
+            .on("mouseout", function (d, i) {
+                tooltip.transition().duration(400).style("opacity", 0);
+                var selection = d3.select(this).transition("tooltip").duration(400);
+                selection.select("path")
+                    .style("stroke-width", 0)
+                    .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
+                    .style("stroke-opacity", 0);
+            });
+
+    </script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
+            <div class="panel-body">
+                <form id="venn-diagram-form">
+                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap. Double
+                        click in the circles to see information about the pathways and their overlap.</p>
+                    <div data-role="dynamic-fields">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <label class="sr-only" for="pathway">Pathways</label>
+                                <input type="text" class="form-control" name="pathways[]" id="input-1"
+                                       placeholder="Select the Pathway to compare"
+                                       style=" min-width: 500px;">
+                                <select type="text" class="form-control" name="resources[]" id="select-1">
+                                    {% for manager in manager_names %}
+                                        <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <button class="btn btn-danger" data-role="remove">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                            <button class="btn btn-primary" data-role="add">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                        </div>  <!-- /div.form-inline -->
+                    </div> <!-- /div[data-role="dynamic-fields"] -->
+                    <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
+                        <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
+                    </div>
+                    <div id="overlap-venn-diagram"></div>
+                </form>
+            </div>
+            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
+        </div>
+
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Genomic Coverage Overview and Ignorome</div>
+            <div class="panel-body">
+                <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
+                <div id="coverage-venn-diagram">
+                </div>
+            </div>
+            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}

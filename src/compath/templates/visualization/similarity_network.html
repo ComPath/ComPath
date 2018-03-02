@@ -84,11 +84,7 @@
     <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-qtip/2.7.0/cytoscape-qtip.js"></script>
     <script src="https://cdn.rawgit.com/cytoscape/cytoscape.js-cola/1.6.0/cytoscape-cola.js"></script>
 
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.js"></script>
-    <script type="text/javascript" src="https://npmcdn.com/tether@1.2.4/dist/js/tether.min.js"></script>
-
-
+    {% include "dependencies/common.html" %}
 
     <script>
 
@@ -156,6 +152,7 @@
             nodesNotInArray.style("opacity", "0.1");
             notMappedEdges.style("opacity", "0.1");
         }
+
         /**
          * Changes the opacity to 0.1 of edges that are not in array
          * @param {array} edgeArray
@@ -357,7 +354,7 @@
                             checkedItems.push(li);
                             console.log(li);
 
-{#                            li.style("opacity", "0.5");#}
+                            {#                            li.style("opacity", "0.5");#}
                         });
                         console.log(checkedItems);
                         resetAttributes();

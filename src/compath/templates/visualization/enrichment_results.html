@@ -50,70 +50,83 @@
         <div class="page-header">
             <h1>Query Results</h1>
             <p>Submitted HGNC gene symbols:
-
                 {% for hgnc_symbol in submitted_gene_set %}
                     <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
                     {{ "," if not loop.last }}
                 {% endfor %}
-
             </p>
         </div>
 
+
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        {% for resource_name, enriched_pathways in query_results.items() %}
-
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">{{ resource_name|upper }}</h3>
-                </div>
-                <div class="panel-body">
-
-                    <table class="table table-hover table-responsive table-striped" id="{{ resource_name }}-table">
-                        <thead>
-                        <tr>
-                            <th>Pathway Name</th>
-                            <th>Resource Identifier</th>
-                            <th>Number of Genes Mapped</th>
-                            <th>Pathway Size</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {% for enriched_pathway in enriched_pathways %}
-                            <tr>
-                                <td>
-                                    {{ enriched_pathway["pathway_name"] }}
-                                </td>
-                                <td>
-                                    {% if resource_name == "reactome" %}
-                                        <a href="https://reactome.org/PathwayBrowser/#/{{ enriched_pathway["pathway_id"] }}">
-                                            {{ enriched_pathway["pathway_id"] }}
-                                        </a>
-                                    {% elif resource_name == "kegg" %}
-                                        <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ enriched_pathway["pathway_id"]|remove_prefix('path:hsa') }}&show_description=show">
-                                            {{ enriched_pathway["pathway_id"] }}
-                                        </a>
-                                    {% elif resource_name == "wikipathways" %}
-                                        <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
-                                            {{ enriched_pathway["pathway_id"] }}
-                                        </a>
-                                    {% else %}
-                                        {{ enriched_pathway["pathway_id"] }}
-                                    {% endif %}
-                                </td>
-                                <td>
-                                    {{ enriched_pathway["mapped_proteins"] }}
-                                </td>
-                                <td>
-                                    {{ enriched_pathway["pathway_size"] }}
-                                </td>
-                            </tr>
-                        {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
+        <form id="compare-pathways-form" method="get" action="{{ url_for('ui.compare_pathways') }}">
+            <p>You can select the pathways of interest and visualize their overlap by clicking in the Submit button
+            </p>
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">Compare Pathways</button>
             </div>
-        {% endfor %}
+            {% for resource_name, enriched_pathways in query_results.items() %}
+
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">{{ resource_name|upper }}</h3>
+                    </div>
+                    <div class="panel-body">
+
+                        <table class="table table-hover table-responsive table-striped" id="{{ resource_name }}-table">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                <th>Pathway Name</th>
+                                <th>Resource Identifier</th>
+                                <th>Number of Genes Mapped</th>
+                                <th>Pathway Size</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for enriched_pathway in enriched_pathways %}
+                                <tr>
+                                    <td>
+                                        <label>
+                                            <input type="checkbox" name="pathways[]"
+                                                   value="{{ resource_name }}|{{ enriched_pathway["pathway_name"] }}"/>
+                                        </label>
+                                    </td>
+                                    <td>
+                                        {{ enriched_pathway["pathway_name"] }}
+                                    </td>
+                                    <td>
+                                        {% if resource_name == "reactome" %}
+                                            <a href="https://reactome.org/PathwayBrowser/#/{{ enriched_pathway["pathway_id"] }}">
+                                                {{ enriched_pathway["pathway_id"] }}
+                                            </a>
+                                        {% elif resource_name == "kegg" %}
+                                            <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ enriched_pathway["pathway_id"]|remove_prefix('path:hsa') }}&show_description=show">
+                                                {{ enriched_pathway["pathway_id"] }}
+                                            </a>
+                                        {% elif resource_name == "wikipathways" %}
+                                            <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
+                                                {{ enriched_pathway["pathway_id"] }}
+                                            </a>
+                                        {% else %}
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        {{ enriched_pathway["mapped_proteins"] }}
+                                    </td>
+                                    <td>
+                                        {{ enriched_pathway["pathway_size"] }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endfor %}
+        </form>
     </div>
 
     {% include "footer.html" %}

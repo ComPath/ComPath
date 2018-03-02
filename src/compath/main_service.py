@@ -59,13 +59,41 @@ def about():
     return render_template('about.html', metadata=metadata)
 
 
+"""Venn Diagram views"""
+
+
 @ui_blueprint.route('/pathway_overlap', methods=['GET'])
 def pathway_overlap():
     """Renders the Pathway Overlap page"""
     return render_template(
-        'visualization/clustergrammer/pathway_overlap.html',
+        'visualization/venn_diagram/pathway_overlap.html',
         manager_names=current_app.resource_distributions.keys(),
         managers_overlap=current_app.manager_overlap
+    )
+
+
+@ui_blueprint.route('/compare_pathways', methods=['GET'])
+def compare_pathways():
+    """Renders a venn diagram rendering pathway overlap"""
+
+    if not 'pathways[]' in request.args:
+        return abort(500, 'Invalid request')
+
+    pathways = [
+        (pathway.split('|')[1], pathway.split('|')[0])
+        for pathway in request.args.getlist('pathways[]')
+    ]
+
+    gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
+
+    if not gene_sets:
+        return abort(500, 'Pathways could not be found. Please check your request.')
+
+    processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
+
+    return render_template(
+        'visualization/venn_diagram/pathway_overlap.html',
+        venn_diagram_data=processed_venn_diagram
     )
 
 
@@ -105,8 +133,10 @@ def wikipathways_matrix():
 @ui_blueprint.route('/pathway_distribution', methods=['GET'])
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
-    return render_template('visualization/pathway_distribution.html',
-                           manager_distribution_dict=current_app.resource_distributions)
+    return render_template(
+        'visualization/pathway_distribution.html',
+        manager_distribution_dict=current_app.resource_distributions
+    )
 
 
 @ui_blueprint.route('/query', methods=['GET'])

@@ -6,7 +6,6 @@
 
 {% block title %}Pathway Overlap Comparison{% endblock %}
 
-
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
@@ -79,14 +78,10 @@
             src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript"
             src="https://benfred.github.io/venn.js/venn.js"></script>
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/overlap_controller.js', version='20180501') }}"></script>
-
     <script>
+        var data = {{ venn_diagram_data|tojson|safe }};
 
-        var data = {{ managers_overlap|safe }};
-
-        var coverageVenn = d3.select("#coverage-venn-diagram");
+        var coverageVenn = d3.select("#venn-diagram");
 
         coverageVenn.attr("align", "center"); // Align center the diagram
 
@@ -140,44 +135,6 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <form id="venn-diagram-form">
-                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap. Double
-                        click in the circles to see information about the pathways and their overlap.</p>
-                    <div data-role="dynamic-fields">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="pathway">Pathways</label>
-                                <input type="text" class="form-control" name="pathways[]" id="input-1"
-                                       placeholder="Select the Pathway to compare"
-                                       style=" min-width: 500px;">
-                                <select type="text" class="form-control" name="resources[]" id="select-1">
-                                    {% for manager in manager_names %}
-                                        <option value="{{ manager }}">{{ manager|upper }}</option>
-                                    {% endfor %}
-                                </select>
-                            </div>
-                            <button class="btn btn-danger" data-role="remove">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            <button class="btn btn-primary" data-role="add">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </div>  <!-- /div.form-inline -->
-                    </div> <!-- /div[data-role="dynamic-fields"] -->
-                    <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                        <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
-                    </div>
-                    <div id="overlap-venn-diagram"></div>
-                </form>
-            </div>
-            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
-        </div>
-
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Genomic Coverage Overview and Ignorome</div>
-            <div class="panel-body">
-                <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
                 <div id="coverage-venn-diagram">
                 </div>
             </div>
