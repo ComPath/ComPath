@@ -29,12 +29,12 @@ Running locally
    :code:`python3 -m bio2bel_wikipathways populate`.
 2. Start the web app (runs by default http://localhost:5000) with :code:`python3 -m compath web`
 
-.. |build| image:: https://travis-ci.org/compath/ComPath.svg?branch=master
-    :target: https://travis-ci.org/compath/compath
+.. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
+    :target: https://travis-ci.org/ComPath/ComPath
     :alt: Build Status
 
-.. |coverage| image:: https://codecov.io/gh/compath/compath/coverage.svg?branch=master
-    :target: https://codecov.io/gh/compath/compath?branch=master
+.. |coverage| image:: https://codecov.io/gh/ComPath/ComPath/coverage.svg?branch=master
+    :target: https://codecov.io/gh/ComPath/ComPath?branch=master
     :alt: Coverage Status
 
 .. |docs| image:: http://readthedocs.org/projects/compath/badge/?version=latest
