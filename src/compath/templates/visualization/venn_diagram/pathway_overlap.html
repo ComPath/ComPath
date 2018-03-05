@@ -12,24 +12,6 @@
 
     <style>
 
-        /* Fuse dynamic field buttons */
-
-        [data-role="dynamic-fields"] > .form-inline + .form-inline {
-            margin-top: 0.5em;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline [data-role="add"] {
-            display: none;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="add"] {
-            display: inline-block;
-        }
-
-        [data-role="dynamic-fields"] > .form-inline:last-child [data-role="remove"] {
-            display: none;
-        }
-
         /* Gene Sets in table info */
 
         td {
@@ -43,7 +25,7 @@
             stroke-width: 2px;
         }
 
-        #overlap-venn-diagram svg text {
+        #venn-diagram svg text {
             fill: white;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
             font-size: 14px !important;
@@ -135,7 +117,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <div id="coverage-venn-diagram">
+                <div id="venn-diagram">
                 </div>
             </div>
             <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
