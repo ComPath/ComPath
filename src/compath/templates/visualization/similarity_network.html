@@ -149,7 +149,7 @@
                 nodeObject["Name"] = node.data('name');
             }
             if (node.data('url')) {
-                nodeObject["Resource"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource') + "</a>";
+                nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "</a>";
             }
 
             var row = 0;
