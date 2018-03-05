@@ -1,15 +1,14 @@
 /* CSS file specific for the legend and node info circles*/
 
 body {
-  font-family: helvetica, sans-serif;
-  font-size: 14px;
+    font-family: helvetica, sans-serif;
+    font-size: 14px;
 }
 
 h1 {
-  opacity: 0.5;
-  font-size: 1em;
+    opacity: 0.5;
+    font-size: 1em;
 }
-
 
 .legend-dashed-line {
     border-top: 2px dashed #888;
@@ -31,7 +30,6 @@ span.after-hr {
     display: inline-block;
     vertical-align: middle;
 }
-
 
 div.kegg {
     width: 20px;
