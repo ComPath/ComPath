@@ -31,7 +31,7 @@ def process_form_gene_set(form_field):
     :return: geneset
     """
     return {
-        gene.strip()
+        gene.strip().upper()
         for line in form_field.split('\n')
         for gene in line.split(',')
     }
