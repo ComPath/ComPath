@@ -16,15 +16,20 @@ function getProperty(o, prop) {
  */
 function getJsonPath() {
 
-    var resource = $("#resource-input").val();
+    var pathwayDatabase1 = $("#resource-input-1").val();
+    var pathwayDatabase2 = $("#resource-input-2").val();
+    var similarityThreshold = $("#similarity-range").val();
 
-    // Define the path of the json file according to the selection
-    var path;
-    if (resource === "all-resources") { // All resources vs all resources
-        path = "static/json/wikipathways/wikipathways_90.json"
+    if (pathwayDatabase1 === pathwayDatabase2) {
+        path = "static/json/" + pathwayDatabase1 + "/" + pathwayDatabase1 + "_" + similarityThreshold + ".json"
     }
-    else {  // resource + range
-        path = "static/json/" + resource + "/" + resource + "_" + $("#similarity-range").val() + ".json"
+    else {
+        // order alphabetically the resources
+        var orderInputs = [pathwayDatabase1, pathwayDatabase2].sort();
+
+        // lookup the path
+        path = "static/json/all/" + orderInputs[0] + "_" + orderInputs[1] + "_" + similarityThreshold + ".json"
+
     }
 
     return path
