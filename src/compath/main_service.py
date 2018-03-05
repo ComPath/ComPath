@@ -5,6 +5,7 @@
 import datetime
 import logging
 import sys
+import itertools
 from io import StringIO
 
 from flask import (
@@ -188,7 +189,8 @@ def process_gene_set():
     return render_template(
         'visualization/enrichment_results.html',
         query_results=enrichment_results,
-        submitted_gene_set=gene_sets
+        submitted_gene_set=gene_sets,
+        number_of_pathways=len(list(itertools.chain(*enrichment_results.values())))
     )
 
 
