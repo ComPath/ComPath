@@ -63,22 +63,22 @@
     <script>
         var data = {{ venn_diagram_data|tojson|safe }};
 
-        var coverageVenn = d3.select("#venn-diagram");
+        var vennDiv = d3.select("#venn-diagram");
 
-        coverageVenn.attr("align", "center"); // Align center the diagram
+        vennDiv.attr("align", "center"); // Align center the diagram
 
         var ignorome = venn.VennDiagram(); // Plot the Venn Diagram
-        coverageVenn.datum(data).call(ignorome); // Stick data
+        vennDiv.datum(data).call(ignorome); // Stick data
 
         // add a tooltip
         var tooltip = d3.select("body").append("div")
             .attr("class", "venntooltip");
 
         // add listeners to all the groups to display tooltip on mouseover
-        coverageVenn.selectAll("g")
+        vennDiv.selectAll("g")
             .on("mouseover", function (d, i) {
                 // sort all the areas relative to the current item
-                venn.sortAreas(coverageVenn, d);
+                venn.sortAreas(vennDiv, d);
 
                 // Display a tooltip with the current size
                 tooltip.transition().duration(400).style("opacity", .9);
@@ -106,6 +106,62 @@
                     .style("stroke-opacity", 0);
             });
 
+
+        // Info box controller
+        /**
+         * Creates a new row in Node/Edge info table
+         * @param {object} table: table object
+         * @param {int} row: row number
+         * @param {string} column1: string for column1
+         * @param {string} column2: string for column2
+         */
+        function insertRow(table, row, column1, column2) {
+
+            var row = table.insertRow(row);
+            var cell1 = row.insertCell(0);
+            var cell2 = row.insertCell(1);
+            cell1.innerHTML = column1;
+            cell2.innerHTML = column2;
+        }
+
+        /**
+         * Renders node info table
+         * @param {object} data object
+         */
+        function populateInfoTable(data) {
+
+            var dynamicTable = document.getElementById('info-table');
+
+            while (dynamicTable.rows.length > 0) {
+                dynamicTable.deleteRow(0);
+            }
+            delete data.sets;
+
+            var tableObject = {};
+
+            if ("intersection" in data) {
+                tableObject["Pathway(s)"] = data["intersection"];
+            }
+            else {
+                tableObject["Pathway(s)"] = data["label"];
+            }
+
+            tableObject["Gene Set Size"] = data["size"];
+            tableObject["Gene Set"] = data["gene_set"].join(', ');
+
+
+            var row = 0;
+            $.each(tableObject, function (key, value) {
+                insertRow(dynamicTable, row, key, value);
+                row++
+            });
+        }
+
+        // Add table creation
+        vennDiv.selectAll("g").on("dblclick", function (d, i) {
+            populateInfoTable(d);
+        })
+
     </script>
 
 {% endblock %}
@@ -117,6 +173,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
+                <p class="pull-right">Click in the Circles to expand info</p>
                 <div id="venn-diagram">
                 </div>
             </div>
