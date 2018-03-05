@@ -504,6 +504,7 @@
                             searchText = searchText.replace(/\s+/g, "");
 
                             $.each($("#node-list-ul")[0].childNodes, updateNodeArray);
+
                             function updateNodeArray() {
                                 var currentLiText = $(this).find("span")[0].innerHTML,
                                     showCurrentLi = ((currentLiText.toLowerCase()).replace(/\s+/g, "")).indexOf(searchText) !== -1;
@@ -519,6 +520,7 @@
                             searchText = searchText.replace(/\s+/g, "");
 
                             $.each($("#edge-list-ul")[0].childNodes, updateEdgeArray);
+
                             function updateEdgeArray() {
 
                                 var currentLiText = $(this).find("span")[0].innerHTML,
@@ -566,9 +568,6 @@
             <div class="col-lg-8 col-md-8 col-xs-8" id="network"></div>
             <div class="panel panel-default col-lg-4 col-md-4 col-xs-4"
                  style="max-height: 585px;height: 585px;padding-right: 0;padding-left: 0; margin-bottom:0">
-                <table id="info-table" class="table table-bordered table-hover"></table>
-
-
                 <ul class="nav nav-tabs nav-center-tabs">
                     <li class="active">
                         <a class="nav-link nav-padding-reduced" data-toggle="tab" href="#network-panel"><i
@@ -670,6 +669,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="row">
+            <table id="info-table" class="table table-bordered table-hover"></table>
         </div>
     </div>
 
