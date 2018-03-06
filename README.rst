@@ -9,6 +9,7 @@ packages:
 - `Bio2BEL KEGG <https://github.com/bio2bel/kegg>`_
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
 - `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
+- `Bio2BEL MSIG <https://github.com/bio2bel/msig>`_
 
 New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
 
@@ -25,8 +26,8 @@ Running locally
 1. Load KEGG, Reactome, and WikiPathways in the Bio2BEL database instance. :code:`python3 -m compath populate`.
    These packages should be already installed in your Python environment. You can check the packages installed by
    running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently
-   by running : :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, or
-   :code:`python3 -m bio2bel_wikipathways populate`.
+   by running : :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
+   :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 2. Start the web app (runs by default http://localhost:5000) with :code:`python3 -m compath web`
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
