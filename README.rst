@@ -18,8 +18,7 @@ How to Use
 
 1. Install and load the required packages
 
-- If you just cloned the repo, you can run the sh script "load_compath.sh" :code:`sh load_compath.sh`.
-This will first install all packages and populate the databases.
+- If you just cloned the repo, you can run the sh script "load_compath.sh" by typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the database.
 
 - If you have already installed the packages, but not loaded the data. First, load `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that these packages are already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 
