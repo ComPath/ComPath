@@ -21,14 +21,9 @@ How to Use
 - If you just cloned the repo, you can run the sh script "load_compath.sh" :code:`sh load_compath.sh`.
 This will first install all packages and populate the databases.
 
-- Or if you already have installed the packages but not load the databases. First load HGNC in the Bio2BEL database instance (see next section)
-and then: KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`.
-These packages should be already installed in your Python environment. You can check the packages installed by
-running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently
-by running : :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
-:code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
+- If you have already installed the packages, but not loaded the data. First, load `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that these packages are already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 
-2. Start the web app locally (runs by default http://localhost:5000) with :code:`python3 -m compath web`
+2. The final step is to start the web application locally (runs by default http://localhost:5000) by running :code:`python3 -m compath web`
 
 Mapping across gene/protein identifiers
 ---------------------------------------
