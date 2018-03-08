@@ -72,10 +72,19 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <form id="compare-pathways-form" method="get" action="{{ url_for('ui.compare_pathways') }}">
-            <p>You can select the pathways of interest and visualize their overlap by clicking in the Submit button
+            <p>Select your pathways of interest and select the type of analysis. "Venn Diagram" displays the overlap between the selected pathways, "
+                "Dendrogram" clusters the pathways and present a dendrogram where users can further investigate the pathway groups, and finally, the 
+                "Most Similar Pathways" represents the neighborhood of most similar pathways around the selection.
+          
             </p>
             <div class="text-center">
-                <button class="btn btn-primary" type="submit">Compare Pathways</button>
+                <button class="btn btn-primary" type="submit">Venn Diagram</button>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">Dendrogram</button>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary" type="submit">Most Similar Pathways</button>
             </div>
             {% for resource_name, enriched_pathways in query_results.items() %}
 
