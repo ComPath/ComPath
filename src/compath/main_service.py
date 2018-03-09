@@ -77,8 +77,10 @@ def pathway_overlap():
 def compare_pathways():
     """Renders a venn diagram rendering pathway overlap"""
 
-    if any(arg in request.args for arg in ("analysis", "pathways[]")):
-        return abort(500, 'Invalid request')
+    if not any(arg in request.args for arg in ("analysis", "pathways[]")):
+        return abort(500, 'Invalid request. Missing analysis or pathways[] arguments in the request')
+
+    analysis_type = request.args["analysis"]
 
     pathways = [
         (pathway.split('|')[1], pathway.split('|')[0])
@@ -94,7 +96,7 @@ def compare_pathways():
             'Please make sure you have submitted a correct request or contact the administrator'
         )
 
-    if 'analysis' == 'venn-diagram':
+    if analysis_type == 'venn-diagram':
 
         processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 
@@ -103,15 +105,13 @@ def compare_pathways():
             venn_diagram_data=processed_venn_diagram
         )
 
-    elif 'analysis' == 'dendrogram':
-
-        print(gene_sets)
+    elif analysis_type == 'dendrogram':
 
         return render_template(
             'visualization/dendrogram.html',
         )
 
-    elif 'analysis' == 'network':
+    elif analysis_type == 'network':
         # TODO: Create new cytoscape template
         return render_template(
             'visualization/similarity_network.html',
