@@ -2,8 +2,10 @@
 
 import logging
 from itertools import combinations
-from .constants import BLACK_LIST
+
 from pandas import DataFrame, Series
+
+from .constants import BLACK_LIST
 
 log = logging.getLogger(__name__)
 
@@ -28,12 +30,13 @@ def process_form_gene_set(form_field):
 
     :param str form_field: string to be processed
     :rtype: set[str]
-    :return: geneset
+    :return: gene set
     """
     return {
-        gene.strip().upper()
+        word.strip().upper()
         for line in form_field.split('\n')
-        for gene in line.split(',')
+        for word in line.split(',')
+        if word
     }
 
 

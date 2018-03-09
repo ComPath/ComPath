@@ -3,9 +3,9 @@
 """ This module contains the common views across all pathway bio2bel repos"""
 
 import datetime
+import itertools
 import logging
 import sys
-import itertools
 from io import StringIO
 
 from flask import (
@@ -77,7 +77,7 @@ def pathway_overlap():
 def compare_pathways():
     """Renders a venn diagram rendering pathway overlap"""
 
-    if not 'pathways[]' in request.args:
+    if any(arg in request.args for arg in ("analysis", "pathways[]")):
         return abort(500, 'Invalid request')
 
     pathways = [
@@ -88,14 +88,38 @@ def compare_pathways():
     gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
 
     if not gene_sets:
-        return abort(500, 'Pathways could not be found. Please check your request.')
+        return abort(
+            500,
+            'Pathways could not be found. '
+            'Please make sure you have submitted a correct request or contact the administrator'
+        )
 
-    processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
+    if 'analysis' == 'venn-diagram':
 
-    return render_template(
-        'visualization/venn_diagram/pathway_overlap.html',
-        venn_diagram_data=processed_venn_diagram
-    )
+        processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
+
+        return render_template(
+            'visualization/venn_diagram/pathway_overlap.html',
+            venn_diagram_data=processed_venn_diagram
+        )
+
+    elif 'analysis' == 'dendrogram':
+        return render_template(
+            'visualization/dendrogram.html',
+        )
+
+    elif 'analysis' == 'network':
+        # TODO: Create new cytoscape template
+        return render_template(
+            'visualization/similarity_network.html',
+            manager_names=current_app.manager_dict.keys(),
+        )
+
+    else:
+        return abort(
+            500,
+            'Not a valid analysis method'
+        )
 
 
 """Cytoscape view"""

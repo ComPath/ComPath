@@ -41,6 +41,24 @@
                 );
 
             {% endfor %}
+
+            // Controls that at least two pathways have been selected
+            $('#compare-pathways-form').on('submit', function (e) {
+                if ($("input[type=checkbox]:checked").length <= 1) {
+                    e.preventDefault();
+                    alert('Please select at least two pathways for comparison.');
+                    return false;
+                }
+            });
+
+            // Clicks all buttons in all table
+            $('#selectAll').click(function (e) {
+
+
+                $("#compare-pathways-form").find('td input:checkbox').prop('checked', this.checked);
+            });
+
+
         });
     </script>
 {% endblock %}
@@ -64,6 +82,12 @@
                     <td>Number of Pathways Mapped</td>
                     <td>{{ number_of_pathways }}</td>
                 </tr>
+                <tr>
+                    <td>Select All Pathways</td>
+                    <td>
+                        <input type="checkbox" id="selectAll"/>
+                    </td>
+                </tr>
                 </tbody>
             </table>
         </div>
@@ -72,20 +96,18 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <form id="compare-pathways-form" method="get" action="{{ url_for('ui.compare_pathways') }}">
-            <p>Select your pathways of interest and select the type of analysis. "Venn Diagram" displays the overlap between the selected pathways, "
-                "Dendrogram" clusters the pathways and present a dendrogram where users can further investigate the pathway groups, and finally, the 
-                "Most Similar Pathways" represents the neighborhood of most similar pathways around the selection.
-          
+            <p>First, select your pathways of interest and click in the type of analysis to perform. The "Venn Diagram"
+                button displays the overlap between the selected pathways represented as Venn Diagrams, "Dendrogram"
+                clusters the pathways and present a dendrogram where users can further investigate the pathway groups,
+                and finally, the "Network View" button represents the neighborhood of most similar pathways to the
+                selection.
             </p>
             <div class="text-center">
                 <button class="btn btn-primary" type="submit">Venn Diagram</button>
+                <button name="analysis" value="dendrogram" class="btn btn-primary" type="submit">Dendrogram</button>
+                <button name="analysis" value="network" class="btn btn-primary" type="submit">Network View</button>
             </div>
-            <div class="text-center">
-                <button class="btn btn-primary" type="submit">Dendrogram</button>
-            </div>
-            <div class="text-center">
-                <button class="btn btn-primary" type="submit">Most Similar Pathways</button>
-            </div>
+            <hr>
             {% for resource_name, enriched_pathways in query_results.items() %}
 
                 <div class="panel panel-default">
