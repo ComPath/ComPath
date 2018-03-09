@@ -104,6 +104,9 @@ def compare_pathways():
         )
 
     elif 'analysis' == 'dendrogram':
+
+        print(gene_sets)
+
         return render_template(
             'visualization/dendrogram.html',
         )

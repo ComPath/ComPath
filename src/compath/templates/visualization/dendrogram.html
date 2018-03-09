@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Pathway Clustering{% endblock %}
+
+{% block styles %}
+    {{ super() }}
+
+    <style>
+    </style>
+
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Cluster Pathways Based On Gene Set Profile</div>
+            <div class="panel-body">
+                <div id="dendrogram"></div>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}
