@@ -45,10 +45,11 @@ def add_node(node, parent):
     if node.right: add_node(node.right, newNode)
 
 
-def label_tree(id2name, n):
+def label_tree(id2name, name2manager, n):
     """Labels each node with the names of each leaf in its subtree
 
     :param dict id2name: column id to name dictionary
+    :param dict name2manager: name to pathway db dictionary
     :param n: tree
     :type: list
     """
@@ -66,15 +67,18 @@ def label_tree(id2name, n):
 
     # Labeling convention: "-"-separated leaf names
     n["name"] = name = "-".join(sorted(map(str, leafNames)))
+    n["color"] = name2manager[name]
 
     return leafNames
 
 
-def get_dendrogram_tree(gene_sets):
+def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     """Returns json data
 
     :param dict[str,set[str]] gene_sets: pathway gene sets dict
-    :return:
+    :param dict[str,str] pathway_manager_dict: pathway name to manager dictionary
+    :rtype: dict
+    :return: json tree like structure
     """
 
     similarity_matrix = create_similarity_matrix(gene_sets)
@@ -91,6 +95,6 @@ def get_dendrogram_tree(gene_sets):
     d3Dendro = dict(children=[], name="Root")
     add_node(tree, d3Dendro)
 
-    label_tree(id2name, d3Dendro["children"][0])
+    label_tree(id2name, pathway_manager_dict, d3Dendro["children"][0])
 
     return d3Dendro

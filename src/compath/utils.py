@@ -59,11 +59,13 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
     :param flask.Flask app: current app
     :param list[tuple[str,str] pathways: pathway/resource tuples
-    :rtype: dict[str,set[str]]
+    :rtype: tuple[dict[str,set[str]],dict[str,str]]
     :return: gene sets
     """
 
     gene_sets = {}
+
+    pathway_manager_dict = {}
 
     for name, resource in pathways:
 
@@ -83,12 +85,14 @@ def get_gene_sets_from_pathway_names(app, pathways):
         if not pathway.proteins:
             continue
 
+        pathway_manager_dict[name] = resource
+
         gene_sets[name] = {
             protein.hgnc_symbol
             for protein in pathway.proteins
         }
 
-    return gene_sets
+    return gene_sets, pathway_manager_dict
 
 
 def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):

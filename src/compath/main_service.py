@@ -88,7 +88,7 @@ def compare_pathways():
         for pathway in request.args.getlist('pathways[]')
     ]
 
-    gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
+    gene_sets, pathway_manager_dict = get_gene_sets_from_pathway_names(current_app, pathways)
 
     if not gene_sets:
         return abort(
@@ -108,7 +108,7 @@ def compare_pathways():
 
     elif analysis_type == 'dendrogram':
 
-        tree_json = get_dendrogram_tree(gene_sets)
+        tree_json = get_dendrogram_tree(gene_sets, pathway_manager_dict)
 
         return render_template(
             'visualization/dendrogram.html',
