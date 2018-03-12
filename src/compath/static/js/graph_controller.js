@@ -172,10 +172,8 @@ function highlightEdges(edgeArray, property) {
     nodes = cy.filter("node");
 
     // Filtered not selected links
-    console.log(edgeArray);
 
     var edgesNotInArray = edges.filter(function (edgeObject) {
-        console.log(nodes[edgeObject.data('source')].data(property));
         if (edgeArray.indexOf(nodes[edgeObject.data('source')].data(property) + " &lt;-&gt; " + nodes[edgeObject.data('target')].data(property)) >= 0) {
             nodesInEdges.push(nodes[edgeObject.data('source')].data(property));
             nodesInEdges.push(nodes[edgeObject.data('target')].data(property));
@@ -211,14 +209,13 @@ function startCy(urlPath) {
             })
             .then(function (style) {
 
-                // TODO: ink width defined by similarity. Fix sliders, I bet the same value is being passed all over again/
+                // TODO: (ink width normalization by similarity). Fix sliders, I bet the same value is being passed all over again/
 
                 //Set style atributes
                 data['nodes'].forEach(function (value, i) {
                     data['nodes'][i]['data']['label'] = value['data']['name'];
                     data['nodes'][i]['classes'] = 'top-left';
                     data['nodes'][i]['data']['color'] = getProperty(colours_resource, value['data']['resource']);
-                    data['nodes'][i]['data']['width'] = getProperty(colours_resource, value['data']['similarity']);
                 });
                 data['edges'].forEach(function (value, i) {
                     data['edges'][i]['data']['width'] = value['data']['similarity']*6;
@@ -333,9 +330,7 @@ function startCy(urlPath) {
 
                 edgePanel.append("<ul id='edge-list-ul' class='list-group checked-list-box not-rounded'></ul>");
 
-                // TODO: Add the circles with color of each resource
                 $.each(edges, function (key, e) {
-
                     $("#edge-list-ul").append("<li class='list-group-item'><input class='edge-checkbox' type='checkbox'><span>" +
                         nodeNames[e.data('source')] + ' <-> ' + nodeNames[e.data('target')] + "</span></li>");
 
