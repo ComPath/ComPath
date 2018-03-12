@@ -14,7 +14,7 @@
     "selector": "edge",
     "style": {
       "label": "data(label)",
-      "width": 3,
+      "width": "data(width)",
       "line-color": "#ccc"
     }
   },

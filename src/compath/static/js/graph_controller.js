@@ -5,8 +5,8 @@ var colours_resource = { // Object resource name -> colour
 };
 
 
-function getProperty(o, prop) {
-    if (o[prop] !== undefined) return o[prop];
+function getProperty(dict, prop) {
+    if (dict[prop] !== undefined) return dict[prop];
     else return "grey";
 }
 
@@ -113,6 +113,9 @@ function displayEdgeInfo(edge) {
     if (edge.data('target')) {
         edgeObject["Target"] = edge.data('target');
     }
+    if (edge.data('similarity')) {
+        edgeObject["Similarity"] = edge.data('similarity');
+    }
 
     var row = 0;
     $.each(edgeObject, function (key, value) {
@@ -137,23 +140,23 @@ function resetAttributes() {
  */
 function highlightNodes(nodeArray, property) {
 
+    nodes = cy.filter("node");
+
+
     // Filter not mapped nodes to change opacity
-    var nodesNotInArray = cy.filter("node").filter(function (nodeObject) {
+    var nodesNotInArray = nodes.filter(function (nodeObject) {
         return nodeArray.indexOf(nodeObject.data(property)) < 0;
     });
 
-
-    // TODO: Fix highlight connected Edges.
     // Not mapped links
     var notMappedEdges = cy.filter("edge").filter(function (edgeObject) {
         // Source and target should be present in the edge
-        return !(nodeArray.indexOf(edgeObject.data('source')) >= 0 || nodeArray.indexOf(edgeObject.data('target') >= 0));
+        return !(nodeArray.indexOf(nodes[edgeObject.data('source')].data(property)) >= 0 || nodeArray.indexOf(nodes[edgeObject.data('target')].data(property)) >= 0);
     });
 
-    console.log(notMappedEdges);
 
-    nodesNotInArray.style("opacity", "0.4");
-    notMappedEdges.style("opacity", "0.1");
+    nodesNotInArray.style("opacity", "0.3");
+    notMappedEdges.style("opacity", "0.2");
 }
 
 /**
@@ -165,24 +168,27 @@ function highlightEdges(edgeArray, property) {
 
     // Array with names of the nodes in the selected edge
     var nodesInEdges = [];
+    edges = cy.filter("edge");
+    nodes = cy.filter("node");
 
-    // TODO: Fix highlight selected Edges.
     // Filtered not selected links
-    var edgesNotInArray = cy.filter("node").filter(function (edgeObject) {
+    console.log(edgeArray);
 
-        if (edgeArray.indexOf(edgeObject.data('source') + "->" + edgeObject.data('id') + " " + edgeObject.data('target')) >= 0) {
-            nodesInEdges.push(edgeObject.data('source'));
-            nodesInEdges.push(edgeObject.data('target'));
+    var edgesNotInArray = edges.filter(function (edgeObject) {
+        console.log(nodes[edgeObject.data('source')].data(property));
+        if (edgeArray.indexOf(nodes[edgeObject.data('source')].data(property) + " &lt;-&gt; " + nodes[edgeObject.data('target')].data(property)) >= 0) {
+            nodesInEdges.push(nodes[edgeObject.data('source')].data(property));
+            nodesInEdges.push(nodes[edgeObject.data('target')].data(property));
         }
         else return edgeObject;
     });
 
-    var nodesNotInEdges = cy.filter("node").filter(function (edgeObject) {
-        return (nodesInEdges.indexOf(edgeObject.data('source')) < 0 || nodesInEdges.indexOf(edgeObject.data('target')) < 0);
+    var nodesNotInEdges = cy.filter("node").filter(function (nodeObject) {
+        return (nodesInEdges.indexOf(nodeObject.data(property)) < 0);
     });
 
-    nodesNotInEdges.style("opacity", "0.1");
-    edgesNotInArray.style("opacity", "0.1");
+    nodesNotInEdges.style("opacity", "0.3");
+    edgesNotInArray.style("opacity", "0.2");
 
 }
 
@@ -193,6 +199,7 @@ function resetAttributesDoubleClick() {
     // TODO: On double click
     cy.on('tap', function (event) {
         cy.filter("node").style("opacity", "1");
+        cy.filter("edge").style("opacity", "1");
     });
 }
 
@@ -210,8 +217,11 @@ function startCy(urlPath) {
                 data['nodes'].forEach(function (value, i) {
                     data['nodes'][i]['data']['label'] = value['data']['name'];
                     data['nodes'][i]['classes'] = 'top-left';
-                    data['nodes'][i]['data']['color'] = colours_resource[value['data']['resource']];
-
+                    data['nodes'][i]['data']['color'] = getProperty(colours_resource, value['data']['resource']);
+                    data['nodes'][i]['data']['width'] = getProperty(colours_resource, value['data']['similarity']);
+                });
+                data['edges'].forEach(function (value, i) {
+                    data['edges'][i]['data']['width'] = value['data']['similarity']*6;
                 });
 
                 var cy = window.cy = cytoscape({
@@ -408,7 +418,7 @@ function startCy(urlPath) {
 
                     var checkedItems = [];
 
-                    $(".node-checkbox:checked").each(function (idx, li) {
+                    $(".edge-checkbox:checked").each(function (idx, li) {
                         checkedItems.push(li.parentElement.childNodes[1].innerHTML);
                     });
 
