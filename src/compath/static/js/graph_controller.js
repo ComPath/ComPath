@@ -209,7 +209,7 @@ function startCy(urlPath) {
             })
             .then(function (style) {
 
-                // TODO: (ink width normalization by similarity). Fix sliders, I bet the same value is being passed all over again/
+                var range2 = 20 - 1; // Max value range x,y to normalize
 
                 //Set style atributes
                 data['nodes'].forEach(function (value, i) {
@@ -218,7 +218,7 @@ function startCy(urlPath) {
                     data['nodes'][i]['data']['color'] = getProperty(colours_resource, value['data']['resource']);
                 });
                 data['edges'].forEach(function (value, i) {
-                    data['edges'][i]['data']['width'] = value['data']['similarity']*6;
+                    data['edges'][i]['data']['width'] = value['data']['similarity'] * range2 + 1;
                 });
 
                 var cy = window.cy = cytoscape({
