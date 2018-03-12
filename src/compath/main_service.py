@@ -20,8 +20,9 @@ from flask import (
     abort
 )
 
-from compath.forms import GeneSetForm
-from compath.utils import (
+from .d3_dendrogram import get_dendrogram_tree
+from .forms import GeneSetForm
+from .utils import (
     dict_to_pandas_df,
     process_form_gene_set,
     get_enriched_pathways,
@@ -107,8 +108,11 @@ def compare_pathways():
 
     elif analysis_type == 'dendrogram':
 
+        tree_json = get_dendrogram_tree(gene_sets)
+
         return render_template(
             'visualization/dendrogram.html',
+            tree_json=tree_json
         )
 
     elif analysis_type == 'network':
