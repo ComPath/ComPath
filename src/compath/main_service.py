@@ -108,11 +108,12 @@ def compare_pathways():
 
     elif analysis_type == 'dendrogram':
 
-        tree_json = get_dendrogram_tree(gene_sets, pathway_manager_dict)
+        tree_json, number_of_nodes = get_dendrogram_tree(gene_sets, pathway_manager_dict)
 
         return render_template(
             'visualization/dendrogram.html',
-            tree_json=tree_json
+            tree_json=tree_json,
+            numberNodes=number_of_nodes
         )
 
     elif analysis_type == 'network':

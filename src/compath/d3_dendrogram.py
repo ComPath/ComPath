@@ -77,7 +77,7 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
 
     :param dict[str,set[str]] gene_sets: pathway gene sets dict
     :param dict[str,str] pathway_manager_dict: pathway name to manager dictionary
-    :rtype: dict
+    :rtype: tuple[dict,int]
     :return: json tree like structure
     """
 
@@ -108,7 +108,4 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
 
     label_tree(id_name_dict, pathway_manager_dict, cluster_to_x, d3_dendrogram["children"][0])
 
-    import json
-    print(json.dumps(d3_dendrogram))
-
-    return d3_dendrogram
+    return d3_dendrogram, (len(labels) + len(cluster_to_x))

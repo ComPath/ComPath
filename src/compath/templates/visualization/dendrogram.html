@@ -52,12 +52,46 @@
         var clusterNodeColor = "white";
 
         var treeJson = {{ tree_json|tojson|safe }};
+        var numberNodes = {{ numberNodes|safe }};
 
         // Select dendrogram div to define the width of the bootstrap panel
         var dendrogramDiv = $("#dendrogram");
 
+        console.log(numberNodes)
+
+        // Adjust heigh depending on the number of nodes
+        if (numberNodes < 20) {
+            var height = 800;
+        }
+        else if (40 > numberNodes && numberNodes >= 20) {
+            var height = 1000;
+        }
+        else if (60 > numberNodes && numberNodes >= 40) {
+            var height = 1200;
+        }
+        else if (80 > numberNodes && numberNodes >= 60) {
+            var height = 1400;
+        }
+        else if (100 > numberNodes && numberNodes >= 80) {
+            var height = 1600;
+        }
+        else if (120 > numberNodes && numberNodes >= 100) {
+            var height = 1800;
+        }
+        else if (140 > numberNodes && numberNodes >= 120) {
+            var height = 2000;
+        }
+        else if (160 > numberNodes && numberNodes >= 140) {
+            var height = 2200;
+        }
+        else {
+            var height = 3000;
+        }
+
+        console.log(height)
+
         // Size definitions
-        var width = dendrogramDiv.width(), height = 800;
+        var width = dendrogramDiv.width();
 
         var cluster = d3.layout.cluster()
             .size([height, width - 200]);
