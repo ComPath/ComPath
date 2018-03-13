@@ -26,18 +26,20 @@
             stroke-width: 1.5px;
         }
 
+        line {
+            stroke: black;
+        }
+
     </style>
 
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
-    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="https://d3js.org/d3.v3.min.js"></script>
     <script>
 
-
         //Node Color Dictionary
-
         var nodeColors = {
             "kegg": "#ff2200",
             "reactome": "#f279aa",
@@ -50,7 +52,6 @@
         var clusterNodeColor = "white";
 
         var treeJson = {{ tree_json|tojson|safe }};
-
         var dendrogramDiv = $("#dendrogram");
 
         // Size definitions
@@ -72,13 +73,53 @@
             .append("g")
             .attr("transform", "translate(40,0)");
 
+        // Allow to locate nodes in a defined axis point
+        var ys = [];
+
+        function getXYfromJSONTree(node) {
+            ys.push(node.y);
+            if (typeof node.children != 'undefined') {
+                for (j in node.children) {
+                    getXYfromJSONTree(node.children[j]);
+                }
+            }
+        }
+
+        var ymax = Number.MIN_VALUE;
+        var ymin = Number.MAX_VALUE;
+
+        getXYfromJSONTree(treeJson);
+
+        ys[0] = ys[1]; // Merges the imaginary root with the real oneby overwriting its y value
+
         // Parse the data structure from root
-        var nodes = cluster.nodes(treeJson),
-            links = cluster.links(nodes);
+        var nodes = cluster.nodes(treeJson);
+
+        nodes.forEach(function (d, i) {
+            if (typeof ys[i] != 'undefined') {
+                d.y = ys[i];
+            }
+        });
+
+        // Update Min and Max value in Y (distance metric)
+        nodes.forEach(function (d) {
+            if (d.y > ymax) {
+                ymax = d.y;
+            }
+            if (d.y < ymin) {
+                ymin = d.y;
+            }
+        });
+
+        // Distance scale
+        x = d3.scale.linear().domain([ymin, ymax]).range([0, width - 200]);
+        xinv = d3.scale.linear().domain([ymax, ymin]).range([0, width - 200]);
+
+        console.log(cluster.links(nodes))
 
         // Add links and apply the previous diagonal definition
         var link = svg.selectAll(".link")
-            .data(links)
+            .data(cluster.links(nodes))
             .enter().append("path")
             .attr("class", "link")
             .attr("d", diagonal);
@@ -89,8 +130,9 @@
             .enter().append("g")
             .attr("class", "node")
             .attr("transform", function (d) {
-                return "translate(" + d.y + "," + d.x + ")";
+                return "translate(" + xinv(d.y) + "," + d.x + ")";
             });
+
         node.append("circle")
             .attr("r", 4.5)
             .attr("fill", function (d) {
@@ -115,6 +157,36 @@
             .text(function (d) {
                 return d.name;
             });
+
+        var g = d3.select("svg").append("g")
+            .attr("transform", "translate(100,40)");
+        g.append("line")
+            .attr("x1", x(ymin))
+            .attr("y1", 0)
+            .attr("x2", x(ymax))
+            .attr("y2", 0);
+        g.selectAll(".ticks")
+            .data(x.ticks(5))
+            .enter().append("line")
+            .attr("class", "ticks")
+            .attr("x1", function (d) {
+                return xinv(d);
+            })
+            .attr("y1", -5)
+            .attr("x2", function (d) {
+                return xinv(d);
+            })
+            .attr("y2", 5);
+        g.selectAll(".label")
+            .data(x.ticks(5))
+            .enter().append("text")
+            .attr("class", "label")
+            .text(String)
+            .attr("x", function (d) {
+                return xinv(d);
+            })
+            .attr("y", -5)
+            .attr("text-anchor", "middle");
 
     </script>
 {% endblock %}
