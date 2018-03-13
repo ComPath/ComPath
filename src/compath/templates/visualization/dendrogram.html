@@ -52,6 +52,8 @@
         var clusterNodeColor = "white";
 
         var treeJson = {{ tree_json|tojson|safe }};
+
+        // Select dendrogram div to define the width of the bootstrap panel
         var dendrogramDiv = $("#dendrogram");
 
         // Size definitions
@@ -63,7 +65,7 @@
         // Define curves linking the nodes
         var diagonal = d3.svg.diagonal()
             .projection(function (d) {
-                return [d.y, d.x];
+                return [xinv(d.y), d.x];
             });
 
         // Append svg element
@@ -71,7 +73,7 @@
             .attr("width", width)
             .attr("height", height)
             .append("g")
-            .attr("transform", "translate(40,0)");
+            .attr("transform", "translate(100,0)");
 
         // Allow to locate nodes in a defined axis point
         var ys = [];
@@ -115,8 +117,6 @@
         x = d3.scale.linear().domain([ymin, ymax]).range([0, width - 200]);
         xinv = d3.scale.linear().domain([ymax, ymin]).range([0, width - 200]);
 
-        console.log(cluster.links(nodes))
-
         // Add links and apply the previous diagonal definition
         var link = svg.selectAll(".link")
             .data(cluster.links(nodes))
@@ -147,19 +147,23 @@
 
         // Add name
         node.append("text")
-            .attr("dx", function (d) {
-                return d.children ? -8 : 8;
-            })
+            .attr("dx", "-8")
             .attr("dy", 3)
-            .style("text-anchor", function (d) {
-                return d.children ? "end" : "start";
-            })
+            .style("text-anchor", "end")
             .text(function (d) {
-                return d.name;
+                if ("name" in d) {
+                    if (d.name === "Root") {
+                        return ""
+                    }
+                    return d.name;
+                }
+                else {
+                    return "Cluster " + d.node_id
+                }
             });
 
         var g = d3.select("svg").append("g")
-            .attr("transform", "translate(100,40)");
+            .attr("transform", "translate(100,20)");
         g.append("line")
             .attr("x1", x(ymin))
             .attr("y1", 0)
