@@ -53,28 +53,37 @@
 
         var dendrogramDiv = $("#dendrogram");
 
+        // Size definitions
         var width = dendrogramDiv.width(), height = 800;
 
         var cluster = d3.layout.cluster()
-            .size([height, width - 160]);
+            .size([height, width - 200]);
+
+        // Define curves linking the nodes
         var diagonal = d3.svg.diagonal()
             .projection(function (d) {
                 return [d.y, d.x];
             });
+
+        // Append svg element
         var svg = d3.select("#dendrogram").append("svg")
             .attr("width", width)
             .attr("height", height)
             .append("g")
             .attr("transform", "translate(40,0)");
 
-
+        // Parse the data structure from root
         var nodes = cluster.nodes(treeJson),
             links = cluster.links(nodes);
+
+        // Add links and apply the previous diagonal definition
         var link = svg.selectAll(".link")
             .data(links)
             .enter().append("path")
             .attr("class", "link")
             .attr("d", diagonal);
+
+        // Add nodes with a 4.5 radius
         var node = svg.selectAll(".node")
             .data(nodes)
             .enter().append("g")
@@ -85,7 +94,7 @@
         node.append("circle")
             .attr("r", 4.5)
             .attr("fill", function (d) {
-
+                // Color pathway nodes, cluster nodes are not filled
                 if (d.color in nodeColors) {
                     return nodeColors[d.color];
                 }
@@ -93,6 +102,8 @@
                     return clusterNodeColor;
                 }
             });
+
+        // Add name
         node.append("text")
             .attr("dx", function (d) {
                 return d.children ? -8 : 8;
@@ -104,7 +115,7 @@
             .text(function (d) {
                 return d.name;
             });
-        d3.select(self.frameElement).style("height", height + "px");
+
     </script>
 {% endblock %}
 
