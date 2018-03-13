@@ -78,8 +78,14 @@
         // Allow to locate nodes in a defined axis point
         var ys = [];
 
+
+        /**
+         * Populates ys array with distance info
+         * @param {object} node object
+         */
         function getXYfromJSONTree(node) {
             ys.push(node.y);
+            // Recursive transversal in the tree to extract all values in the same order as d3.cluster()
             if (typeof node.children != 'undefined') {
                 for (j in node.children) {
                     getXYfromJSONTree(node.children[j]);
@@ -130,7 +136,7 @@
             .enter().append("g")
             .attr("class", "node")
             .attr("transform", function (d) {
-                return "translate(" + xinv(d.y) + "," + d.x + ")";
+                return "translate(" + xinv(d.y) + "," + d.x + ")"; // Important to use the xinv scale
             });
 
         node.append("circle")
