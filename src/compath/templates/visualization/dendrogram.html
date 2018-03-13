@@ -149,21 +149,23 @@
         node.append("text")
             .attr("dx", "-8")
             .attr("dy", 3)
-            .style("text-anchor", "end")
+            .style("text-anchor", "end") // Text align to the left of the node
             .text(function (d) {
                 if ("name" in d) {
+                    // Avoid the Root node to be present
                     if (d.name === "Root") {
                         return ""
                     }
                     return d.name;
                 }
+                //Custom name for the cluster nodes
                 else {
                     return "Cluster " + d.node_id
                 }
             });
 
         var g = d3.select("svg").append("g")
-            .attr("transform", "translate(100,20)");
+            .attr("transform", "translate(100,20)"); //the X value needs to be the same than the #dendrogram div translate attribute
         g.append("line")
             .attr("x1", x(ymin))
             .attr("y1", 0)
