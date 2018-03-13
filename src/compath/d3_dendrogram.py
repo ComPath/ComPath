@@ -3,15 +3,13 @@
 """Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455"""
 
 import itertools as itt
-import math
 from functools import reduce
 
 import pandas as pd
 import scipy
 import scipy.cluster
 import scipy.stats
-from scipy.cluster.hierarchy import dendrogram
-from scipy.spatial.distance import squareform
+from scipy.spatial.distance import pdist
 
 
 def create_similarity_matrix(gene_sets):
@@ -34,27 +32,6 @@ def create_similarity_matrix(gene_sets):
         similarity_dataframe[pathway_1][pathway_2] = similarity
 
     return similarity_dataframe
-
-
-def create_distance_matrix(data_frame):
-    """Creates a distance matrix based on Pearson correlation and distance given the distance matrix as described in
-    https://doi.org/10.1371/journal.pone.0099030
-
-    :param pandas.DataFrame data_frame: distance matrix as pandasDataframe
-    :rtype: pandas.DataFrame
-    :returns: distance matrix
-    """
-
-    index = data_frame.columns
-
-    distance_dataframe = pd.DataFrame(0.0, index=index, columns=index)
-
-    for pathway_1, pathway_2 in itt.product(index, index):
-        pearson_correlation = scipy.stats.pearsonr(data_frame[pathway_1], data_frame[pathway_2])
-
-        distance_dataframe[pathway_1][pathway_2] = 1 - math.fabs(pearson_correlation[0])
-
-    return distance_dataframe
 
 
 def add_node(node, parent):
@@ -110,14 +87,12 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
 
     similarity_matrix = create_similarity_matrix(gene_sets)
 
-    distance_matrix = create_distance_matrix(similarity_matrix)
-
-    distance_matrix = squareform(distance_matrix)
+    # Create the dissimilarity matrix for each row of the similarity matrix using 1-R where R is the pearson correlation
+    # Between two rows
+    distance_matrix = pdist(similarity_matrix, metric='correlation')
 
     clusters = scipy.cluster.hierarchy.linkage(distance_matrix, method='average')
     tree = scipy.cluster.hierarchy.to_tree(clusters, rd=False)
-
-    print(clusters)
 
     # Create dictionary for labeling nodes by their IDs
     labels = list(similarity_matrix.columns)
