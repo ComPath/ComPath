@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Utils to generate the D3.js dendrogram. This module is modified from https://gist.github.com/mdml/7537455"""
+"""Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455"""
 
 import pandas as pd
 import itertools as itt
@@ -57,17 +57,17 @@ def label_tree(id2name, name2manager, n):
     if len(n["children"]) == 0:
         leafNames = [id2name[n["node_id"]]]
 
+        node_name = leafNames[0]
+        n["name"] = node_name
+        n["color"] = name2manager[node_name]
+
     # If not, flatten all the leaves in the node's subtree
     else:
-        leafNames = reduce(lambda ls, c: ls + label_tree(id2name, c), n["children"], [])
+        leafNames = reduce(lambda ls, c: ls + label_tree(id2name, name2manager, c), n["children"], [])
 
     # Delete the node id since we don't need it anymore and
     # it makes for cleaner JSON
     del n["node_id"]
-
-    # Labeling convention: "-"-separated leaf names
-    n["name"] = name = "-".join(sorted(map(str, leafNames)))
-    n["color"] = name2manager[name]
 
     return leafNames
 

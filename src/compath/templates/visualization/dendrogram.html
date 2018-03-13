@@ -12,8 +12,7 @@
     <style>
 
         .node circle {
-            fill: #fff;
-            stroke: steelblue;
+            stroke: black;
             stroke-width: 1.5px;
         }
 
@@ -36,7 +35,21 @@
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script>
 
-        var tree_json = {{ tree_json|tojson|safe }};
+
+        //Node Color Dictionary
+
+        var nodeColors = {
+            "kegg": "#ff2200",
+            "reactome": "#f279aa",
+            "wikipathways": "#00add9",
+            "msig": "#5ba629",
+            "neurommsig_ad": "#e5c339",
+            "neurommsig_pd": "#282040"
+        };
+
+        var clusterNodeColor = "white";
+
+        var treeJson = {{ tree_json|tojson|safe }};
 
         var dendrogramDiv = $("#dendrogram");
 
@@ -55,7 +68,7 @@
             .attr("transform", "translate(40,0)");
 
 
-        var nodes = cluster.nodes(tree_json),
+        var nodes = cluster.nodes(treeJson),
             links = cluster.links(nodes);
         var link = svg.selectAll(".link")
             .data(links)
@@ -68,9 +81,18 @@
             .attr("class", "node")
             .attr("transform", function (d) {
                 return "translate(" + d.y + "," + d.x + ")";
-            })
+            });
         node.append("circle")
-            .attr("r", 4.5);
+            .attr("r", 4.5)
+            .attr("fill", function (d) {
+
+                if (d.color in nodeColors) {
+                    return nodeColors[d.color];
+                }
+                else {
+                    return clusterNodeColor;
+                }
+            });
         node.append("text")
             .attr("dx", function (d) {
                 return d.children ? -8 : 8;
