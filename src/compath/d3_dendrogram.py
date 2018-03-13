@@ -3,7 +3,6 @@
 """Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455"""
 
 import itertools as itt
-from functools import reduce
 
 import pandas as pd
 import scipy
@@ -49,31 +48,28 @@ def add_node(node, parent):
     if node.right: add_node(node.right, newNode)
 
 
-def label_tree(id2name, name2manager, n):
-    """Labels each node with the names of each leaf in its subtree
+def label_tree(id_name_dict, name_manager_dict, cluster_to_x, tree):
+    if len(tree["children"]) == 0:
+        leafs_ids = [tree["node_id"]]
 
-    :param dict id2name: column id to name dictionary
-    :param dict name2manager: name to pathway db dictionary
-    :param n: tree
-    :type: list
-    """
-    # If the node is a leaf, then we have its name
-    if len(n["children"]) == 0:
-        leafNames = [id2name[n["node_id"]]]
+        node_name = id_name_dict[leafs_ids[0]]
+        tree["name"] = node_name
+        tree["color"] = name_manager_dict[node_name]
+        tree["y"] = 0
 
-        node_name = leafNames[0]
-        n["name"] = node_name
-        n["color"] = name2manager[node_name]
+        return []
 
-    # If not, flatten all the leaves in the node's subtree
-    else:
-        leafNames = reduce(lambda ls, c: ls + label_tree(id2name, name2manager, c), n["children"], [])
+    result = [(tree["node_id"], list(tree["children"]))]
 
-    # Delete the node id since we don't need it anymore and
-    # it makes for cleaner JSON
-    del n["node_id"]
+    childs = []
 
-    return leafNames
+    for child in tree["children"]:  # Iterate over the two children
+        childs.append(child["node_id"])
+        result.extend(label_tree(id_name_dict, name_manager_dict, cluster_to_x, child))  # Recursive tree transversal
+
+    tree["y"] = cluster_to_x[childs[0], childs[1]]
+
+    return result
 
 
 def get_dendrogram_tree(gene_sets, pathway_manager_dict):
@@ -91,17 +87,25 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     # Between two rows
     distance_matrix = pdist(similarity_matrix, metric='correlation')
 
+    # Calculate clusters
     clusters = scipy.cluster.hierarchy.linkage(distance_matrix, method='average')
+    # Tree lik object
     tree = scipy.cluster.hierarchy.to_tree(clusters, rd=False)
 
-    # Create dictionary for labeling nodes by their IDs
+    # Dictionary of tuple of nodes ids (cluster) pointing to the distance in the histogram of that cluster
+    cluster_to_x = {
+        (int(cluster[0]), int(cluster[1])): cluster[2]
+        for cluster in clusters
+    }
+
+    # Create dictionaries necessary to label the tree object with node and resource info
     labels = list(similarity_matrix.columns)
-    id2name = dict(zip(range(len(labels)), labels))
+    id_name_dict = dict(zip(range(len(labels)), labels))
 
     # Initialize nested dictionary for d3, then recursively iterate through tree
-    d3Dendro = dict(children=[], name="Root")
-    add_node(tree, d3Dendro)
+    d3_dendrogram = dict(children=[], name="Root")
+    add_node(tree, d3_dendrogram)
 
-    label_tree(id2name, pathway_manager_dict, d3Dendro["children"][0])
+    label_tree(id_name_dict, pathway_manager_dict, cluster_to_x, d3_dendrogram["children"][0])
 
-    return d3Dendro
+    return d3_dendrogram
