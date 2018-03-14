@@ -88,6 +88,9 @@ def compare_pathways():
         for pathway in request.args.getlist('pathways[]')
     ]
 
+    if len(pathways) <= 1:
+        return abort(500, 'At least two pathways should be sent as arguments.')
+
     gene_sets, pathway_manager_dict = get_gene_sets_from_pathway_names(current_app, pathways)
 
     if not gene_sets:
@@ -97,7 +100,7 @@ def compare_pathways():
             'Please make sure you have submitted a correct request or contact the administrator'
         )
 
-    if analysis_type == 'venn-diagram':
+    if analysis_type == 'venn':
 
         processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 

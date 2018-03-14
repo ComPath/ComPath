@@ -27,9 +27,11 @@
 
         $(document).ready(function () {
 
+            var tables = [];
+
             {% for resource_name in query_results.keys() %}
 
-                $("#{{ resource_name }}" + "-table").DataTable(
+                var table = $("#{{ resource_name }}" + "-table").DataTable(
                     {
                         dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
                         "<'row'<'col-sm-12'tr>>" +
@@ -40,21 +42,57 @@
                     }
                 );
 
+                tables.push(table);
+
             {% endfor %}
 
+            var form = $('#compare-pathways-form');
+
             // Controls that at least two pathways have been selected
-            $('#compare-pathways-form').on('submit', function (e) {
-                if ($("input[type=checkbox]:checked").length <= 1) {
-                    e.preventDefault();
+            $('button[type="submit"]').on('click', function (e) {
+                e.preventDefault(); // Prevent the default submission
+
+                // In case the user comes back from the analysis page, make sure the added inputs are deleted so there are no duplicates
+                form.empty();
+
+                // Add the analysis info from the clicked button
+                $(form).append(
+                    $('<input>')
+                        .attr('type', 'hidden')
+                        .attr('name', $(this).attr("name"))
+                        .val($(this).val())
+                );
+
+                // For each table add a hidden input to the form with the checked boxes
+                $.each(tables, function (index, table) {
+
+                    $.each(table.$('input'), function (index, input) {
+
+                        if (input.checked) {
+                            $(form).append(
+                                $('<input>')
+                                    .attr('type', 'hidden')
+                                    .attr('name', input.name)
+                                    .val(input.value)
+                            );
+                        }
+                    });
+                });
+
+                // Check there are at least 2 pathways selected (so the analysis input plus two more (3))
+                if (form.children().length <= 2) {
                     alert('Please select at least two pathways for comparison.');
                     return false;
                 }
+
+                // Submit form
+                form.submit();
+
             });
 
             // Clicks all buttons in all table
             $('#selectAll').click(function (e) {
-
-
+                e.preventDefault();
                 $("#compare-pathways-form").find('td input:checkbox').prop('checked', this.checked);
             });
 
@@ -96,79 +134,81 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <form id="compare-pathways-form" method="get" action="{{ url_for('ui.compare_pathways') }}">
-            <p>First, select your pathways of interest and click in the type of analysis to perform. The "Venn Diagram"
-                button displays the overlap between the selected pathways represented as Venn Diagrams, "Dendrogram"
-                clusters the pathways and present a dendrogram where users can further investigate the pathway groups,
-                and finally, the "Network View" button represents the neighborhood of most similar pathways to the
-                selection.
-            </p>
-            <div class="text-center">
-                <button class="btn btn-primary" type="submit">Venn Diagram</button>
-                <button name="analysis" value="dendrogram" class="btn btn-primary" type="submit">Dendrogram</button>
-                <button name="analysis" value="network" class="btn btn-primary" type="submit">Network View</button>
-            </div>
-            <hr>
-            {% for resource_name, enriched_pathways in query_results.items() %}
-
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        <h3 class="panel-title">{{ resource_name|upper }}</h3>
-                    </div>
-                    <div class="panel-body">
-
-                        <table class="table table-hover table-responsive table-striped" id="{{ resource_name }}-table">
-                            <thead>
-                            <tr>
-                                <th></th>
-                                <th>Pathway Name</th>
-                                <th>Resource Identifier</th>
-                                <th>Number of Genes Mapped</th>
-                                <th>Pathway Size</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for enriched_pathway in enriched_pathways %}
-                                <tr>
-                                    <td>
-                                        <label>
-                                            <input type="checkbox" name="pathways[]"
-                                                   value="{{ resource_name }}|{{ enriched_pathway["pathway_name"] }}"/>
-                                        </label>
-                                    </td>
-                                    <td>
-                                        {{ enriched_pathway["pathway_name"] }}
-                                    </td>
-                                    <td>
-                                        {% if resource_name == "reactome" %}
-                                            <a href="https://reactome.org/PathwayBrowser/#/{{ enriched_pathway["pathway_id"] }}">
-                                                {{ enriched_pathway["pathway_id"] }}
-                                            </a>
-                                        {% elif resource_name == "kegg" %}
-                                            <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ enriched_pathway["pathway_id"]|remove_prefix('path:hsa') }}&show_description=show">
-                                                {{ enriched_pathway["pathway_id"] }}
-                                            </a>
-                                        {% elif resource_name == "wikipathways" %}
-                                            <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
-                                                {{ enriched_pathway["pathway_id"] }}
-                                            </a>
-                                        {% else %}
-                                            {{ enriched_pathway["pathway_id"] }}
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        {{ enriched_pathway["mapped_proteins"] }}
-                                    </td>
-                                    <td>
-                                        {{ enriched_pathway["pathway_size"] }}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            {% endfor %}
         </form>
+
+        <p>First, select your pathways of interest and click in the type of analysis to perform. The "Venn Diagram"
+            button displays the overlap between the selected pathways represented as Venn Diagrams, "Dendrogram"
+            clusters the pathways and present a dendrogram where users can further investigate the pathway groups,
+            and finally, the "Network View" button represents the neighborhood of most similar pathways to the
+            selection.
+        </p>
+        <div class="text-center">
+            <button class="btn btn-primary" name="analysis" value="venn" type="submit">Venn Diagram</button>
+            <button class="btn btn-primary" name="analysis" value="dendrogram" type="submit">Dendrogram</button>
+            <button class="btn btn-primary" name="analysis" value="network" type="submit">Network</button>
+        </div>
+
+        <hr>
+        {% for resource_name, enriched_pathways in query_results.items() %}
+
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">{{ resource_name|upper }}</h3>
+                </div>
+                <div class="panel-body">
+
+                    <table class="table table-hover table-responsive table-striped" id="{{ resource_name }}-table">
+                        <thead>
+                        <tr>
+                            <th></th>
+                            <th>Pathway Name</th>
+                            <th>Resource Identifier</th>
+                            <th>Number of Genes Mapped</th>
+                            <th>Pathway Size</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for enriched_pathway in enriched_pathways %}
+                            <tr>
+                                <td>
+                                    <label>
+                                        <input type="checkbox" name="pathways[]"
+                                               value="{{ resource_name }}|{{ enriched_pathway["pathway_name"] }}"/>
+                                    </label>
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["pathway_name"] }}
+                                </td>
+                                <td>
+                                    {% if resource_name == "reactome" %}
+                                        <a href="https://reactome.org/PathwayBrowser/#/{{ enriched_pathway["pathway_id"] }}">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% elif resource_name == "kegg" %}
+                                        <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ enriched_pathway["pathway_id"]|remove_prefix('path:hsa') }}&show_description=show">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% elif resource_name == "wikipathways" %}
+                                        <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% else %}
+                                        {{ enriched_pathway["pathway_id"] }}
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["mapped_proteins"] }}
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["pathway_size"] }}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
     </div>
 
     {% include "footer.html" %}
