@@ -90,10 +90,23 @@
 
             });
 
-            // Clicks all buttons in all table
+            // Clicks all buttons in all tables
             $('#selectAll').click(function (e) {
-                e.preventDefault();
-                $("#compare-pathways-form").find('td input:checkbox').prop('checked', this.checked);
+
+                var boolean;
+                if ($(this).prop('checked')) {
+                    boolean = true;
+                }
+                else {
+                    boolean = false;
+                }
+
+                // For each table add a hidden input to the form with the checked boxes
+                $.each(tables, function (index, table) {
+                    $.each(table.$('input'), function (index, input) {
+                        input.checked = boolean;
+                    });
+                });
             });
 
 
