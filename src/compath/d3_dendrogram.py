@@ -49,6 +49,14 @@ def add_node(node, parent):
 
 
 def label_tree(id_name_dict, name_manager_dict, cluster_to_x, tree):
+    """Labels the tree in a recursive way with names, resource and cluster information
+
+    :param dict[str,str] id_name_dict: node_id to name dictionary
+    :param dict[str,str] name_manager_dict: node name to resource ditionary
+    :param dict[tuple[int,int],float] cluster_to_x: node_id tuple of the cluster to distance
+    :param dict tree: tree like structure
+    :rtype: list
+    """
     if len(tree["children"]) == 0:
         leafs_ids = [tree["node_id"]]
 
