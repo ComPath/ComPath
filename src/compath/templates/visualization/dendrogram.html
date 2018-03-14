@@ -13,7 +13,7 @@
 
         .node circle {
             stroke: black;
-            stroke-width: 1.5px;
+            stroke-width: 2.5px;
         }
 
         .node {
@@ -22,7 +22,7 @@
 
         .link {
             fill: none;
-            stroke-width: 1.5px;
+            stroke-width: 2px;
         }
 
         line {
@@ -242,34 +242,22 @@
         node.on("mouseenter", function (data, index) {
             d3.select(this).classed('node_highlighted', true);
 
-
             link.classed("link_highlighted", function (o) {
                 return o.source.index === index || o.target.index === index;
             });
 
-            node.classed('node_highlighted', function (o) {
-                return isConnected(data, o);
-            });
-        })
-            .on("mousedown", function () {
-                d3.event.stopPropagation();
-            })
-            .on("mouseout", function () {
-                link.classed("link_highlighted", false);
-                node.classed("node_highlighted", false);
-            });
+        }).on("mouseout", function () {
+            link.classed("link_highlighted", false);
+            node.classed("node_highlighted", false);
+        });
 
 
         // Highlight links on mouseenter and back to normal on mouseout
         link.on("mouseenter", function (data) {
             d3.select(this).classed('link_highlighted', true);
-        })
-            .on("mousedown", function () {
-                d3.event.stopPropagation();
-            })
-            .on("mouseout", function () {
-                d3.select(this).classed('link_highlighted', false);
-            });
+        }).on("mouseout", function () {
+            d3.select(this).classed('link_highlighted', false);
+        });
 
 
         ////////////// Slider /////////////////
