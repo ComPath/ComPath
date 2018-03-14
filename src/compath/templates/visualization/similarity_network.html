@@ -10,12 +10,18 @@
 {% block styles %}
     {{ super() }}
 
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-slider/4.10.3/css/bootstrap-slider.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/graph_explorer.css') }}">
 
     <style>
+
+        .center-slider {
+            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
 
         #network {
             display: block;
@@ -62,6 +68,7 @@
     {{ super() }}
     {% include "dependencies/common.html" %}
     {% include "dependencies/cytoscape.html" %}
+    {% include "dependencies/slider.html" %}
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/graph_controller.js', version='20181602') }}"></script>
 
@@ -151,8 +158,7 @@
                     </div>
                     <div class="tab-pane not-rounded" id="nodes-panel" role="tabpanel">
                         <p class="text-center" style="margin-top: 10px;"><b> Modify Node Spacing</b></p>
-                        <div id="node-slider" style="margin-bottom: 10px; margin-top: 10px;
-                         margin-left: 10%; margin-right: 10%;"></div>
+                        <div id="node-slider" class="center-slider"></div>
                         <button class='btn btn-primary not-rounded full-width' id='get-checked-nodes'>Show
                             Selected Nodes
                         </button>
@@ -168,9 +174,8 @@
                         </div>
                     </div>
                     <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
-                        <p class="text-center" style="margin-top: 10px;"><b> Modify Links Length</b></p>
-                        <div id="edge-slider" style="margin-bottom: 10px; margin-top: 10px;
-                         margin-left: 10%; margin-right: 10%;"></div>
+                        <p class="text-center" style="margin-top: 10px ;"><b> Modify Links Length</b></p>
+                        <div id="edge-slider" class="center-slider"></div>
                         <button class='btn btn-primary not-rounded full-width' id='get-checked-edges'>Show
                             Selected Edges
                         </button>

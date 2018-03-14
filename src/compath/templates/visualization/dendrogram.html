@@ -22,12 +22,23 @@
 
         .link {
             fill: none;
-            stroke: #ccc;
             stroke-width: 1.5px;
         }
 
         line {
             stroke: black;
+        }
+
+        hr {
+            color: #123455;
+        }
+
+        .center-slider {
+            margin-bottom: 10px;
+            margin-top: 10px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
         }
 
     </style>
@@ -37,6 +48,7 @@
 {% block scripts %}
     {{ super() }}
     <script src="https://d3js.org/d3.v3.min.js"></script>
+    {% include "dependencies/slider.html" %}
     <script>
 
         //Node Color Dictionary
@@ -49,6 +61,9 @@
             "neurommsig_pd": "#282040"
         };
 
+        var defaultLinkColor = "#ccc";
+        var highlightLinkColor = "#4EB2D4";
+
         var clusterNodeColor = "white";
 
         var treeJson = {{ tree_json|tojson|safe }};
@@ -57,7 +72,8 @@
         // Select dendrogram div to define the width of the bootstrap panel
         var dendrogramDiv = $("#dendrogram");
 
-        console.log(numberNodes)
+        // TODO Adjust the height when a lot of pathways have to be clustered
+        console.log(numberNodes);
 
         // Adjust heigh depending on the number of nodes
         if (numberNodes < 20) {
@@ -88,7 +104,7 @@
             var height = 3000;
         }
 
-        console.log(height)
+        console.log(height);
 
         // Size definitions
         var width = dendrogramDiv.width();
@@ -161,6 +177,7 @@
         var link = svg.selectAll(".link")
             .data(cluster.links(nodes))
             .enter().append("path")
+            .attr("stroke", defaultLinkColor)
             .attr("class", "link")
             .attr("d", diagonal);
 
@@ -234,6 +251,42 @@
             .attr("y", -5)
             .attr("text-anchor", "middle");
 
+        var targetDiv = $("#threshold-slider");
+
+        var input = $("<input style='width: 30%'></input>");
+
+        targetDiv.append('<span class="label label-default"></span>');
+        targetDiv.append(input);
+
+        var slider = input.slider(
+            {
+                reversed: true,
+                min: ymin,
+                max: ymax,
+                step: 0.1,
+                value: ymin,
+                formatter: function (value) {
+                    return 'Max distance to cluster: ' + value;
+                }
+            }
+        );
+
+
+        slider.bind("change", function () {
+
+            var currentValue = slider.val();
+
+            link.style("stroke", defaultLinkColor); // Reset default color
+
+            linkSelection = svg.selectAll(".link").filter(function (link) {
+                return link.source.y <= currentValue;
+            });
+
+            linkSelection.style("stroke", highlightLinkColor); // Apply highlight color to the filtered clusters
+
+        });
+
+
     </script>
 {% endblock %}
 
@@ -244,6 +297,16 @@
         <div class="panel panel-default">
             <div class="panel-heading">Cluster Pathways Based On Gene Set Profile</div>
             <div class="panel-body">
+                <div>
+                    <p>The Dendrogram rendered in this page presents clusters of pathways based on the method described
+                        <a href="http://journals.plos.org/plosone/article?id=10.1371/journal.pone.0099030">Chen <i>et
+                            al</i>., 2014.</a>. Clusters can be highlighted by selecting a a minimum threshold in the
+                        slider.
+                    </p>
+                    <div id="threshold-slider" class="center-slider">
+                    </div>
+                </div>
+                <hr>
                 <div id="dendrogram"></div>
             </div>
         </div>

@@ -1,7 +1,8 @@
 var colours_resource = { // Object resource name -> colour
-    reactome: "blue",
-    kegg: "red",
-    wikipathways: "green"
+    reactome: "#f279aa",
+    kegg: "#ff2200",
+    wikipathways: "#00add9",
+    msig: "#5ba629"
 };
 
 
@@ -357,7 +358,6 @@ function startCy(urlPath) {
                     var $input = $('<input style="width: 80%"></input>');
                     var $targetId = $('#' + divId);
 
-                    // TODO: Center the sliders
                     $targetId.append('<span class="label label-default"></span>');
                     $targetId.append($input);
 
