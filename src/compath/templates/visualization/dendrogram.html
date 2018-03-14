@@ -215,7 +215,7 @@
             .attr("x2", x(ymax))
             .attr("y2", 0);
         g.selectAll(".ticks")
-            .data(x.ticks(5))
+            .data(x.ticks(15))
             .enter().append("line")
             .attr("class", "ticks")
             .attr("x1", function (d) {
@@ -227,7 +227,7 @@
             })
             .attr("y2", 5);
         g.selectAll(".label")
-            .data(x.ticks(5))
+            .data(x.ticks(15))
             .enter().append("text")
             .attr("class", "label")
             .text(String)
