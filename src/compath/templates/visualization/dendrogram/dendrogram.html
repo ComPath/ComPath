@@ -11,6 +11,43 @@
 
     <style>
 
+
+        div.kegg {
+            width: 20px;
+            height: 20px;
+            background: #ff2200;
+            -moz-border-radius: 60px;
+            -webkit-border-radius: 60px;
+            border-radius: 60px;
+        }
+
+        div.reactome {
+            width: 20px;
+            height: 20px;
+            background: #f279aa;
+            -moz-border-radius: 60px;
+            -webkit-border-radius: 60px;
+            border-radius: 60px;
+        }
+
+        div.wikipathways {
+            width: 20px;
+            height: 20px;
+            background: #00add9;
+            -moz-border-radius: 60px;
+            -webkit-border-radius: 60px;
+            border-radius: 60px;
+        }
+
+        div.msig {
+            width: 20px;
+            height: 20px;
+            background: #5ba629;
+            -moz-border-radius: 60px;
+            -webkit-border-radius: 60px;
+            border-radius: 60px;
+        }
+
         .node circle {
             stroke: black;
             stroke-width: 2.5px;
@@ -315,6 +352,11 @@
                         slider. We recommend to decrease the zoom of the page and refresh the page if the dendrogram is
                         too compacted.
                     </p>
+                    <button type="button" class="btn btn-primary pull-right"
+                            data-toggle="modal"
+                            data-target="#legend">
+                        Legend
+                    </button>
                     <div id="threshold-slider" class="center-slider">
                     </div>
                 </div>
@@ -323,5 +365,6 @@
             </div>
         </div>
     </div>
+    {% include "visualization/dendrogram/legend.html" %}
     {% include "footer.html" %}
 {% endblock %}

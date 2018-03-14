@@ -114,7 +114,7 @@ def compare_pathways():
         tree_json, number_of_pathways = get_dendrogram_tree(gene_sets, pathway_manager_dict)
 
         return render_template(
-            'visualization/dendrogram.html',
+            'visualization/dendrogram/dendrogram.html',
             tree_json=tree_json,
             numberNodes=number_of_pathways
         )
