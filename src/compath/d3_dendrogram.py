@@ -107,5 +107,7 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     add_node(tree, d3_dendrogram)
 
     label_tree(id_name_dict, pathway_manager_dict, cluster_to_x, d3_dendrogram["children"][0])
+    
+    node_number = (len(labels) + len(cluster_to_x))
 
-    return d3_dendrogram, (len(labels) + len(cluster_to_x))
+    return d3_dendrogram, node_number
