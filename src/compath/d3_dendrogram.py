@@ -107,15 +107,13 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     }
 
     # Create dictionaries necessary to label the tree object with node and resource info
-    labels = list(similarity_matrix.columns)
-    id_name_dict = dict(zip(range(len(labels)), labels))
+    pathways = list(similarity_matrix.columns)
+    id_name_dict = dict(zip(range(len(pathways)), pathways))
 
     # Initialize nested dictionary for d3, then recursively iterate through tree
     d3_dendrogram = dict(children=[], name="Root")
     add_node(tree, d3_dendrogram)
 
     label_tree(id_name_dict, pathway_manager_dict, cluster_to_x, d3_dendrogram["children"][0])
-    
-    node_number = (len(labels) + len(cluster_to_x))
 
-    return d3_dendrogram, node_number
+    return d3_dendrogram, len(pathways)

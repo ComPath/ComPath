@@ -73,37 +73,9 @@
         // Select dendrogram div to define the width of the bootstrap panel
         var dendrogramDiv = $("#dendrogram");
 
-        // TODO Adjust the height when a lot of pathways have to be clustered
         console.log(numberNodes);
 
-        // Adjust heigh depending on the number of nodes
-        if (numberNodes < 20) {
-            var height = 800;
-        }
-        else if (40 > numberNodes && numberNodes >= 20) {
-            var height = 1000;
-        }
-        else if (60 > numberNodes && numberNodes >= 40) {
-            var height = 1200;
-        }
-        else if (80 > numberNodes && numberNodes >= 60) {
-            var height = 1400;
-        }
-        else if (100 > numberNodes && numberNodes >= 80) {
-            var height = 1600;
-        }
-        else if (120 > numberNodes && numberNodes >= 100) {
-            var height = 1800;
-        }
-        else if (140 > numberNodes && numberNodes >= 120) {
-            var height = 2000;
-        }
-        else if (160 > numberNodes && numberNodes >= 140) {
-            var height = 2200;
-        }
-        else {
-            var height = 3000;
-        }
+        var height = 800 + numberNodes * 40;
 
         console.log(height);
 
