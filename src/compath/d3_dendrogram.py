@@ -93,7 +93,11 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
 
     # Create the dissimilarity matrix for each row of the similarity matrix using 1-R where R is the pearson correlation
     # Between two rows
-    distance_matrix = pdist(similarity_matrix, metric='correlation')
+    distance_matrix = pdist(
+        similarity_matrix,
+        metric='correlation',
+        # **{'centered': False} # TODO: try in Python 3.6
+    )
 
     # Calculate clusters
     clusters = scipy.cluster.hierarchy.linkage(distance_matrix, method='average')
