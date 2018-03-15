@@ -42,7 +42,7 @@ class TestVotingSystem(DatabaseMixin):
         """Test if votes are adding"""
         current_user = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -51,6 +51,7 @@ class TestVotingSystem(DatabaseMixin):
             'reactome pathway',
             current_user
         )
+        self.assertTrue(created, msg='Mapping not created')
 
         vote = self.manager.get_or_create_vote(user=current_user, mapping=mapping_1, vote_type=False)
 
