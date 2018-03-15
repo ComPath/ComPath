@@ -78,7 +78,7 @@ function displayNodeInfo(node) {
         nodeObject["Node"] = node.data('id') + " (ID: " + node.data('id') + ")";
     }
     if (node.data('name')) {
-        nodeObject["Name"] = node.data('name');
+        nodeObject["Pathway Name"] = node.data('name');
     }
     if (node.data('url')) {
         nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "</a>";
@@ -105,9 +105,6 @@ function displayEdgeInfo(edge) {
 
     var edgeObject = {};
 
-    if (edge.data('id')) {
-        edgeObject["ID"] = edge.data('id');
-    }
     if (edge.data('source')) {
         edgeObject["Source"] = edge.data('source');
     }
