@@ -238,10 +238,6 @@
                     }
                     return d.name;
                 }
-                //Custom name for the cluster nodes
-                else {
-                    return "Cluster " + d.node_id
-                }
             });
 
         var g = d3.select("svg").append("g")
