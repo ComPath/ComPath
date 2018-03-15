@@ -55,7 +55,7 @@ class TestMapping(DatabaseMixin):
             'reactome pathway',
             current_user
         )
-        self.assertEqual(created_1, False, msg='The mapping was not created')
+        self.assertTrue(created_1, msg='The mapping was not created')
 
         mapping_2, created_2 = self.manager.get_or_create_mapping(
             REACTOME,
@@ -74,10 +74,10 @@ class TestMapping(DatabaseMixin):
     def test_create_double_mapping_different_users(self):
         """Test duplicate mappings for different users"""
 
-        user_1 = User()
-        user_2 = User()
+        user_1 = User(email='mycool@email.com')
+        user_2 = User(email='myawesome@email.com')
 
-        mapping_1, _ = self.manager.get_or_create_mapping(
+        mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -87,7 +87,9 @@ class TestMapping(DatabaseMixin):
             user_1
         )
 
-        mapping_2, _ = self.manager.get_or_create_mapping(
+        self.assertTrue(created, 'Mapping not created')
+
+        mapping_2, created = self.manager.get_or_create_mapping(
             REACTOME,
             '2',
             'reactome pathway',
@@ -97,5 +99,11 @@ class TestMapping(DatabaseMixin):
             user_2
         )
 
+        self.assertFalse(created, 'Mapping not created')
         self.assertEqual(1, self.manager.count_mappings(), msg='Wrong number of mappings')
-        self.assertEqual(mapping_1.creators, [user_1, user_2])
+
+        emails = [
+            user.email
+            for user in mapping_1.creators
+        ]
+        self.assertEqual(emails, [user_1.email, user_2.email])
