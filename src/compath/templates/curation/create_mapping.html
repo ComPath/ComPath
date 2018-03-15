@@ -75,29 +75,39 @@
             <div class="panel-heading">Map two pathways</div>
             <div class="panel-body">
                 <form id="curation-form" action="{{ url_for("curation.process_mapping") }}">
-                    <p></p>
+                    <p>This form allows you to establish mappings between two Pathways. It contains autocompletion
+                        depending on the pathway resource chosen on the right side of the form.</p>
                     <div class="form-group">
-                        <label class="sr-only" for="pathway">Pathways</label>
-                        <input type="text" class="form-control" name="pathway-1" id="input-1"
-                               placeholder="Select the Pathway to compare">
-                        <select type="text" class="form-control" name="resource-1" id="select-1">
-                            {% for manager in manager_names|sort %}
-                                <option value="{{ manager }}">{{ manager|upper }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="col-sm-10">
+                            <label class="sr-only" for="pathway">Pathways</label>
+                            <input type="text" class="form-control" name="pathway-1" id="input-1"
+                                   placeholder="Select the first Pathway">
+                        </div>
+                        <div class="col-sm-2">
+                            <select type="text" class="form-control" name="resource-1" id="select-1">
+                                {% for manager in manager_names|sort %}
+                                    <option value="{{ manager }}">{{ manager|upper }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
                     </div>
                     <div class="form-group">
-                        <label class="sr-only" for="pathway">Pathways</label>
-                        <input type="text" class="form-control" name="pathway-2" id="input-2"
-                               placeholder="Select the Pathway to compare">
-                        <select type="text" class="form-control" name="resource-2" id="select-2">
-                            {% for manager in manager_names|sort %}
-                                <option value="{{ manager }}">{{ manager|upper }}</option>
-                            {% endfor %}
-                        </select>
+                        <div class="col-sm-10">
+                            <label class="sr-only" for="pathway">Pathways</label>
+                            <input type="text" class="form-control" name="pathway-2" id="input-2"
+                                   placeholder="Select the second Pathway">
+                        </div>
+                        <div class="col-sm-2">
 
+                            <select type="text" class="form-control" name="resource-2" id="select-2">
+                                {% for manager in manager_names|sort %}
+                                    <option value="{{ manager }}">{{ manager|upper }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
                     </div>
+
                     <div class="btn-group text-center align-center">
                         <button type="submit" class="btn btn-primary btn-lg"
                                 data-toggle="popover" title="Create New Mapping"
@@ -109,7 +119,6 @@
                             Catalog
                         </a>
                     </div>
-
                 </form>
             </div>
         </div>
