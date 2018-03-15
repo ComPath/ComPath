@@ -19,6 +19,7 @@ VOTE_TABLE_NAME = '{}_vote'.format(TABLE_PREFIX)
 USER_TABLE_NAME = '{}_user'.format(TABLE_PREFIX)
 ROLE_TABLE_NAME = '{}_role'.format(TABLE_PREFIX)
 ROLES_USERS_TABLE_NAME = '{}_roles_users'.format(TABLE_PREFIX)
+MAPPING_USER_TABLE_NAME = '{}_mappings_users'.format(TABLE_PREFIX)
 
 roles_users = Table(
     ROLES_USERS_TABLE_NAME,
@@ -27,10 +28,17 @@ roles_users = Table(
     Column('role_id', Integer(), ForeignKey('{}.id'.format(ROLE_TABLE_NAME)))
 )
 
+mappings_users = Table(
+    MAPPING_USER_TABLE_NAME,
+    Base.metadata,
+    Column('mapping_id', Integer(), ForeignKey('{}.id'.format(MAPPING_TABLE_NAME))),
+    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME)))
+)
+
 
 class User(Base, UserMixin):
     """User table"""
-    __tablename__ = ROLE_TABLE_NAME
+    __tablename__ = USER_TABLE_NAME
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
     password = Column(String(255))
@@ -48,7 +56,7 @@ class User(Base, UserMixin):
 
 
 class Role(Base, RoleMixin):
-    __tablename__ = USER_TABLE_NAME
+    __tablename__ = ROLE_TABLE_NAME
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True)
     description = Column(String(255))
@@ -69,8 +77,7 @@ class PathwayMapping(Base):
     service_2_pathway_name = Column(String(255), doc='pathway 2 name')
 
     accepted = Column(Boolean, doc='canonical mapping')
-    creator_id = Column(Integer, ForeignKey(User.id), nullable=False)
-    creator = relationship(User, backref=backref('mappings'))
+    creators = relationship('User', secondary=mappings_users, backref='mappings')
 
     def __str__(self):
         return 'Mapping from {}:{} to {}:{}'.format(

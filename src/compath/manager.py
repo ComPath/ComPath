@@ -2,8 +2,9 @@
 
 """ This module the database manager of ComPath"""
 
-import logging
 import datetime
+import logging
+
 from bio2bel.utils import get_connection
 from sqlalchemy import and_
 from sqlalchemy import create_engine
@@ -124,8 +125,16 @@ class Manager(object):
 
         return vote
 
-    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
-                    user):
+    def claim_mapping(self, mapping, user):
+        """Add the user as a creator of the mapping
+
+        :param PathwayMapping mapping: Mapping instance
+        :param User user: User
+        """
+        mapping.creators.append(user)
+        self.session.commit()
+
+    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
         """Query mapping in the database
 
         :param str service_1_name: manager name of the service 1
@@ -134,7 +143,6 @@ class Manager(object):
         :param str service_2_name: manager name of the service 1
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
-        :param User user: the user
         :rtype: Optional[Mapping]
         """
         mapping_filter = and_(
@@ -144,7 +152,6 @@ class Manager(object):
             PathwayMapping.service_2_name == service_2_name,
             PathwayMapping.service_2_pathway_id == pathway_2_id,
             PathwayMapping.service_2_pathway_name == pathway_2_name,
-            PathwayMapping.creator == user
         )
 
         return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
@@ -184,7 +191,6 @@ class Manager(object):
             service_2_name=service_2_name,
             pathway_2_id=pathway_2_id,
             pathway_2_name=pathway_2_name,
-            user=user
         )
 
         if mapping is not None:
@@ -197,7 +203,6 @@ class Manager(object):
             service_2_name=service_2_name,
             service_2_pathway_id=pathway_2_id,
             service_2_pathway_name=pathway_2_name,
-            creator=user
         )
 
         vote = Vote(
@@ -207,6 +212,7 @@ class Manager(object):
 
         self.session.add(mapping)
         self.session.add(vote)
+        mapping.creators.append(user)
         self.session.commit()
 
         return mapping, True
