@@ -48,7 +48,7 @@ class Role(Base, RoleMixin):
     description = Column(String(255))
 
 
-class Mapping(Base):
+class PathwayMapping(Base):
     """Mapping Table"""
     __tablename__ = MAPPING_TABLE_NAME
 
@@ -72,8 +72,8 @@ class Vote(Base):
     __tablename__ = VOTE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
-    mapping_id = Column(Integer, ForeignKey(Mapping.id), nullable=False)
-    mapping = relationship(Mapping, backref=backref('votes'))
+    mapping_id = Column(Integer, ForeignKey(PathwayMapping.id), nullable=False)
+    mapping = relationship(PathwayMapping, backref=backref('votes'))
 
     type = Column(Boolean, default=True, nullable=False, doc='Type of vote, by default is up-vote')
 

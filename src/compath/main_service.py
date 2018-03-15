@@ -19,6 +19,7 @@ from flask import (
     jsonify,
     abort
 )
+from flask_security import current_user, login_required
 
 from .d3_dendrogram import get_dendrogram_tree
 from .forms import GeneSetForm
@@ -30,7 +31,6 @@ from .utils import (
     get_gene_sets_from_pathway_names,
     process_overlap_for_venn_diagram
 )
-
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -151,6 +151,7 @@ def similarity_network():
 
 
 @ui_blueprint.route('/curation', methods=['GET'])
+@login_required
 def curation():
     """Renders the curation page"""
     return render_template(
@@ -158,8 +159,8 @@ def curation():
         manager_names=current_app.manager_dict.keys(),
     )
 
-
 @ui_blueprint.route('/map_pathways', methods=['GET', 'POST'])
+@login_required
 def process_curation():
     """Processes the mapping between two pathways"""
 
@@ -191,10 +192,20 @@ def process_curation():
     if pathway_2_model is None:
         return abort(500, "Pathway 2 '{}' not found in manager '{}'".format(pathway_2, resource_2))
 
-    flash("Pathway 1 is {}".format(pathway_1_model))
-    flash("Pathway 2 is {}".format(pathway_2_model))
+    mapping = current_app.manager.get_or_create_mapping(
+        resource_1,
+        pathway_1_model.id,
+        pathway_1_model.name,
+        resource_2,
+        pathway_2_model.id,
+        pathway_2_model.name,
+        current_user
+    )
 
+    current_app.manager.session.add(mapping)
+    current_app.manager.session.commit()
 
+    flash("Created a mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
 
     return render_template(
         'curation.html',

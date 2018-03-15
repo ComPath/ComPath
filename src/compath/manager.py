@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from compath import managers
 from .constants import MODULE_NAME
-from .models import Base, Mapping, User, Vote
+from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
     'Manager'
@@ -63,7 +63,7 @@ class Manager(object):
 
         :rtype: int
         """
-        return self.session.query(Mapping).count()
+        return self.session.query(PathwayMapping).count()
 
     def count_users(self):
         """Counts the Users in the database
@@ -84,7 +84,7 @@ class Manager(object):
         """Gets a vote
 
         :param User user: User instance
-        :param Mapping mapping: Mapping instance
+        :param PathwayMapping mapping: Mapping instance
         :rtype: Optional[Vote]
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
@@ -93,7 +93,7 @@ class Manager(object):
         """Gets or create vote
 
         :param User user: User instance
-        :param Mapping mapping: Mapping instance
+        :param PathwayMapping mapping: Mapping instance
         :param Optional[Vote.type] vote_type: vote type
         :rtype: Vote
         """
@@ -125,16 +125,16 @@ class Manager(object):
         :rtype: Optional[Mapping]
         """
         mapping_filter = and_(
-            Mapping.service_1_name == service_1_name,
-            Mapping.service_1_pathway_id == pathway_1_id,
-            Mapping.service_1_pathway_name == pathway_1_name,
-            Mapping.service_2_name == service_2_name,
-            Mapping.service_2_pathway_id == pathway_2_id,
-            Mapping.service_2_pathway_name == pathway_2_name,
-            Mapping.creator == user
+            PathwayMapping.service_1_name == service_1_name,
+            PathwayMapping.service_1_pathway_id == pathway_1_id,
+            PathwayMapping.service_1_pathway_name == pathway_1_name,
+            PathwayMapping.service_2_name == service_2_name,
+            PathwayMapping.service_2_pathway_id == pathway_2_id,
+            PathwayMapping.service_2_pathway_name == pathway_2_name,
+            PathwayMapping.creator == user
         )
 
-        return self.session.query(Mapping).filter(mapping_filter).one_or_none()
+        return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
                               pathway_2_name, user):
@@ -147,7 +147,7 @@ class Manager(object):
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
         :param User user: the user
-        :rtype: Mapping
+        :rtype: PathwayMapping
         """
         if sorted([service_1_name, service_2_name]) == [service_2_name, service_1_name]:
             return self.get_or_create_mapping(
@@ -177,7 +177,7 @@ class Manager(object):
         )
 
         if mapping is None:
-            mapping = Mapping(
+            mapping = PathwayMapping(
                 service_1_name=service_1_name,
                 service_1_pathway_id=pathway_1_id,
                 service_1_pathway_name=pathway_1_name,
@@ -186,7 +186,5 @@ class Manager(object):
                 service_2_pathway_name=pathway_2_name,
                 creator=user
             )
-            self.session.add(mapping)
-            self.session.commit()
 
         return mapping

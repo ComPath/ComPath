@@ -19,14 +19,13 @@ from . import managers
 from .constants import DEFAULT_CACHE_CONNECTION
 from .main_service import ui_blueprint
 from .manager import Manager
-from .models import Base, Mapping, Role, User, Vote
+from .models import Base, PathwayMapping, Role, User, Vote
 from .utils import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
 
 bootstrap = Bootstrap()
 security = Security()
-db = SQLAlchemy()
 
 
 def create_app(connection=None):
@@ -52,7 +51,7 @@ def create_app(connection=None):
         return text
 
     app.config['SQLALCHEMY_DATABASE_URI'] = connection or DEFAULT_CACHE_CONNECTION
-
+    app.config.setdefault("SQLALCHEMY_TRACK_MODIFICATIONS", False)
     app.config.update(
         SECURITY_REGISTERABLE=True,
         SECURITY_CONFIRMABLE=False,
@@ -69,34 +68,36 @@ def create_app(connection=None):
 
     csrf = CSRFProtect(app)
     bootstrap.init_app(app)
+    db = SQLAlchemy(app)
 
-    db.init_app(app)
-
-    class WebManager(Manager):
+    class WebBaseManager(object):
         def __init__(self):
             self.session = db.session
             self.engine = db.session
 
-    manager = WebManager()
+    class WebManager(Manager, WebBaseManager):
+        pass
+
+    app.manager = WebManager()
 
     with app.app_context():
         Base.metadata.bind = db.engine
         Base.query = db.session.query_property()
 
         try:
-            manager.create_all()
+            app.manager.create_all()
         except Exception:
             log.exception('Failed to create all')
 
-    user_datastore = SQLAlchemyUserDatastore(manager, User, Role)
+    user_datastore = SQLAlchemyUserDatastore(app.manager, User, Role)
 
     security.init_app(app, user_datastore)
 
     admin = Admin(app, template_mode='bootstrap3')
-    admin.add_view(ModelView(User, manager.session))
-    admin.add_view(ModelView(Role, manager.session))
-    admin.add_view(ModelView(Mapping, manager.session))
-    admin.add_view(ModelView(Vote, manager.session))
+    admin.add_view(ModelView(User, app.manager.session))
+    admin.add_view(ModelView(Role, app.manager.session))
+    admin.add_view(ModelView(PathwayMapping, app.manager.session))
+    admin.add_view(ModelView(Vote, app.manager.session))
 
     app.register_blueprint(ui_blueprint)
 
