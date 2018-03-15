@@ -73,10 +73,10 @@ def create_app(connection=None):
     class WebBaseManager(object):
         def __init__(self):
             self.session = db.session
-            self.engine = db.session
 
     class WebManager(Manager, WebBaseManager):
         pass
+            self.engine = db.engine
 
     app.manager = WebManager()
 
