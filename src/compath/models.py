@@ -40,6 +40,9 @@ class User(Base, UserMixin):
         """Is this user an administrator?"""
         return self.has_role('admin')
 
+    def __str__(self):
+        return self.email
+
 
 class Role(Base, RoleMixin):
     __tablename__ = USER_TABLE_NAME
@@ -65,6 +68,10 @@ class PathwayMapping(Base):
     accepted = Column(Boolean, doc='canonical mapping')
     creator_id = Column(Integer, ForeignKey(User.id), nullable=False)
     creator = relationship(User, backref=backref('mappings'))
+
+    def __str__(self):
+        return 'Mapping from {}:{} to {}:{}'.format(self.service_1_name, self.service_1_pathway_name,
+                                                  self.service_2_name, self.service_2_pathway_name)
 
 
 class Vote(Base):
