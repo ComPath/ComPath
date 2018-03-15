@@ -16,9 +16,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
 from . import managers
+from .analysis_service import analysis_blueprint
 from .constants import DEFAULT_CACHE_CONNECTION
+from .curation_service import curation_blueprint
 from .main_service import ui_blueprint
 from .manager import Manager
+from .model_views import model_blueprint
 from .models import Base, PathwayMapping, Role, User, Vote
 from .utils import process_overlap_for_venn_diagram
 
@@ -97,6 +100,9 @@ def create_app(connection=None):
     admin.add_view(ModelView(Vote, app.manager.session))
 
     app.register_blueprint(ui_blueprint)
+    app.register_blueprint(curation_blueprint)
+    app.register_blueprint(model_blueprint)
+    app.register_blueprint(analysis_blueprint)
 
     app.manager_dict = {
         name: ExternalManager(connection=connection)
@@ -104,26 +110,26 @@ def create_app(connection=None):
     }
 
     log.info('Loading resource distributions')
-
+    #
     # app.resource_distributions = {
     #     name: manager.get_pathway_size_distribution()
     #     for name, manager in app.manager_dict.items()
     # }
-    #
+
     log.info('Loading overlap across pathway databases')
 
     resource_genesets = {}
-    #
+
     # for name, manager in app.manager_dict.items():
     #
     #     if name == 'compath_hgnc':
     #         name = 'hgnc families'
     #
     #     resource_genesets[name] = manager.get_all_hgnc_symbols()
-    #
-    # # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
-    # log.info('Loading gene universe from bio2BEL_hgnc ')
-    # # TODO Uncomment later
+
+    # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
+    log.info('Loading gene universe from bio2BEL_hgnc ')
+    # TODO Uncomment later
     hgnc_manager = HgncManager()
 
     resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()

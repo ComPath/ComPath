@@ -48,7 +48,7 @@
                                 <h3>Pathway Enrichment</h3>
                                 <p>Submit a geneset and get their enriched pathways.</p>
                                 <p>
-                                    <a href="{{ url_for('ui.query') }}" class="btn btn-primary btn-block">
+                                    <a href="{{ url_for('analysis.query') }}" class="btn btn-primary btn-block">
                                         Query
                                     </a>
                                 </p>
@@ -73,7 +73,7 @@
                                     <a href="{{ url_for('ui.wikipathways_matrix') }}" class="btn btn-primary">
                                         WikiPathways
                                     </a>
-                                    <a href="{{ url_for('ui.similarity_network') }}"
+                                    <a href="{{ url_for('analysis.similarity_network') }}"
                                        class="btn btn-primary btn-block button-margin">
                                         Similarity network
                                     </a>
@@ -88,7 +88,7 @@
                                 <h3>Pathway Overlap</h3>
                                 <p>Explore and visualize the overlap between different pathways.</p>
                                 <p>
-                                    <a href="{{ url_for('ui.pathway_overlap') }}" class="btn btn-primary btn-block">
+                                    <a href="{{ url_for('analysis.pathway_overlap') }}" class="btn btn-primary btn-block">
                                         Explore Overlaps
                                     </a>
                                 </p>
@@ -106,7 +106,7 @@
                                     Analyze the pathway population size.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.pathway_distribution') }}"
+                                    <a href="{{ url_for('analysis.pathway_distribution') }}"
                                        class="btn btn-primary btn-block">
                                         Explore Distribution
                                     </a>
@@ -124,10 +124,10 @@
                                     Curate, propose, and establish new mappings between pathways.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.curation') }}" class="btn btn-primary">
+                                    <a href="{{ url_for('curation.curation') }}" class="btn btn-primary">
                                         Curate
                                     </a>
-                                    <a href="{{ url_for('ui.catalog') }}" class="btn btn-primary">
+                                    <a href="{{ url_for('curation.catalog') }}" class="btn btn-primary">
                                         Catalog
                                     </a>
                                 </p>
