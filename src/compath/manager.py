@@ -18,6 +18,19 @@ __all__ = [
 log = logging.getLogger(__name__)
 
 
+def _flip_service_order(service_1_name, service_2_name):
+    """Decides whether the service order should be flipped (true if they should be)
+
+    :param str service_1_name:
+    :param str service_2_name:
+    :rtype: bool
+    """
+    if service_1_name == service_2_name:
+        return False
+
+    return service_1_name > service_2_name
+
+
 class Manager(object):
     """Database manager"""
 
@@ -149,7 +162,7 @@ class Manager(object):
         :param User user: the user
         :rtype: PathwayMapping
         """
-        if sorted([service_1_name, service_2_name]) == [service_2_name, service_1_name]:
+        if _flip_service_order(service_1_name, service_2_name):
             return self.get_or_create_mapping(
                 service_2_name,
                 pathway_2_id,
