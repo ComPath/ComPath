@@ -2,7 +2,7 @@
 
 """ComPath database model"""
 
-from flask_security import RoleMixin, SQLAlchemyUserDatastore, Security, UserMixin, login_required
+from flask_security import RoleMixin, UserMixin
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship

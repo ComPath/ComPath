@@ -3,13 +3,10 @@
 
 import logging
 
-from bio2bel.utils import get_connection
-from sqlalchemy import and_, create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy import and_
 
 from compath import managers
-from .constants import MODULE_NAME
-from .models import Base, PathwayMapping, User, Vote
+from .models import PathwayMapping, User, Vote
 
 __all__ = [
     'Manager'
@@ -33,34 +30,6 @@ def _flip_service_order(service_1_name, service_2_name):
 
 class Manager(object):
     """Database manager"""
-
-    def __init__(self, connection=None):
-        self.connection = get_connection(MODULE_NAME, connection)
-        self.engine = create_engine(self.connection)
-        self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
-        self.session = self.session_maker()
-        self.create_all()
-
-        # Add all available managers
-
-    def create_all(self, check_first=True):
-        """Create tables for Bio2BEL KEGG"""
-        Base.metadata.create_all(self.engine, checkfirst=check_first)
-
-    def drop_all(self, check_first=True):
-        """Drop all tables for Bio2BEL KEGG"""
-        Base.metadata.drop_all(self.engine, checkfirst=check_first)
-
-    @staticmethod
-    def ensure(connection=None):
-        """Checks and allows for a Manager to be passed to the function. """
-        if connection is None or isinstance(connection, str):
-            return Manager(connection=connection)
-
-        if isinstance(connection, Manager):
-            return connection
-
-        raise TypeError
 
     """Query methods"""
 

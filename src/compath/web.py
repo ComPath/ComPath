@@ -70,12 +70,9 @@ def create_app(connection=None):
     bootstrap.init_app(app)
     db = SQLAlchemy(app)
 
-    class WebBaseManager(object):
+    class WebManager(Manager):
         def __init__(self):
             self.session = db.session
-
-    class WebManager(Manager, WebBaseManager):
-        pass
             self.engine = db.engine
 
     app.manager = WebManager()
