@@ -2,11 +2,16 @@
 
 from __future__ import print_function
 
-import click
 import logging
+import sys
+
+import click
+from flask_security import SQLAlchemyUserDatastore
 
 from . import managers
 from .constants import DEFAULT_CACHE_CONNECTION
+from .manager import RealManager
+from .models import User, Role, Base
 
 log = logging.getLogger(__name__)
 
@@ -80,6 +85,31 @@ def web(debug, connection):
     from compath.web import create_app
     app = create_app(connection=connection)
     app.run(host='0.0.0.0', port=5000)
+
+
+@main.command()
+@click.argument('email')
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+def make_admin(connection, email):
+    """Makes a pre-existing user an admin"""
+
+    #  Example: python3 -m compath make_admin xxx@xxx.com
+
+    manager = RealManager(connection=connection)
+    Base.metadata.bind = manager.engine
+    Base.query = manager.session.query_property()
+
+    ds = SQLAlchemyUserDatastore(manager, User, Role)
+    user = ds.find_user(email=email)
+
+    if user is None:
+        click.echo('Not user found')
+        sys.exit(0)
+
+    admin = ds.find_or_create_role('admin')
+
+    ds.add_role_to_user(user,admin)
+    ds.commit()
 
 
 if __name__ == '__main__':

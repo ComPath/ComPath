@@ -66,6 +66,11 @@
                                         <span class="badge"> {{ mapping.count_down_votes() }}</span>
                                         <span class="glyphicon glyphicon-thumbs-down"></span>
                                     </a>
+                                    {% if current_user.is_admin %}
+                                         <a class="btn btn-default" href="">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </a>
+                                    {% endif %}
                                 </div>
                             </td>
                         </tr>

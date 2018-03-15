@@ -1,12 +1,17 @@
 # -*- coding: utf-8 -*-
+
 """ This module the database manager of ComPath"""
 
 import logging
 
+from bio2bel.utils import get_connection
 from sqlalchemy import and_
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker, scoped_session
 
-from compath import managers
-from .models import PathwayMapping, User, Vote
+from . import managers
+from .constants import MODULE_NAME
+from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
     'Manager'
@@ -190,3 +195,22 @@ class Manager(object):
         self.session.commit()
 
         return mapping, False
+
+
+class RealManager(Manager):
+    def __init__(self, connection=None):
+        self.connection = get_connection(MODULE_NAME, connection)
+        self.engine = create_engine(self.connection)
+        self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
+        self.session = scoped_session(self.session_maker)
+        self.create_all()
+
+        # Add all available managers
+
+    def create_all(self, check_first=True):
+        """Create tables for Bio2BEL KEGG"""
+        Base.metadata.create_all(self.engine, checkfirst=check_first)
+
+    def drop_all(self, check_first=True):
+        """Drop all tables for Bio2BEL KEGG"""
+        Base.metadata.drop_all(self.engine, checkfirst=check_first)
