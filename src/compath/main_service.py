@@ -25,10 +25,12 @@ from .forms import GeneSetForm
 from .utils import (
     dict_to_pandas_df,
     process_form_gene_set,
+    get_pathway_model,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
     process_overlap_for_venn_diagram
 )
+
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -141,6 +143,61 @@ def similarity_network():
     """Renders the Similarity network powered by Cytoscape"""
     return render_template(
         'visualization/similarity_network.html',
+        manager_names=current_app.manager_dict.keys(),
+    )
+
+
+"""Curation views"""
+
+
+@ui_blueprint.route('/curation', methods=['GET'])
+def curation():
+    """Renders the curation page"""
+    return render_template(
+        'curation.html',
+        manager_names=current_app.manager_dict.keys(),
+    )
+
+
+@ui_blueprint.route('/map_pathways', methods=['GET', 'POST'])
+def process_curation():
+    """Processes the mapping between two pathways"""
+
+    resource_1 = request.args.get('resource-1')
+
+    if resource_1 is None:
+        return abort(500, "Invalid request. Missing 'resource-1' arguments in the request")
+
+    if resource_1 not in current_app.manager_dict:
+        return abort(500, "'{}' does not exist or has not been loaded in ComPath".format(resource_1))
+
+    resource_2 = request.args.get('resource-2')
+
+    if resource_2 is None:
+        return abort(500, "Invalid request. Missing 'resource-2' arguments in the request")
+
+    if resource_2 not in current_app.manager_dict:
+        return abort(500, "'{}' does not exist or has not been loaded in ComPath".format(resource_2))
+
+    pathway_1 = request.args.get('pathway-1')
+    pathway_2 = request.args.get('pathway-2')
+
+    pathway_1_model = get_pathway_model(current_app, resource_1, pathway_1)
+    pathway_2_model = get_pathway_model(current_app, resource_2, pathway_2)
+
+    if pathway_1_model is None:
+        return abort(500, "Pathway 1 '{}' not found in manager '{}'".format(pathway_1, resource_1))
+
+    if pathway_2_model is None:
+        return abort(500, "Pathway 2 '{}' not found in manager '{}'".format(pathway_2, resource_2))
+
+    flash("Pathway 1 is {}".format(pathway_1_model))
+    flash("Pathway 2 is {}".format(pathway_2_model))
+
+
+
+    return render_template(
+        'curation.html',
         manager_names=current_app.manager_dict.keys(),
     )
 

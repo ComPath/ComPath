@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Mapping{% endblock %}
+{% block styles %}
+    {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            // Autocompletion in the first input
+            $('#input-1').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/api/autocompletion/pathway_name",
+                        dataType: "json",
+                        data: {
+                            resource: $('#select-1').find(":selected").val(),
+                            q: request.term
+                        },
+                        success: function (data) {
+                            response(data); // functionName
+                        }
+                    });
+                }, minLength: 2
+            });
+
+            // Autocompletion in the first input
+            $('#input-2').autocomplete({
+                source: function (request, response) {
+                    $.ajax({
+                        url: "/api/autocompletion/pathway_name",
+                        dataType: "json",
+                        data: {
+                            resource: $('#select-2').find(":selected").val(),
+                            q: request.term
+                        },
+                        success: function (data) {
+                            response(data); // functionName
+                        }
+                    });
+                }, minLength: 2
+            });
+        });
+
+    </script>
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Map two pathways</div>
+            <div class="panel-body">
+                <form id="curation-form" action="{{ url_for("ui.process_curation") }}">
+                    <p></p>
+                    <div class="form-group">
+                        <label class="sr-only" for="pathway">Pathways</label>
+                        <input type="text" class="form-control" name="pathway-1" id="input-1"
+                               placeholder="Select the Pathway to compare">
+                        <select type="text" class="form-control" name="resource-1" id="select-1">
+                            {% for manager in manager_names|sort %}
+                                <option value="{{ manager }}">{{ manager|upper }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <div class="form-group">
+                        <label class="sr-only" for="pathway">Pathways</label>
+                        <input type="text" class="form-control" name="pathway-2" id="input-2"
+                               placeholder="Select the Pathway to compare">
+                        <select type="text" class="form-control" name="resource-2" id="select-2">
+                            {% for manager in manager_names|sort %}
+                                <option value="{{ manager }}">{{ manager|upper }}</option>
+                            {% endfor %}
+                        </select>
+
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}

@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
 import logging
-import numpy as np
 from itertools import combinations
 
+import numpy as np
 from pandas import DataFrame, Series
 
 from .constants import BLACK_LIST
@@ -55,6 +55,21 @@ def get_enriched_pathways(manager_list, gene_set):
     }
 
 
+def get_pathway_model(app, resource, pathway_name):
+    """Returns the pathway object from the resource manager
+
+    :param flask.Flask app: current app
+    :param str resource: name of the manager
+    :param str pathway_name: pathway name
+    :rtype: Optional[Pathway]
+    :return: pathway if exists
+    """
+
+    manager = app.manager_dict.get(resource.lower())
+
+    return manager.get_pathway_by_name(pathway_name)
+
+
 def get_gene_sets_from_pathway_names(app, pathways):
     """Returns the gene sets for a given pathway/resource tuple
 
@@ -70,9 +85,7 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
     for name, resource in pathways:
 
-        manager = app.manager_dict.get(resource.lower())
-
-        pathway = manager.get_pathway_by_name(name)
+        pathway = get_pathway_model(app, resource, name)
 
         if not pathway:
             log.warning('{} pathway not found'.format(name))
@@ -178,8 +191,6 @@ def perform_hypergeometric_test(gene_set, pathways, gene_universe):
     :rtype:
     :return:
     """
-
-
 
 
 def get_genes_without_assigned_pathways(manager_list, gene_set):
