@@ -18,9 +18,9 @@ from flask import (
     abort
 )
 
-from .d3_dendrogram import get_dendrogram_tree
-from .forms import GeneSetForm
-from .utils import (
+from compath.d3_dendrogram import get_dendrogram_tree
+from compath.forms import GeneSetForm
+from compath.utils import (
     dict_to_pandas_df,
     process_form_gene_set,
     get_enriched_pathways,

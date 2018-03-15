@@ -16,7 +16,7 @@ from flask import (
 )
 from flask_security import current_user, login_required
 
-from .utils import (
+from compath.utils import (
     get_pathway_model_by_name
 )
 
@@ -37,7 +37,6 @@ def curation():
 
 
 @curation_blueprint.route('/mapping_catalog', methods=['GET'])
-@login_required
 def catalog():
     """Renders the mapping catalog page"""
 

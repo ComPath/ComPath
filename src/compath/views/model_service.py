@@ -10,7 +10,7 @@ from flask import (
     current_app
 )
 
-from .utils import (
+from compath.utils import (
     get_pathway_model_by_id
 )
 

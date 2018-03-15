@@ -16,12 +16,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
 from . import managers
-from .analysis_service import analysis_blueprint
+from compath.views.analysis_service import analysis_blueprint
 from .constants import DEFAULT_CACHE_CONNECTION
-from .curation_service import curation_blueprint
-from .main_service import ui_blueprint
+from compath.views.curation_service import curation_blueprint
+from compath.views.main_service import ui_blueprint
 from .manager import Manager
-from .model_views import model_blueprint
+from compath.views.model_service import model_blueprint
 from .models import Base, PathwayMapping, Role, User, Vote
 from .utils import process_overlap_for_venn_diagram
 
