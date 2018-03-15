@@ -15,13 +15,14 @@ from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
-from . import managers
 from compath.views.analysis_service import analysis_blueprint
-from .constants import DEFAULT_CACHE_CONNECTION
 from compath.views.curation_service import curation_blueprint
 from compath.views.main_service import ui_blueprint
-from .manager import Manager
+from compath.views.model_service import VoteView, MappingView
 from compath.views.model_service import model_blueprint
+from . import managers
+from .constants import DEFAULT_CACHE_CONNECTION
+from .manager import Manager
 from .models import Base, PathwayMapping, Role, User, Vote
 from .utils import process_overlap_for_venn_diagram
 
@@ -96,8 +97,8 @@ def create_app(connection=None):
     admin = Admin(app, template_mode='bootstrap3')
     admin.add_view(ModelView(User, app.manager.session))
     admin.add_view(ModelView(Role, app.manager.session))
-    admin.add_view(ModelView(PathwayMapping, app.manager.session))
-    admin.add_view(ModelView(Vote, app.manager.session))
+    admin.add_view(MappingView(PathwayMapping, app.manager.session))
+    admin.add_view(VoteView(Vote, app.manager.session))
 
     app.register_blueprint(ui_blueprint)
     app.register_blueprint(curation_blueprint)

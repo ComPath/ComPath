@@ -73,12 +73,12 @@
 
                                     <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
                                        href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
-                                        <span class="badge"> {{ mapping.count_up_votes() }}</span>
+                                        <span class="badge"> {{ mapping.count_up_votes }}</span>
                                         <span class="glyphicon glyphicon-thumbs-up"></span>
                                     </a>
                                     <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
                                        href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
-                                        <span class="badge"> {{ mapping.count_down_votes() }}</span>
+                                        <span class="badge"> {{ mapping.count_down_votes }}</span>
                                         <span class="glyphicon glyphicon-thumbs-down"></span>
                                     </a>
                                     {% if current_user.is_admin %}

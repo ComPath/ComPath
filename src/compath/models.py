@@ -87,6 +87,7 @@ class PathwayMapping(Base):
             self.service_2_pathway_name
         )
 
+    @property
     def count_votes(self):
         """Return the number of votes for this mapping
 
@@ -94,6 +95,15 @@ class PathwayMapping(Base):
         """
         return len(self.votes)
 
+    @property
+    def count_creators(self):
+        """Return the number of creator that claimed this mapping
+
+        :rtype: int
+        """
+        return len(self.creators)
+
+    @property
     def count_up_votes(self):
         """Return the number of up votes for this mapping
 
@@ -101,6 +111,7 @@ class PathwayMapping(Base):
         """
         return self.votes.filter(Vote.type == True).count()
 
+    @property
     def count_down_votes(self):
         """Return the number of down votes for this mapping
 
