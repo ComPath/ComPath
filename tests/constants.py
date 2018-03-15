@@ -5,11 +5,11 @@
 import os
 import tempfile
 import unittest
+
 from compath.manager import RealManager
 
 KEGG = 'kegg'
 REACTOME = 'reactome'
-
 
 
 class DatabaseMixin(unittest.TestCase):

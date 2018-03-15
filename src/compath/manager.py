@@ -160,7 +160,8 @@ class Manager(object):
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
         :param User user: the user
-        :rtype: PathwayMapping
+        :return: PathwayMapping and boolean indicating if the mapping was created or not
+        :rtype: tuple[PathwayMapping,bool]
         """
         if _flip_service_order(service_1_name, service_2_name):
             return self.get_or_create_mapping(
@@ -187,7 +188,7 @@ class Manager(object):
         )
 
         if mapping is not None:
-            return mapping, True
+            return mapping, False
 
         mapping = PathwayMapping(
             service_1_name=service_1_name,
@@ -208,7 +209,7 @@ class Manager(object):
         self.session.add(vote)
         self.session.commit()
 
-        return mapping, False
+        return mapping, True
 
 
 class RealManager(Manager):
