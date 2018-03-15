@@ -3,7 +3,7 @@
 """ This module the database manager of ComPath"""
 
 import logging
-
+import datetime
 from bio2bel.utils import get_connection
 from sqlalchemy import and_
 from sqlalchemy import create_engine
@@ -88,6 +88,14 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
+    def get_mapping_by_id(self, mapping_id):
+        """Gets a mapping by its id
+
+        :param int mapping_id: mapping id
+        :rtype: Optional[PathwayMapping]
+        """
+        return self.session.query(PathwayMapping).filter(PathwayMapping.id == mapping_id).one_or_none()
+
     def get_or_create_vote(self, user, mapping, vote_type=True):
         """Gets or create vote
 
@@ -106,6 +114,12 @@ class Manager(object):
             )
 
             self.session.add(vote)
+            self.session.commit()
+
+        # If there was already a vote, and it's being changed
+        elif vote_type is not None:
+            vote.type = vote_type
+            vote.changed = datetime.datetime.utcnow()
             self.session.commit()
 
         return vote

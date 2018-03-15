@@ -2,6 +2,8 @@
 
 """ComPath database model"""
 
+import datetime
+
 from flask_security import RoleMixin, UserMixin
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
@@ -16,9 +18,10 @@ MAPPING_TABLE_NAME = '{}_mapping'.format(TABLE_PREFIX)
 VOTE_TABLE_NAME = '{}_vote'.format(TABLE_PREFIX)
 USER_TABLE_NAME = '{}_user'.format(TABLE_PREFIX)
 ROLE_TABLE_NAME = '{}_role'.format(TABLE_PREFIX)
+ROLES_USERS_TABLE_NAME = '{}_roles_users'.format(TABLE_PREFIX)
 
 roles_users = Table(
-    'roles_users',
+    ROLES_USERS_TABLE_NAME,
     Base.metadata,
     Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME))),
     Column('role_id', Integer(), ForeignKey('{}.id'.format(ROLE_TABLE_NAME)))
@@ -98,6 +101,10 @@ class PathwayMapping(Base):
         """
         return self.votes.filter(Vote.type == False).count()
 
+    def get_user_vote(self, user):
+        """Returns votes given by the user"""
+        return self.votes.filter(Vote.user == user).one_or_none()
+
 
 class Vote(Base):
     """Vote Table"""
@@ -106,6 +113,7 @@ class Vote(Base):
     id = Column(Integer, primary_key=True)
     mapping_id = Column(Integer, ForeignKey(PathwayMapping.id), nullable=False)
     mapping = relationship(PathwayMapping, backref=backref('votes', lazy='dynamic', cascade='all, delete-orphan'))
+    changed = Column(DateTime, default=datetime.datetime.utcnow)
 
     type = Column(Boolean, default=True, nullable=False, doc='Type of vote, by default is up-vote')
 

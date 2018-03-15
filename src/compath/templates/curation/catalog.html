@@ -12,8 +12,20 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
-    <script></script>
+    {% include "dependencies/datatables.html" %}
 
+    <script>
+        $("#mapping-table").DataTable(
+            {
+                dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            }
+        );
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +36,7 @@
             <div class="panel-heading">All Mappings</div>
             <div class="panel-body">
 
-                <table class="table table-bordered table-striped table-hover">
+                <table id="mapping-table" class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
                         <th>Pathway 1 Name</th>
@@ -57,19 +69,29 @@
                             {#                            TODO: Avoid wrapping this cell#}
                             <td>
                                 <div class="btn-group">
-                                    <a class="btn btn-default" href="">
+                                    {% set vote=mapping.get_user_vote(current_user) %}
+
+                                    <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
+                                       href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
                                         <span class="badge"> {{ mapping.count_up_votes() }}</span>
                                         <span class="glyphicon glyphicon-thumbs-up"></span>
                                     </a>
-
-                                    <a class="btn btn-default" href="">
+                                    <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
+                                       href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
                                         <span class="badge"> {{ mapping.count_down_votes() }}</span>
                                         <span class="glyphicon glyphicon-thumbs-down"></span>
                                     </a>
                                     {% if current_user.is_admin %}
-                                         <a class="btn btn-default" href="">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                    </a>
+                                        {% if mapping.accepted %}
+                                            <div class="btn btn-default">
+                                                <span class="glyphicon glyphicon-star"></span>
+                                            </div>
+                                        {% else %}
+                                            <a class="btn btn-default" href="">
+                                                <span class="glyphicon glyphicon-star-empty"></span>
+                                            </a>
+                                        {% endif %}
+
                                     {% endif %}
                                 </div>
                             </td>

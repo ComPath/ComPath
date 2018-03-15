@@ -9,7 +9,7 @@
 
 {% block styles %}
     {{ super() }}
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.css"/>
+
 
     <style>
 
@@ -44,12 +44,12 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
+    {% include "dependencies/datatables.html" %}
 
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
     <script type="text/javascript"
             src="https://benfred.github.io/venn.js/venn.js"></script>
-    <script type="text/javascript" src="https://cdn.datatables.net/v/bs/dt-1.10.16/datatables.min.js"></script>
 
     <script>
 

@@ -10,7 +10,9 @@ from flask import (
     flash,
     current_app,
     request,
-    abort
+    abort,
+    redirect,
+    url_for
 )
 from flask_security import current_user, login_required
 
@@ -45,9 +47,31 @@ def catalog():
     )
 
 
+@curation_blueprint.route('/vote/<int:mapping_id>/<int:type>', methods=['GET', 'POST'])
+@login_required
+def process_vote(mapping_id, type):
+    """Processes the vote
+
+    :param int mapping_id: id of the mapping to process the vote info
+    :param int type: 0 if down vote and 1 if up vote
+    """
+
+    if type not in {0, 1}:
+        return abort(500, "Invalid vote type {}. Vote type should be 0 or 1".format(type))
+
+    mapping = current_app.manager.get_mapping_by_id(mapping_id)
+
+    if mapping is None:
+        return abort(404, "Missing mapping for ID {}".format(mapping_id))
+
+    vote = current_app.manager.get_or_create_vote(current_user, mapping, vote_type=(type == 1))
+
+    return redirect(url_for('.catalog'))
+
+
 @curation_blueprint.route('/map_pathways', methods=['GET', 'POST'])
 @login_required
-def process_curation():
+def process_mapping():
     """Processes the mapping between two pathways"""
 
     resource_1 = request.args.get('resource-1')
@@ -87,6 +111,8 @@ def process_curation():
         pathway_2_model.name,
         current_user
     )
+
+    # TODO: Deal with the mapping
 
     flash("Created a mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
 

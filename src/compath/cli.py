@@ -108,7 +108,7 @@ def make_admin(connection, email):
 
     admin = ds.find_or_create_role('admin')
 
-    ds.add_role_to_user(user,admin)
+    ds.add_role_to_user(user, admin)
     ds.commit()
 
 
