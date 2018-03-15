@@ -53,7 +53,7 @@ function insertRow(table, row, column1, column2) {
      </dl>
      </div>*/
 
-    var row = table.insertRow(row);
+    row = table.insertRow(row);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
     cell1.innerHTML = column1;
@@ -169,12 +169,11 @@ function highlightEdges(edgeArray, property) {
 
     // Array with names of the nodes in the selected edge
     var nodesInEdges = [];
-    edges = cy.filter("edge");
     nodes = cy.filter("node");
 
     // Filtered not selected links
 
-    var edgesNotInArray = edges.filter(function (edgeObject) {
+    var edgesNotInArray = cy.filter("edge").filter(function (edgeObject) {
         if (edgeArray.indexOf(nodes[edgeObject.data('source')].data(property) + " &lt;-&gt; " + nodes[edgeObject.data('target')].data(property)) >= 0) {
             nodesInEdges.push(nodes[edgeObject.data('source')].data(property));
             nodesInEdges.push(nodes[edgeObject.data('target')].data(property));
@@ -424,6 +423,39 @@ function startCy(urlPath) {
                     resetAttributesDoubleClick();
                 });
 
+                ///////////////////////////////////////
+                // Edges threshold
+                ///////////////////////////////////////
+
+                $("#threshold-slider").bind("change", function () {
+                    nodes = cy.filter("node");
+                    var edgesInThreshold = [];
+
+                    var range = $('#threshold-slider').val().split(','); // Array of size two with min,max value of the range
+
+                    $.each(cy.filter("edge"), function (key, value) {
+                        similarity = value.data('similarity');
+
+                        if (similarity > 1) similarity = (similarity / 100);
+
+                        if (similarity < 0.8) {
+                            console.log(similarity);
+                            similarity = (similarity / 100);
+
+                        }
+                        if (similarity <= range[1] && similarity >= range[0]) {
+                            edgesInThreshold.push(nodes[value.data('source')].data('name') + " &lt;-&gt; " + nodes[value.data('target')].data('name'));
+                        }
+                    });
+
+                    resetAttributes();
+
+                    highlightEdges(edgesInThreshold, 'name');
+
+                    resetAttributesDoubleClick();
+
+                });
+
 
                 $('#config-toggle').on('click', function () {
                     $('body').toggleClass('config-closed');
@@ -470,6 +502,8 @@ function startCy(urlPath) {
 
 
 $(document).ready(function () {
+    var slider = new Slider('#threshold-slider', {});
+
 
     startCy(getJsonPath()); // Generate the default Network
 

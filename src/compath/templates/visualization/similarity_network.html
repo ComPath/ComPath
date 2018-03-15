@@ -150,6 +150,22 @@
                                     </select>
                                 </div>
                             </form>
+                            <div class="tab-pane not-rounded" id="highlight-threshold" role="tabpanel">
+                                <div class="panel-body">
+
+                                    <p>
+                                    <center>
+                                        Highlight the edges with a similarity in the range falling on the slider
+                                        threshold.
+                                    </center>
+                                    </p>
+                                    <center><input id="threshold-slider" type="text" value="" data-slider-min="0"
+                                                   data-slider-max="1"
+                                                   data-slider-step="0.01" data-slider-value="[0.5,1]"
+                                                   class="col-lg-10"/>
+                                    </center>
+                                </div>
+                            </div>
 
 
                             <div class="param">
@@ -176,6 +192,7 @@
                     <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
                         <p class="text-center" style="margin-top: 10px ;"><b> Modify Links Length</b></p>
                         <div id="edge-slider" class="center-slider"></div>
+
                         <button class='btn btn-primary not-rounded full-width' id='get-checked-edges'>Show
                             Selected Edges
                         </button>
