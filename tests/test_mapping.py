@@ -28,7 +28,7 @@ class TestMapping(DatabaseMixin):
 
         current_user = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -45,7 +45,7 @@ class TestMapping(DatabaseMixin):
 
         current_user = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -55,7 +55,7 @@ class TestMapping(DatabaseMixin):
             current_user
         )
 
-        mapping_2 = self.manager.get_or_create_mapping(
+        mapping_2, created = self.manager.get_or_create_mapping(
             REACTOME,
             '2',
             'reactome pathway',
@@ -65,6 +65,7 @@ class TestMapping(DatabaseMixin):
             current_user
         )
 
+        self.assertEqual(created, False, msg='The same mapping was added twice')
         self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
 
     def test_create_double_mapping_different_users(self):
@@ -73,7 +74,7 @@ class TestMapping(DatabaseMixin):
         user_1 = User()
         user_2 = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -83,7 +84,7 @@ class TestMapping(DatabaseMixin):
             user_1
         )
 
-        mapping_2 = self.manager.get_or_create_mapping(
+        mapping_2, _ = self.manager.get_or_create_mapping(
             REACTOME,
             '2',
             'reactome pathway',
@@ -103,7 +104,7 @@ class TestMapping(DatabaseMixin):
         current_user_1 = User()
         current_user_2 = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -113,7 +114,7 @@ class TestMapping(DatabaseMixin):
             current_user_1
         )
 
-        mapping_2 = self.manager.get_or_create_mapping(
+        mapping_2, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',

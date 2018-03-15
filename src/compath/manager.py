@@ -158,15 +158,20 @@ class Manager(object):
             user=user
         )
 
-        if mapping is None:
-            mapping = PathwayMapping(
-                service_1_name=service_1_name,
-                service_1_pathway_id=pathway_1_id,
-                service_1_pathway_name=pathway_1_name,
-                service_2_name=service_2_name,
-                service_2_pathway_id=pathway_2_id,
-                service_2_pathway_name=pathway_2_name,
-                creator=user
-            )
+        if mapping is not None:
+            return mapping, True
 
-        return mapping
+        mapping = PathwayMapping(
+            service_1_name=service_1_name,
+            service_1_pathway_id=pathway_1_id,
+            service_1_pathway_name=pathway_1_name,
+            service_2_name=service_2_name,
+            service_2_pathway_id=pathway_2_id,
+            service_2_pathway_name=pathway_2_name,
+            creator=user
+        )
+
+        self.session.manager.session.add(mapping)
+        self.session.manager.session.commit()
+
+        return mapping, False

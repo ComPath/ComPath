@@ -159,6 +159,7 @@ def curation():
         manager_names=current_app.manager_dict.keys(),
     )
 
+
 @ui_blueprint.route('/map_pathways', methods=['GET', 'POST'])
 @login_required
 def process_curation():
@@ -192,7 +193,7 @@ def process_curation():
     if pathway_2_model is None:
         return abort(500, "Pathway 2 '{}' not found in manager '{}'".format(pathway_2, resource_2))
 
-    mapping = current_app.manager.get_or_create_mapping(
+    mapping, created = current_app.manager.get_or_create_mapping(
         resource_1,
         pathway_1_model.id,
         pathway_1_model.name,
@@ -202,8 +203,6 @@ def process_curation():
         current_user
     )
 
-    current_app.manager.session.add(mapping)
-    current_app.manager.session.commit()
 
     flash("Created a mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
 

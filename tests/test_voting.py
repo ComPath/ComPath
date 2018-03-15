@@ -23,7 +23,7 @@ class TestVotingSystem(DatabaseMixin):
         """Test if votes are adding"""
         current_user = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -63,7 +63,7 @@ class TestVotingSystem(DatabaseMixin):
         current_user_1 = User()
         current_user_2 = User()
 
-        mapping_1 = self.manager.get_or_create_mapping(
+        mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -73,7 +73,7 @@ class TestVotingSystem(DatabaseMixin):
             current_user_1
         )
 
-        mapping_2 = self.manager.get_or_create_mapping(
+        mapping_2, _ = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
