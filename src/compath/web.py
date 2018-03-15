@@ -85,7 +85,7 @@ def create_app(connection=None):
         Base.query = db.session.query_property()
 
         try:
-            app.manager.create_all()
+            db.create_all()
         except Exception:
             log.exception('Failed to create all')
 
