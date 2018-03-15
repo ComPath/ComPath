@@ -438,10 +438,6 @@ function startCy(urlPath) {
 
                         if (similarity > 1) similarity = (similarity / 100);
 
-                        if (similarity < 0.8) {
-                            similarity = (similarity / 100);
-
-                        }
                         if (similarity <= range[1] && similarity >= range[0]) {
                             edgesInThreshold.push(nodes[value.data('source')].data('name') + " &lt;-&gt; " + nodes[value.data('target')].data('name'));
                         }
