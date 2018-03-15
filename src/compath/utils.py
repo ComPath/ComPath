@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+import numpy as np
 from itertools import combinations
 
 from pandas import DataFrame, Series
@@ -146,6 +147,39 @@ def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
             )
 
     return overlaps_venn_diagram
+
+
+def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe):
+    """Prepares the matrix for hypergeometric test calculations
+
+    :param set[str] query_gene_set: gene set to test against pathway
+    :param set[str] pathway_gene_set: pathway gene set
+    :param int gene_universe: number of HGNC symbols
+    :rtype: numpy.array
+    :return: 2x2 matrix
+    """
+    return np.array(
+        [[len(query_gene_set.intersection(pathway_gene_set)),
+          len(query_gene_set.difference(pathway_gene_set))
+          ],
+         [len(pathway_gene_set.difference(query_gene_set)),
+          gene_universe - len(pathway_gene_set.union(query_gene_set))
+          ]
+         ]
+    )
+
+
+def perform_hypergeometric_test(gene_set, pathways, gene_universe):
+    """
+
+    :param set[str] gene_set: gene set to test against pathway
+    :param dict[str,set[str]] pathways: pathway gene set
+    :param int gene_universe: number of HGNC symbols
+    :rtype:
+    :return:
+    """
+
+
 
 
 def get_genes_without_assigned_pathways(manager_list, gene_set):
