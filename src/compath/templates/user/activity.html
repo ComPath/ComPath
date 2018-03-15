@@ -12,8 +12,30 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
-    <script></script>
+    {% include "dependencies/datatables.html" %}
 
+    <script>
+        $("#user-mappings").DataTable(
+            {
+                dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            }
+        );
+        $("#user-votes").DataTable(
+            {
+                dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ]
+            }
+        );
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -24,7 +46,7 @@
             <div class="panel-heading">My Mappings</div>
             <div class="panel-body">
 
-                <table class="table table-bordered table-striped table-hover">
+                <table id="user-mappings" class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
                         <th>Pathway 1 Name</th>
@@ -78,7 +100,7 @@
             <div class="panel-heading">My Votes</div>
             <div class="panel-body">
 
-                <table class="table table-bordered table-striped table-hover">
+                <table id="user-votes" class="table table-bordered table-striped table-hover">
                     <thead>
                     <tr>
                         <th>Pathway 1 Name</th>

@@ -12,8 +12,6 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
-    <script></script>
-
 {% endblock %}
 
 {% block content %}
@@ -24,7 +22,7 @@
             <div class="panel-heading">{{ pathway.name }} Overview</div>
             <div class="panel-body">
 
-                <table class="table table-bordered table-striped table-hover">
+                <table id="pathway-info" class="table table-bordered table-striped table-hover">
                     <tbody>
                     <tr>
                         <td>Name
@@ -43,7 +41,6 @@
                     <tr>
                         <td>Genes in Pathway
                         </td>
-                        <td>
                         <td>
                             {% for hgnc_symbol in pathway.get_gene_set() %}
                                 <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
