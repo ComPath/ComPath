@@ -93,7 +93,7 @@ def web(debug, connection):
 def make_admin(connection, email):
     """Makes a pre-existing user an admin"""
 
-    #  Example: python3 -m compath make_admin xxx@xxx.com
+    # Example: python3 -m compath make_admin xxx@xxx.com
 
     manager = RealManager(connection=connection)
     Base.metadata.bind = manager.engine
