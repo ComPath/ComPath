@@ -132,7 +132,8 @@ class Manager(object):
         :param User user: User
         """
         mapping.creators.append(user)
-        self.session.commit()
+
+        vote = self.get_or_create_vote(user, mapping)
 
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
         """Query mapping in the database

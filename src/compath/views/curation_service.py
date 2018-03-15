@@ -96,7 +96,11 @@ def process_mapping():
     pathway_2_model = get_pathway_model_by_name(current_app, resource_2, pathway_2)
 
     if pathway_1 == pathway_2:
-        return abort(500, "Trying to establish a mapping between the same pathway")
+        flash("Trying to establish a mapping between the same pathway")
+        return render_template(
+            'curation/create_mapping.html',
+            manager_names=current_app.manager_dict.keys(),
+        )
 
     if pathway_1_model is None:
         return abort(500, "Pathway 1 '{}' not found in manager '{}'".format(pathway_1, resource_1))
