@@ -439,7 +439,6 @@ function startCy(urlPath) {
                         if (similarity > 1) similarity = (similarity / 100);
 
                         if (similarity < 0.8) {
-                            console.log(similarity);
                             similarity = (similarity / 100);
 
                         }
