@@ -93,7 +93,7 @@
 
                         <tr>
                             <td>
-                                <a href="{{ url_for("ui.pathway_view",resource=vote.mapping.service_1_name, identifier=vote.mapping.service_1_pathway_id ) }}">
+                                <a href="{{ url_for("model.pathway_view",resource=vote.mapping.service_1_name, identifier=vote.mapping.service_1_pathway_id ) }}">
                                     {{ vote.mapping.service_1_pathway_name }}
                                 </a>
                             </td>
@@ -101,7 +101,7 @@
                                 {{ vote.mapping.service_1_name|upper }}
                             </td>
                             <td>
-                                <a href="{{ url_for("ui.pathway_view",resource=vote.mapping.service_2_name, identifier=vote.mapping.service_2_pathway_id ) }}">
+                                <a href="{{ url_for("model.pathway_view",resource=vote.mapping.service_2_name, identifier=vote.mapping.service_2_pathway_id ) }}">
                                     {{ vote.mapping.service_2_pathway_name }}
                                 </a>
                             </td>
