@@ -126,14 +126,20 @@ class Manager(object):
         return vote
 
     def claim_mapping(self, mapping, user):
-        """Add the user as a creator of the mapping
+        """Checks if user has already established the mapping, if not claims it
 
         :param PathwayMapping mapping: Mapping instance
         :param User user: User
+        :rtype: bool
+        :return: if mapping was assigned to user
         """
-        mapping.creators.append(user)
 
-        vote = self.get_or_create_vote(user, mapping)
+        if user in mapping.creators:
+            return False
+
+        mapping.creators.append(user)
+        _ = self.get_or_create_vote(user, mapping)
+        return True
 
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
         """Query mapping in the database
@@ -195,6 +201,8 @@ class Manager(object):
         )
 
         if mapping is not None:
+            _ = self.claim_mapping(mapping, user)
+
             return mapping, False
 
         mapping = PathwayMapping(

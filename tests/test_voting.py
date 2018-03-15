@@ -64,7 +64,7 @@ class TestVotingSystem(DatabaseMixin):
         current_user_1 = User()
         current_user_2 = User()
 
-        mapping_1, _ = self.manager.get_or_create_mapping(
+        mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
             '1',
             'kegg pathway',
@@ -74,15 +74,19 @@ class TestVotingSystem(DatabaseMixin):
             current_user_1
         )
 
-        mapping_2, _ = self.manager.get_or_create_mapping(
-            KEGG,
-            '1',
-            'kegg pathway',
+        self.assertTrue(created, 'mapping not created')
+
+        mapping_2, created = self.manager.get_or_create_mapping(
             REACTOME,
             '2',
             'reactome pathway',
+            KEGG,
+            '1',
+            'kegg pathway',
             current_user_2
         )
+
+        self.assertFalse(created, 'mapping was created')
 
         self.assertEqual(2, self.manager.count_votes(), msg='Problem with votes')
 

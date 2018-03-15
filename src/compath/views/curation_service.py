@@ -120,11 +120,12 @@ def process_mapping():
 
     if created is False:
 
-        if current_user in mapping.creators:
+        claimed = current_app.manager.claim_mapping(mapping, current_user)
+        if not claimed:
             flash("You already established this mapping")
         else:
             flash("Since this mapping was already established, you have been assigned as a creator of the mapping")
-            current_app.manager.claim_mapping(mapping, current_user)
+
 
     else:
         flash("You have established a new mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
