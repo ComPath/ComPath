@@ -44,6 +44,11 @@
                         <td>Genes in Pathway
                         </td>
                         <td>
+                        <td>
+                            {% for hgnc_symbol in pathway.get_gene_set() %}
+                                <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
+                                {{ "," if not loop.last }}
+                            {% endfor %}
                         </td>
                     </tr>
                     <tr>

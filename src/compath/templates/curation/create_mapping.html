@@ -17,6 +17,14 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script type="text/javascript">
+        // Initializes popover
+        $(function () {
+            $('[data-toggle="popover"]').popover({
+                placement: 'top',
+                trigger: 'hover'
+            })
+        });
+
         $(document).ready(function () {
 
             // Autocompletion in the first input
@@ -90,7 +98,18 @@
                         </select>
 
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <div class="btn-group text-center align-center">
+                        <button type="submit" class="btn btn-primary btn-lg"
+                                data-toggle="popover" title="Create New Mapping"
+                                data-content="Creates a new mapping between the two selected pathways">Submit
+                        </button>
+                        <a href="{{ url_for('curation.catalog') }}" class="btn btn-primary btn-lg"
+                           data-toggle="popover" title="Mapping Catalog"
+                           data-content="Go to the pathway mapping catalog page">
+                            Catalog
+                        </a>
+                    </div>
+
                 </form>
             </div>
         </div>
