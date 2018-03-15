@@ -146,7 +146,7 @@
 
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
-        <form id="compare-pathways-form" method="get" action="{{ url_for('ui.compare_pathways') }}">
+        <form id="compare-pathways-form" method="get" action="{{ url_for('analysis.compare_pathways') }}">
         </form>
 
         <p>First, select your pathways of interest and click in the type of analysis to perform. The "Venn Diagram"
