@@ -56,6 +56,9 @@
                             {% if current_user.is_admin %}
                                 <li><a class="nav-header" href="{{ url_for('admin.index') }}">Admin</a></li>
                             {% endif %}
+                            {% if current_user.is_authenticated %}
+                                <li><a class="nav-header" href="{{ url_for('ui.user_activity') }}">My Activity</a></li>
+                            {% endif %}
                             <li><a href="{{ url_for('security.logout') }}">Log Out</a></li>
                         </ul>
                     </li>

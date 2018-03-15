@@ -55,7 +55,7 @@ def get_enriched_pathways(manager_list, gene_set):
     }
 
 
-def get_pathway_model(app, resource, pathway_name):
+def get_pathway_model_by_name(app, resource, pathway_name):
     """Returns the pathway object from the resource manager
 
     :param flask.Flask app: current app
@@ -68,6 +68,21 @@ def get_pathway_model(app, resource, pathway_name):
     manager = app.manager_dict.get(resource.lower())
 
     return manager.get_pathway_by_name(pathway_name)
+
+
+def get_pathway_model_by_id(app, resource, pathway_id):
+    """Returns the pathway object from the resource manager
+
+    :param flask.Flask app: current app
+    :param str resource: name of the manager
+    :param str pathway_id: pathway id
+    :rtype: Optional[Pathway]
+    :return: pathway if exists
+    """
+
+    manager = app.manager_dict.get(resource.lower())
+
+    return manager.get_pathway_by_id(pathway_id)
 
 
 def get_gene_sets_from_pathway_names(app, pathways):
@@ -85,7 +100,7 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
     for name, resource in pathways:
 
-        pathway = get_pathway_model(app, resource, name)
+        pathway = get_pathway_model_by_name(app, resource, name)
 
         if not pathway:
             log.warning('{} pathway not found'.format(name))

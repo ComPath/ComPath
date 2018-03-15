@@ -28,6 +28,11 @@ def _flip_service_order(service_1_name, service_2_name):
     return service_1_name > service_2_name
 
 
+def _ensure_manager(name):
+    if name not in managers:
+        raise ValueError('Manager does not exist for {}'.format(name))
+
+
 class Manager(object):
     """Database manager"""
 
@@ -53,6 +58,13 @@ class Manager(object):
         :rtype: int
         """
         return self.session.query(User).count()
+
+    def get_mappings(self):
+        """Get all mappings in the database
+
+        :rtype: list[PathwayMapping]
+        """
+        return self.session.query(PathwayMapping).all()
 
     def get_vote_by_id(self, vote_id):
         """Gets a vote by its id
@@ -142,11 +154,8 @@ class Manager(object):
                 user
             )
 
-        if service_1_name not in managers:
-            raise ValueError('Manager does not exist for {}'.format(service_1_name))
-
-        if service_2_name not in managers:
-            raise ValueError('Manager does not exist for {}'.format(service_2_name))
+        _ensure_manager(service_1_name)
+        _ensure_manager(service_2_name)
 
         mapping = self.get_mapping(
             service_1_name=service_1_name,
@@ -171,7 +180,13 @@ class Manager(object):
             creator=user
         )
 
-        self.session.manager.session.add(mapping)
-        self.session.manager.session.commit()
+        vote = Vote(
+            mapping=mapping,
+            user=user
+        )
+
+        self.session.add(mapping)
+        self.session.add(vote)
+        self.session.commit()
 
         return mapping, False

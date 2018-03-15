@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}My Activity{% endblock %}
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+    <script></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">My Mappings</div>
+            <div class="panel-body">
+
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Pathway 1 Name</th>
+                        <th>Resource 1</th>
+                        <th>Pathway 2 Name</th>
+                        <th>Resource 2</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for mapping in current_user.mappings %}
+
+                        <tr>
+                            <td>
+                                <a href="{{ url_for("ui.pathway_view",resource=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
+                                    {{ mapping.service_1_pathway_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ mapping.service_1_name|upper }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for("ui.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
+                                    {{ mapping.service_2_pathway_name }}
+                                </a></td>
+                            <td>
+                                {{ mapping.service_2_name|upper }}
+                            </td>
+                            <td>
+                                <div class="btn-group">
+                                    <div class="btn btn-primary">
+                                        <span class="badge"> {{ mapping.count_up_votes() }}</span>
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    </div>
+
+                                    <div class="btn btn-danger">
+                                        <span class="badge"> {{ mapping.count_down_votes() }}</span>
+                                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">My Votes</div>
+            <div class="panel-body">
+
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Pathway 1 Name</th>
+                        <th>Resource 1</th>
+                        <th>Pathway 2 Name</th>
+                        <th>Resource 2</th>
+                        <th>Vote Type</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for vote in current_user.votes %}
+
+                        <tr>
+                            <td>
+                                <a href="{{ url_for("ui.pathway_view",resource=vote.mapping.service_1_name, identifier=vote.mapping.service_1_pathway_id ) }}">
+                                    {{ vote.mapping.service_1_pathway_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ vote.mapping.service_1_name|upper }}
+                            </td>
+                            <td>
+                                <a href="{{ url_for("ui.pathway_view",resource=vote.mapping.service_2_name, identifier=vote.mapping.service_2_pathway_id ) }}">
+                                    {{ vote.mapping.service_2_pathway_name }}
+                                </a>
+                            </td>
+                            <td>
+                                {{ vote.mapping.service_2_name|upper }}
+                            </td>
+                            <td>
+                                {% if vote.type %}
+                                    <div class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    </div>
+                                {% else %}
+                                    <div class="btn btn-danger">
+                                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                                    </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}

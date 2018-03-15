@@ -26,7 +26,8 @@ from .forms import GeneSetForm
 from .utils import (
     dict_to_pandas_df,
     process_form_gene_set,
-    get_pathway_model,
+    get_pathway_model_by_name,
+    get_pathway_model_by_id,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
     process_overlap_for_venn_diagram
@@ -61,6 +62,23 @@ def about():
     ]
 
     return render_template('about.html', metadata=metadata)
+
+
+@ui_blueprint.route('/user', methods=['GET'])
+@login_required
+def user_activity():
+    """Renders the user activity page"""
+    return render_template('activity.html')
+
+
+"""Model views"""
+
+
+@ui_blueprint.route('/pathway/<resource>/<identifier>', methods=['GET'])
+def pathway_view(resource, identifier):
+    pathway = get_pathway_model_by_id(current_app, resource, identifier)
+
+    return render_template('models/pathway.html', pathway=pathway, resource=resource)
 
 
 """Venn Diagram views"""
@@ -155,8 +173,19 @@ def similarity_network():
 def curation():
     """Renders the curation page"""
     return render_template(
-        'curation.html',
+        'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
+    )
+
+
+@ui_blueprint.route('/mapping_catalog', methods=['GET'])
+@login_required
+def catalog():
+    """Renders the mapping catalog page"""
+
+    return render_template(
+        'curation/catalog.html',
+        mappings=current_app.manager.get_mappings()
     )
 
 
@@ -184,8 +213,8 @@ def process_curation():
     pathway_1 = request.args.get('pathway-1')
     pathway_2 = request.args.get('pathway-2')
 
-    pathway_1_model = get_pathway_model(current_app, resource_1, pathway_1)
-    pathway_2_model = get_pathway_model(current_app, resource_2, pathway_2)
+    pathway_1_model = get_pathway_model_by_name(current_app, resource_1, pathway_1)
+    pathway_2_model = get_pathway_model_by_name(current_app, resource_2, pathway_2)
 
     if pathway_1_model is None:
         return abort(500, "Pathway 1 '{}' not found in manager '{}'".format(pathway_1, resource_1))
@@ -195,19 +224,18 @@ def process_curation():
 
     mapping, created = current_app.manager.get_or_create_mapping(
         resource_1,
-        pathway_1_model.id,
+        getattr(pathway_1_model, '{}_id'.format(resource_1)),
         pathway_1_model.name,
         resource_2,
-        pathway_2_model.id,
+        getattr(pathway_2_model, '{}_id'.format(resource_2)),
         pathway_2_model.name,
         current_user
     )
 
-
     flash("Created a mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
 
     return render_template(
-        'curation.html',
+        'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
     )
 

@@ -70,8 +70,33 @@ class PathwayMapping(Base):
     creator = relationship(User, backref=backref('mappings'))
 
     def __str__(self):
-        return 'Mapping from {}:{} to {}:{}'.format(self.service_1_name, self.service_1_pathway_name,
-                                                  self.service_2_name, self.service_2_pathway_name)
+        return 'Mapping from {}:{} to {}:{}'.format(
+            self.service_1_name,
+            self.service_1_pathway_name,
+            self.service_2_name,
+            self.service_2_pathway_name
+        )
+
+    def count_votes(self):
+        """Return the number of votes for this mapping
+
+        :rtype: int
+        """
+        return len(self.votes)
+
+    def count_up_votes(self):
+        """Return the number of up votes for this mapping
+
+        :rtype: int
+        """
+        return self.votes.filter(Vote.type == True).count()
+
+    def count_down_votes(self):
+        """Return the number of down votes for this mapping
+
+        :rtype: int
+        """
+        return self.votes.filter(Vote.type == False).count()
 
 
 class Vote(Base):
@@ -80,7 +105,7 @@ class Vote(Base):
 
     id = Column(Integer, primary_key=True)
     mapping_id = Column(Integer, ForeignKey(PathwayMapping.id), nullable=False)
-    mapping = relationship(PathwayMapping, backref=backref('votes'))
+    mapping = relationship(PathwayMapping, backref=backref('votes', lazy='dynamic', cascade='all, delete-orphan'))
 
     type = Column(Boolean, default=True, nullable=False, doc='Type of vote, by default is up-vote')
 

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Mapping Catalog{% endblock %}
+{% block styles %}
+    {{ super() }}
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+    <script></script>
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">All Mappings</div>
+            <div class="panel-body">
+
+                <table class="table table-bordered table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Pathway 1 Name</th>
+                        <th>Resource 1</th>
+                        <th>Pathway 2 Name</th>
+                        <th>Resource 2</th>
+                        <th>Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for mapping in mappings %}
+                        <tr>
+                            <td>
+                                {{ mapping.service_1_pathway_name }}
+                            </td>
+                            <td>
+                                {{ mapping.service_1_name|upper }}
+                            </td>
+                            <td>
+                                {{ mapping.service_2_pathway_name }}
+                            </td>
+                            <td>
+                                {{ mapping.service_2_name|upper }}
+                            </td>
+                            {#                            TODO: Avoid wrapping this cell#}
+                            <td>
+                                <div class="btn-group">
+                                    <a class="btn btn-default" href="">
+                                        <span class="badge"> {{ mapping.count_up_votes() }}</span>
+                                        <span class="glyphicon glyphicon-thumbs-up"></span>
+                                    </a>
+
+                                    <a class="btn btn-default" href="">
+                                        <span class="badge"> {{ mapping.count_down_votes() }}</span>
+                                        <span class="glyphicon glyphicon-thumbs-down"></span>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}
