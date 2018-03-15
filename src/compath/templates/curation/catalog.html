@@ -39,13 +39,17 @@
                     {% for mapping in mappings %}
                         <tr>
                             <td>
-                                {{ mapping.service_1_pathway_name }}
+                                <a href="{{ url_for("ui.pathway_view",resource=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
+                                    {{ mapping.service_1_pathway_name }}
+                                </a>
                             </td>
                             <td>
                                 {{ mapping.service_1_name|upper }}
                             </td>
                             <td>
-                                {{ mapping.service_2_pathway_name }}
+                                <a href="{{ url_for("ui.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
+                                    {{ mapping.service_2_pathway_name }}
+                                </a>
                             </td>
                             <td>
                                 {{ mapping.service_2_name|upper }}

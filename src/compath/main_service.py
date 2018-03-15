@@ -42,8 +42,7 @@ ui_blueprint = Blueprint('ui', __name__)
 
 @ui_blueprint.route('/', methods=['GET'])
 def home():
-    """ComPath home page
-    """
+    """ComPath home page"""
     return render_template('home.html')
 
 
@@ -68,7 +67,7 @@ def about():
 @login_required
 def user_activity():
     """Renders the user activity page"""
-    return render_template('activity.html')
+    return render_template('user/activity.html')
 
 
 """Model views"""
