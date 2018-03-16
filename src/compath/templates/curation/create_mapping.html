@@ -93,7 +93,9 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <select type="text" class="form-control" name="resource-1" id="select-1">
                                 {% for manager in manager_names|sort %}
-                                    <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% if manager not in ['compath_hgnc', 'hgnc'] %}
+                                        <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -107,7 +109,9 @@
                         <div class="col-sm-3 col-md-3 col-lg-3">
                             <select type="text" class="form-control" name="resource-2" id="select-2">
                                 {% for manager in manager_names|sort %}
-                                    <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% if manager not in ['compath_hgnc', 'hgnc'] %}
+                                        <option value="{{ manager }}">{{ manager|upper }}</option>
+                                    {% endif %}
                                 {% endfor %}
                             </select>
                         </div>
@@ -115,7 +119,7 @@
 
                     <div class="row">
                         <div class="col-sm-offset-4 col-sm-3 text-center">
-                            <div class="btn-group btn-space" data-toggle="buttons">
+                            <div class="btn-group btn-space">
                                 <button type="submit" class="btn btn-primary btn-lg"
                                         data-toggle="popover" title="Create New Mapping"
                                         data-content="Creates a new mapping between the two selected pathways">Submit
