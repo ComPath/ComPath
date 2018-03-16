@@ -4,7 +4,7 @@
 {% import "bootstrap/fixes.html" as fixes %}
 {% import "bootstrap/utils.html" as util %}
 
-{% block title %}Pathway View{% endblock %}
+{% block title %}Pathway Details{% endblock %}
 {% block styles %}
     {{ super() }}
 {% endblock %}
@@ -12,6 +12,15 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
+    <script>
+        // Initializes popover
+        $(function () {
+            $('[data-toggle="popover"]').popover({
+                placement: 'top',
+                trigger: 'hover'
+            })
+        });
+    </script>
 {% endblock %}
 
 {% block content %}
@@ -62,6 +71,25 @@
                     </tr>
                     </tbody>
                 </table>
+
+                <hr>
+
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6 text-center">
+                        <div class="btn-group btn-space">
+                            <button type="submit" class="btn btn-primary btn-lg"
+                                    data-toggle="popover" title="Suggest Pathways"
+                                    data-content="Suggests the most similar pathways according to genetic overlap">
+                                Suggest Mappings By Overlap
+                            </button>
+                            <button type="submit" class="btn btn-primary btn-lg"
+                                    data-toggle="popover" title="Suggest Pathways"
+                                    data-content="Suggests the most similar pathways according to name similarity">
+                                Suggest Mappings By Name
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

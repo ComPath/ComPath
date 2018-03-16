@@ -16,6 +16,7 @@ from flask import (
 )
 from flask_security import current_user, login_required
 
+from compath.constants import BLACK_LIST
 from compath.utils import (
     get_pathway_model_by_name
 )
@@ -33,6 +34,7 @@ def curation():
     return render_template(
         'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
+        BLACK_LIST=BLACK_LIST
     )
 
 
