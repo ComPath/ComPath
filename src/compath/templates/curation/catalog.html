@@ -43,7 +43,9 @@
                         <th>Resource 1</th>
                         <th>Pathway 2 Name</th>
                         <th>Resource 2</th>
-                        <th>Vote</th>
+                        {% if current_user.is_authenticated %}
+                            <th>Vote</th>
+                        {% endif %}
                         <th>Accepted</th>
                     </tr>
                     </thead>
@@ -67,22 +69,24 @@
                             <td>
                                 {{ mapping.service_2_name|upper }}
                             </td>
-                            <td>
-                                <div class="btn-group">
-                                    {% set vote=mapping.get_user_vote(current_user) %}
+                            {% if current_user.is_authenticated %}
+                                <td>
+                                    <div class="btn-group">
+                                        {% set vote=mapping.get_user_vote(current_user) %}
 
-                                    <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
-                                       href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
-                                        <span class="badge"> {{ mapping.count_up_votes }}</span>
-                                        <span class="glyphicon glyphicon-thumbs-up"></span>
-                                    </a>
-                                    <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
-                                       href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
-                                        <span class="badge"> {{ mapping.count_down_votes }}</span>
-                                        <span class="glyphicon glyphicon-thumbs-down"></span>
-                                    </a>
-                                </div>
-                            </td>
+                                        <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
+                                           href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
+                                            <span class="badge"> {{ mapping.count_up_votes }}</span>
+                                            <span class="glyphicon glyphicon-thumbs-up"></span>
+                                        </a>
+                                        <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
+                                           href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
+                                            <span class="badge"> {{ mapping.count_down_votes }}</span>
+                                            <span class="glyphicon glyphicon-thumbs-down"></span>
+                                        </a>
+                                    </div>
+                                </td>
+                            {% endif %}
                             <td>
                                 {% if mapping.accepted %}
                                     <div class="btn btn-default">

@@ -247,6 +247,8 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
+    # def get_mappings_with_pathway
+
 
 class RealManager(Manager):
     def __init__(self, connection=None):
