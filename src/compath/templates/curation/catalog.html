@@ -43,7 +43,7 @@
                         <th>Resource 1</th>
                         <th>Pathway 2 Name</th>
                         <th>Resource 2</th>
-                        <th>Actions</th>
+                        <th>Vote</th>
                         <th>Accepted</th>
                     </tr>
                     </thead>
@@ -81,17 +81,6 @@
                                         <span class="badge"> {{ mapping.count_down_votes }}</span>
                                         <span class="glyphicon glyphicon-thumbs-down"></span>
                                     </a>
-                                    {% if current_user.is_admin %}
-                                        {% if mapping.accepted %}
-                                            <div class="btn btn-default">
-                                                <span class="glyphicon glyphicon-star"></span>
-                                            </div>
-                                        {% else %}
-                                            <a class="btn btn-default" href="">
-                                                <span class="glyphicon glyphicon-star-empty"></span>
-                                            </a>
-                                        {% endif %}
-                                    {% endif %}
                                 </div>
                             </td>
                             <td>

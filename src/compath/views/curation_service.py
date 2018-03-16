@@ -4,10 +4,6 @@
 
 import logging
 
-from compath.constants import BLACK_LIST
-from compath.utils import (
-    get_pathway_model_by_name
-)
 from flask import (
     Blueprint,
     render_template,
@@ -18,7 +14,12 @@ from flask import (
     redirect,
     url_for
 )
-from flask_security import current_user, login_required, roles_required
+from flask_security import current_user, login_required
+
+from compath.constants import BLACK_LIST
+from compath.utils import (
+    get_pathway_model_by_name
+)
 
 log = logging.getLogger(__name__)
 curation_blueprint = Blueprint('curation', __name__)
@@ -71,12 +72,15 @@ def process_vote(mapping_id, type):
 
 @curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET', 'POST'])
 @login_required
-@roles_required('admin')
 def accept_mapping(mapping_id):
     """Processes the vote
 
     :param int mapping_id: id of the mapping to be accepted by the admin
     """
+
+    if not current_user.is_admin:
+        flash("Only Admins can accept established mappings")
+        return redirect(url_for('.catalog'))
 
     mapping, created = current_app.manager.accept_mapping(mapping_id)
 
