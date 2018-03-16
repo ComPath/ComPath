@@ -144,14 +144,12 @@ class TestMapping(DatabaseMixin):
             user_2
         )
 
+
         mapping_3, accepted = self.manager.accept_mapping(mapping_3.id)
 
         self.assertTrue(accepted, 'Mapping was not accepted')
 
-        accepted_mappings = self.manager.get_all_accepted_mappings()
-
-        self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
-
+        # Checks all mappings
         all_mappings = self.manager.get_all_mappings()
 
         self.assertEqual(
@@ -159,3 +157,13 @@ class TestMapping(DatabaseMixin):
             set(all_mappings),
             'Not all the mappings were fetched'
         )
+
+        # Checks only accepted mappings
+
+        accepted_mappings = self.manager.get_all_accepted_mappings()
+
+        self.assertIsNotNone(accepted_mappings[0], msg='No mappings were fetched')
+
+        self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
+
+
