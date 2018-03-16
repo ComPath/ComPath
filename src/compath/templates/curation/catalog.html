@@ -44,6 +44,7 @@
                         <th>Pathway 2 Name</th>
                         <th>Resource 2</th>
                         <th>Actions</th>
+                        <th>Canonical</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -66,7 +67,6 @@
                             <td>
                                 {{ mapping.service_2_name|upper }}
                             </td>
-                            {#                            TODO: Avoid wrapping this cell#}
                             <td>
                                 <div class="btn-group">
                                     {% set vote=mapping.get_user_vote(current_user) %}
@@ -91,9 +91,19 @@
                                                 <span class="glyphicon glyphicon-star-empty"></span>
                                             </a>
                                         {% endif %}
-
                                     {% endif %}
                                 </div>
+                            </td>
+                            <td>
+                                {% if mapping.accepted %}
+                                    <div class="btn btn-default">
+                                        <span class="glyphicon glyphicon-ok"></span>
+                                    </div>
+                                {% else %}
+                                    <a class="btn btn-default">
+                                        <span class="glyphicon glyphicon-remove"></span>
+                                    </a>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
