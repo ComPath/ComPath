@@ -65,12 +65,19 @@ class Manager(object):
         """
         return self.session.query(User).count()
 
-    def get_mappings(self):
+    def get_all_mappings(self):
         """Get all mappings in the database
 
         :rtype: list[PathwayMapping]
         """
         return self.session.query(PathwayMapping).all()
+
+    def get_all_accepted_mappings(self):
+        """Get all accepted mappings in the database
+
+        :rtype: list[PathwayMapping]
+        """
+        return self.session.query(PathwayMapping.accepted == True).all()
 
     def get_vote_by_id(self, vote_id):
         """Gets a vote by its id

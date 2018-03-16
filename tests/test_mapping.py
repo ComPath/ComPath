@@ -107,3 +107,55 @@ class TestMapping(DatabaseMixin):
             for user in mapping_1.creators
         ]
         self.assertEqual(emails, [user_1.email, user_2.email])
+
+    def test_export_mappings(self):
+        """Test duplicate mappings for different users"""
+
+        user_1 = User(email='mycool@email.com')
+        user_2 = User(email='myawesome@email.com')
+
+        mapping_1, created = self.manager.get_or_create_mapping(
+            KEGG,
+            '1',
+            'kegg pathway',
+            REACTOME,
+            '2',
+            'reactome pathway',
+            user_1
+        )
+
+        mapping_2, created = self.manager.get_or_create_mapping(
+            REACTOME,
+            '3',
+            'reactome pathway',
+            KEGG,
+            '1',
+            'kegg pathway',
+            user_2
+        )
+
+        mapping_3, created = self.manager.get_or_create_mapping(
+            REACTOME,
+            '2',
+            'reactome pathway',
+            KEGG,
+            '2',
+            'kegg pathway',
+            user_2
+        )
+
+        mapping_3, accepted = self.manager.accept_mapping(mapping_3.id)
+
+        self.assertTrue(accepted, 'Mapping was not accepted')
+
+        accepted_mappings = self.manager.get_all_accepted_mappings()
+
+        self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
+
+        all_mappings = self.manager.get_all_mappings()
+
+        self.assertEqual(
+            {mapping_1, mapping_2, mapping_3},
+            set(all_mappings),
+            'Not all the mappings were fetched'
+        )

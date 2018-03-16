@@ -44,7 +44,7 @@ def catalog():
 
     return render_template(
         'curation/catalog.html',
-        mappings=current_app.manager.get_mappings()
+        mappings=current_app.manager.get_all_mappings()
     )
 
 
