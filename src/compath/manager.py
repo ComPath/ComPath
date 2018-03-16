@@ -77,7 +77,7 @@ class Manager(object):
 
         :rtype: list[PathwayMapping]
         """
-        return self.session.query(PathwayMapping.accepted == True).all()
+        return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
 
     def get_vote_by_id(self, vote_id):
         """Gets a vote by its id

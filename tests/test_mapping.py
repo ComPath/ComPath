@@ -4,9 +4,10 @@
 
 import unittest
 
+from tests.constants import DatabaseMixin, KEGG, REACTOME
+
 from compath.manager import _flip_service_order
 from compath.models import User
-from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestServiceOrder(unittest.TestCase):
@@ -144,7 +145,6 @@ class TestMapping(DatabaseMixin):
             user_2
         )
 
-
         mapping_3, accepted = self.manager.accept_mapping(mapping_3.id)
 
         self.assertTrue(accepted, 'Mapping was not accepted')
@@ -165,5 +165,3 @@ class TestMapping(DatabaseMixin):
         self.assertIsNotNone(accepted_mappings[0], msg='No mappings were fetched')
 
         self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
-
-
