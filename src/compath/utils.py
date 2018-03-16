@@ -183,7 +183,7 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     :param set[str] query_gene_set: gene set to test against pathway
     :param set[str] pathway_gene_set: pathway gene set
     :param int gene_universe: number of HGNC symbols
-    :rtype: numpy.array
+    :rtype: numpy.ndarray
     :return: 2x2 matrix
     """
     return np.array(

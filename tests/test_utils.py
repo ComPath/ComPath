@@ -3,8 +3,13 @@
 import unittest
 
 import numpy as np
-from compath.utils import process_form_gene_set
+
 from compath.d3_dendrogram import create_similarity_matrix
+from compath.utils import (
+    process_form_gene_set,
+    _prepare_hypergeometric_test,
+    process_overlap_for_venn_diagram
+)
 
 
 class TestUtils(unittest.TestCase):
@@ -42,4 +47,22 @@ class TestUtils(unittest.TestCase):
             ]),
                 similarity_matrix,
             )
+        )
+
+    def test_hypergeometric_matrix(self):
+        """Test how the matrix gets created"""
+        matrix = _prepare_hypergeometric_test({'A', 'B', 'C'}, {'A', 'B', 'C', 'D', 'E', 'F'}, 10)
+
+        self.assertEqual(
+            [[3, 0], [3, 4]],
+            matrix.tolist()
+        )
+
+    def test_venn_diagram_process(self):
+        """Venn Diagram"""
+        json = process_overlap_for_venn_diagram({'pathway1': {'A', 'B', 'C', 'D', 'E', 'F'}, 'pathway2': {'A', 'B'}})
+
+        self.assertEqual(
+           3,
+           len(json)
         )
