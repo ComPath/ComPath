@@ -231,6 +231,10 @@ def api_resource_autocompletion():
     if not manager:
         return jsonify([])
 
+    # Special method for ComPath HGNC since it does not have a pathway model but gene families
+    if resource == 'compath_hgnc':
+        return jsonify(manager.autocomplete_gene_families(q, 10))
+
     return jsonify(list({
         pathway.name
         for pathway in manager.query_pathway_by_name(q, 10)  # Limits the results returned to 10
