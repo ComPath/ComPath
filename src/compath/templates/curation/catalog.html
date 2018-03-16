@@ -33,76 +33,94 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="panel panel-default">
-            <div class="panel-heading">All Mappings</div>
+            <div class="panel-heading">Proposed Pathway Mappings</div>
             <div class="panel-body">
-
-                <table id="mapping-table" class="table table-bordered table-striped table-hover">
-                    <thead>
-                    <tr>
-                        <th>Pathway 1 Name</th>
-                        <th>Resource 1</th>
-                        <th>Pathway 2 Name</th>
-                        <th>Resource 2</th>
-                        {% if current_user.is_authenticated %}
-                            <th>Vote</th>
-                        {% endif %}
-                        <th>Accepted</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-
-                    {% for mapping in mappings %}
+                <p>The following table lists all the proposed mappings by the users/independent curators between a pair
+                    of pathways. Registered users can use the voting system to reach a consensus about a given mapping.
+                    If this mapping has been proposed/voted for three independent users. The status of the mapping will
+                    change to accepted (last column). You can download the accepted mappings or all mappings using the
+                    buttons below.
+                </p>
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6 text-center">
+                        <div class="btn-group btn-space">
+                            <button type="submit" class="btn btn-primary">Download Accepted Mappings
+                            </button>
+                            <button type="submit" class="btn btn-primary">Download All Mappings
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div>
+                    <table id="mapping-table" class="table table-bordered table-striped table-hover">
+                        <thead>
                         <tr>
-                            <td>
-                                <a href="{{ url_for("model.pathway_view",resource=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
-                                    {{ mapping.service_1_pathway_name }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ mapping.service_1_name|upper }}
-                            </td>
-                            <td>
-                                <a href="{{ url_for("model.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
-                                    {{ mapping.service_2_pathway_name }}
-                                </a>
-                            </td>
-                            <td>
-                                {{ mapping.service_2_name|upper }}
-                            </td>
+                            <th>Pathway 1 Name</th>
+                            <th>Resource 1</th>
+                            <th>Pathway 2 Name</th>
+                            <th>Resource 2</th>
                             {% if current_user.is_authenticated %}
-                                <td>
-                                    <div class="btn-group">
-                                        {% set vote=mapping.get_user_vote(current_user) %}
-
-                                        <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
-                                           href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
-                                            <span class="badge"> {{ mapping.count_up_votes }}</span>
-                                            <span class="glyphicon glyphicon-thumbs-up"></span>
-                                        </a>
-                                        <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
-                                           href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
-                                            <span class="badge"> {{ mapping.count_down_votes }}</span>
-                                            <span class="glyphicon glyphicon-thumbs-down"></span>
-                                        </a>
-                                    </div>
-                                </td>
+                                <th>Vote</th>
                             {% endif %}
-                            <td>
-                                {% if mapping.accepted %}
-                                    <div class="btn btn-default">
-                                        <span class="glyphicon glyphicon-ok"></span>
-                                    </div>
-                                {% else %}
-                                    <a class="btn btn-default"
-                                       href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
-                                        <span class="glyphicon glyphicon-remove"></span>
-                                    </a>
-                                {% endif %}
-                            </td>
+                            <th>Accepted</th>
                         </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody>
+
+                        {% for mapping in mappings %}
+                            <tr>
+                                <td>
+                                    <a href="{{ url_for("model.pathway_view",resource=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
+                                        {{ mapping.service_1_pathway_name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ mapping.service_1_name|upper }}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for("model.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
+                                        {{ mapping.service_2_pathway_name }}
+                                    </a>
+                                </td>
+                                <td>
+                                    {{ mapping.service_2_name|upper }}
+                                </td>
+                                {% if current_user.is_authenticated %}
+                                    <td>
+                                        <div class="btn-group">
+                                            {% set vote=mapping.get_user_vote(current_user) %}
+
+                                            <a class="btn btn-{% if vote is none or vote.type == False %}default{% else %}primary{% endif %}"
+                                               href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=1) }}">
+                                                <span class="badge"> {{ mapping.count_up_votes }}</span>
+                                                <span class="glyphicon glyphicon-thumbs-up"></span>
+                                            </a>
+                                            <a class="btn btn-{% if vote is none or vote.type == True %}default{% else %}danger{% endif %}"
+                                               href="{{ url_for('curation.process_vote',mapping_id=mapping.id, type=0) }}">
+                                                <span class="badge"> {{ mapping.count_down_votes }}</span>
+                                                <span class="glyphicon glyphicon-thumbs-down"></span>
+                                            </a>
+                                        </div>
+                                    </td>
+                                {% endif %}
+                                <td>
+                                    {% if mapping.accepted %}
+                                        <div class="btn btn-default">
+                                            <span class="glyphicon glyphicon-ok"></span>
+                                        </div>
+                                    {% else %}
+                                        <a class="btn btn-default"
+                                           href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
+                                            <span class="glyphicon glyphicon-remove"></span>
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
