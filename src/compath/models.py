@@ -76,7 +76,7 @@ class PathwayMapping(Base):
     service_2_pathway_id = Column(String(255), doc='pathway 2 id')
     service_2_pathway_name = Column(String(255), doc='pathway 2 name')
 
-    accepted = Column(Boolean, doc='canonical mapping')
+    accepted = Column(Boolean, doc='accepted mapping by the admin/curator consensus')
     creators = relationship('User', secondary=mappings_users, backref='mappings')
 
     def __str__(self):

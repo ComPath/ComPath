@@ -89,6 +89,28 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
+    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
+        """Query mapping in the database
+
+        :param str service_1_name: manager name of the service 1
+        :param str pathway_1_name: pathway 1 name
+        :param str pathway_1_id: pathway 1 id
+        :param str service_2_name: manager name of the service 1
+        :param str pathway_2_name: pathway 2 name
+        :param str pathway_2_id: pathway 2 id
+        :rtype: Optional[Mapping]
+        """
+        mapping_filter = and_(
+            PathwayMapping.service_1_name == service_1_name,
+            PathwayMapping.service_1_pathway_id == pathway_1_id,
+            PathwayMapping.service_1_pathway_name == pathway_1_name,
+            PathwayMapping.service_2_name == service_2_name,
+            PathwayMapping.service_2_pathway_id == pathway_2_id,
+            PathwayMapping.service_2_pathway_name == pathway_2_name,
+        )
+
+        return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
+
     def get_mapping_by_id(self, mapping_id):
         """Gets a mapping by its id
 
@@ -124,44 +146,6 @@ class Manager(object):
             self.session.commit()
 
         return vote
-
-    def claim_mapping(self, mapping, user):
-        """Checks if user has already established the mapping, if not claims it
-
-        :param PathwayMapping mapping: Mapping instance
-        :param User user: User
-        :rtype: bool
-        :return: if mapping was assigned to user
-        """
-
-        if user in mapping.creators:
-            return False
-
-        mapping.creators.append(user)
-        _ = self.get_or_create_vote(user, mapping)
-        return True
-
-    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
-        """Query mapping in the database
-
-        :param str service_1_name: manager name of the service 1
-        :param str pathway_1_name: pathway 1 name
-        :param str pathway_1_id: pathway 1 id
-        :param str service_2_name: manager name of the service 1
-        :param str pathway_2_name: pathway 2 name
-        :param str pathway_2_id: pathway 2 id
-        :rtype: Optional[Mapping]
-        """
-        mapping_filter = and_(
-            PathwayMapping.service_1_name == service_1_name,
-            PathwayMapping.service_1_pathway_id == pathway_1_id,
-            PathwayMapping.service_1_pathway_name == pathway_1_name,
-            PathwayMapping.service_2_name == service_2_name,
-            PathwayMapping.service_2_pathway_id == pathway_2_id,
-            PathwayMapping.service_2_pathway_name == pathway_2_name,
-        )
-
-        return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
                               pathway_2_name, user):
@@ -224,6 +208,43 @@ class Manager(object):
         mapping.creators.append(user)
         self.session.commit()
 
+        return mapping, True
+
+    """Custom Model Manipulations"""
+
+    def claim_mapping(self, mapping, user):
+        """Checks if user has already established the mapping, if not claims it
+
+        :param PathwayMapping mapping: Mapping instance
+        :param User user: User
+        :rtype: bool
+        :return: if mapping was assigned to user
+        """
+
+        if user in mapping.creators:
+            return False
+
+        mapping.creators.append(user)
+        _ = self.get_or_create_vote(user, mapping)
+        return True
+
+    def accept_mapping(self, mapping_id):
+        """Accepts established mapping (from user or curator consensus)
+
+        :param int mapping_id: mapping id
+        :rtype: tuple[PathwayMapping,bool]
+        :return: mapping and boolean that indicates if transaction was made
+        """
+        mapping = self.get_mapping_by_id(mapping_id)
+
+        if not mapping:
+            return None, False
+
+        if mapping.accepted:
+            return mapping, False
+
+        mapping.accepted = True
+        self.session.commit()
         return mapping, True
 
 

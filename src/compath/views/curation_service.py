@@ -4,6 +4,10 @@
 
 import logging
 
+from compath.constants import BLACK_LIST
+from compath.utils import (
+    get_pathway_model_by_name
+)
 from flask import (
     Blueprint,
     render_template,
@@ -14,12 +18,7 @@ from flask import (
     redirect,
     url_for
 )
-from flask_security import current_user, login_required
-
-from compath.constants import BLACK_LIST
-from compath.utils import (
-    get_pathway_model_by_name
-)
+from flask_security import current_user, login_required, roles_required
 
 log = logging.getLogger(__name__)
 curation_blueprint = Blueprint('curation', __name__)
@@ -66,6 +65,31 @@ def process_vote(mapping_id, type):
         return abort(404, "Missing mapping for ID {}".format(mapping_id))
 
     vote = current_app.manager.get_or_create_vote(current_user, mapping, vote_type=(type == 1))
+
+    return redirect(url_for('.catalog'))
+
+
+@curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET', 'POST'])
+@login_required
+@roles_required('admin')
+def accept_mapping(mapping_id):
+    """Processes the vote
+
+    :param int mapping_id: id of the mapping to be accepted by the admin
+    """
+
+    mapping, created = current_app.manager.accept_mapping(mapping_id)
+
+    if not mapping:
+        return abort(404, "Missing mapping for ID {}".format(mapping_id))
+
+    if created is False:
+        flash("The mapping was already accepted")
+
+    flash("You have accepted the mapping between {} and {}".format(
+        mapping.service_1_pathway_name,
+        mapping.service_2_pathway_name)
+    )
 
     return redirect(url_for('.catalog'))
 

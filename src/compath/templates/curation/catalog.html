@@ -44,7 +44,7 @@
                         <th>Pathway 2 Name</th>
                         <th>Resource 2</th>
                         <th>Actions</th>
-                        <th>Canonical</th>
+                        <th>Accepted</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -100,7 +100,8 @@
                                         <span class="glyphicon glyphicon-ok"></span>
                                     </div>
                                 {% else %}
-                                    <a class="btn btn-default">
+                                    <a class="btn btn-default"
+                                       href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
                                         <span class="glyphicon glyphicon-remove"></span>
                                     </a>
                                 {% endif %}
