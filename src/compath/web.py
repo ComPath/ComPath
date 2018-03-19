@@ -110,24 +110,27 @@ def create_app(connection=None):
         for name, ExternalManager in managers.items()
     }
 
-    # log.info('Loading resource distributions')
-    #
-    # app.resource_distributions = {
-    #     name: manager.get_pathway_size_distribution()
-    #     for name, manager in app.manager_dict.items()
-    #     if manager not in BLACK_LIST
-    # }
+    log.info('Loading resource distributions')
 
-    # log.info('Loading overlap across pathway databases')
-    #
+    app.resource_distributions = {
+        name: manager.get_pathway_size_distribution()
+        for name, manager in app.manager_dict.items()
+        if name not in BLACK_LIST
+    }
+
+    log.info('Loading overlap across pathway databases')
+
     resource_genesets = {}
-    #
-    # for name, manager in app.manager_dict.items():
-    #
-    #     if name == 'compath_hgnc':
-    #         name = 'hgnc families'
-    #
-    #     resource_genesets[name] = manager.get_all_hgnc_symbols()
+
+    for name, manager in app.manager_dict.items():
+
+        if name == 'compath_hgnc':
+            name = 'hgnc families'
+
+        if name in BLACK_LIST:
+            continue
+
+        resource_genesets[name] = manager.get_all_hgnc_symbols()
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
