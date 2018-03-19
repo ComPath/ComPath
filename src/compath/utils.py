@@ -197,6 +197,26 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     )
 
 
+
+def export_mappings(compath_manager, only_accepted=True):
+    """Returns a pandas dataframe with mappings information as an excel sheet file
+
+    :param compath.manager.Manager compath_manager: ComPath Manager
+    :param bool only_accepted: only accepted (True) or all (False)
+    """
+
+    if only_accepted:
+        mappings = compath_manager.get_all_accepted_mappings()
+    else:
+        mappings = compath_manager.get_all_mappings()
+
+    #TODO: Process here the mappings into data frame
+
+    dataframe = ...
+
+    return dataframe
+
+
 def perform_hypergeometric_test(gene_set, pathways, gene_universe):
     """
 
