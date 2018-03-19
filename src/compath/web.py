@@ -21,7 +21,7 @@ from compath.views.main_service import ui_blueprint
 from compath.views.model_service import VoteView, MappingView
 from compath.views.model_service import model_blueprint
 from . import managers
-from .constants import DEFAULT_CACHE_CONNECTION
+from .constants import DEFAULT_CACHE_CONNECTION, BLACK_LIST
 from .manager import Manager
 from .models import Base, PathwayMapping, Role, User, Vote
 from .utils import process_overlap_for_venn_diagram
@@ -110,17 +110,18 @@ def create_app(connection=None):
         for name, ExternalManager in managers.items()
     }
 
-    log.info('Loading resource distributions')
+    # log.info('Loading resource distributions')
     #
     # app.resource_distributions = {
     #     name: manager.get_pathway_size_distribution()
     #     for name, manager in app.manager_dict.items()
+    #     if manager not in BLACK_LIST
     # }
 
-    log.info('Loading overlap across pathway databases')
-
+    # log.info('Loading overlap across pathway databases')
+    #
     resource_genesets = {}
-
+    #
     # for name, manager in app.manager_dict.items():
     #
     #     if name == 'compath_hgnc':

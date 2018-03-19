@@ -58,7 +58,7 @@ def calculate_overlap():
     if len(pathways) < 2:
         return abort(500, 'Only one set given')
 
-    gene_sets = get_gene_sets_from_pathway_names(current_app, pathways)
+    gene_sets, pathway_manager_dict = get_gene_sets_from_pathway_names(current_app, pathways)
 
     if len(gene_sets) < 2:
         return abort(500, 'Only one valid set given')
