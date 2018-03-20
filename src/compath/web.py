@@ -136,9 +136,9 @@ def create_app(connection=None):
 
     resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
 
-    app.gene_universe = len(resource_genesets['Gene Universe'])
+    app.gene_universe = resource_genesets['Gene Universe']
 
-    if app.gene_universe < 40000:
+    if len(resource_genesets['Gene Universe']) < 40000:
         log.warning(
             'The number of HGNC symbols loaded is smaller than 40000. Please check that HGNC database has been'
             'properly loaded'

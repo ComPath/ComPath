@@ -119,6 +119,7 @@
         <div class="page-header">
             <h1>Query Results</h1>
             <hr>
+            {{ util.flashed_messages(dismissible=True, container=False) }}
 
             <p>The enriched pathways are presented in different tables for each resource loaded into ComPath.
                 The pathway enrichment is presented in the third column (adjusted <i>p</i>-values) by performing a
@@ -151,9 +152,6 @@
                 </tbody>
             </table>
         </div>
-
-
-        {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <form id="compare-pathways-form" method="get" action="{{ url_for('analysis.compare_pathways') }}">
         </form>

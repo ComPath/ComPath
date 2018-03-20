@@ -116,14 +116,19 @@ def process_gene_set():
 
     enrichment_results = get_enriched_pathways(current_app.manager_dict, gene_sets)
 
-    # TODO Check if gene set is valid looking in HGNC manager
+    # Ensures that submitted genes are in HGNC Manager
+    valid_gene_sets = current_app.gene_universe.intersection(gene_sets)
 
-    enrichment_results = perform_hypergeometric_test(gene_sets, enrichment_results, current_app.gene_universe)
+    if valid_gene_sets:
+        enrichment_results = perform_hypergeometric_test(valid_gene_sets, enrichment_results,
+                                                         len(current_app.gene_universe))
+    else:
+        flash('ComPath could not find any valid HGNC Symbol from the submitted list')
 
     return render_template(
         'visualization/enrichment_results.html',
         query_results=enrichment_results,
-        submitted_gene_set=gene_sets,
+        submitted_gene_set=valid_gene_sets,
         number_of_pathways=len(list(itertools.chain(*enrichment_results.values())))
     )
 
