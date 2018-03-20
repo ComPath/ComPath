@@ -120,7 +120,12 @@
             <h1>Query Results</h1>
             <hr>
 
-            <p>Explain ORA</p>
+            <p>The enriched pathways are presented in different tables for each resource loaded into ComPath.
+                The pathway enrichment is presented in the third column (adjusted <i>p</i>-values) by performing a
+                Fisher's Exact Test for each mapped pathway in all resources and adjusting the values using Benjamini &
+                Hochberg correction. The purpose of the adjusted <i>p</i>-values (rounded to 4 decimal places) is to
+                guide the user on what pathway selection should use for further analysis.
+            </p>
 
             <table class="table table-bordered table-striped table-hover">
                 <tbody>
@@ -181,7 +186,7 @@
                             <th>Pathway Name</th>
                             <th>Resource Identifier</th>
                             <th>Adjusted <i>p</i>-value</th>
-                            <th>Number of Genes Mapped</th>
+                            <th>Genes Mapped</th>
                             <th>Pathway Size</th>
                         </tr>
                         </thead>

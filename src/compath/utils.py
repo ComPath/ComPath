@@ -246,7 +246,7 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
 
     # Update original dict with p value corrections
     for i, (manager_name, pathway_id) in enumerate(manager_pathway_id):
-        manager_pathways_dict[manager_name][pathway_id]["q_value"] = q_values[i]
+        manager_pathways_dict[manager_name][pathway_id]["q_value"] = round(q_values[i], 4)
 
     return manager_pathways_dict
 
