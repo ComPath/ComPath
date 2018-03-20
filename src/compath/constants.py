@@ -19,8 +19,11 @@ EXCEL_FOLDER = os.path.join(STATIC_FOLDER, 'resources', 'excel')
 REACTOME_GENE_SET = os.path.join(EXCEL_FOLDER, 'kegg_gene_sets.csv')
 KEGG_GENE_SET = os.path.join(EXCEL_FOLDER, 'reactome_gene_sets.csv')
 
+
+# Managers with hierarchical information
 HIERARCHY_MANAGERS = {'reactome'}
 
+# Managers without pathway knowledge
 BLACK_LIST = {
     'hgnc',
     'compath_hgnc',
