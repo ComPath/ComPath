@@ -16,9 +16,11 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 STATIC_FOLDER = os.path.join(dir_path, 'static')
 
 EXCEL_FOLDER = os.path.join(STATIC_FOLDER, 'resources', 'excel')
+
 REACTOME_GENE_SET = os.path.join(EXCEL_FOLDER, 'kegg_gene_sets.csv')
 KEGG_GENE_SET = os.path.join(EXCEL_FOLDER, 'reactome_gene_sets.csv')
-
+WIKIPATHWAYS_GENE_SET = os.path.join(EXCEL_FOLDER, 'wikipathways_gene_sets.csv')
+MSIG_GENE_SET = os.path.join(EXCEL_FOLDER, 'msig_gene_sets.csv')
 
 # Managers with hierarchical information
 HIERARCHY_MANAGERS = {'reactome'}
