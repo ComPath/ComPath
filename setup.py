@@ -25,6 +25,8 @@ INSTALL_REQUIRES = [
     'flask_admin',
     'flask_security',
     'flask_sqlalchemy',
+    'scipy',
+    'statsmodels'
 ]
 ENTRY_POINTS = {
     'console_scripts': [

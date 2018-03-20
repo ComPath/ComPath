@@ -13,3 +13,5 @@ wtforms
 flask_wtf
 flask_security
 flask_sqlalchemy
+scipy
+statsmodels
