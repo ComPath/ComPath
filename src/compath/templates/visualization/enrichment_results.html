@@ -9,6 +9,13 @@
 
 {% block styles %}
     {{ super() }}
+    <style>
+        td {
+            overflow: hidden;
+            max-width: 200px;
+            word-wrap: break-word;
+        }
+    </style>
 {% endblock %}
 
 {% block scripts %}
@@ -198,6 +205,10 @@
                                         </a>
                                     {% elif resource_name == "wikipathways" %}
                                         <a href="https://www.wikipathways.org/index.php/Pathway:{{ enriched_pathway["pathway_id"] }}">
+                                            {{ enriched_pathway["pathway_id"] }}
+                                        </a>
+                                    {% elif resource_name == "msig" %}
+                                        <a href="http://www.broadinstitute.org/gsea/msigdb/cards/{{ enriched_pathway["pathway_id"] }}">
                                             {{ enriched_pathway["pathway_id"] }}
                                         </a>
                                     {% else %}

@@ -10,6 +10,8 @@ from .constants import BLACK_LIST
 
 log = logging.getLogger(__name__)
 
+"""General utils"""
+
 
 # modified from https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths
 
@@ -39,6 +41,72 @@ def process_form_gene_set(form_field):
         for word in line.split(',')
         if word
     }
+
+
+def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
+    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
+
+    :param dict[str,set] gene_sets: pathway to gene sets dictionary
+    :param bool skip_gene_set_info: include gene set overlap data
+    :return: list[dict]
+    """
+
+    # Creates future js array with gene sets' lengths
+    overlaps_venn_diagram = []
+
+    pathway_to_index = {}
+    index = 0
+
+    for name, gene_set in gene_sets.items():
+
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(gene_set), 'label': name.upper()}
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append(
+                {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)}
+            )
+
+        pathway_to_index[name] = index
+
+        index += 1
+
+    # Perform intersection calculations
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append(
+                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                 'size': len(set_1_values.intersection(set_2_values)),
+                 }
+            )
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append(
+                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                 'size': len(set_1_values.intersection(set_2_values)),
+                 'gene_set': list(set_1_values.intersection(set_2_values)),
+                 'intersection': set_1_name + ' &#8745 ' + set_2_name
+                 }
+            )
+
+    return overlaps_venn_diagram
+
+
+"""Query utils"""
+
+
+def get_genes_without_assigned_pathways(manager_list, gene_set):
+    """Returns the genes without any known pathway assigned
+
+    :param list manager_list: list of managers
+    :param set[str] gene_set: gene set queried
+    :return:
+    """
+    NotImplemented
 
 
 def get_enriched_pathways(manager_list, gene_set):
@@ -124,57 +192,7 @@ def get_gene_sets_from_pathway_names(app, pathways):
     return gene_sets, pathway_manager_dict
 
 
-def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
-    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
-
-    :param dict[str,set] gene_sets: pathway to gene sets dictionary
-    :param bool skip_gene_set_info: include gene set overlap data
-    :return: list[dict]
-    """
-
-    # Creates future js array with gene sets' lengths
-    overlaps_venn_diagram = []
-
-    pathway_to_index = {}
-    index = 0
-
-    for name, gene_set in gene_sets.items():
-
-        # Only minimum info is returned
-        if skip_gene_set_info:
-            overlaps_venn_diagram.append(
-                {'sets': [index], 'size': len(gene_set), 'label': name.upper()}
-            )
-        # Returns gene set overlap/intersection information as well
-        else:
-            overlaps_venn_diagram.append(
-                {'sets': [index], 'size': len(gene_set), 'label': name, 'gene_set': list(gene_set)}
-            )
-
-        pathway_to_index[name] = index
-
-        index += 1
-
-    # Perform intersection calculations
-    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
-        # Only minimum info is returned
-        if skip_gene_set_info:
-            overlaps_venn_diagram.append(
-                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-                 'size': len(set_1_values.intersection(set_2_values)),
-                 }
-            )
-        # Returns gene set overlap/intersection information as well
-        else:
-            overlaps_venn_diagram.append(
-                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-                 'size': len(set_1_values.intersection(set_2_values)),
-                 'gene_set': list(set_1_values.intersection(set_2_values)),
-                 'intersection': set_1_name + ' &#8745 ' + set_2_name
-                 }
-            )
-
-    return overlaps_venn_diagram
+"""Statistical utils"""
 
 
 def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe):
@@ -197,6 +215,21 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     )
 
 
+def perform_hypergeometric_test(gene_set, pathways, gene_universe):
+    """
+
+    :param set[str] gene_set: gene set to test against pathway
+    :param dict[str,set[str]] pathways: pathway gene set
+    :param int gene_universe: number of HGNC symbols
+    :rtype:
+    :return:
+    """
+
+
+
+
+"""Export utils"""
+
 
 def export_mappings(compath_manager, only_accepted=True):
     """Returns a pandas dataframe with mappings information as an excel sheet file
@@ -210,32 +243,14 @@ def export_mappings(compath_manager, only_accepted=True):
     else:
         mappings = compath_manager.get_all_mappings()
 
-    #TODO: Process here the mappings into data frame
+    # TODO: Process here the mappings into data frame
 
     dataframe = ...
 
     return dataframe
 
 
-def perform_hypergeometric_test(gene_set, pathways, gene_universe):
-    """
-
-    :param set[str] gene_set: gene set to test against pathway
-    :param dict[str,set[str]] pathways: pathway gene set
-    :param int gene_universe: number of HGNC symbols
-    :rtype:
-    :return:
-    """
-
-
-def get_genes_without_assigned_pathways(manager_list, gene_set):
-    """Returns the genes without any known pathway assigned
-
-    :param list manager_list: list of managers
-    :param set[str] gene_set: gene set queried
-    :return:
-    """
-    NotImplemented
+"""Parser"""
 
 
 def parse_pathway_mapping_file(file_path):
