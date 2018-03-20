@@ -124,9 +124,6 @@ def create_app(connection=None):
 
     for name, manager in app.manager_dict.items():
 
-        if name == 'compath_hgnc':
-            name = 'hgnc families'
-
         if name in BLACK_LIST:
             continue
 
@@ -134,7 +131,7 @@ def create_app(connection=None):
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
-    # TODO Uncomment later
+
     hgnc_manager = HgncManager()
 
     resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
