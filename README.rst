@@ -9,7 +9,7 @@ packages:
 - `Bio2BEL KEGG <https://github.com/bio2bel/kegg>`_
 - `Bio2BEL Reactome <https://github.com/bio2bel/reactome>`_
 - `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
-- `Bio2BEL MSIG <https://github.com/bio2bel/msig>`_
+- `Bio2BEL MSig <https://github.com/bio2bel/msig>`_
 
 New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
 
