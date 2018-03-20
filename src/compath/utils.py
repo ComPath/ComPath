@@ -5,6 +5,8 @@ from itertools import combinations
 
 import numpy as np
 from pandas import DataFrame, Series
+from scipy.stats import fisher_exact
+from statsmodels.sandbox.stats.multicomp import multipletests
 
 from .constants import BLACK_LIST
 
@@ -114,7 +116,7 @@ def get_enriched_pathways(manager_list, gene_set):
 
     :param dict[str, Manager] manager_list: list of managers
     :param set[str] gene_set: gene set queried
-    :rtype: dict[str,list[dict]]
+    :rtype: dict[str,dict[str,dict]]
     """
     return {
         manager_name: instance.query_gene_set(gene_set)
@@ -215,17 +217,38 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     )
 
 
-def perform_hypergeometric_test(gene_set, pathways, gene_universe):
+def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
     """
 
     :param set[str] gene_set: gene set to test against pathway
-    :param dict[str,set[str]] pathways: pathway gene set
+    :param dict[str,dict[str,dict]] manager_pathways_dict: manager to pathways
     :param int gene_universe: number of HGNC symbols
-    :rtype:
-    :return:
+    :rtype: dict[str,dict[str,dict]]
+    :return: manager_pathways_dict with p value info
     """
 
+    manager_p_values = dict()
 
+    for manager_name, pathways in manager_pathways_dict.items():
+
+        for pathway_id, pathway_dict in pathways.items():
+            test_table = _prepare_hypergeometric_test(gene_set, pathway_dict["pathway_gene_set"], gene_universe)
+
+            oddsratio, pvalue = fisher_exact(test_table, alternative='greater')
+
+            manager_p_values[manager_name, pathway_id] = pvalue
+
+    # Split the dictionary into names_id tuples and p values to keep the same order
+    manager_pathway_id, p_values = zip(*manager_p_values.items())
+    correction_test = multipletests(p_values, method='fdr_bh')
+
+    q_values = correction_test[1]
+
+    # Update original dict with p value corrections
+    for i, (manager_name, pathway_id) in enumerate(manager_pathway_id):
+        manager_pathways_dict[manager_name][pathway_id]["q_value"] = q_values[i]
+
+    return manager_pathways_dict
 
 
 """Export utils"""

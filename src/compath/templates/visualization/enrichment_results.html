@@ -120,6 +120,8 @@
             <h1>Query Results</h1>
             <hr>
 
+            <p>Explain ORA</p>
+
             <table class="table table-bordered table-striped table-hover">
                 <tbody>
                 <tr>
@@ -164,7 +166,7 @@
         </div>
 
         <hr>
-        {% for resource_name, enriched_pathways in query_results.items() %}
+        {% for resource_name, pathway_dict in query_results.items() %}
 
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -178,12 +180,13 @@
                             <th></th>
                             <th>Pathway Name</th>
                             <th>Resource Identifier</th>
+                            <th>Adjusted <i>p</i>-value</th>
                             <th>Number of Genes Mapped</th>
                             <th>Pathway Size</th>
                         </tr>
                         </thead>
                         <tbody>
-                        {% for enriched_pathway in enriched_pathways %}
+                        {% for pathway_id, enriched_pathway in pathway_dict.items() %}
                             <tr>
                                 <td>
                                     <label>
@@ -214,6 +217,9 @@
                                     {% else %}
                                         {{ enriched_pathway["pathway_id"] }}
                                     {% endif %}
+                                </td>
+                                <td>
+                                    {{ enriched_pathway["q_value"] }}
                                 </td>
                                 <td>
                                     {{ enriched_pathway["mapped_proteins"] }}

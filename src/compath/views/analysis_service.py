@@ -25,7 +25,9 @@ from compath.utils import (
     process_form_gene_set,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
-    process_overlap_for_venn_diagram
+    process_overlap_for_venn_diagram,
+    perform_hypergeometric_test
+
 )
 
 log = logging.getLogger(__name__)
@@ -113,6 +115,10 @@ def process_gene_set():
     gene_sets = process_form_gene_set(form.geneset.data)
 
     enrichment_results = get_enriched_pathways(current_app.manager_dict, gene_sets)
+
+    # TODO Check if gene set is valid looking in HGNC manager
+
+    enrichment_results = perform_hypergeometric_test(gene_sets, enrichment_results, current_app.gene_universe)
 
     return render_template(
         'visualization/enrichment_results.html',
