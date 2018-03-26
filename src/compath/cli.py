@@ -2,6 +2,7 @@
 
 from __future__ import print_function
 
+import datetime
 import logging
 import sys
 
@@ -11,7 +12,7 @@ from flask_security import SQLAlchemyUserDatastore
 from . import managers
 from .constants import DEFAULT_CACHE_CONNECTION
 from .manager import RealManager
-from .models import User, Role, Base
+from .models import Base, Role, User
 
 log = logging.getLogger(__name__)
 
@@ -89,6 +90,28 @@ def web(debug, connection):
 
 @main.command()
 @click.argument('email')
+@click.argument('password')
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+def make_user(connection, email, password):
+    """Makes a pre-existing user an admin"""
+
+    # Example: python3 -m compath make_admin xxx@xxx.com
+
+    manager = RealManager(connection=connection)
+    Base.metadata.bind = manager.engine
+    Base.query = manager.session.query_property()
+    manager.create_all()
+
+    ds = SQLAlchemyUserDatastore(manager, User, Role)
+    user = ds.find_user(email=email)
+
+    if user is None:
+        user = User(email=email, password=password, confirmed_at=datetime.datetime.utcnow())
+        ds.commit()
+
+
+@main.command()
+@click.argument('email')
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def make_admin(connection, email):
     """Makes a pre-existing user an admin"""
@@ -98,6 +121,7 @@ def make_admin(connection, email):
     manager = RealManager(connection=connection)
     Base.metadata.bind = manager.engine
     Base.query = manager.session.query_property()
+    manager.create_all()
 
     ds = SQLAlchemyUserDatastore(manager, User, Role)
     user = ds.find_user(email=email)
