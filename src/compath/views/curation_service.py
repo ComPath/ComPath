@@ -104,23 +104,31 @@ def process_mapping():
     """Processes the mapping between two pathways"""
 
     resource_1 = request.args.get('resource-1')
-
-    if resource_1 is None:
-        return abort(500, "Invalid request. Missing 'resource-1' arguments in the request")
-
+    if not resource_1:
+        flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')
+        return redirect(url_for('.curation'))
     if resource_1 not in current_app.manager_dict:
-        return abort(500, "'{}' does not exist or has not been loaded in ComPath".format(resource_1))
+        flash("'{}' does not exist or has not been loaded in ComPath".format(resource_1), category='warning')
+        return redirect(url_for('.curation'))
 
     resource_2 = request.args.get('resource-2')
-
-    if resource_2 is None:
-        return abort(500, "Invalid request. Missing 'resource-2' arguments in the request")
+    if not resource_2:
+        flash("Invalid request. Missing 'resource-2' arguments in the request", category='warning')
+        return redirect(url_for('.curation'))
 
     if resource_2 not in current_app.manager_dict:
-        return abort(500, "'{}' does not exist or has not been loaded in ComPath".format(resource_2))
+        flash("'{}' does not exist or has not been loaded in ComPath".format(resource_2), category='warning')
+        return redirect(url_for('.curation'))
 
     pathway_1 = request.args.get('pathway-1')
+    if not pathway_1:
+        flash("missing pathway 1", category='warning')
+        return redirect(url_for('.curation'))
+
     pathway_2 = request.args.get('pathway-2')
+    if not pathway_2:
+        flash("missing pathway 2", category='warning')
+        return redirect(url_for('.curation'))
 
     pathway_1_model = get_pathway_model_by_name(current_app, resource_1, pathway_1)
     pathway_2_model = get_pathway_model_by_name(current_app, resource_2, pathway_2)
@@ -148,15 +156,12 @@ def process_mapping():
         current_user
     )
 
-    if created is False:
-
+    if not created:
         claimed = current_app.manager.claim_mapping(mapping, current_user)
         if not claimed:
-            flash("You already established this mapping")
+            flash("You already established this mapping", category='warning')
         else:
             flash("Since this mapping was already established, you have been assigned as a creator of the mapping")
-
-
     else:
         flash("You have established a new mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
 
