@@ -96,6 +96,14 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
+    def get_user_by_email(self, email):
+        """Gets a vote by its id
+
+        :param str email: identifier
+        :rtype: Optional[Vote]
+        """
+        return self.session.query(User).filter(User.email == email).one_or_none()
+
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
                     mapping_type):
         """Query mapping in the database
@@ -261,7 +269,13 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
-    # def get_mappings_with_pathway
+    def get_mappings_from_pathway_name(self, pathway_name):
+        """
+
+        :param str pathway_name:
+        :return:
+        """
+        NotImplemented
 
 
 class RealManager(Manager):

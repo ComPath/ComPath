@@ -21,6 +21,9 @@ REACTOME_GENE_SET = os.path.join(EXCEL_FOLDER, 'kegg_gene_sets.csv')
 KEGG_GENE_SET = os.path.join(EXCEL_FOLDER, 'reactome_gene_sets.csv')
 WIKIPATHWAYS_GENE_SET = os.path.join(EXCEL_FOLDER, 'wikipathways_gene_sets.csv')
 MSIG_GENE_SET = os.path.join(EXCEL_FOLDER, 'msig_gene_sets.csv')
+# Users
+
+ADMIN_EMAIL = 'daniel.domingo.fernandez@scai.fraunhofer.de'
 
 # Managers with hierarchical information
 HIERARCHY_MANAGERS = {'reactome'}
