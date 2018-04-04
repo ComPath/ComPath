@@ -5,8 +5,8 @@
 import logging
 
 from compath import managers
+from compath.curation.utils import *
 from compath.manager import RealManager
-from .utils import *
 
 log = logging.getLogger(__name__)
 
