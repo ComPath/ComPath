@@ -56,7 +56,7 @@ def _ensure_two_pathways(mapping_statement, mapping_type):
     return True
 
 
-def _syntax_checker(mapping_statement, pathway_reference):
+def _statement_syntax_checker(mapping_statement, pathway_reference):
     """Checks if a particular mapping contains syntax errors
 
     :param str mapping_statement: mapping statement
@@ -112,6 +112,26 @@ def _is_valid_pathway(manager_dict, resource, pathway_name):
     return True
 
 
+def _ensure_syntax(statements):
+    """Ensure syntax
+
+    :param pandas.core.series.Series statements: Statements list
+    """
+
+    for reference_pathway, cell in statements.iteritems():
+
+        if pd.isnull(cell):
+            continue
+
+        for mapping_statement in cell.split('|'):
+
+            if _statement_syntax_checker(mapping_statement, reference_pathway) is False:
+                print(
+                    'Problem with cell "{}" given the reference pathway: "{}"'.format(mapping_statement,
+                                                                                      reference_pathway)
+                )
+
+
 def parse_curation_template(path, index_mapping_column=2):
     """Loads the curation template excel sheet into a pandas Dataframe
 
@@ -127,17 +147,10 @@ def parse_curation_template(path, index_mapping_column=2):
 
     mapping_statements = load_curation_template(path)
 
-    for reference_pathway, cell in mapping_statements.iteritems():
+    # Ensures the Syntax of the file is correct
+    _ensure_syntax(mapping_statements)
 
-        if pd.isnull(cell):
-            continue
 
-        for mapping_statement in cell.split('|'):
-
-            if _syntax_checker(mapping_statement, reference_pathway) is False:
-                print(
-                    'Problem with cell "{}" given the reference pathway: "{}"'.format(mapping_statement,
-                                                                                      reference_pathway))
 
 
 # Only will open when not imported
