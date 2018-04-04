@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from . import managers
-from .constants import MODULE_NAME
+from .constants import MODULE_NAME, EQUIVALENT_TO
 from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
@@ -180,7 +180,7 @@ class Manager(object):
         :return: PathwayMapping and boolean indicating if the mapping was created or not
         :rtype: tuple[PathwayMapping,bool]
         """
-        if _flip_service_order(service_1_name, service_2_name):
+        if mapping_type == EQUIVALENT_TO and _flip_service_order(service_1_name, service_2_name):
             return self.get_or_create_mapping(
                 service_2_name,
                 pathway_2_id,

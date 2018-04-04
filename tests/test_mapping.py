@@ -6,6 +6,7 @@ import unittest
 
 from tests.constants import DatabaseMixin, KEGG, REACTOME
 
+from compath.constants import IS_PART_OF, EQUIVALENT_TO
 from compath.manager import _flip_service_order
 from compath.models import User
 
@@ -36,7 +37,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
 
@@ -55,7 +56,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
         self.assertTrue(created_1, msg='The mapping was not created')
@@ -67,13 +68,55 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
 
         self.assertFalse(created_2, msg='The same mapping was added twice')
+
         self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
         self.assertEqual(1, self.manager.count_votes(), msg='Vote was not added')
+
+        mapping_3, created_3 = self.manager.get_or_create_mapping(
+            KEGG,
+            '1',
+            'kegg pathway',
+            REACTOME,
+            '2',
+            'reactome pathway',
+            IS_PART_OF,
+            current_user
+        )
+        self.assertTrue(created_3, msg='The mapping was not created')
+
+        mapping_4, created_4 = self.manager.get_or_create_mapping(
+            REACTOME,
+            '2',
+            'reactome pathway',
+            KEGG,
+            '1',
+            'kegg pathway',
+            IS_PART_OF,
+            current_user
+        )
+
+        self.assertTrue(created_4, msg='The mapping was not created')
+
+        mapping_5, created_5 = self.manager.get_or_create_mapping(
+            REACTOME,
+            '2',
+            'reactome pathway',
+            KEGG,
+            '1',
+            'kegg pathway',
+            IS_PART_OF,
+            current_user
+        )
+
+        self.assertFalse(created_5, msg='A duplicate mapping was created')
+
+        self.assertEqual(3, self.manager.count_mappings(), msg='Something wrong with isPartOf mappings')
+        self.assertEqual(3, self.manager.count_votes(), msg='Something wrong with isPartOf mappings')
 
     def test_create_double_mapping_different_users(self):
         """Test duplicate mappings for different users"""
@@ -88,7 +131,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             user_1
         )
 
@@ -101,7 +144,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             user_2
         )
 
@@ -127,7 +170,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             user_1
         )
 
@@ -138,7 +181,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             user_2
         )
 
@@ -149,7 +192,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '2',
             'kegg pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             user_2
         )
 
@@ -186,7 +229,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
         self.assertTrue(created_1, msg='The mapping was not created')
@@ -198,7 +241,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'isPartOf',
+            IS_PART_OF,
             current_user
         )
 

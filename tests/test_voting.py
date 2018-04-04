@@ -3,6 +3,7 @@
 """ This module contains tests for the data model of ComPath"""
 
 from tests.constants import DatabaseMixin, KEGG, REACTOME
+from compath.constants import IS_PART_OF, EQUIVALENT_TO
 
 from compath.models import User
 
@@ -31,7 +32,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
 
@@ -51,7 +52,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user
         )
         self.assertTrue(created, msg='Mapping not created')
@@ -74,7 +75,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user_1
         )
 
@@ -87,7 +88,7 @@ class TestVotingSystem(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
-            'equivalentTo',
+            EQUIVALENT_TO,
             current_user_2
         )
 
