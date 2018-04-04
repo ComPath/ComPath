@@ -18,6 +18,7 @@ PATHWAY_X = 'Pathway X'
 VALID_MAPPING_1 = 'Pathway X* isPartOf Pathway Parent'
 VALID_MAPPING_2 = 'Pathway X equivalentTo Pathway Y'
 VALID_MAPPING_3 = 'Pathway X equivalentTo Pathway X'
+VALID_MAPPING_4 = '    Pathway X equivalentTo Pathway X'
 
 INVALID_MAPPING_1 = 'Pathway X equivalentto Pathway X'
 INVALID_MAPPING_2 = 'Pathway X* ispartof Pathway Parent'

@@ -20,6 +20,9 @@ class TestCurationParser(unittest.TestCase):
         result_3 = _syntax_checker(VALID_MAPPING_3, PATHWAY_X)
         self.assertTrue(result_3)
 
+        result_4 = _syntax_checker(VALID_MAPPING_4, PATHWAY_X)
+        self.assertTrue(result_4)
+
     def test_unvalid_syntax_examples(self):
         """Testing unvalid statements"""
         result_1 = _syntax_checker(INVALID_MAPPING_1, PATHWAY_X)

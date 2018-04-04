@@ -73,6 +73,8 @@ def _syntax_checker(mapping_statement, pathway_reference):
             mapping_type in mapping_statement for mapping_type in MAPPING_TYPES):
         return False
 
+    mapping_statement = mapping_statement.strip()
+
     # Handling mapping types
     if EQUIVALENT_TO in mapping_statement and mapping_statement.startswith(pathway_reference):
         have_two_pathways = _ensure_two_pathways(mapping_statement, EQUIVALENT_TO)
@@ -123,10 +125,22 @@ def parse_curation_template(path, index_mapping_column=2):
         for name, ExternalManager in managers.items()
     }
 
-    curation_data = load_curation_template(path)
+    mapping_statements = load_curation_template(path)
+
+    for reference_pathway, cell in mapping_statements.iteritems():
+
+        if pd.isnull(cell):
+            continue
+
+        for mapping_statement in cell.split('|'):
+
+            if _syntax_checker(mapping_statement, reference_pathway) is False:
+                print(
+                    'Problem with cell "{}" given the reference pathway: "{}"'.format(mapping_statement,
+                                                                                      reference_pathway))
 
 
 # Only will open when not imported
 if __name__ == '__main__':
-    load_curation_template(
+    parse_curation_template(
         '/home/ddomingofernandez/Projects/compath/compath_curation/curation/KEGG vs WikiPathways - Daniel.xlsx')
