@@ -58,6 +58,7 @@
                         <tr>
                             <th>Pathway 1 Name</th>
                             <th>Resource 1</th>
+                            <th>Type</th>
                             <th>Pathway 2 Name</th>
                             <th>Resource 2</th>
                             {% if current_user.is_authenticated %}
@@ -77,6 +78,9 @@
                                 </td>
                                 <td>
                                     {{ mapping.service_1_name|upper }}
+                                </td>
+                                <td>
+                                    {{ mapping.type }}
                                 </td>
                                 <td>
                                     <a href="{{ url_for("model.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
