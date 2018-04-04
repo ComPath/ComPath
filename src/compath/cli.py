@@ -44,6 +44,18 @@ def ls():
 @main.command()
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+def web(debug, connection):
+    """Run web service"""
+    set_debug_param(debug)
+
+    from compath.web import create_app
+    app = create_app(connection=connection)
+    app.run(host='0.0.0.0', port=5000)
+
+
+@main.command()
+@click.option('-v', '--debug', count=True, help="Turn on debugging.")
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('-d', '--delete-first', is_flag=True)
 def populate(debug, connection, delete_first):
     """Populate all registered Bio2BEL pathway packages"""
