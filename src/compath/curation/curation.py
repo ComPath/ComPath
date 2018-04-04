@@ -62,14 +62,16 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                 if "*" in pathway_1:
 
+                    pathway_1 = remove_star_from_pathway_name(pathway_1)
+
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                        raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                        print('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                        continue
 
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                        raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
-
-                    pathway_1 = remove_star_from_pathway_name(pathway_1)
+                        print('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                        continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
                         reference_pathway_db,
@@ -85,23 +87,23 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
                     mapping, _ = compath_manager.accept_mapping(mapping.id)
 
                 else:
+                    pathway_2 = remove_star_from_pathway_name(pathway_2)
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
-                        raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
-
+                        print('{} not found in {}'.format(pathway_1, compared_pathway_db))
+                        continue
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
-                        raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
-
-                    pathway_2 = remove_star_from_pathway_name(pathway_2)
+                        print('{} not found in {}'.format(pathway_2, reference_pathway_db))
+                        continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
                         compared_pathway_db,
-                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
-                        pathway_2,
-                        reference_pathway_db,
-                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
+                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_1).id,
                         pathway_1,
+                        reference_pathway_db,
+                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_2).id,
+                        pathway_2,
                         IS_PART_OF,
                         curator
                     )
@@ -113,10 +115,12 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                 # Ensures the pathways exist in their corresponding managers
                 if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                    raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                    print('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                    continue
 
                 if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                    raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                    print('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                    continue
 
                 mapping, _ = compath_manager.get_or_create_mapping(
                     reference_pathway_db,
