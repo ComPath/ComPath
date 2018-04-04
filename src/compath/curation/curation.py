@@ -66,11 +66,11 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                        print('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                        log.warning('{} not found in {}'.format(pathway_1, reference_pathway_db))
                         continue
 
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                        print('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                        log.warning('{} not found in {}'.format(pathway_2, compared_pathway_db))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
@@ -91,10 +91,10 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
-                        print('{} not found in {}'.format(pathway_1, compared_pathway_db))
+                        log.warning('{} not found in {}'.format(pathway_1, compared_pathway_db))
                         continue
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
-                        print('{} not found in {}'.format(pathway_2, reference_pathway_db))
+                        log.warning('{} not found in {}'.format(pathway_2, reference_pathway_db))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
@@ -115,11 +115,11 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                 # Ensures the pathways exist in their corresponding managers
                 if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                    print('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                    log.warning('{} not found in {}'.format(pathway_1, reference_pathway_db))
                     continue
 
                 if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                    print('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                    log.warning('{} not found in {}'.format(pathway_2, compared_pathway_db))
                     continue
 
                 mapping, _ = compath_manager.get_or_create_mapping(
@@ -134,10 +134,3 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
                 )
 
                 mapping, _ = compath_manager.accept_mapping(mapping.id)
-
-
-# Only will open when not imported
-if __name__ == '__main__':
-    parse_curation_template(
-        '/home/ddomingofernandez/Projects/compath/compath_curation/curation/KEGG vs WikiPathways - Daniel.xlsx', 'kegg',
-        'wikipathways')

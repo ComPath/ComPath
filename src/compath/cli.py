@@ -11,6 +11,7 @@ from flask_security import SQLAlchemyUserDatastore
 
 from . import managers
 from .constants import DEFAULT_CACHE_CONNECTION
+from .curation.curation import parse_curation_template
 from .manager import RealManager
 from .models import Base, Role, User
 
@@ -92,15 +93,17 @@ def drop_databases(debug, yes, connection):
 
 
 @main.command()
-@click.option('-v', '--debug', count=True, help="Turn on debugging.")
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def web(debug, connection):
-    """Run web service"""
-    set_debug_param(debug)
+@click.argument('path')
+@click.argument('reference')
+@click.argument('compare')
+def add_mappings(path, reference, compare):
+    """Add mappings from template"""
 
-    from compath.web import create_app
-    app = create_app(connection=connection)
-    app.run(host='0.0.0.0', port=5000)
+    # Example: python3 -m compath add_mappings '/my/path' 'kegg' 'wikipathways'
+
+    set_debug_param(2)
+
+    parse_curation_template(path, reference, compare)
 
 
 @main.command()
