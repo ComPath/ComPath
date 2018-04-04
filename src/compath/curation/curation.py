@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains all the curation processing scripts to integrate the mappings to ComPath"""
+"""This module contains all the curation processing methods to integrate curated mappings to ComPath"""
 
 import logging
 
