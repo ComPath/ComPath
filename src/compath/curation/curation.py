@@ -7,41 +7,19 @@ import logging
 import pandas as pd
 
 from compath import managers
-from compath.constants import MAPPING_TYPES, DEFAULT_CACHE_CONNECTION, IS_PART_OF, EQUIVALENT_TO, ADMIN_EMAIL
+from compath.constants import *
 from compath.manager import RealManager
 from compath.utils import get_pathway_model_by_name
 
 log = logging.getLogger(__name__)
 
 
-def load_curation_template(path, index_mapping_column=2):
-    """Loads the curation template excel sheet into a pandas Dataframe
+def _remove_star_from_pathway_name(pathway_name):
+    """Removes the star that label the reference pathway in isPartOf statements
 
-    :param str path: path of the excel sheet
-    :param Optional[int] index_mapping_column: index of the column containing the mappings
-    :rtype: pandas.core.series.Series
-    :return: pandas.core.series.Series
+    :param str statements: pathway name
     """
-
-    data_frame = pd.read_excel(path, header=0, index_col=0)
-
-    return data_frame.iloc[:, index_mapping_column]
-
-
-def _get_mapping_type(mapping_statement):
-    """Returns the mapping type from a given statement
-
-    :param str mapping_statement:
-    :rtype: Optional[str]
-    """
-
-    if EQUIVALENT_TO in mapping_statement:
-        return EQUIVALENT_TO
-
-    elif IS_PART_OF in mapping_statement:
-        return IS_PART_OF
-
-    return None
+    return pathway_name.replace("*", "").strip()
 
 
 def _get_pathways_from_statement(mapping_statement, mapping_type):
@@ -71,6 +49,38 @@ def _ensure_two_pathways(mapping_statement, mapping_type):
         return False
 
     return True
+
+
+def load_curation_template(path, index_mapping_column=2):
+    """Loads the curation template excel sheet into a pandas Dataframe
+
+    :param str path: path of the excel sheet
+    :param Optional[int] index_mapping_column: index of the column containing the mappings
+    :rtype: pandas.core.series.Series
+    :return: pathways with mappings
+    """
+
+    data_frame = pd.read_excel(path, header=0, index_col=0)
+
+    mapping_statements = data_frame.iloc[:, index_mapping_column]
+
+    return mapping_statements.dropna()
+
+
+def _get_mapping_type(mapping_statement):
+    """Returns the mapping type from a given statement
+
+    :param str mapping_statement:
+    :rtype: Optional[str]
+    """
+
+    if EQUIVALENT_TO in mapping_statement:
+        return EQUIVALENT_TO
+
+    elif IS_PART_OF in mapping_statement:
+        return IS_PART_OF
+
+    return None
 
 
 def _statement_syntax_checker(mapping_statement, pathway_reference):
@@ -137,9 +147,6 @@ def _ensure_syntax(statements):
 
     for reference_pathway, cell in statements.iteritems():
 
-        if pd.isnull(cell):
-            continue
-
         for mapping_statement in cell.split('|'):
 
             if _statement_syntax_checker(mapping_statement, reference_pathway) is False:
@@ -147,14 +154,6 @@ def _ensure_syntax(statements):
                     'Problem with cell "{}" given the reference pathway: "{}"'.format(mapping_statement,
                                                                                       reference_pathway)
                 )
-
-
-def _remove_star_from_pathway_name(pathway_name):
-    """Removes the star that label the reference pathway in isPartOf statements
-
-    :param str statements: pathway name
-    """
-    return pathway_name.replace("*", "").strip()
 
 
 def parse_curation_template(path, reference_pathway_db, compared_pathway_db, index_mapping_column=2, admin_email=None):
@@ -189,21 +188,73 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
         )
 
     # Populate the curated mappings
-    for reference_pathway, mapping_statement in mapping_statements.iteritems():
-        mapping_type = _get_mapping_type(mapping_statement)
+    for reference_pathway, cell in mapping_statements.items():
 
-        if not mapping_type:
-            raise ValueError(
-                'Problem with mapping type in "{}" given the reference pathway: "{}"'.format(
-                    mapping_statement,
-                    reference_pathway)
-            )
+        for mapping_statement in cell.split('|'):
 
-        pathway_1, pathway_2 = _get_pathways_from_statement(mapping_statement, mapping_type)
+            mapping_type = _get_mapping_type(mapping_statement)
 
-        if mapping_type == IS_PART_OF:
+            if not mapping_type:
+                raise ValueError(
+                    'Problem with mapping type in "{}" given the reference pathway: "{}"'.format(
+                        mapping_statement,
+                        reference_pathway)
+                )
 
-            if "*" in pathway_1:
+            pathway_1, pathway_2 = _get_pathways_from_statement(mapping_statement, mapping_type)
+
+            if mapping_type == IS_PART_OF:
+
+                if "*" in pathway_1:
+
+                    # Ensures the pathways exist in their corresponding managers
+                    if _is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
+                        raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
+
+                    if _is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
+                        raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
+
+                    pathway_1 = _remove_star_from_pathway_name(pathway_1)
+
+                    mapping, _ = compath_manager.get_or_create_mapping(
+                        reference_pathway_db,
+                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
+                        pathway_1,
+                        compared_pathway_db,
+                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
+                        pathway_2,
+                        IS_PART_OF,
+                        curator
+                    )
+
+                    mapping, _ = compath_manager.accept_mapping(mapping.id)
+
+                else:
+
+                    # Ensures the pathways exist in their corresponding managers
+                    if _is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
+                        raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
+
+                    if _is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
+                        raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
+
+                    pathway_2 = _remove_star_from_pathway_name(pathway_2)
+
+                    mapping, _ = compath_manager.get_or_create_mapping(
+                        compared_pathway_db,
+                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
+                        pathway_2,
+                        reference_pathway_db,
+                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
+                        pathway_1,
+                        IS_PART_OF,
+                        curator
+                    )
+
+                    mapping, _ = compath_manager.accept_mapping(mapping.id)
+
+
+            else:  # EquivalentTo
 
                 # Ensures the pathways exist in their corresponding managers
                 if _is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
@@ -212,8 +263,6 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
                 if _is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
                     raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
 
-                pathway_1 = _remove_star_from_pathway_name(pathway_1)
-
                 mapping, _ = compath_manager.get_or_create_mapping(
                     reference_pathway_db,
                     manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
@@ -221,58 +270,11 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
                     compared_pathway_db,
                     manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
                     pathway_2,
-                    IS_PART_OF,
+                    EQUIVALENT_TO,
                     curator
                 )
 
                 mapping, _ = compath_manager.accept_mapping(mapping.id)
-
-            else:
-
-                # Ensures the pathways exist in their corresponding managers
-                if _is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
-                    raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
-
-                if _is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
-                    raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
-
-                pathway_2 = _remove_star_from_pathway_name(pathway_2)
-
-                mapping, _ = compath_manager.get_or_create_mapping(
-                    compared_pathway_db,
-                    manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
-                    pathway_2,
-                    reference_pathway_db,
-                    manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
-                    pathway_1,
-                    IS_PART_OF,
-                    curator
-                )
-
-                mapping, _ = compath_manager.accept_mapping(mapping.id)
-
-
-        else:  # EquivalentTo
-
-            # Ensures the pathways exist in their corresponding managers
-            if _is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                raise ValueError('{} not found in {}'.format(pathway_1, reference_pathway_db))
-
-            if _is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                raise ValueError('{} not found in {}'.format(pathway_2, compared_pathway_db))
-
-            mapping, _ = compath_manager.get_or_create_mapping(
-                reference_pathway_db,
-                manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
-                pathway_1,
-                compared_pathway_db,
-                manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
-                pathway_2,
-                EQUIVALENT_TO,
-                curator
-            )
-
-            mapping, _ = compath_manager.accept_mapping(mapping.id)
 
 
 # Only will open when not imported
