@@ -30,3 +30,11 @@ BLACK_LIST = {
     'hgnc',
     'compath_hgnc',
 }
+
+MAPPING_TYPES = {
+    'equivalentTo',
+    'isPartOf'
+}
+
+EQUIVALENT_TO = 'equivalentTo'
+IS_PART_OF = 'isPartOf'
