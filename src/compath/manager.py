@@ -96,15 +96,17 @@ class Manager(object):
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
-    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name):
+    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
+                    mapping_type):
         """Query mapping in the database
 
         :param str service_1_name: manager name of the service 1
-        :param str pathway_1_name: pathway 1 name
         :param str pathway_1_id: pathway 1 id
+        :param str pathway_1_name: pathway 1 name
         :param str service_2_name: manager name of the service 1
-        :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
+        :param str pathway_2_name: pathway 2 name
+        :param str mapping_type: mapping type (isPartOf or equivalentTo)
         :rtype: Optional[Mapping]
         """
         mapping_filter = and_(
@@ -114,6 +116,7 @@ class Manager(object):
             PathwayMapping.service_2_name == service_2_name,
             PathwayMapping.service_2_pathway_id == pathway_2_id,
             PathwayMapping.service_2_pathway_name == pathway_2_name,
+            PathwayMapping.type == mapping_type,
         )
 
         return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
@@ -155,7 +158,7 @@ class Manager(object):
         return vote
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
-                              pathway_2_name, user):
+                              pathway_2_name, mapping_type, user):
         """Gets or creates a mapping
 
         :param str service_1_name: manager name of the service 1
@@ -164,6 +167,7 @@ class Manager(object):
         :param str service_2_name: manager name of the service 1
         :param str pathway_2_name: pathway 2 name
         :param str pathway_2_id: pathway 2 id
+        :param str mapping_type: type of mapping
         :param User user: the user
         :return: PathwayMapping and boolean indicating if the mapping was created or not
         :rtype: tuple[PathwayMapping,bool]
@@ -176,6 +180,7 @@ class Manager(object):
                 service_1_name,
                 pathway_1_id,
                 pathway_1_name,
+                mapping_type,
                 user
             )
 
@@ -189,6 +194,7 @@ class Manager(object):
             service_2_name=service_2_name,
             pathway_2_id=pathway_2_id,
             pathway_2_name=pathway_2_name,
+            mapping_type=mapping_type
         )
 
         if mapping is not None:
@@ -203,6 +209,7 @@ class Manager(object):
             service_2_name=service_2_name,
             service_2_pathway_id=pathway_2_id,
             service_2_pathway_name=pathway_2_name,
+            type=mapping_type
         )
 
         vote = Vote(

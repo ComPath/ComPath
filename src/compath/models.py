@@ -76,6 +76,8 @@ class PathwayMapping(Base):
     service_2_pathway_id = Column(String(255), doc='pathway 2 id')
     service_2_pathway_name = Column(String(255), doc='pathway 2 name')
 
+    type = Column(String(255), doc='Type of Mapping (isPartOf or equivalentTo)')
+
     accepted = Column(Boolean, doc='accepted mapping by the admin/curator consensus')
     creators = relationship('User', secondary=mappings_users, backref='mappings')
 

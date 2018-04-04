@@ -2,8 +2,9 @@
 
 """ This module contains tests for the data model of ComPath"""
 
-from compath.models import User
 from tests.constants import DatabaseMixin, KEGG, REACTOME
+
+from compath.models import User
 
 
 class TestVotingSystem(DatabaseMixin):
@@ -12,12 +13,12 @@ class TestVotingSystem(DatabaseMixin):
     def test_missing_manager_1(self):
         """Test that the mapping can't be created if the first manager can't be looked up"""
         with self.assertRaises(ValueError):
-            self.manager.get_or_create_mapping('missing manager 1', '', '', REACTOME, '', '', '')
+            self.manager.get_or_create_mapping('missing manager 1', '', '', REACTOME, '', '', '', '')
 
     def test_missing_manager_2(self):
         """Test that the mapping can't be created if the second manager can't be looked up"""
         with self.assertRaises(ValueError):
-            self.manager.get_or_create_mapping(REACTOME, '', '', '' 'missing manager 2', '', '', '')
+            self.manager.get_or_create_mapping(REACTOME, '', '', '' 'missing manager 2', '', '', '', '')
 
     def test_vote_up(self):
         """Test if votes are adding"""
@@ -30,6 +31,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             current_user
         )
 
@@ -49,6 +51,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             current_user
         )
         self.assertTrue(created, msg='Mapping not created')
@@ -71,6 +74,7 @@ class TestVotingSystem(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             current_user_1
         )
 
@@ -83,6 +87,7 @@ class TestVotingSystem(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
+            'equivalentTo',
             current_user_2
         )
 

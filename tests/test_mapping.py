@@ -36,6 +36,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             current_user
         )
 
@@ -54,6 +55,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             current_user
         )
         self.assertTrue(created_1, msg='The mapping was not created')
@@ -65,10 +67,11 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
+            'equivalentTo',
             current_user
         )
 
-        self.assertEqual(created_2, False, msg='The same mapping was added twice')
+        self.assertFalse(created_2, msg='The same mapping was added twice')
         self.assertEqual(1, self.manager.count_mappings(), msg='The same mapping was added twice')
         self.assertEqual(1, self.manager.count_votes(), msg='Vote was not added')
 
@@ -85,6 +88,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             user_1
         )
 
@@ -97,6 +101,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
+            'equivalentTo',
             user_2
         )
 
@@ -109,7 +114,7 @@ class TestMapping(DatabaseMixin):
         ]
         self.assertEqual(emails, [user_1.email, user_2.email])
 
-    def test_export_mappings(self):
+    def test_get_accepted_mappings(self):
         """Test duplicate mappings for different users"""
 
         user_1 = User(email='mycool@email.com')
@@ -122,6 +127,7 @@ class TestMapping(DatabaseMixin):
             REACTOME,
             '2',
             'reactome pathway',
+            'equivalentTo',
             user_1
         )
 
@@ -132,6 +138,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '1',
             'kegg pathway',
+            'equivalentTo',
             user_2
         )
 
@@ -142,6 +149,7 @@ class TestMapping(DatabaseMixin):
             KEGG,
             '2',
             'kegg pathway',
+            'equivalentTo',
             user_2
         )
 
@@ -165,3 +173,35 @@ class TestMapping(DatabaseMixin):
         self.assertIsNotNone(accepted_mappings[0], msg='No mappings were fetched')
 
         self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
+
+    def test_create_double_mapping_different_types_same_users(self):
+        """Test duplicate mappings for same users"""
+
+        current_user = User()
+
+        mapping_1, created_1 = self.manager.get_or_create_mapping(
+            KEGG,
+            '1',
+            'kegg pathway',
+            REACTOME,
+            '2',
+            'reactome pathway',
+            'equivalentTo',
+            current_user
+        )
+        self.assertTrue(created_1, msg='The mapping was not created')
+
+        mapping_2, created_2 = self.manager.get_or_create_mapping(
+            KEGG,
+            '1',
+            'kegg pathway',
+            REACTOME,
+            '2',
+            'reactome pathway',
+            'isPartOf',
+            current_user
+        )
+
+        self.assertTrue(created_2, msg='The same mapping was added twice')
+        self.assertEqual(2, self.manager.count_mappings(), msg='Only one mapping was created')
+        self.assertEqual(2, self.manager.count_votes(), msg='Problem with voting')
