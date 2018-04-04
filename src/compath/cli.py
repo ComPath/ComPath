@@ -69,6 +69,21 @@ def drop(debug, yes, connection):
     """Drop all databases"""
     set_debug_param(debug)
 
+    if yes or click.confirm('Do you really want to delete the ComPath DB'):
+        m = RealManager(connection=connection)
+        click.echo('Deleting ComPath DB')
+        m.drop_all()
+        m.create_all()
+
+
+@main.command()
+@click.option('-v', '--debug', count=True, help="Turn on debugging.")
+@click.option('-y', '--yes', is_flag=True)
+@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
+def drop_databases(debug, yes, connection):
+    """Drop all databases"""
+    set_debug_param(debug)
+
     if yes or click.confirm('Do you really want to delete the databases for {}?'.format(', '.join(managers))):
         for name, Manager in managers.items():
             m = Manager(connection=connection)
