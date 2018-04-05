@@ -44,10 +44,12 @@
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6 text-center">
                         <div class="btn-group btn-space">
-                            <button type="submit" class="btn btn-primary">Download Accepted Mappings
-                            </button>
-                            <button type="submit" class="btn btn-primary">Download All Mappings
-                            </button>
+                            <a href="{{ url_for("curation.export_mappings") }}" class="btn btn-primary">Download
+                                Accepted Mappings
+                            </a>
+                            <a href="{{ url_for("curation.export_mappings", all=all) }}" class="btn btn-primary">
+                                Download All Mappings
+                            </a>
                         </div>
                     </div>
                 </div>

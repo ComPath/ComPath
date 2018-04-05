@@ -3,6 +3,7 @@
 """ This module contains the curation views in ComPath"""
 
 import logging
+from io import StringIO, BytesIO
 
 from flask import (
     Blueprint,
@@ -12,13 +13,16 @@ from flask import (
     request,
     abort,
     redirect,
-    url_for
+    url_for,
+    send_file
 )
 from flask_security import current_user, login_required
 
 from compath.constants import BLACK_LIST, MAPPING_TYPES
 from compath.utils import (
-    get_pathway_model_by_name
+    get_pathway_model_by_name,
+    get_mappings,
+    to_csv
 )
 
 log = logging.getLogger(__name__)
@@ -44,7 +48,26 @@ def catalog():
 
     return render_template(
         'curation/catalog.html',
-        mappings=current_app.manager.get_all_mappings()
+        mappings=current_app.manager.get_all_mappings(),
+        all='all'
+    )
+
+
+@curation_blueprint.route('/get_mappings', methods=['GET', 'POST'])
+def export_mappings():
+    """Processes the mapping between two pathways"""
+
+    mappings = get_mappings(current_app.manager, only_accepted=False if request.args.get('all') else True)
+
+    string = StringIO()
+    to_csv(mappings, string)
+    string.seek(0)
+    data = BytesIO(string.read().encode('utf-8'))
+    return send_file(
+        data,
+        mimetype="text/tab-separated-values",
+        attachment_filename="all_mappings.tsv" if request.args.get('all') else "curated_mappings.tsv",
+        as_attachment=True
     )
 
 

@@ -257,7 +257,18 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
 """Export utils"""
 
 
-def export_mappings(compath_manager, only_accepted=True):
+def to_csv(triplets, file=None, sep='\t'):
+    """Writes triplets as a tab-separated:
+
+    :param iterable[tuple[str,str,str]] triplets: iterable of triplets
+    :param file file: A writable file or file-like. Defaults to stdout.
+    :param str sep: The separator. Defaults to tab.
+    """
+    for subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource in triplets:
+        print(subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource, sep=sep, file=file)
+
+
+def get_mappings(compath_manager, only_accepted=True):
     """Returns a pandas dataframe with mappings information as an excel sheet file
 
     :param compath.manager.Manager compath_manager: ComPath Manager
@@ -269,11 +280,18 @@ def export_mappings(compath_manager, only_accepted=True):
     else:
         mappings = compath_manager.get_all_mappings()
 
-    # TODO: Process here the mappings into data frame
-
-    dataframe = ...
-
-    return dataframe
+    return [
+        (
+            mapping.service_1_pathway_name,
+            mapping.service_1_pathway_id,
+            mapping.service_1_name,
+            mapping.type,
+            mapping.service_2_pathway_name,
+            mapping.service_2_pathway_id,
+            mapping.service_2_name
+        )
+        for mapping in mappings
+    ]
 
 
 """Parser"""
