@@ -93,13 +93,7 @@
             // Clicks all buttons in all tables
             $('#selectAll').click(function (e) {
 
-                var boolean;
-                if ($(this).prop('checked')) {
-                    boolean = true;
-                }
-                else {
-                    boolean = false;
-                }
+                var boolean = $(this).prop('checked');
 
                 // For each table add a hidden input to the form with the checked boxes
                 $.each(tables, function (index, table) {
