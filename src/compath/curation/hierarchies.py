@@ -4,6 +4,8 @@
 
 import logging
 
+from tqdm import tqdm
+
 from compath import managers
 from compath.constants import ADMIN_EMAIL, IS_PART_OF
 from compath.manager import RealManager
@@ -38,7 +40,7 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
     """
     mappings_created = 0
 
-    for pathway in pathways:
+    for pathway in tqdm(pathways, desc='Loading hierarchies'):
 
         if not pathway.children:
             continue
