@@ -16,8 +16,7 @@ from flask import (
 )
 from flask_security import current_user, login_required
 
-from compath.models import Vote
-from compath.constants import BLACK_LIST, VOTE_ACCEPTANCE
+from compath.constants import BLACK_LIST, MAPPING_TYPES
 from compath.utils import (
     get_pathway_model_by_name
 )
@@ -112,6 +111,11 @@ def accept_mapping(mapping_id):
 def process_mapping():
     """Processes the mapping between two pathways"""
 
+    mapping_type = request.args.get('mapping-type')
+    if not mapping_type or not mapping_type in MAPPING_TYPES:
+        flash("Missing or incorrect mapping type", category='warning')
+        return redirect(url_for('.curation'))
+
     resource_1 = request.args.get('resource-1')
     if not resource_1:
         flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')
@@ -131,23 +135,20 @@ def process_mapping():
 
     pathway_1 = request.args.get('pathway-1')
     if not pathway_1:
-        flash("missing pathway 1", category='warning')
+        flash("Missing pathway 1", category='warning')
         return redirect(url_for('.curation'))
 
     pathway_2 = request.args.get('pathway-2')
     if not pathway_2:
-        flash("missing pathway 2", category='warning')
+        flash("Missing pathway 2", category='warning')
         return redirect(url_for('.curation'))
 
     pathway_1_model = get_pathway_model_by_name(current_app.manager_dict, resource_1, pathway_1)
     pathway_2_model = get_pathway_model_by_name(current_app.manager_dict, resource_2, pathway_2)
 
-    if pathway_1 == pathway_2:
+    if pathway_1_model == pathway_2_model:
         flash("Trying to establish a mapping between the same pathway")
-        return render_template(
-            'curation/create_mapping.html',
-            manager_names=current_app.manager_dict.keys(),
-        )
+        return redirect(url_for('.curation'))
 
     if pathway_1_model is None:
         return abort(500, "Pathway 1 '{}' not found in manager '{}'".format(pathway_1, resource_1))
@@ -173,7 +174,11 @@ def process_mapping():
         else:
             flash("Since this mapping was already established, you have been assigned as a creator of the mapping")
     else:
-        flash("You have established a new mapping between {} and {}".format(pathway_1_model.name, pathway_2_model.name))
+        flash("You have established a new mapping between {} and {} with the mapping type {}".format(
+            pathway_1_model.name,
+            pathway_2_model.name,
+            mapping_type)
+        )
 
     return render_template(
         'curation/create_mapping.html',
