@@ -10,8 +10,9 @@ import click
 from flask_security import SQLAlchemyUserDatastore
 
 from . import managers
-from .constants import DEFAULT_CACHE_CONNECTION
+from .constants import DEFAULT_CACHE_CONNECTION, ADMIN_EMAIL
 from .curation.curation import parse_curation_template
+from .curation.hierarchies import load_hierarchy
 from .manager import RealManager
 from .models import Base, Role, User
 
@@ -116,6 +117,17 @@ def add_mappings(path, reference, compare):
     set_debug_param(2)
 
     parse_curation_template(path, reference, compare)
+
+
+@main.command()
+@click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
+def load_hierarchies(email):
+    """Add mappings from template"""
+
+    # Example: python3 -m compath load_hierarchies --email='your@email.com'
+    set_debug_param(2)
+
+    load_hierarchy(curator_email=email)
 
 
 @main.command()
