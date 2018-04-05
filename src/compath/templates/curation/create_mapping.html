@@ -82,43 +82,64 @@
                 <form id="curation-form" action="{{ url_for("curation.process_mapping") }}">
                     <p>This form allows you to establish mappings between Pathway pairs. First, select the resource
                         of the pathway to map, and then start typing the pathway in the left-side input which will be
-                        automatically autocompleted.</p>
+                        automatically autocompleted. Finally, ComPath allows for two types of mappings:
+                    </p>
+                    <ul>
+                        <li><b>equivalentTo</b>. This mapping type reflects that the pathway pair shares a high
+                            similary as well as the same specific focus. E.g., "Allograft rejection - Homo sapiens
+                            (human)" from KEGG equivalentTo "Allograft Rejection" from WikiPathways.
+                        </li>
+                        <li><b>IsPartOf</b>. This type of mapping represents a hierarchical relationship between the
+                            pathway 1 (child) and 2 (parent). E.g., "Lipid metabolism" isPartOf "Metabolism".
+                        </li>
+                    </ul>
 
-                    <div class="form-group">
-                        <div class="col-sm-9 col-md-9 col-lg-9">
-                            <label class="sr-only" for="pathway">Pathways</label>
-                            <input type="text" class="form-control" name="pathway-1" id="input-1"
-                                   placeholder="Select the first Pathway">
+                    <div class="row">
+
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-6 col-md-6 col-lg-6">
+                                <label class="sr-only" for="pathway">Pathways</label>
+                                <input type="text" class="form-control" name="pathway-1" id="input-1"
+                                       placeholder="Select the first Pathway">
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2">
+                                <select type="text" class="form-control" name="resource-1" id="select-1">
+                                    {% for manager in manager_names|sort %}
+                                        {% if manager not in BLACK_LIST %}
+                                            <option value="{{ manager }}">{{ manager|upper }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-sm-3 col-md-3 col-lg-3">
-                            <select type="text" class="form-control" name="resource-1" id="select-1">
-                                {% for manager in manager_names|sort %}
-                                    {% if manager not in BLACK_LIST %}
-                                        <option value="{{ manager }}">{{ manager|upper }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-sm-9 col-md-9 col-lg-9">
-                            <label class="sr-only" for="pathway">Pathways</label>
-                            <input type="text" class="form-control" name="pathway-2" id="input-2"
-                                   placeholder="Select the second Pathway">
-                        </div>
-                        <div class="col-sm-3 col-md-3 col-lg-3">
-                            <select type="text" class="form-control" name="resource-2" id="select-2">
-                                {% for manager in manager_names|sort %}
-                                    {% if manager not in BLACK_LIST %}
-                                        <option value="{{ manager }}">{{ manager|upper }}</option>
-                                    {% endif %}
-                                {% endfor %}
-                            </select>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-6 col-md-6 col-lg-6">
+                                <label class="sr-only" for="pathway">Pathways</label>
+                                <input type="text" class="form-control" name="pathway-2" id="input-2"
+                                       placeholder="Select the second Pathway">
+                            </div>
+                            <div class="col-sm-2 col-md-2 col-lg-2">
+                                <select type="text" class="form-control" name="resource-2" id="select-2">
+                                    {% for manager in manager_names|sort %}
+                                        {% if manager not in BLACK_LIST %}
+                                            <option value="{{ manager }}">{{ manager|upper }}</option>
+                                        {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-offset-4 col-sm-4 text-center">
+                        <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-3 col-md-3 col-lg-3">
+                            <label for="mapping-type">
+                            </label><select type="text" class="form-control" name="mapping-type" id="mapping-type">
+                            <option value="isPartOf">isPartOf</option>
+                            <option selected value="equivalentTo">equivalentTo</option>
+                        </select>
+                        </div>
+
+                        <div class="col-sm-6 col-md-6 col-lg-6">
                             <div class="btn-group btn-space">
                                 <button type="submit" class="btn btn-primary btn-lg"
                                         data-toggle="popover" title="Create New Mapping"

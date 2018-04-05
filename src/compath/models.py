@@ -9,7 +9,7 @@ from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, T
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
-from .constants import MODULE_NAME
+from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
 
 Base = declarative_base()
 
@@ -120,6 +120,14 @@ class PathwayMapping(Base):
         :rtype: int
         """
         return self.votes.filter(Vote.type == False).count()
+
+    @property
+    def is_acceptable(self):
+        """Returns true if the mapping has enough votes to be accepted
+
+        :rtype: bool
+        """
+        return self.votes.filter(Vote.type == True).count() >= VOTE_ACCEPTANCE
 
     def get_user_vote(self, user):
         """Returns votes given by the user"""

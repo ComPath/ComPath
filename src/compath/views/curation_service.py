@@ -16,7 +16,8 @@ from flask import (
 )
 from flask_security import current_user, login_required
 
-from compath.constants import BLACK_LIST
+from compath.models import Vote
+from compath.constants import BLACK_LIST, VOTE_ACCEPTANCE
 from compath.utils import (
     get_pathway_model_by_name
 )
@@ -66,6 +67,14 @@ def process_vote(mapping_id, type):
         return abort(404, "Missing mapping for ID {}".format(mapping_id))
 
     vote = current_app.manager.get_or_create_vote(current_user, mapping, vote_type=(type == 1))
+
+    # Accept mapping if there are enough votes
+    if not vote.mapping.accepted and vote.mapping.is_acceptable:
+        vote.mapping.accepted = True
+        current_app.manager.session.add(vote)
+        current_app.manager.session.commit()
+
+        flash("The mapping you just voted had enough number of votes to be accepted")
 
     return redirect(url_for('.catalog'))
 
@@ -130,8 +139,8 @@ def process_mapping():
         flash("missing pathway 2", category='warning')
         return redirect(url_for('.curation'))
 
-    pathway_1_model = get_pathway_model_by_name(current_app, resource_1, pathway_1)
-    pathway_2_model = get_pathway_model_by_name(current_app, resource_2, pathway_2)
+    pathway_1_model = get_pathway_model_by_name(current_app.manager_dict, resource_1, pathway_1)
+    pathway_2_model = get_pathway_model_by_name(current_app.manager_dict, resource_2, pathway_2)
 
     if pathway_1 == pathway_2:
         flash("Trying to establish a mapping between the same pathway")
@@ -153,6 +162,7 @@ def process_mapping():
         resource_2,
         getattr(pathway_2_model, '{}_id'.format(resource_2)),
         pathway_2_model.name,
+        mapping_type,
         current_user
     )
 

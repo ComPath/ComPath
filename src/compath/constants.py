@@ -25,6 +25,9 @@ MSIG_GENE_SET = os.path.join(EXCEL_FOLDER, 'msig_gene_sets.csv')
 
 ADMIN_EMAIL = 'daniel.domingo.fernandez@scai.fraunhofer.de'
 
+# Minimum number of votes to accept a mapping
+VOTE_ACCEPTANCE = 3
+
 KEGG = 'kegg'
 REACTOME = 'reactome'
 WIKIPATHWAYS = 'wikipathways'
