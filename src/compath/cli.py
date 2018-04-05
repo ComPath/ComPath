@@ -137,7 +137,7 @@ def load_hierarchies(email):
 def make_user(connection, email, password):
     """Makes a pre-existing user an admin"""
 
-    # Example: python3 -m compath make_admin xxx@xxx.com
+    # Example: python3 -m compath make_admin xxx@xxx.com password
 
     manager = RealManager(connection=connection)
     Base.metadata.bind = manager.engine

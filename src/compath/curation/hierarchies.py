@@ -11,6 +11,21 @@ from compath.manager import RealManager
 log = logging.getLogger(__name__)
 
 
+def _reactome_wrapper(pathways):
+    """Filter down the human pathways
+
+    :param list[Pathway] pathways: list of pathways
+    :rtype: list[Pathway]
+    :return: human pathways
+    """
+
+    return [
+        pathway
+        for pathway in pathways
+        if pathway.species.name == 'Homo sapiens'
+    ]
+
+
 def create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator):
     """Iterate over pathway objects and creates hierarchies if exist
 
@@ -71,6 +86,11 @@ def load_hierarchy(curator_email=None):
         log.info("Loading hierarchies for {}".format(pathway_database))
 
         pathways = pathway_db_manager.get_all_pathways()
+
+        if pathway_database == 'reactome':
+            pathways = _reactome_wrapper(pathways)
+
+        log.info("Searching for hierarchical relationships in {} pathways".format(len(pathways)))
 
         mapping_created = create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator)
 
