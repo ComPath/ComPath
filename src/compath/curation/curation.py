@@ -66,11 +66,11 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                        log.warning('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                        log.error('{} not found in {}. {}'.format(pathway_1, reference_pathway_db, mapping_statement))
                         continue
 
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                        log.warning('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                        log.error('{} not found in {}. {}'.format(pathway_2, compared_pathway_db, mapping_statement))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
@@ -91,10 +91,10 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
-                        log.warning('{} not found in {}'.format(pathway_1, compared_pathway_db))
+                        log.error('{} not found in {}. {}'.format(pathway_1, reference_pathway_db, mapping_statement))
                         continue
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
-                        log.warning('{} not found in {}'.format(pathway_2, reference_pathway_db))
+                        log.error('{} not found in {}. {}'.format(pathway_2, compared_pathway_db, mapping_statement))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
@@ -115,11 +115,11 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                 # Ensures the pathways exist in their corresponding managers
                 if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                    log.warning('{} not found in {}'.format(pathway_1, reference_pathway_db))
+                    log.error('{} not found in {}. {}'.format(pathway_1, reference_pathway_db, mapping_statement))
                     continue
 
                 if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                    log.warning('{} not found in {}'.format(pathway_2, compared_pathway_db))
+                    log.error('{} not found in {}. {}'.format(pathway_2, compared_pathway_db, mapping_statement))
                     continue
 
                 mapping, _ = compath_manager.get_or_create_mapping(
