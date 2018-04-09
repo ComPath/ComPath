@@ -15,16 +15,16 @@ from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
+from compath import managers
+from compath.constants import DEFAULT_CACHE_CONNECTION, BLACK_LIST
+from compath.manager import Manager
+from compath.models import Base, PathwayMapping, Role, User, Vote
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.curation_service import curation_blueprint
 from compath.views.main_service import ui_blueprint
 from compath.views.model_service import VoteView, MappingView
 from compath.views.model_service import model_blueprint
-from . import managers
-from .constants import DEFAULT_CACHE_CONNECTION, BLACK_LIST
-from .manager import Manager
-from .models import Base, PathwayMapping, Role, User, Vote
-from .utils import process_overlap_for_venn_diagram
+from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
 

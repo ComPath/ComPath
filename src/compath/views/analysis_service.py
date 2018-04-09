@@ -18,17 +18,17 @@ from flask import (
     abort
 )
 
-from compath.d3_dendrogram import get_dendrogram_tree
 from compath.forms import GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
     process_form_gene_set,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
-    process_overlap_for_venn_diagram,
     perform_hypergeometric_test
 
 )
+from compath.visualization.d3_dendrogram import get_dendrogram_tree
+from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
 analysis_blueprint = Blueprint('analysis', __name__)
