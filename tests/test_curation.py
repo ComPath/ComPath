@@ -3,12 +3,17 @@
 """ This module contains tests for the parsing and processing of the curation exercises"""
 
 from compath.constants import *
-from compath.curation.utils import statement_syntax_checker, ensure_two_pathways, get_pathways_from_statement
+from compath.curation.utils import (
+    statement_syntax_checker,
+    ensure_two_pathways,
+    get_pathways_from_statement,
+    get_mapping_type,
+    remove_star_from_pathway_name
+)
 from .constants import *
 
 
 class TestCurationParser(unittest.TestCase):
-
     def test_valid_syntax_examples(self):
         """Testing valid statements"""
         result_1 = statement_syntax_checker(VALID_MAPPING_1, PATHWAY_X)
@@ -52,6 +57,9 @@ class TestCurationParser(unittest.TestCase):
         result_9 = statement_syntax_checker(INVALID_MAPPING_6, PATHWAY_X)
         self.assertFalse(result_9)
 
+        result_10 = statement_syntax_checker(INVALID_MAPPING_7, PATHWAY_X)
+        self.assertFalse(result_10)
+
     def test_two_pathways_in_statement(self):
         """Testing two pathways statements"""
         result_1 = ensure_two_pathways(INVALID_MAPPING_5, IS_PART_OF)
@@ -73,3 +81,20 @@ class TestCurationParser(unittest.TestCase):
         subject, object = get_pathways_from_statement(VALID_MAPPING_3, EQUIVALENT_TO)
         self.assertEqual(subject, PATHWAY_X)
         self.assertEqual(object, PATHWAY_X)
+
+    def test_get_mapping_type(self):
+        """Testing get mapping type"""
+        result_1 = get_mapping_type(VALID_MAPPING_1)
+        self.assertEqual(result_1, 'isPartOf')
+
+        result_2 = get_mapping_type(VALID_MAPPING_2)
+        self.assertEqual(result_2, 'equivalentTo')
+
+        result_3 = get_mapping_type(INVALID_MAPPING_2)
+        self.assertEqual(result_3, None)
+
+    def test_remove_star(self):
+        """Testing get mapping type"""
+        result_1 = remove_star_from_pathway_name(VALID_MAPPING_1)
+
+        self.assertEqual(result_1, 'Pathway X isPartOf Pathway Parent')

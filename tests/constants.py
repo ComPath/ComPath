@@ -26,6 +26,7 @@ INVALID_MAPPING_3 = ''
 INVALID_MAPPING_4 = 'Pathway X isPartOf Pathway Parent'
 INVALID_MAPPING_5 = 'Pathway X isPartOfisPartOf Pathway Parent'
 INVALID_MAPPING_6 = 'Pathway X isPartOf isPartOf Pathway Parent'
+INVALID_MAPPING_7 = []
 
 
 class DatabaseMixin(unittest.TestCase):
