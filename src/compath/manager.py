@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from . import managers
-from .constants import MODULE_NAME, EQUIVALENT_TO
+from .constants import MODULE_NAME, EQUIVALENT_TO, MAPPING_TYPES
 from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
@@ -78,6 +78,16 @@ class Manager(object):
         :rtype: list[PathwayMapping]
         """
         return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
+
+    def get_mappings_by_type(self, type):
+        """Get all mappings in the database
+
+        :rtype: list[PathwayMapping]
+        """
+        if type not in MAPPING_TYPES:
+            raise ValueError('{} is not valid mapping type'.format(type))
+
+        return self.session.query(PathwayMapping).filter(PathwayMapping.type == type).all()
 
     def get_vote_by_id(self, vote_id):
         """Gets a vote by its id

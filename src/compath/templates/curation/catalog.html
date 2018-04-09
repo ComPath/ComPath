@@ -38,17 +38,18 @@
                 <p>The following table lists all the proposed mappings by the users/independent curators between a pair
                     of pathways. Registered users can use the voting system to reach a consensus about a given mapping.
                     If this mapping has been proposed/voted for three independent users. The status of the mapping will
-                    change to accepted (last column). You can download the accepted mappings or all mappings using the
-                    buttons below.
+                    change to accepted (last column). You can filter the mappings using the table or using the buttons
+                    below. Finally, the mappings can be downloaded for programmatic usage using the buttons located on
+                    the bottom of the page.
                 </p>
                 <div class="row">
                     <div class="col-sm-offset-3 col-sm-6 text-center">
                         <div class="btn-group btn-space">
-                            <a href="{{ url_for("curation.export_mappings") }}" class="btn btn-primary">Download
-                                Accepted Mappings
+                            <a href="{{ url_for("curation.catalog", isPartOf=True) }}" class="btn btn-primary">Only
+                                Hierarchical Mappings
                             </a>
-                            <a href="{{ url_for("curation.export_mappings", all=all) }}" class="btn btn-primary">
-                                Download All Mappings
+                            <a href="{{ url_for("curation.catalog", equivalentTo=True) }}" class="btn btn-primary">
+                                Only Equivalent Mappings
                             </a>
                         </div>
                     </div>
@@ -111,21 +112,36 @@
                                     </td>
                                 {% endif %}
                                 <td>
-                                    {% if mapping.accepted %}
-                                        <div class="btn btn-default">
+                                    <div class="text-center">
+                                        {% if mapping.accepted %}
                                             <span class="glyphicon glyphicon-ok"></span>
-                                        </div>
-                                    {% else %}
-                                        <a class="btn btn-default"
-                                           href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
+
+                                        {% elif current_user.is_admin %}
+                                            <a class="btn btn-default"
+                                               href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
+                                                <span class="glyphicon glyphicon-remove"></span>
+                                            </a>
+                                        {% else %}
                                             <span class="glyphicon glyphicon-remove"></span>
-                                        </a>
-                                    {% endif %}
+                                        {% endif %}
+                                    </div>
                                 </td>
                             </tr>
                         {% endfor %}
                         </tbody>
                     </table>
+                </div>
+                <div class="row">
+                    <div class="col-sm-offset-3 col-sm-6 text-center">
+                        <div class="btn-group btn-space">
+                            <a href="{{ url_for("curation.export_mappings") }}" class="btn btn-primary">Download
+                                Accepted Mappings
+                            </a>
+                            <a href="{{ url_for("curation.export_mappings", all=all) }}" class="btn btn-primary">
+                                Download All Mappings
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

@@ -16,9 +16,9 @@ from flask import (
     url_for,
     send_file
 )
-from flask_security import current_user, login_required
+from flask_security import current_user, login_required, roles_required
 
-from compath.constants import BLACK_LIST, MAPPING_TYPES
+from compath.constants import BLACK_LIST, MAPPING_TYPES, EQUIVALENT_TO, IS_PART_OF
 from compath.utils import (
     get_pathway_model_by_name,
     get_mappings,
@@ -46,9 +46,20 @@ def curation():
 def catalog():
     """Renders the mapping catalog page"""
 
+    if request.args.get(EQUIVALENT_TO):
+        mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
+        flash('You are visualizing the catalog of equivalent mappings')
+
+    elif request.args.get(IS_PART_OF):
+        mappings = current_app.manager.get_mappings_by_type(IS_PART_OF)
+        flash('You are visualizing the catalog of hierarhical mappings')
+
+    else:
+        mappings = current_app.manager.get_all_mappings()
+
     return render_template(
         'curation/catalog.html',
-        mappings=current_app.manager.get_all_mappings(),
+        mappings=mappings,
         all='all'
     )
 
@@ -102,16 +113,12 @@ def process_vote(mapping_id, type):
 
 
 @curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET', 'POST'])
-@login_required
+@roles_required('admin')
 def accept_mapping(mapping_id):
     """Processes the vote
 
     :param int mapping_id: id of the mapping to be accepted by the admin
     """
-
-    if not current_user.is_admin:
-        flash("Only Admins can accept established mappings")
-        return redirect(url_for('.catalog'))
 
     mapping, created = current_app.manager.accept_mapping(mapping_id)
 
