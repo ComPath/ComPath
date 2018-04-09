@@ -6,6 +6,7 @@ import datetime
 
 from flask_security import RoleMixin, UserMixin
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
+from sqlalchemy import and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
@@ -87,6 +88,43 @@ class PathwayMapping(Base):
             self.service_1_pathway_name,
             self.service_2_name,
             self.service_2_pathway_name
+        )
+
+    def get_complement_mapping_info(self, service_name, pathway_id, pathway_name):
+        """Returns the info corresponding to the other pathway in a mapping
+
+        :param PathwayMapping mapping:
+        :param str service_name: reference service name
+        :param str pathway_id: reference pathway id
+        :param str pathway_name: reference pathway name
+        :rtype: tuple[str,str,str]
+        """
+
+        if self.service_1_name == service_name and \
+                self.service_1_pathway_id == pathway_id and \
+                self.service_1_pathway_name == pathway_name:
+
+            return self.service_1_name, self.service_1_pathway_id, self.service_1_pathway_name
+
+        else:
+            return self.service_2_name, self.service_2_pathway_id, self.service_2_pathway_name
+
+    @staticmethod
+    def has_pathway_tuple(type, service_name, pathway_id, pathway_name):
+        """Returns a filter to get all mappings matching service and pathway names"""
+        return or_(
+            and_(
+                PathwayMapping.service_1_name == service_name,
+                PathwayMapping.service_1_pathway_id == pathway_id,
+                PathwayMapping.service_1_pathway_name == pathway_name,
+                PathwayMapping.type == type
+            ),
+            and_(
+                PathwayMapping.service_2_name == service_name,
+                PathwayMapping.service_2_pathway_id == pathway_id,
+                PathwayMapping.service_2_pathway_name == pathway_name,
+                PathwayMapping.type == type
+            )
         )
 
     @property

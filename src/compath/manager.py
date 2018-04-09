@@ -11,7 +11,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 from . import managers
-from .constants import MODULE_NAME, EQUIVALENT_TO, MAPPING_TYPES
+from .constants import MODULE_NAME, EQUIVALENT_TO, MAPPING_TYPES, IS_PART_OF
 from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
@@ -88,6 +88,17 @@ class Manager(object):
             raise ValueError('{} is not valid mapping type'.format(type))
 
         return self.session.query(PathwayMapping).filter(PathwayMapping.type == type).all()
+
+    def get_pathway_mappings(self, mapping_type, service_name, pathway_name):
+        """Returns all the specific mappings given a service and pathway names
+
+        :param str mapping_type: type of mapping
+        :param str service_name: name of the service
+        :param str pathway_name: name of the pathway
+        :rtype: Optional[PathwayMapping]
+        :return: pathways if exist
+        """
+        return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
 
     def get_vote_by_id(self, vote_id):
         """Gets a vote by its id
@@ -279,13 +290,53 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
-    def get_mappings_from_pathway_name(self, pathway_name):
-        """
+    def get_mappings_from_pathway_name(self, type, service_name, pathway_id, pathway_name):
+        """Get all mappings matching pathway and service name
 
-        :param str pathway_name:
+        :param str service_name: service name
+        :param str pathway_id: original pathway identifer
+        :param str pathway_name: pathway name
+        :rtype: list[PathwayMapping]
         :return:
         """
-        NotImplemented
+        return self.session.query(PathwayMapping).filter(
+            PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
+
+    def infer_hierarchy(self, resource, pathway_id, pathway_name):
+        """Returns the possible hierarchy of a given pathway based on its equivalent mappings
+
+        :param str type: mapping type
+        :param str resource: service name
+        :param str pathway_id: pathway original identifier
+        :param str pathway_name: pathway name
+        :return:
+        """
+        matching_mappings = self.get_mappings_from_pathway_name(
+            EQUIVALENT_TO, resource, pathway_id, pathway_name
+        )
+
+        inferred_mappings = []
+
+        for mapping in matching_mappings:
+            # Get all hierarchical mappings from equivalent pathways
+
+            complement_resource, complement_pathway_id, complement_pathway_name = mapping.get_complement_mapping_info(
+                resource, pathway_id, pathway_name
+            )
+
+            hierarchical_mappings_from_complement = self.get_mappings_from_pathway_name(
+                IS_PART_OF,
+                complement_resource,
+                complement_pathway_id,
+                complement_pathway_name
+            )
+
+            for hierarchical_mapping in hierarchical_mappings_from_complement:
+                inferred_mappings.append(hierarchical_mapping.get_complement_mapping_info(
+                    resource, pathway_id, pathway_name
+                ))
+
+        return inferred_mappings
 
 
 class RealManager(Manager):

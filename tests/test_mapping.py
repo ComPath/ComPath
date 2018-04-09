@@ -248,3 +248,11 @@ class TestMapping(DatabaseMixin):
         self.assertTrue(created_2, msg='The same mapping was added twice')
         self.assertEqual(2, self.manager.count_mappings(), msg='Only one mapping was created')
         self.assertEqual(2, self.manager.count_votes(), msg='Problem with voting')
+
+        result_1 = self.manager.get_mappings_from_pathway_name(EQUIVALENT_TO, REACTOME,'2', 'reactome pathway')
+        self.assertEqual(result_1[0], mapping_1, msg='Query not working')
+        self.assertIn(mapping_1, result_1, msg='Query not working')
+
+        result_2 = self.manager.get_mappings_from_pathway_name(IS_PART_OF, REACTOME, '2', 'reactome pathway')
+        self.assertEqual(result_2[0], mapping_2, msg='Query not working')
+        self.assertIn(mapping_2, result_2, msg='Query not working')

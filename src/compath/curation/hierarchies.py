@@ -97,14 +97,3 @@ def load_hierarchy(curator_email=None):
         mapping_created = create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator)
 
         log.info("{} hierarchical mappings created in {}".format(mapping_created, pathway_database))
-
-
-def infer_hierarchy(compath_manager, resource, pathway_id, pathway_name):
-    """"""
-    NotImplemented
-
-    # Specific sql query and filter down the mapping having equivalentTo, and any of the field with resource, pathway_id or name
-
-    # Iterate over results and check if the pathways that have a isPartOf relationship
-
-    # Return them
