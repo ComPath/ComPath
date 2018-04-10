@@ -10,6 +10,18 @@ MODULE_NAME = 'compath'
 DATA_DIR = get_data_dir(MODULE_NAME)
 DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
 
+SWAGGER_CONFIG = {
+    'title': 'ComPath API',
+    'description': 'Exposes the ComPath RESTful API',
+    'contact': {
+        'responsibleOrganization': 'Fraunhofer SCAI',
+        'responsibleDeveloper': 'Daniel Domingo-Fernandez',
+        'email': 'daniel.domingo.fernandez@scai.fraunhofer.de',
+        'url': 'https://www.scai.fraunhofer.de/de/geschaeftsfelder/bioinformatik.html',
+    },
+    'version': '0.1.0',
+}
+
 """Static files"""
 
 dir_path = os.path.dirname(os.path.realpath(__file__))

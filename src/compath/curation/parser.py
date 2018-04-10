@@ -66,19 +66,21 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_1) is False:
-                        log.error('"{}" not found in "{}". "{}"'.format(pathway_1, reference_pathway_db, mapping_statement))
+                        log.error(
+                            '"{}" not found in "{}". "{}"'.format(pathway_1, reference_pathway_db, mapping_statement))
                         continue
 
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_2) is False:
-                        log.error('"{}" not found in "{}". "{}"'.format(pathway_2, compared_pathway_db, mapping_statement))
+                        log.error(
+                            '"{}" not found in "{}". "{}"'.format(pathway_2, compared_pathway_db, mapping_statement))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
                         reference_pathway_db,
-                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
+                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).resource_id,
                         pathway_1,
                         compared_pathway_db,
-                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
+                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).resource_id,
                         pathway_2,
                         IS_PART_OF,
                         curator
@@ -91,18 +93,20 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                     # Ensures the pathways exist in their corresponding managers
                     if is_valid_pathway(manager_dict, compared_pathway_db, pathway_1) is False:
-                        log.error('"{}" not found in "{}". "{}"'.format(pathway_1, compared_pathway_db, mapping_statement))
+                        log.error(
+                            '"{}" not found in "{}". "{}"'.format(pathway_1, compared_pathway_db, mapping_statement))
                         continue
                     if is_valid_pathway(manager_dict, reference_pathway_db, pathway_2) is False:
-                        log.error('"{}" not found in "{}". "{}"'.format(pathway_2, reference_pathway_db, mapping_statement))
+                        log.error(
+                            '"{}" not found in "{}". "{}"'.format(pathway_2, reference_pathway_db, mapping_statement))
                         continue
 
                     mapping, _ = compath_manager.get_or_create_mapping(
                         compared_pathway_db,
-                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_1).id,
+                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_1).resource_id,
                         pathway_1,
                         reference_pathway_db,
-                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_2).id,
+                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_2).resource_id,
                         pathway_2,
                         IS_PART_OF,
                         curator
@@ -124,10 +128,10 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
 
                 mapping, _ = compath_manager.get_or_create_mapping(
                     reference_pathway_db,
-                    manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).id,
+                    manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).resource_id,
                     pathway_1,
                     compared_pathway_db,
-                    manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).id,
+                    manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).resource_id,
                     pathway_2,
                     EQUIVALENT_TO,
                     curator

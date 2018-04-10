@@ -7,7 +7,8 @@ import logging
 from flask import (
     Blueprint,
     render_template,
-    current_app
+    current_app,
+    abort
 )
 from flask_admin.contrib.sqla import ModelView
 
@@ -57,5 +58,8 @@ class VoteView(ModelView):
 @model_blueprint.route('/pathway/<resource>/<identifier>', methods=['GET'])
 def pathway_view(resource, identifier):
     pathway = get_pathway_model_by_id(current_app, resource, identifier)
+
+    if not pathway:
+        abort(404, 'Pathway not found')
 
     return render_template('models/pathway.html', pathway=pathway, resource=resource)

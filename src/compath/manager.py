@@ -350,9 +350,9 @@ class RealManager(Manager):
         # Add all available managers
 
     def create_all(self, check_first=True):
-        """Create tables for Bio2BEL KEGG"""
+        """Create tables for ComPath"""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
     def drop_all(self, check_first=True):
-        """Drop all tables for Bio2BEL KEGG"""
+        """Drop all tables for ComPath"""
         Base.metadata.drop_all(self.engine, checkfirst=check_first)

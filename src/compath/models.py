@@ -62,6 +62,9 @@ class Role(Base, RoleMixin):
     name = Column(String(255), unique=True)
     description = Column(String(255))
 
+    def __str__(self):
+        return self.name
+
 
 class PathwayMapping(Base):
     """Mapping Table"""

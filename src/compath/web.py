@@ -7,6 +7,7 @@ import os
 import time
 
 from bio2bel_hgnc.manager import Manager as HgncManager
+from flasgger import Swagger
 from flask import Flask
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -16,11 +17,12 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
 from compath import managers
-from compath.constants import DEFAULT_CACHE_CONNECTION, BLACK_LIST
+from compath.constants import DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG, BLACK_LIST
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.curation_service import curation_blueprint
+from compath.views.db_service import db_blueprint
 from compath.views.main_service import ui_blueprint
 from compath.views.model_service import VoteView, MappingView
 from compath.views.model_service import model_blueprint
@@ -30,6 +32,7 @@ log = logging.getLogger(__name__)
 
 bootstrap = Bootstrap()
 security = Security()
+swagger = Swagger()
 
 
 def create_app(connection=None):
@@ -67,6 +70,8 @@ def create_app(connection=None):
         SECURITY_PASSWORD_SALT=os.environ.get('COMPATH_SECURITY_PASSWORD_SALT', 'compath_not_default_salt1234567890')
     )
 
+    app.config.setdefault('SWAGGER', SWAGGER_CONFIG)
+
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'
     app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
 
@@ -78,6 +83,11 @@ def create_app(connection=None):
         def __init__(self):
             self.session = db.session
             self.engine = db.engine
+
+        def drop_all(self):
+            """Drop all tables for ComPath"""
+            Base.metadata.drop_all(self.engine)
+            Base.metadata.create_all(self.engine)
 
     app.manager = WebManager()
 
@@ -93,6 +103,7 @@ def create_app(connection=None):
     user_datastore = SQLAlchemyUserDatastore(app.manager, User, Role)
 
     security.init_app(app, user_datastore)
+    swagger.init_app(app)
 
     admin = Admin(app, template_mode='bootstrap3')
     admin.add_view(ModelView(User, app.manager.session))
@@ -104,6 +115,7 @@ def create_app(connection=None):
     app.register_blueprint(curation_blueprint)
     app.register_blueprint(model_blueprint)
     app.register_blueprint(analysis_blueprint)
+    app.register_blueprint(db_blueprint)
 
     app.manager_dict = {
         name: ExternalManager(connection=connection)

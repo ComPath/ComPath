@@ -8,10 +8,9 @@ import sys
 
 from flask import (
     Blueprint,
-    render_template,
-    current_app
+    render_template
 )
-from flask_security import login_required
+from flask_security import login_required, current_user
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -47,10 +46,7 @@ def about():
 @login_required
 def user_activity():
     """Renders the user activity page"""
-    return render_template('user/activity.html')
-
-
-
+    return render_template('user/activity.html', user=current_user)
 
 
 """Clustergrammer views"""
@@ -72,6 +68,7 @@ def reactome_matrix():
 def wikipathways_matrix():
     """Renders the WikiPathways Matrix page powered by Clustergrammer"""
     return render_template('visualization/clustergrammer/wikipathways_overlap.html')
+
 
 @ui_blueprint.route('/msig_overlap', methods=['GET'])
 def msig_matrix():

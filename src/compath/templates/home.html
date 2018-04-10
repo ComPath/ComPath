@@ -38,6 +38,40 @@
             </p>
         </div>
 
+        {% if current_user.is_admin %}
+            <div class="panel panel-info" id="admin-panel">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Admin
+                        <button type="button" class="close" data-target="#admin-panel" data-dismiss="alert">
+                            <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                        </button>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <a class="btn btn-info" href="{{ url_for('admin.index') }}" role="button">
+                        Flask Admin
+                    </a>
+                    <a class="btn btn-info" href="{{ url_for('db.view_config') }}" role="button">
+                        Configuration
+                    </a>
+                    <a class="btn btn-info" href="{{ url_for('db.view_users') }}" role="button">
+                        View Users
+                    </a>
+                    <a class="btn btn-warning" href="{{ url_for('db.delete_mappings') }}"
+                       role="button">
+                        Drop All Mappings
+                    </a>
+                    <a class="btn btn-danger" href="{{ url_for('db.delete_db') }}" role="button"
+                       data-toggle="confirmation" data-btn-ok-icon="glyphicon glyphicon-share-alt"
+                       data-btn-ok-class="btn-success" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"
+                       data-btn-cancel-class="btn-danger">
+                        Nuke Database
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+
+
         <div class="panel panel-default">
             <div class="panel-body">
                 <div class="row">
