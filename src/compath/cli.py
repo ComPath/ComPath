@@ -9,12 +9,12 @@ import sys
 import click
 from flask_security import SQLAlchemyUserDatastore
 
-from . import managers
-from .constants import DEFAULT_CACHE_CONNECTION, ADMIN_EMAIL
-from .curation.curation import parse_curation_template
-from .curation.hierarchies import load_hierarchy
-from .manager import RealManager
-from .models import Base, Role, User
+from compath import managers
+from compath.constants import DEFAULT_CACHE_CONNECTION, ADMIN_EMAIL
+from compath.curation.hierarchies import load_hierarchy
+from compath.curation.parser import parse_curation_template
+from compath.manager import RealManager
+from compath.models import Base, Role, User
 
 log = logging.getLogger(__name__)
 
