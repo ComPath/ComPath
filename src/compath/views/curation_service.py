@@ -31,7 +31,7 @@ curation_blueprint = Blueprint('curation', __name__)
 """Curation views"""
 
 
-@curation_blueprint.route('/curation', methods=['GET'])
+@curation_blueprint.route('/curation')
 @login_required
 def curation():
     """Renders the curation page"""
@@ -42,7 +42,7 @@ def curation():
     )
 
 
-@curation_blueprint.route('/mapping_catalog', methods=['GET'])
+@curation_blueprint.route('/mapping_catalog')
 def catalog():
     """Renders the mapping catalog page"""
 
@@ -64,7 +64,7 @@ def catalog():
     )
 
 
-@curation_blueprint.route('/export_mappings', methods=['GET'])
+@curation_blueprint.route('/export_mappings')
 def export_mappings():
     """Export mappings
     ---
@@ -93,7 +93,7 @@ def export_mappings():
     )
 
 
-@curation_blueprint.route('/vote/<int:mapping_id>/<int:type>', methods=['GET'])
+@curation_blueprint.route('/vote/<int:mapping_id>/<int:type>')
 @login_required
 def process_vote(mapping_id, type):
     """Processes the vote
@@ -123,7 +123,7 @@ def process_vote(mapping_id, type):
     return redirect(url_for('.catalog'))
 
 
-@curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET'])
+@curation_blueprint.route('/mapping/<int:mapping_id>/accept')
 @roles_required('admin')
 def accept_mapping(mapping_id):
     """Processes the vote
@@ -147,7 +147,7 @@ def accept_mapping(mapping_id):
     return redirect(url_for('.catalog'))
 
 
-@curation_blueprint.route('/map_pathways', methods=['GET'])
+@curation_blueprint.route('/map_pathways')
 @login_required
 def process_mapping():
     """Processes the mapping between two pathways

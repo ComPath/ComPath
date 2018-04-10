@@ -55,7 +55,7 @@ class VoteView(ModelView):
 """Model views"""
 
 
-@model_blueprint.route('/pathway/<resource>/<identifier>', methods=['GET'])
+@model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
     pathway = get_pathway_model_by_id(current_app, resource, identifier)
 

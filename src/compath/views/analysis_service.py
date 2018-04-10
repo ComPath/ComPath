@@ -225,7 +225,7 @@ def export_gene_set(resource):
 """Autocompletion views"""
 
 
-@analysis_blueprint.route('/api/autocompletion/pathway_name', methods=['GET'])
+@analysis_blueprint.route('/api/autocompletion/pathway_name')
 def api_resource_autocompletion():
     """Autocompletion for pathway name"""
 
