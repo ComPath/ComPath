@@ -30,18 +30,18 @@ INVALID_MAPPING_7 = []
 
 
 class DatabaseMixin(unittest.TestCase):
-    def setUp(cls):
+    def setUp(self):
         """Create temporary file"""
 
-        cls.fd, cls.path = tempfile.mkstemp()
-        cls.connection = 'sqlite:///' + cls.path
+        self.fd, self.path = tempfile.mkstemp()
+        self.connection = 'sqlite:///' + self.path
 
         # create temporary database
-        cls.manager = RealManager(connection=cls.connection)
+        self.manager = RealManager(connection=self.connection)
 
-    def tearDown(cls):
+    def tearDown(self):
         """Closes the connection in the manager and deletes the temporary database"""
-        cls.manager.drop_all()
-        cls.manager.session.close()
-        os.close(cls.fd)
-        os.remove(cls.path)
+        self.manager.drop_all()
+        self.manager.session.close()
+        os.close(self.fd)
+        os.remove(self.path)
