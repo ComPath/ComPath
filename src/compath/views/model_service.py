@@ -23,11 +23,20 @@ model_blueprint = Blueprint('model', __name__)
 
 class MappingView(ModelView):
     """Mapping view in Flask-admin"""
-
+    column_searchable_list = (
+        PathwayMapping.service_1_name,
+        PathwayMapping.service_1_pathway_id,
+        PathwayMapping.service_1_pathway_name,
+        PathwayMapping.type,
+        PathwayMapping.service_2_name,
+        PathwayMapping.service_2_pathway_id,
+        PathwayMapping.service_2_pathway_name,
+    )
     column_list = (
         PathwayMapping.service_1_name,
         PathwayMapping.service_1_pathway_id,
         PathwayMapping.service_1_pathway_name,
+        PathwayMapping.type,
         PathwayMapping.service_2_name,
         PathwayMapping.service_2_pathway_id,
         PathwayMapping.service_2_pathway_name,

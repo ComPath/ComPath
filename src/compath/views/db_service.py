@@ -5,10 +5,11 @@
 import datetime
 import logging
 
-from flask import Blueprint, current_app, render_template, jsonify
+from flask import Blueprint, current_app, render_template, jsonify, flash, request, redirect, url_for, abort
 from flask_security import roles_required
 
 from compath.models import User, PathwayMapping
+from compath.utils import get_pathway_model_by_name, get_pathway_model_by_id
 
 log = logging.getLogger(__name__)
 
@@ -64,3 +65,55 @@ def delete_mappings():
         status=200,
         message='All Mappings have been deleted',
     )
+
+
+@db_blueprint.route('/pathway/infer/hierarchy')
+def infer_hierarchy():
+    """Infers hierarchy for a given pathway
+
+    ---
+    tags:
+      - mappings
+    parameters:
+      - name: resource
+        type: string
+        required: true
+      - name: pathway-name
+        type: string
+        required: true
+      - name: pathway-id
+        type: string
+        required: true
+
+    responses:
+      200:
+        description:
+    """
+
+    resource = request.args.get('resource')
+    if not resource:
+        flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')
+        return redirect(url_for('.curation'))
+    if resource not in current_app.manager_dict:
+        flash("'{}' does not exist or has not been loaded in ComPath".format(resource), category='warning')
+        return redirect(url_for('.curation'))
+
+    pathway_name = request.args.get('pathway_name')
+    if not pathway_name:
+        flash("Missing pathway name", category='warning')
+        return redirect(url_for('.curation'))
+
+    pathway_id = request.args.get('pathway_id')
+    if not pathway_id:
+        flash("Missing pathway identifier", category='warning')
+        return redirect(url_for('.curation'))
+
+    pathway_from_name = get_pathway_model_by_name(current_app.manager_dict, resource, pathway_name)
+    pathway_from_id = get_pathway_model_by_id(current_app, resource, pathway_id)
+
+    if pathway_from_name != pathway_from_id:
+        abort(500, 'The identifier and the name do not point the same pathway')
+
+    inferred_hierarchies = current_app.manager.infer_hierarchy(resource, pathway_id, pathway_name)
+
+    return jsonify(inferred_hierarchies)
