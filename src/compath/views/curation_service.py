@@ -64,9 +64,20 @@ def catalog():
     )
 
 
-@curation_blueprint.route('/get_mappings', methods=['GET', 'POST'])
+@curation_blueprint.route('/export_mappings', methods=['GET'])
 def export_mappings():
-    """Processes the mapping between two pathways"""
+    """Export mappings
+    ---
+    tags:
+      - mappings
+    parameters:
+      - name: all
+        type: string
+        required: false
+    responses:
+      200:
+        description: A tsv file with mappings
+    """
 
     mappings = get_mappings(current_app.manager, only_accepted=False if request.args.get('all') else True)
 
@@ -82,7 +93,7 @@ def export_mappings():
     )
 
 
-@curation_blueprint.route('/vote/<int:mapping_id>/<int:type>', methods=['GET', 'POST'])
+@curation_blueprint.route('/vote/<int:mapping_id>/<int:type>', methods=['GET'])
 @login_required
 def process_vote(mapping_id, type):
     """Processes the vote
@@ -112,7 +123,7 @@ def process_vote(mapping_id, type):
     return redirect(url_for('.catalog'))
 
 
-@curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET', 'POST'])
+@curation_blueprint.route('/mapping/<int:mapping_id>/accept', methods=['GET'])
 @roles_required('admin')
 def accept_mapping(mapping_id):
     """Processes the vote
@@ -136,10 +147,36 @@ def accept_mapping(mapping_id):
     return redirect(url_for('.catalog'))
 
 
-@curation_blueprint.route('/map_pathways', methods=['GET', 'POST'])
+@curation_blueprint.route('/map_pathways', methods=['GET'])
 @login_required
 def process_mapping():
-    """Processes the mapping between two pathways"""
+    """Processes the mapping between two pathways
+
+    ---
+    tags:
+      - mappings
+    parameters:
+      - name: mapping-type
+        type: string
+        enum: ['isPartOf', 'equivalentTo']
+        required: true
+      - name: resource-1
+        type: string
+        required: true
+      - name: pathway-1
+        type: string
+        required: true
+      - name: resource-2
+        type: string
+        required: true
+      - name: pathway-2
+        type: string
+        required: true
+
+    responses:
+      200:
+        description: Mapping created
+    """
 
     mapping_type = request.args.get('mapping-type')
     if not mapping_type or not mapping_type in MAPPING_TYPES:
