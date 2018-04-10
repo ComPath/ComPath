@@ -11,8 +11,8 @@ class TestCascades(DatabaseMixin):
     def setUp(self):
         super().setUp()
 
-        self.u1 = User()
-        self.u2 = User()
+        self.u1 = User(email='my_email')
+        self.u2 = User(email='my_email_fake')
 
         self.manager.session.add_all([self.u1, self.u2])
         self.manager.session.commit()
@@ -47,14 +47,6 @@ class TestCascades(DatabaseMixin):
         self.assertEqual(2, self.manager.count_users())
         self.assertEqual(2, self.manager.count_mappings())
         self.assertEqual(4, self.manager.count_votes())
-
-    def test_drop_user(self):
-        self.manager.session.delete(self.u1)
-        self.manager.session.commit()
-
-        self.assertEqual(1, self.manager.count_users())
-        self.assertEqual(2, self.manager.count_mappings())
-        self.assertEqual(2, self.manager.count_votes())
 
     def test_drop_all_mappings(self):
         self.manager.delete_all_mappings()
