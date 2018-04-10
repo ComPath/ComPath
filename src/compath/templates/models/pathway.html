@@ -75,18 +75,24 @@
                 <hr>
 
                 <div class="row">
-                    <div class="col-sm-offset-3 col-sm-6 text-center">
+                    <div class="text-center">
                         <div class="btn-group btn-space">
-                            <button type="submit" class="btn btn-primary btn-lg"
-                                    data-toggle="popover" title="Suggest Pathways"
-                                    data-content="Suggests the most similar pathways according to genetic overlap">
+                            <a class="btn btn-primary"
+                               data-toggle="popover" title="Suggest Pathways"
+                               data-content="Suggests the most similar pathways according to genetic overlap">
                                 Suggest Mappings By Overlap
-                            </button>
-                            <button type="submit" class="btn btn-primary btn-lg"
-                                    data-toggle="popover" title="Suggest Pathways"
-                                    data-content="Suggests the most similar pathways according to name similarity">
+                            </a>
+                            <a class="btn btn-primary"
+                               data-toggle="popover" title="Suggest Pathways"
+                               data-content="Suggests the most similar pathways according to name similarity">
                                 Suggest Mappings By Name
-                            </button>
+                            </a>
+                            <a class="btn btn-primary"
+                               data-toggle="popover" title="Infer Hierarchical Mappings in other Databases"
+                               data-content="Search for hierarchical mappings based on their equivalent pathways in other databases"
+                                href="{{ url_for('db.infer_hierarchy',resource=resource, pathway_name=pathway.name, pathway_id=pathway.resource_id) }}">Infer
+                                Hierarchical Mappings
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -122,7 +122,7 @@ def add_mappings(path, reference, compare):
 @main.command()
 @click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
 def load_hierarchies(email):
-    """Add mappings from template"""
+    """Loads pathway databases with hierarchies"""
 
     # Example: python3 -m compath load_hierarchies --email='your@email.com'
     set_debug_param(2)
