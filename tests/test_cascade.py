@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from compath.constants import EQUIVALENT_TO
-from compath.models import User, PathwayMapping
+from compath.models import User
 from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
@@ -57,8 +57,7 @@ class TestCascades(DatabaseMixin):
         self.assertEqual(2, self.manager.count_votes())
 
     def test_drop_all_mappings(self):
-        self.manager.session.query(PathwayMapping).delete()
-        self.manager.session.commit()
+        self.manager.delete_all_mappings()
 
         self.assertEqual(2, self.manager.count_users())
         self.assertEqual(0, self.manager.count_mappings())

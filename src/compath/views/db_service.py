@@ -5,11 +5,11 @@
 import datetime
 import logging
 
-from flask import Blueprint, current_app, render_template, jsonify, flash, request, redirect, url_for, abort
+from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
 from flask_security import roles_required
 
-from compath.models import User, PathwayMapping
-from compath.utils import get_pathway_model_by_name, get_pathway_model_by_id
+from compath.models import User
+from compath.utils import get_pathway_model_by_id, get_pathway_model_by_name
 
 log = logging.getLogger(__name__)
 
@@ -58,8 +58,7 @@ def view_users():
 @roles_required('admin')
 def delete_mappings():
     """Delete all mappings"""
-    current_app.manager.session.query(PathwayMapping).delete()
-    current_app.manager.session.commit()
+    current_app.manager.delete_all_mappings()
 
     return jsonify(
         status=200,

@@ -253,6 +253,12 @@ class Manager(object):
 
         return mapping, True
 
+    def delete_all_mappings(self):
+        """Delets all the votes then all the mappings"""
+        self.session.query(Vote).delete()
+        self.session.query(PathwayMapping).delete()
+        self.session.commit()
+
     """Custom Model Manipulations"""
 
     def claim_mapping(self, mapping, user):
