@@ -1,3 +1,9 @@
+/** Network controller
+ **
+ * @requires: jquery, cytoscape.js
+ */
+
+
 var colours_resource = { // Object resource name -> colour
     reactome: "#f279aa",
     kegg: "#ff2200",

@@ -12,6 +12,9 @@
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/pathway_controller.js', version='20181004') }}"></script>
+
     <script>
         // Initializes popover
         $(function () {
@@ -21,9 +24,9 @@
             })
         });
 
-        var resource = {{resource}};
-        var pathway_name = {{ pathway.name }};
-        var pathway_id = {{pathway.resource_id }};
+        var resource = "{{resource}}";
+        var pathwayName = "{{ pathway.name }}";
+        var pathwayId = "{{pathway.resource_id }}";
 
     </script>
 {% endblock %}
@@ -92,7 +95,7 @@
                                data-content="Suggests the most similar pathways according to name similarity">
                                 Suggest Mappings By Name
                             </a>
-                            <button class="btn btn-primary"
+                            <button class="btn btn-primary" id="infer-mappings"
                                     data-toggle="popover" title="Infer Hierarchical Mappings in other Databases"
                                     data-content="Search for hierarchical mappings based on their equivalent pathways
                                     in other databases">Infer Hierarchical Mappings
@@ -103,6 +106,7 @@
                 <div class="row">
                     <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
                 </div>
+
             </div>
         </div>
     </div>
