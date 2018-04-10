@@ -48,10 +48,10 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
         for children in pathway.children:
             mapping, created = compath_manager.get_or_create_mapping(
                 service_1_name=pathway_database,
-                pathway_1_id=children.id,
+                pathway_1_id=children.resource_id,
                 pathway_1_name=children.name,
                 service_2_name=pathway_database,
-                pathway_2_id=pathway.id,
+                pathway_2_id=pathway.resource_id,
                 pathway_2_name=pathway.name,
                 mapping_type=IS_PART_OF,
                 user=curator

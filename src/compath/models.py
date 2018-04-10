@@ -106,11 +106,10 @@ class PathwayMapping(Base):
         if self.service_1_name == service_name and \
                 self.service_1_pathway_id == pathway_id and \
                 self.service_1_pathway_name == pathway_name:
-
-            return self.service_1_name, self.service_1_pathway_id, self.service_1_pathway_name
+            return self.service_2_name, self.service_2_pathway_id, self.service_2_pathway_name
 
         else:
-            return self.service_2_name, self.service_2_pathway_id, self.service_2_pathway_name
+            return self.service_1_name, self.service_1_pathway_id, self.service_1_pathway_name
 
     @staticmethod
     def has_pathway_tuple(type, service_name, pathway_id, pathway_name):

@@ -90,11 +90,14 @@
                             <a class="btn btn-primary"
                                data-toggle="popover" title="Infer Hierarchical Mappings in other Databases"
                                data-content="Search for hierarchical mappings based on their equivalent pathways in other databases"
-                                href="{{ url_for('db.infer_hierarchy',resource=resource, pathway_name=pathway.name, pathway_id=pathway.resource_id) }}">Infer
+                               href="{{ url_for('db.infer_hierarchy',resource=resource, pathway_name=pathway.name, pathway_id=pathway.resource_id) }}">Infer
                                 Hierarchical Mappings
                             </a>
                         </div>
                     </div>
+                </div>
+                <div class="row">
+                    <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
                 </div>
             </div>
         </div>
