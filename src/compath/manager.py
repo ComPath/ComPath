@@ -290,7 +290,7 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
-    def get_mappings_from_pathway_name(self, type, service_name, pathway_id, pathway_name):
+    def get_mappings_from_pathway(self, type, service_name, pathway_id, pathway_name):
         """Get all mappings matching pathway and service name
 
         :param str service_name: service name
@@ -311,7 +311,7 @@ class Manager(object):
         :param str pathway_name: pathway name
         :return:
         """
-        matching_mappings = self.get_mappings_from_pathway_name(
+        matching_mappings = self.get_mappings_from_pathway(
             EQUIVALENT_TO, resource, pathway_id, pathway_name
         )
 
@@ -324,7 +324,7 @@ class Manager(object):
                 resource, pathway_id, pathway_name
             )
 
-            hierarchical_mappings_from_complement = self.get_mappings_from_pathway_name(
+            hierarchical_mappings_from_complement = self.get_mappings_from_pathway(
                 IS_PART_OF,
                 complement_resource,
                 complement_pathway_id,

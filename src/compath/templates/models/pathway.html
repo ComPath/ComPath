@@ -20,6 +20,11 @@
                 trigger: 'hover'
             })
         });
+
+        var resource = {{resource}};
+        var pathway_name = {{ pathway.name }};
+        var pathway_id = {{pathway.resource_id }};
+
     </script>
 {% endblock %}
 
@@ -87,12 +92,11 @@
                                data-content="Suggests the most similar pathways according to name similarity">
                                 Suggest Mappings By Name
                             </a>
-                            <a class="btn btn-primary"
-                               data-toggle="popover" title="Infer Hierarchical Mappings in other Databases"
-                               data-content="Search for hierarchical mappings based on their equivalent pathways in other databases"
-                               href="{{ url_for('db.infer_hierarchy',resource=resource, pathway_name=pathway.name, pathway_id=pathway.resource_id) }}">Infer
-                                Hierarchical Mappings
-                            </a>
+                            <button class="btn btn-primary"
+                                    data-toggle="popover" title="Infer Hierarchical Mappings in other Databases"
+                                    data-content="Search for hierarchical mappings based on their equivalent pathways
+                                    in other databases">Infer Hierarchical Mappings
+                            </button>
                         </div>
                     </div>
                 </div>
