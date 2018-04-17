@@ -308,6 +308,18 @@ class Manager(object):
         return self.session.query(PathwayMapping).filter(
             PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
 
+    def get_all_pathways_from_db_with_mappings(self, pathway_database):
+        """Get all mappings that contain a pathway from a given database
+
+        :param str service_name: service name
+        :param str pathway_id: original pathway identifer
+        :param str pathway_name: pathway name
+        :rtype: list[PathwayMapping]
+        :return:
+        """
+        return self.session.query(PathwayMapping).filter(
+            PathwayMapping.has_database_pathway(pathway_database)).all()
+
     def infer_hierarchy(self, resource, pathway_id, pathway_name):
         """Returns the possible hierarchy of a given pathway based on its equivalent mappings
 

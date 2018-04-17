@@ -129,6 +129,14 @@ class PathwayMapping(Base):
             )
         )
 
+    @staticmethod
+    def has_database_pathway(service_name):
+        """Returns a filter to get all mappings matching service a name"""
+        return or_(
+            PathwayMapping.service_1_name == service_name,
+            PathwayMapping.service_2_name == service_name,
+        )
+
     @property
     def count_votes(self):
         """Return the number of votes for this mapping
