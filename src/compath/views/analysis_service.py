@@ -88,7 +88,8 @@ def pathway_distribution():
     """Renders the Pathway Size distribution page"""
     return render_template(
         'visualization/pathway_distribution.html',
-        manager_distribution_dict=current_app.resource_distributions
+        pathway_distribution_dict=current_app.resource_distributions,
+        gene_distribution_dict=current_app.gene_distributions
     )
 
 

@@ -53,7 +53,7 @@
 
         $(document).ready(function () {
 
-            {% for manager, distribution_data in manager_distribution_dict.items() %}
+            {% for manager, distribution_data in pathway_distribution_dict.items() %}
 
                 $("#{{ manager|safe }}" + "-table").DataTable(
                     {
