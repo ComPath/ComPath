@@ -109,14 +109,15 @@ def drop_databases(debug, yes, connection):
 @click.argument('path')
 @click.argument('reference')
 @click.argument('compare')
-def add_mappings(path, reference, compare):
+@click.option('--curator')
+def add_mappings(path, reference, compare, curator):
     """Add mappings from template"""
 
     # Example: python3 -m compath add_mappings '/my/path' 'kegg' 'wikipathways'
 
     set_debug_param(2)
 
-    parse_curation_template(path, reference, compare)
+    parse_curation_template(path, reference, compare, admin_email=curator)
 
 
 @main.command()
