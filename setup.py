@@ -19,7 +19,7 @@ INSTALL_REQUIRES = [
     'bio2bel_kegg>=0.0.4',
     'bio2bel_reactome>=0.0.3',
     'bio2bel_wikipathways>=0.0.3',
-    'bio2bel_msig==0.0.1',
+    'bio2bel_msig>=0.0.1',
     'wtforms',
     'flask_wtf',
     'flask',
