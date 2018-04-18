@@ -296,17 +296,29 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
-    def get_mappings_from_pathway(self, type, service_name, pathway_id, pathway_name):
+    def get_mappings_from_pathway_with_relationship(self, type, service_name, pathway_id, pathway_name):
         """Get all mappings matching pathway and service name
 
         :param str service_name: service name
-        :param str pathway_id: original pathway identifer
+        :param str pathway_id: original pathway identifier
         :param str pathway_name: pathway name
         :rtype: list[PathwayMapping]
         :return:
         """
         return self.session.query(PathwayMapping).filter(
             PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
+
+    def get_all_mappings_from_pathway(self, service_name, pathway_id, pathway_name):
+        """Get all mappings matching pathway and service name
+
+        :param str service_name: service name
+        :param str pathway_id: original pathway identifier
+        :param str pathway_name: pathway name
+        :rtype: list[PathwayMapping]
+        :return:
+        """
+        return self.session.query(PathwayMapping).filter(
+            PathwayMapping.has_pathway(service_name, pathway_id, pathway_name)).all()
 
     def get_all_pathways_from_db_with_mappings(self, pathway_database):
         """Get all mappings that contain a pathway from a given database
@@ -329,7 +341,7 @@ class Manager(object):
         :param str pathway_name: pathway name
         :return:
         """
-        matching_mappings = self.get_mappings_from_pathway(
+        matching_mappings = self.get_mappings_from_pathway_with_relationship(
             EQUIVALENT_TO, resource, pathway_id, pathway_name
         )
 
@@ -342,7 +354,7 @@ class Manager(object):
                 resource, pathway_id, pathway_name
             )
 
-            hierarchical_mappings_from_complement = self.get_mappings_from_pathway(
+            hierarchical_mappings_from_complement = self.get_mappings_from_pathway_with_relationship(
                 IS_PART_OF,
                 complement_resource,
                 complement_pathway_id,

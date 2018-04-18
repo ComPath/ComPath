@@ -113,7 +113,7 @@ class PathwayMapping(Base):
 
     @staticmethod
     def has_pathway_tuple(type, service_name, pathway_id, pathway_name):
-        """Returns a filter to get all mappings matching service and pathway names"""
+        """Returns a filter to get all mappings matching type, service and pathway name and id"""
         return or_(
             and_(
                 PathwayMapping.service_1_name == service_name,
@@ -126,6 +126,22 @@ class PathwayMapping(Base):
                 PathwayMapping.service_2_pathway_id == pathway_id,
                 PathwayMapping.service_2_pathway_name == pathway_name,
                 PathwayMapping.type == type
+            )
+        )
+
+    @staticmethod
+    def has_pathway(service_name, pathway_id, pathway_name):
+        """Returns a filter to get all mappings matching service and pathway name and id"""
+        return or_(
+            and_(
+                PathwayMapping.service_1_name == service_name,
+                PathwayMapping.service_1_pathway_id == pathway_id,
+                PathwayMapping.service_1_pathway_name == pathway_name,
+            ),
+            and_(
+                PathwayMapping.service_2_name == service_name,
+                PathwayMapping.service_2_pathway_id == pathway_id,
+                PathwayMapping.service_2_pathway_name == pathway_name,
             )
         )
 
