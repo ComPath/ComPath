@@ -16,8 +16,11 @@ New pathway/gene signatures resources can be added by forking the `ComPath Templ
 """
 
 import logging
-from compath.constants import MODULE_NAME
+
+from compath_utils import CompathManager
 from pkg_resources import VersionConflict, iter_entry_points
+
+from compath.constants import MODULE_NAME
 
 log = logging.getLogger(__name__)
 
@@ -33,10 +36,15 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
         continue
 
     try:
-        managers[entry] = bio2bel_module.Manager
-    except Exception:
+        ExternalManager = bio2bel_module.Manager
+    except AttributeError:
         log.warning('%s does not have a top-level Manager class', entry)
         continue
+
+    if not issubclass(ExternalManager, CompathManager):
+        log.warning('%s:%s is not a standard ComPath manager class', entry, ExternalManager)
+
+    managers[entry] = ExternalManager
 
 __version__ = '0.0.1-dev'
 

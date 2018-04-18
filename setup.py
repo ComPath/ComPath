@@ -14,6 +14,7 @@ INSTALL_REQUIRES = [
     'sqlalchemy==1.1.15',
     'pandas',
     'bio2bel',
+    'compath_utils',
     'bio2bel_hgnc',
     'bio2bel_kegg>=0.0.4',
     'bio2bel_reactome>=0.0.3',
