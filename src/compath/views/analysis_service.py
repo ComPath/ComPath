@@ -18,6 +18,7 @@ from flask import (
     abort
 )
 
+from compath.constants import BLACK_LIST
 from compath.forms import GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
@@ -74,9 +75,10 @@ def calculate_overlap():
 def pathway_overlap():
     """Renders the Pathway Overlap page"""
     return render_template(
-        'visualization/venn_diagram/compare_pathways.html',
+        'visualization/venn_diagram/venn_diagram_view.html',
         manager_names=current_app.manager_dict.keys(),
-        managers_overlap=current_app.manager_overlap
+        managers_overlap=current_app.manager_overlap,
+        BLACK_LIST=BLACK_LIST
     )
 
 

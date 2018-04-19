@@ -150,7 +150,9 @@
                                        style=" min-width: 500px;">
                                 <select type="text" class="form-control" name="resources[]" id="select-1">
                                     {% for manager in manager_names %}
-                                        <option value="{{ manager }}">{{ manager|upper }}</option>
+                                        {% if manager not in BLACK_LIST %}
+                                            <option value="{{ manager }}">{{ manager|upper }}</option>
+                                        {% endif %}
                                     {% endfor %}
                                 </select>
                             </div>

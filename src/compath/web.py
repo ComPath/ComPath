@@ -131,7 +131,7 @@ def create_app(connection=None):
     }
 
     app.gene_distributions = {
-        name: manager.gene_gene_distribution()
+        name: manager.get_gene_distribution()
         for name, manager in app.manager_dict.items()
         if name not in BLACK_LIST
     }
