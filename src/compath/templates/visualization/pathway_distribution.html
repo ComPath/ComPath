@@ -167,7 +167,7 @@
                     show the distribution and the outliers, in order to inspect and find the name of the outliers,
                     please use the table in the section below. </p>
 
-                {% for manager in manager_distribution_dict.keys() %}
+                {% for manager in pathway_distribution_dict.keys() %}
 
                     <h3 class="text-center">{{ manager|upper }}</h3>
                     <svg id="{{ manager }}-histogram" width="960" height="500"></svg>
@@ -185,7 +185,7 @@
             <div class="panel-body">
                 <p>Explore the size in detail using DataTable.</p>
 
-                {% for manager, distribution_data in manager_distribution_dict.items() %}
+                {% for manager, distribution_data in pathway_distribution_dict.items() %}
 
                     <h3 class="text-center">{{ manager|upper }}</h3>
 
