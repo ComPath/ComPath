@@ -122,7 +122,7 @@ def create_app(connection=None):
         for name, ExternalManager in managers.items()
     }
 
-    log.info('Loading resource distributions')
+    log.info('Loading pathway distributions')
 
     app.resource_distributions = {
         name: manager.get_pathway_size_distribution()
@@ -130,8 +130,10 @@ def create_app(connection=None):
         if name not in BLACK_LIST
     }
 
+    log.info('Loading gene distributions')
+
     app.gene_distributions = {
-        name: manager.get_gene_distribution()
+        name: dict(manager.get_gene_distribution())
         for name, manager in app.manager_dict.items()
         if name not in BLACK_LIST
     }

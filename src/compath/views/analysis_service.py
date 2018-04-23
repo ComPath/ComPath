@@ -91,9 +91,15 @@ def pathway_distribution():
     return render_template(
         'visualization/pathway_distribution.html',
         pathway_distribution_dict=current_app.resource_distributions,
-        gene_distribution_dict=current_app.gene_distributions
     )
 
+@analysis_blueprint.route('/gene_promiscuity', methods=['GET'])
+def gene_distribution():
+    """Renders how many times genes are present in pathways page"""
+    return render_template(
+        'visualization/gene_promiscuity.html',
+        gene_distribution_dict=current_app.gene_distributions
+    )
 
 """Query submission handling views"""
 

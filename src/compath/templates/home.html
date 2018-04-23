@@ -139,14 +139,18 @@
                     <div class="col-sm-6 col-md-4">
                         <div class="thumbnail home-link">
                             <div class="caption">
-                                <h3>Pathway Size Distribution</h3>
+                                <h3>Analyze Distributions</h3>
                                 <p>
-                                    Analyze the pathway population size.
+                                    Analyze the pathway size or gene promiscuity.
                                 </p>
                                 <p>
                                     <a href="{{ url_for('analysis.pathway_distribution') }}"
                                        class="btn btn-primary btn-block">
-                                        Explore Distribution
+                                        Pathway Size Distribution
+                                    </a>
+                                    <a href="{{ url_for('analysis.gene_distribution') }}"
+                                       class="btn btn-primary btn-block">
+                                        Gene Promiscuity
                                     </a>
 
                                 </p>
