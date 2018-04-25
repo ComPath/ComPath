@@ -87,3 +87,7 @@ div.navbar-header button.navbar-toggle {
     padding-left: 7px !important;
     padding-right: 7px !important;
 }
+
+.img-responsive {
+    margin: 0 auto;
+}
