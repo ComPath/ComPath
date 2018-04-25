@@ -37,7 +37,7 @@ analysis_blueprint = Blueprint('analysis', __name__)
 """Cytoscape view"""
 
 
-@analysis_blueprint.route('/similarity_network', methods=['GET'])
+@analysis_blueprint.route('/similarity_network')
 def similarity_network():
     """Renders the Similarity network powered by Cytoscape"""
     return render_template(
@@ -49,7 +49,7 @@ def similarity_network():
 """Venn Diagram views"""
 
 
-@analysis_blueprint.route('/query/overlap', methods=['GET'])
+@analysis_blueprint.route('/query/overlap')
 def calculate_overlap():
     """Returns the overlap between different pathways in order to generate a Venn diagram"""
 
@@ -71,7 +71,7 @@ def calculate_overlap():
     return jsonify(processed_venn_diagram)
 
 
-@analysis_blueprint.route('/pathway_overlap', methods=['GET'])
+@analysis_blueprint.route('/pathway_overlap')
 def pathway_overlap():
     """Renders the Pathway Overlap page"""
     return render_template(
@@ -85,7 +85,7 @@ def pathway_overlap():
 """Histogram view"""
 
 
-@analysis_blueprint.route('/pathway_distribution', methods=['GET'])
+@analysis_blueprint.route('/pathway_distribution')
 def pathway_distribution():
     """Renders the Pathway Size distribution page"""
     return render_template(
@@ -93,7 +93,8 @@ def pathway_distribution():
         pathway_distribution_dict=current_app.resource_distributions,
     )
 
-@analysis_blueprint.route('/gene_promiscuity', methods=['GET'])
+
+@analysis_blueprint.route('/gene_promiscuity')
 def gene_distribution():
     """Renders how many times genes are present in pathways page"""
     return render_template(
@@ -101,10 +102,11 @@ def gene_distribution():
         gene_distribution_dict=current_app.gene_distributions
     )
 
+
 """Query submission handling views"""
 
 
-@analysis_blueprint.route('/query', methods=['GET'])
+@analysis_blueprint.route('/query')
 def query():
     """Returns the Query page"""
 
@@ -142,7 +144,7 @@ def process_gene_set():
     )
 
 
-@analysis_blueprint.route('/compare_pathways', methods=['GET'])
+@analysis_blueprint.route('/compare_pathways')
 def compare_pathways():
     """Renders a visualization comparing pathways"""
 
@@ -204,7 +206,7 @@ def compare_pathways():
 """Export views"""
 
 
-@analysis_blueprint.route('/export/<resource>', methods=['GET'])
+@analysis_blueprint.route('/export/<resource>')
 def export_gene_set(resource):
     """Export gene set to excel"""
 

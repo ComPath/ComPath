@@ -42,6 +42,13 @@ def about():
     return render_template('about.html', metadata=metadata)
 
 
+@ui_blueprint.route('/curation')
+def curation():
+    """Renders Curation page"""
+
+    return render_template('curation.html')
+
+
 @ui_blueprint.route('/user')
 @login_required
 def user_activity():

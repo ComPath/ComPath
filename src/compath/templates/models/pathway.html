@@ -36,28 +36,25 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="panel panel-default">
-            <div class="panel-heading">{{ pathway.name }} Overview</div>
+            <div class="panel-heading">{{ pathway.name }} - Pathway Page</div>
             <div class="panel-body">
 
                 <table id="pathway-info" class="table table-bordered table-striped table-hover">
                     <tbody>
                     <tr>
-                        <td>Name
-                        </td>
+                        <td>Name</td>
                         <td>
                             <a href="{{ pathway.url }}">{{ pathway }}</a>
                         </td>
                     </tr>
                     <tr>
-                        <td>Resource
-                        </td>
+                        <td>Resource</td>
                         <td>
                             {{ resource|upper }}
                         </td>
                     </tr>
                     <tr>
-                        <td>Genes in Pathway
-                        </td>
+                        <td>Genes in Pathway</td>
                         <td>
                             {% for hgnc_symbol in pathway.get_gene_set() %}
                                 <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
@@ -66,14 +63,17 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Statistics
-                        </td>
-                        <td>How many up and down votes it h as...
+                        <td>Gene Set Size</td>
+                        <td> {{ pathway.get_gene_set()|length }}
                         </td>
                     </tr>
                     <tr>
-                        <td>Pathways Mapped
+                        <td>equivalentTo Mappings</td>
+                        <td>
                         </td>
+                    </tr>
+                    <tr>
+                        <td>isPartOf Mappings</td>
                         <td>
                         </td>
                     </tr>
