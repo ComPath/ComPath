@@ -29,7 +29,8 @@ INSTALL_REQUIRES = [
     'flask_sqlalchemy',
     'scipy',
     'numpy',
-    'statsmodels'
+    'statsmodels',
+    'xlrd'
 ]
 ENTRY_POINTS = {
     'console_scripts': [
