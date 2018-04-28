@@ -28,6 +28,7 @@ INSTALL_REQUIRES = [
     'flask_security',
     'flask_sqlalchemy',
     'scipy',
+    'numpy',
     'statsmodels'
 ]
 ENTRY_POINTS = {
