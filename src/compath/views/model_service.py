@@ -12,6 +12,7 @@ from flask import (
 )
 from flask_admin.contrib.sqla import ModelView
 
+from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
 
@@ -71,4 +72,63 @@ def pathway_view(resource, identifier):
     if not pathway:
         abort(404, 'Pathway not found')
 
-    return render_template('models/pathway.html', pathway=pathway, resource=resource)
+    mappings = current_app.manager.get_all_mappings_from_pathway(resource, identifier, pathway.name)
+
+    super_pathways = []
+
+    sub_pathways = []
+
+    equivalent_pathways = []
+
+    for mapping in mappings:
+
+        if mapping.type == EQUIVALENT_TO:
+            if mapping.service_1_pathway_id == pathway.resource_id:
+                equivalent_pathways.append(
+                    (
+                        mapping.service_2_name,
+                        mapping.service_2_pathway_id,
+                        mapping.service_2_pathway_name
+                    )
+
+                )
+
+            else:
+                equivalent_pathways.append(
+                    (
+                        mapping.service_1_name,
+                        mapping.service_1_pathway_id,
+                        mapping.service_1_pathway_name
+                    )
+                )
+
+        elif mapping.type == IS_PART_OF:
+            if mapping.service_1_pathway_id == pathway.resource_id:
+                super_pathways.append(
+                    (
+                        mapping.service_2_name,
+                        mapping.service_2_pathway_id,
+                        mapping.service_2_pathway_name
+                    )
+
+                )
+
+            else:
+                sub_pathways.append(
+                    (
+                        mapping.service_1_name,
+                        mapping.service_1_pathway_id,
+                        mapping.service_1_pathway_name
+                    )
+                )
+        else:
+            raise ValueError('Error with mapping type')
+
+    return render_template(
+        'models/pathway.html',
+        pathway=pathway,
+        resource=resource,
+        equivalent_pathways=equivalent_pathways,
+        sub_pathways=sub_pathways,
+        super_pathways=super_pathways
+    )

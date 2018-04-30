@@ -9,6 +9,45 @@
     {{ super() }}
 {% endblock %}
 
+
+{% macro write_label(resource) -%}
+    {% if resource == 'kegg' %}
+        label-success
+    {% elif resource == 'reactome' %}
+        label-danger
+    {% elif resource == 'wikipathways' %}
+        label-info
+    {% elif resource == 'msig' %}
+        label-default
+    {% else %}
+        label-warning
+    {% endif %}
+{%- endmacro %}
+
+
+{% macro write_pathways(pathways, title) -%}
+    {% if pathways|length > 0 %}
+        <div class="panel panel-default">
+            <div class="panel-heading">{{ title }}</div>
+            <div class="panel-body">
+                <ul>
+                    {% for resource, identifier, name in pathways %}
+                        <li>
+                            <span class="label {{ write_label(resource) }}">
+                                {{ resource|upper }}
+                            </span>
+                            &nbsp;
+                            <a href="{{ url_for('model.pathway_view', resource=resource, identifier=identifier) }}">
+                                {{ name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{%- endmacro %}
+
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
@@ -54,33 +93,24 @@
                         </td>
                     </tr>
                     <tr>
-                        <td>Genes in Pathway</td>
+                        <td>Genes</td>
                         <td>
                             {% for hgnc_symbol in pathway.get_gene_set() %}
                                 <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
-                                {{ "," if not loop.last }}
                             {% endfor %}
                         </td>
                     </tr>
                     <tr>
-                        <td>Gene Set Size</td>
+                        <td>Size</td>
                         <td> {{ pathway.get_gene_set()|length }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>equivalentTo Mappings</td>
-                        <td>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>isPartOf Mappings</td>
-                        <td>
                         </td>
                     </tr>
                     </tbody>
                 </table>
 
-                <hr>
+                {{ write_pathways(equivalent_pathways, "Equivalent Pathways") }}
+                {{ write_pathways(super_pathways, "Super-Pathways") }}
+                {{ write_pathways(sub_pathways, "Sub-Pathways") }}
 
                 <div class="row">
                     <div class="text-center">
