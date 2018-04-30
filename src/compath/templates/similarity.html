@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+{% import "bootstrap/utils.html" as util %}
+
+{% block title %}Gene Promiscuity{% endblock %}
+
+
+{% block styles %}
+    {{ super() }}
+
+
+    <style>
+
+        /* Histogram CSS */
+
+        .bar rect {
+            fill: steelblue;
+        }
+
+        .bar text {
+            fill: #fff;
+            font: 10px sans-serif;
+        }
+
+        .bar:hover {
+            fill: brown;
+        }
+
+        .toolTip {
+            position: absolute;
+            display: none;
+            min-width: 80px;
+            height: auto;
+            background: none repeat scroll 0 0 #ffffff;
+            border: 1px solid #6F257F;
+            padding: 14px;
+            text-align: center;
+        }
+    </style>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+    {% include "dependencies/datatables.html" %}
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+
+
+{% endblock %}
+
+{% block content %}
+    <div class="container" style="margin-top: 50px">
+        {{ util.flashed_messages(dismissible=True, container=False) }}
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Similarity</div>
+            <div class="panel-body">
+                <p>
+                    <a href="{{ url_for('ui.kegg_matrix') }}" class="btn btn-primary">
+                        KEGG
+                    </a>
+                    <a href="{{ url_for('ui.reactome_matrix') }}" class="btn btn-primary">
+                        Reactome
+                    </a>
+                    <a href="{{ url_for('ui.wikipathways_matrix') }}" class="btn btn-primary">
+                        WikiPathways
+                    </a>
+                    <a href="{{ url_for('ui.msig_matrix') }}" class="btn btn-primary">
+                        MSig
+                    </a>
+                    <a href="{{ url_for('analysis.similarity_network') }}"
+                       class="btn btn-primary btn-block button-margin">
+                        Similarity network
+                    </a>
+                </p>
+            </div>
+        </div>
+    </div>
+    {% include "footer.html" %}
+{% endblock %}

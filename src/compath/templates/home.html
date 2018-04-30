@@ -82,7 +82,7 @@
                                 <p>Overview of the content of the resources loaded in ComPath.</p>
                                 <p>
                                     <a href="{{ url_for('ui.overview') }}" class="btn btn-primary btn-block">
-                                        Query
+                                        Explore
                                     </a>
                                 </p>
                             </div>
@@ -97,21 +97,9 @@
                                     Visualize and cluster pathways according to their gene set similarity.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('ui.kegg_matrix') }}" class="btn btn-primary">
-                                        KEGG
-                                    </a>
-                                    <a href="{{ url_for('ui.reactome_matrix') }}" class="btn btn-primary">
-                                        Reactome
-                                    </a>
-                                    <a href="{{ url_for('ui.wikipathways_matrix') }}" class="btn btn-primary">
-                                        WikiPathways
-                                    </a>
-                                    <a href="{{ url_for('ui.msig_matrix') }}" class="btn btn-primary">
-                                        MSig
-                                    </a>
-                                    <a href="{{ url_for('analysis.similarity_network') }}"
-                                       class="btn btn-primary btn-block button-margin">
-                                        Similarity network
+                                    <a href="{{ url_for('ui.similarity') }}"
+                                       class="btn btn-primary btn-block">
+                                        Explore
                                     </a>
                                 </p>
                             </div>

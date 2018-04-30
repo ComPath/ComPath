@@ -47,10 +47,17 @@ def curation():
     """Renders Curation page"""
     return render_template('curation.html')
 
+
 @ui_blueprint.route('/overview')
 def overview():
     """Renders Overview page"""
     return render_template('overview.html')
+
+
+@ui_blueprint.route('/similarity')
+def similarity():
+    """Renders Similarity page"""
+    return render_template('similarity.html')
 
 
 @ui_blueprint.route('/user')
