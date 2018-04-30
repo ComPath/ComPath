@@ -47,6 +47,34 @@
                         </li>
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Downloads <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a href="{{ url_for('static', filename='resources/excel/kegg_gene_sets.csv') }}"
+                               class="btn btn-primary" data-toggle="popover" title="Export KEGG"
+                               data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
+                                KEGG
+                            </a>
+
+                        </li>
+                        <li>
+                            <a href="{{ url_for('static', filename='resources/excel/reactome_gene_sets.csv') }}"
+                               class="btn btn-primary" data-toggle="popover" title="Export Reactome"
+                               data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
+                                Reactome
+                            </a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('static', filename='resources/excel/wikipathways_gene_sets.csv') }}"
+                               class="btn btn-primary" data-toggle="popover" title="Export WikiPathways"
+                               data-content="Export gene sets to a csv file where each pathway (columns) is followed by their corresponding genes (rows).">
+                                WikiPathways
+                            </a>
+                        </li>
+                    </ul>
+                </li>
             </ul>
 
             <ul class="nav navbar-nav navbar-right no-collapse">
