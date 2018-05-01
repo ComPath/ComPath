@@ -4,51 +4,16 @@
 {% import "bootstrap/fixes.html" as fixes %}
 {% import "bootstrap/utils.html" as util %}
 
-{% block title %}Gene Promiscuity{% endblock %}
+{% block title %}Explore Similar Pathways{% endblock %}
 
 
 {% block styles %}
     {{ super() }}
-
-
-    <style>
-
-        /* Histogram CSS */
-
-        .bar rect {
-            fill: steelblue;
-        }
-
-        .bar text {
-            fill: #fff;
-            font: 10px sans-serif;
-        }
-
-        .bar:hover {
-            fill: brown;
-        }
-
-        .toolTip {
-            position: absolute;
-            display: none;
-            min-width: 80px;
-            height: auto;
-            background: none repeat scroll 0 0 #ffffff;
-            border: 1px solid #6F257F;
-            padding: 14px;
-            text-align: center;
-        }
-    </style>
 {% endblock %}
 
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
-    {% include "dependencies/datatables.html" %}
-
-    <script type="text/javascript"
-            src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
-
 
 {% endblock %}
 
@@ -57,8 +22,12 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="panel panel-default">
-            <div class="panel-heading">Similarity</div>
+            <div class="panel-heading">Clustegrammer View</div>
             <div class="panel-body">
+                <p>Visualize the HeatMap of each individual pathway database to identify clusters of pathways based on
+                    their content similarity. This visualization is powered by <a
+                            href="http://amp.pharm.mssm.edu/clustergrammer/"> Clustergrammer</a>.
+                </p>
                 <p>
                     <a href="{{ url_for('ui.kegg_matrix') }}" class="btn btn-primary">
                         KEGG
@@ -72,6 +41,14 @@
                     <a href="{{ url_for('ui.msig_matrix') }}" class="btn btn-primary">
                         MSig
                     </a>
+                </p>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Network View</div>
+            <div class="panel-body">
+                <p>The network view allows you to visualize the pathway knowledge as a network.
                     <a href="{{ url_for('analysis.similarity_network') }}"
                        class="btn btn-primary btn-block button-margin">
                         Similarity network

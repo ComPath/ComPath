@@ -94,7 +94,7 @@
                             <div class="caption">
                                 <h3>Pathway Similarity</h3>
                                 <p>
-                                    Visualize and cluster pathways according to their gene set similarity.
+                                    Explore, visualize, and cluster pathways according to their gene set similarity.
                                 </p>
                                 <p>
                                     <a href="{{ url_for('ui.similarity') }}"
@@ -145,8 +145,9 @@
                                     Curate, propose, and establish new mappings between pathways.
                                 </p>
                                 <p>
-                                    <a href="{{ url_for('curation.curation') }}" class="btn btn-primary btn-block">
-                                        Catalog
+                                    <a href="{{ url_for('curation.create_mapping') }}"
+                                       class="btn btn-primary btn-block">
+                                        Curate
                                     </a>
                                 </p>
                             </div>

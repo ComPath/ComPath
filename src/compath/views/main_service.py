@@ -44,7 +44,7 @@ def about():
 
 
 @ui_blueprint.route('/curation')
-def curation():
+def curation_overview():
     """Renders Curation page"""
     return render_template('curation.html')
 

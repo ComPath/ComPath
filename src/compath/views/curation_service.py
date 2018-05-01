@@ -31,9 +31,9 @@ curation_blueprint = Blueprint('curation', __name__)
 """Curation views"""
 
 
-@curation_blueprint.route('/curation')
+@curation_blueprint.route('/curate')
 @login_required
-def curation():
+def create_mapping():
     """Renders the curation page"""
     return render_template(
         'curation/create_mapping.html',
@@ -181,41 +181,41 @@ def process_mapping():
     mapping_type = request.args.get('mapping-type')
     if not mapping_type or not mapping_type in MAPPING_TYPES:
         flash("Missing or incorrect mapping type", category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     resource_1 = request.args.get('resource-1')
     if not resource_1:
         flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
     if resource_1 not in current_app.manager_dict:
         flash("'{}' does not exist or has not been loaded in ComPath".format(resource_1), category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     resource_2 = request.args.get('resource-2')
     if not resource_2:
         flash("Invalid request. Missing 'resource-2' arguments in the request", category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     if resource_2 not in current_app.manager_dict:
         flash("'{}' does not exist or has not been loaded in ComPath".format(resource_2), category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     pathway_1 = request.args.get('pathway-1')
     if not pathway_1:
         flash("Missing pathway 1", category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     pathway_2 = request.args.get('pathway-2')
     if not pathway_2:
         flash("Missing pathway 2", category='warning')
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     pathway_1_model = get_pathway_model_by_name(current_app.manager_dict, resource_1, pathway_1)
     pathway_2_model = get_pathway_model_by_name(current_app.manager_dict, resource_2, pathway_2)
 
     if pathway_1_model == pathway_2_model:
         flash("Trying to establish a mapping between the same pathway")
-        return redirect(url_for('.curation'))
+        return redirect(url_for('.create_mapping'))
 
     if pathway_1_model is None:
         return abort(500, "Pathway 1 '{}' not found in manager '{}'".format(pathway_1, resource_1))
