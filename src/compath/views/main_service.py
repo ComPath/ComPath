@@ -2,13 +2,14 @@
 
 """ This module contains the main views of ComPath"""
 
-import datetime
 import logging
 import sys
 
+import datetime
 from flask import (
     Blueprint,
-    render_template
+    render_template,
+    current_app
 )
 from flask_security import login_required, current_user
 
@@ -51,7 +52,11 @@ def curation():
 @ui_blueprint.route('/overview')
 def overview():
     """Renders Overview page"""
-    return render_template('overview.html')
+    return render_template(
+        'overview.html',
+        managers_overlap=current_app.manager_overlap,
+        resource_overview=current_app.resource_overview
+    )
 
 
 @ui_blueprint.route('/similarity')

@@ -79,56 +79,6 @@
             src="https://benfred.github.io/venn.js/venn.js"></script>
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/overlap_controller.js', version='20180501') }}"></script>
-
-    <script>
-
-        var data = {{ managers_overlap|safe }};
-
-        var coverageVenn = d3.select("#coverage-venn-diagram");
-
-        coverageVenn.attr("align", "center"); // Align center the diagram
-
-        var ignorome = venn.VennDiagram(); // Plot the Venn Diagram
-        coverageVenn.datum(data).call(ignorome); // Stick data
-
-        // add a tooltip
-        var tooltip = d3.select("body").append("div")
-            .attr("class", "venntooltip");
-
-        // add listeners to all the groups to display tooltip on mouseover
-        coverageVenn.selectAll("g")
-            .on("mouseover", function (d, i) {
-                // sort all the areas relative to the current item
-                venn.sortAreas(coverageVenn, d);
-
-                // Display a tooltip with the current size
-                tooltip.transition().duration(400).style("opacity", .9);
-                tooltip.text(d.size + " genes");
-
-                // highlight the current path
-                var selection = d3.select(this).transition("tooltip").duration(400);
-                selection.select("path")
-                    .style("stroke-width", 3)
-                    .style("fill-opacity", d.sets.length == 1 ? .4 : .1)
-                    .style("stroke-opacity", 1);
-            })
-
-            .on("mousemove", function () {
-                tooltip.style("left", (d3.event.pageX) + "px")
-                    .style("top", (d3.event.pageY - 28) + "px");
-            })
-
-            .on("mouseout", function (d, i) {
-                tooltip.transition().duration(400).style("opacity", 0);
-                var selection = d3.select(this).transition("tooltip").duration(400);
-                selection.select("path")
-                    .style("stroke-width", 0)
-                    .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
-                    .style("stroke-opacity", 0);
-            });
-
-    </script>
-
 {% endblock %}
 
 {% block content %}
@@ -169,17 +119,6 @@
                     </div>
                     <div id="overlap-venn-diagram"></div>
                 </form>
-            </div>
-            <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
-        </div>
-
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Genomic Coverage Overview and Ignorome</div>
-            <div class="panel-body">
-                <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
-                <div id="coverage-venn-diagram">
-                </div>
             </div>
             <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
         </div>

@@ -77,7 +77,6 @@ def pathway_overlap():
     return render_template(
         'visualization/venn_diagram/venn_diagram_view.html',
         manager_names=current_app.manager_dict.keys(),
-        managers_overlap=current_app.manager_overlap,
         BLACK_LIST=BLACK_LIST
     )
 

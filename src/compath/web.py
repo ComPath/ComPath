@@ -140,31 +140,37 @@ def create_app(connection=None):
 
     log.info('Loading overlap across pathway databases')
 
-    resource_genesets = {}
+    resource_gene_sets = {
+        name: manager.get_all_hgnc_symbols()
+        for name, manager in app.manager_dict.items()
+        if name not in BLACK_LIST
+    }
 
-    for name, manager in app.manager_dict.items():
+    log.info('Loading resource overview')
 
-        if name in BLACK_LIST:
-            continue
-
-        resource_genesets[name] = manager.get_all_hgnc_symbols()
+    app.resource_overview = {
+        name: (len(manager.get_all_pathways()), len(resource_gene_sets[name]))
+        # dict(Manager name: tuple(#pathways, #genes))
+        for name, manager in app.manager_dict.items()
+        if name not in BLACK_LIST
+    }
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
 
     hgnc_manager = HgncManager()
 
-    resource_genesets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
+    resource_gene_sets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
 
-    app.gene_universe = resource_genesets['Gene Universe']
+    app.gene_universe = resource_gene_sets['Gene Universe']
 
-    if len(resource_genesets['Gene Universe']) < 40000:
+    if len(resource_gene_sets['Gene Universe']) < 40000:
         log.warning(
             'The number of HGNC symbols loaded is smaller than 40000. Please check that HGNC database has been'
             'properly loaded'
         )
 
-    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_genesets, skip_gene_set_info=True)
+    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_gene_sets, skip_gene_set_info=True)
 
     hgnc_manager.session.close()
 
