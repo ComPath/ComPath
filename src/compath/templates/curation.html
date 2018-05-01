@@ -27,7 +27,75 @@
                 <h3 class="panel-title">Curation Protocol</h3>
             </div>
             <div class="panel-body">
+                <p>As an application scenario, ComPath was used to generate mapping files across pathway databases in
+                    order to establish the multiple relationships between equivalent or related pathways in three of the
+                    major pathway databases (<a href="http://www.kegg.jp/">KEGG</a>, <a href="https://reactome.org/">
+                        Reactome</a>, and <a href="https://www.wikipathways.org/index.php/WikiPathways">WikiPathways</a>).
+                    The protocol established for the mapping is described below.
+                </p>
 
+                <h4>Mapping Files</h4>
+
+                <p>A total of 3 mapping files were curated, one for each pairwise comparison:
+                </p>
+
+                <ul>
+                    <li>KEGG vs Reactome</li>
+                    <li>KEGG vs WikiPathways</li>
+                    <li>Reactome vs WikiPathways</li>
+                </ul>
+
+                <h4>Description</h4>
+
+                <p>
+                    For each pairwise pathway database comparison (resource 1 vs resource 2), they will be a unique
+                    template containing the following columns:
+                </p>
+
+                <ol>
+                    <li><b>Reference pathway from resource 1</b>. E.g., 'Akt signaling'.</li>
+
+                    <li><b>Proposed mapping pathways according to content similarity</b> (Point 1 in the next section).
+                        The pathways (resource 2) are represented by an ordered list of top 10 most similar pathways
+                        together with the values of similarity (%). E.g., ['Akt signaling pathway'|90%, 'MAPK
+                        signaling'|50%]
+                    </li>
+
+                    <li><b>Proposed mapping pathways according to name similarity</b> (Point 2 in the next section). The
+                        pathways (resource 2) are represented by an ordered list of the top 5 most similar pathways.
+                        E.g., ['Akt signaling pathway', 'Example signaling'...]
+                    </li>
+
+                    <li><b>Curator's proposed mapping</b>. This column contains the mappings proposed by the curator. In
+                        case there is more than one pathway, the mappings need to be separated by pipes (|). E.g., "Akt
+                        signaling pathway equivalentTo Akt pathways|Akt signaling pathway isPartOf Akt family pathways")
+                    </li>
+
+                    <li>
+                        <b>Curator explanation</b>. Arguments behind the mapping, needed for the inter-curator
+                        agreement.
+                    </li>
+
+                </ol>
+
+                <p>
+                    We have chosen to use the top of most similar pathways instead of presenting the curator with the
+                    full list due to the vast amount of overlapping pathways. If we present the curator with 100
+                    pathways to analyze against one, the curator would need huge amount of time. Instead, the curator is
+                    presented with the top 10 (for content similarity) and 5 (string similarity) so he can get an idea
+                    of the most similar pathways. However, for each row (pathwayw) we assessed whether it was necessary
+                    to look at more than the top 10 pathways (e.g, the top 10 pathways by content similarity had 100
+                    similarity%). For those cases, we had another excel sheet with the full list of matches to look not
+                    only at the top 100 but at the full list.
+                </p>
+
+                <h4>Inter-curator agreement</h4>
+
+                <p>
+                    The final step of the curation process is to agree on the proposed mappings. Therefore, the three
+                    curators examined together one by one the mapping files and compare the differences,
+                    and subsequently agreeing on the final mappings.
+                </p>
             </div>
         </div>
 
@@ -36,6 +104,35 @@
                 <h3 class="panel-title">Types of Mappings</h3>
             </div>
             <div class="panel-body">
+
+                <p>ComPath curation interface allows for two types of mappings: equivalentTo and isPartOf.</p>
+
+                <ul>
+
+                    <li><b>equivalentTo</b>.reflects that the pathway pair shares a high similarity. The guidelines for
+                        this mapping are:
+
+                        <ul>
+
+                            <li>
+                                The pair should share at least a certain degree of similarity (this is required). In
+                                other words, only pathways with at least 1 overlapping gene can be used for the mapping.
+                            </li>
+
+                            <li>
+                                Same focus and biological function. A high concordance in the name between the pair is
+                                not required but it is helpful to identify this similarity. Curators have read
+                                the descriptions for each database to assess whether the focus of the pathway is the
+                                same or not.
+                            </li>
+                        </ul>
+                    </li>
+
+                    <li><b>isPartOf</b>.This type of mapping represents a hierarchical relationship between the pathway
+                        1 (child) and 2 (parent).
+                    </li>
+                </ul>
+
 
             </div>
         </div>
