@@ -44,7 +44,6 @@ def process_form_gene_set(form_field):
     }
 
 
-
 """Query utils"""
 
 
@@ -72,7 +71,6 @@ def get_enriched_pathways(manager_list, gene_set):
     }
 
 
-
 def get_mappings(compath_manager, only_accepted=True):
     """Returns a pandas dataframe with mappings information as an excel sheet file
 
@@ -97,6 +95,7 @@ def get_mappings(compath_manager, only_accepted=True):
         )
         for mapping in mappings
     ]
+
 
 def get_pathway_model_by_name(manager_dict, resource, pathway_name):
     """Returns the pathway object from the resource manager
@@ -239,4 +238,3 @@ def to_csv(triplets, file=None, sep='\t'):
     """
     for subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource in triplets:
         print(subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource, sep=sep, file=file)
-
