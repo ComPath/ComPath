@@ -82,8 +82,10 @@
                 <form id="curation-form" action="{{ url_for("curation.process_mapping") }}">
                     <p>This form allows you to establish mappings between pathway pairs. First, select the resource
                         of the pathway you want to map, and then start typing the pathway in the left-side input which
-                        will be
-                        automatically autocompleted.
+                        will be automatically autocompleted. The mappings created will be automatically added to the
+                        <a href="{{ url_for('curation.catalog') }}">mapping catalog</a>, where users can vote for the
+                        mappings. After 3 users have approved a mapping, the mapping will be added to the curated
+                        mapping list.
                     </p>
 
                     <p>ComPath allows for two types of mappings. More description about the mapping types and protocol
