@@ -107,7 +107,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">ComPath Overview</div>
             <div class="panel-body">
-                <p>Table summarizing the data sources and their content</p>
+                <p>Summary of the pathway databases loaded in ComPath and their content</p>
 
                 <table class="table table-striped table-hover">
                     <thead>
@@ -120,13 +120,11 @@
                     <tbody>
 
                     {% for resource, (number_of_pathways, number_of_genes) in resource_overview.items() %}
-
                         <tr>
                             <td> {{ resource|upper }}</td>
                             <td>{{ number_of_pathways }}</td>
                             <td>{{ number_of_genes }}</td>
                         </tr>
-
                     {% endfor %}
 
                     </tbody>
@@ -136,7 +134,7 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Genomic Coverage Overview and Ignorome</div>
+            <div class="panel-heading">Pathway Knowledge Coverage and Ignorome</div>
             <div class="panel-body">
                 <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
                 <div id="coverage-venn-diagram">
@@ -148,7 +146,10 @@
             <div class="panel-heading">Distribution Overview</div>
             <div class="panel-body">
                 <p>
-                    Analyze the pathway size or gene promiscuity.
+                    Analyze the distribution of the pathway in each database or gene promiscuity. In other words, what
+                    are the biggest and smalles pathways and which genes appear in more or less in each database
+                    (promiscuity). This analysis might help you to interpret the results of enrichment analyses as well
+                    as analyze the boundaries of databases.
                 </p>
                 <p>
                     <a href="{{ url_for('analysis.pathway_distribution') }}"
@@ -159,7 +160,6 @@
                        class="btn btn-primary">
                         Gene Promiscuity
                     </a>
-
                 </p>
 
             </div>
