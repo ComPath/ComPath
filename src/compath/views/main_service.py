@@ -32,6 +32,12 @@ def imprint():
     return render_template('imprint.html')
 
 
+@ui_blueprint.route('/terms_and_conditions')
+def terms_and_conditions():
+    """Renders the Terms and conditiosn page"""
+    return render_template('terms_conditions.html')
+
+
 @ui_blueprint.route('/about')
 def about():
     """Renders About page"""
