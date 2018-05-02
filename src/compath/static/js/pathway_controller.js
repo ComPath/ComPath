@@ -69,6 +69,27 @@ $(document).ready(function () {
                 alert('Problem with request');
             },
             success: function (response) {
+                console.log(response);
+
+                clearTable('info-table');
+
+                updateDynamicTable('info-table', response);
+            }
+        });
+
+    });
+
+    $("#suggest-by-name").on('click', function (e) {
+
+        $.ajax({
+            type: "GET",
+            url: "/suggest_mappings/name/" + pathwayName,
+            dataType: "json",
+            global: false,
+            error: function (request) {
+                alert('Problem with request');
+            },
+            success: function (response) {
 
                 clearTable('info-table');
 

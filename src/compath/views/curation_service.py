@@ -14,7 +14,8 @@ from flask import (
     abort,
     redirect,
     url_for,
-    send_file
+    send_file,
+    jsonify
 )
 from flask_security import current_user, login_required, roles_required
 
@@ -22,7 +23,8 @@ from compath.constants import BLACK_LIST, MAPPING_TYPES, EQUIVALENT_TO, IS_PART_
 from compath.utils import (
     get_pathway_model_by_name,
     get_mappings,
-    to_csv
+    to_csv,
+    get_most_similar_names
 )
 
 log = logging.getLogger(__name__)
@@ -251,3 +253,48 @@ def process_mapping():
         'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
     )
+
+
+@curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
+def suggest_mappings_by_name(pathway_name):
+    """Returns list of top matches based on string similarity
+
+    :param str pathway_name:
+    """
+
+    # Get all pathway names from each resource
+    pathways_dict = {
+        manager: external_manager.get_all_pathway_names()
+        for manager, external_manager in current_app.manager_dict.items()
+        if manager not in BLACK_LIST
+    }
+
+    # Flat list of lists
+    pathways_lists = [pathway for pathway_list in pathways_dict.values() for pathway in pathway_list]
+
+    # TODO: Do this dynamically
+    # Remove suffix from KEGG
+    pathways_lists = map(lambda x: str.replace(x, " - Homo sapiens (human)", ""), pathways_lists)
+
+    top_pathways = [
+        pathway_name
+        for pathway_name, value in get_most_similar_names(pathway_name, pathways_lists)
+    ]
+
+    results = []
+
+    for pathway in top_pathways:
+        # Find to which manager the pathway belongs to and get identifier
+        for manager, pathways in pathways_dict.items():
+
+            if pathway in pathways:
+                results.append(
+                    [
+                        manager,
+                        current_app.manager_dict[manager].get_pathway_by_name(pathway).resource_id,
+                        pathway
+                    ]
+                )
+
+    # Return the top 5 most similar ones
+    return jsonify(results)

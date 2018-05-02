@@ -265,7 +265,7 @@ def filter_results(results, threshold):
     ]
 
 
-def get_most_similar_names(reference_name, names, threshold=0.6, top=5):
+def get_most_similar_names(reference_name, names, threshold=0.4, top=5):
     """Returns the most similar names based on string matching
 
     :param str reference_name:
