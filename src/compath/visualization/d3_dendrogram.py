@@ -3,12 +3,52 @@
 """Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455"""
 
 import itertools as itt
+import math
 
+import numpy as np
 import pandas as pd
 import scipy
 import scipy.cluster
 import scipy.stats
 from scipy.spatial.distance import pdist
+
+
+def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matrix):
+    """Remove column and row in matrix after value error to proceed with clustering
+
+    :param numpy.ndarray distance_matrix:
+    :param dict pathway_manager_dict:
+    :param pandas.DataFrame similarity_matrix:
+    :rtype: tuple(numpy.ndarray, dict, pandas.DataFrame)
+    :return: distance matrix, pathway_manager_dict, and similarity_matrix
+    """
+    if np.all(np.isfinite(distance_matrix)):
+        return distance_matrix, pathway_manager_dict, similarity_matrix
+
+    # Checks rows that only contain one unique number and this number is close to 1
+    pathways_to_remove = {
+        index
+        for index, row in similarity_matrix.iterrows()
+        if row.nunique() == 1 and math.isclose(row.unique()[0], 1, rel_tol=1e-5)
+    }
+
+    # Remove all columns/rows having the pathway label
+    for pathway in pathways_to_remove:
+        similarity_matrix = similarity_matrix.drop(axis=0, labels=pathway)
+        similarity_matrix = similarity_matrix.drop(axis=1, labels=pathway)
+
+    # Recalculate the distances
+    distance_matrix = pdist(
+        similarity_matrix,
+        metric='correlation',
+        # **{'centered': False} # TODO: try in Python 3.6
+    )
+
+    # Remove pathways
+    for pathway in pathways_to_remove:
+        pathway_manager_dict.pop(pathway)
+
+    return distance_matrix, pathway_manager_dict, similarity_matrix
 
 
 def create_similarity_matrix(gene_sets):
@@ -99,8 +139,16 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
         # **{'centered': False} # TODO: try in Python 3.6
     )
 
+    # Checks for exceptions (pathways with 1 gene only matching the gene queried causes division by zero problems because the distance of this pathway to all others is 1.0)
+    distance_matrix, pathway_manager_dict, similarity_matrix = _check_error_distance(
+        distance_matrix,
+        pathway_manager_dict,
+        similarity_matrix
+    )
+
     # Calculate clusters
     clusters = scipy.cluster.hierarchy.linkage(distance_matrix, method='average')
+
     # Tree lik object
     tree = scipy.cluster.hierarchy.to_tree(clusters, rd=False)
 
