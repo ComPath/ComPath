@@ -84,21 +84,31 @@ def pathway_overlap():
 """Histogram view"""
 
 
-@analysis_blueprint.route('/pathway_distribution')
-def pathway_distribution():
+@analysis_blueprint.route('/pathway_distribution/<resource>')
+def pathway_distribution(resource):
     """Renders the Pathway Size distribution page"""
+
+    if resource not in current_app.resource_distributions:
+        return abort(500, 'Invalid request. Not a valid manager')
+
     return render_template(
         'visualization/pathway_distribution.html',
-        pathway_distribution_dict=current_app.resource_distributions,
+        distribution_data=current_app.resource_distributions[resource],
+        resource=resource,
     )
 
 
-@analysis_blueprint.route('/gene_promiscuity')
-def gene_distribution():
+@analysis_blueprint.route('/gene_promiscuity/<resource>')
+def gene_distribution(resource):
     """Renders how many times genes are present in pathways page"""
+
+    if resource not in current_app.resource_distributions:
+        return abort(500, 'Invalid request. Not a valid manager')
+
     return render_template(
         'visualization/gene_promiscuity.html',
-        gene_distribution_dict=current_app.gene_distributions
+        distribution_data=current_app.gene_distributions[resource],
+        resource=resource,
     )
 
 

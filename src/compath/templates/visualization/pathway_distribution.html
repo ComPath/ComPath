@@ -4,7 +4,7 @@
 {% import "bootstrap/fixes.html" as fixes %}
 {% import "bootstrap/utils.html" as util %}
 
-{% block title %}Pathway Size Distribution{% endblock %}
+{% block title %}{{ resource|upper }} Size Distribution{% endblock %}
 
 
 {% block styles %}
@@ -53,99 +53,96 @@
 
         $(document).ready(function () {
 
-            {% for manager, distribution_data in pathway_distribution_dict.items() %}
+            $("#{{ resource|safe }}" + "-table").DataTable(
+                {
+                    dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
+                    "<'row'<'col-sm-12'tr>>" +
+                    "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+                    buttons: [
+                        'copy', 'csv', 'excel', 'pdf', 'print'
+                    ]
+                }
+            );
 
-                $("#{{ manager|safe }}" + "-table").DataTable(
-                    {
-                        dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
-                        "<'row'<'col-sm-12'tr>>" +
-                        "<'row'<'col-sm-5'i><'col-sm-7'p>>",
-                        buttons: [
-                            'copy', 'csv', 'excel', 'pdf', 'print'
-                        ]
-                    }
-                );
+            var data = {{ distribution_data|safe }};
 
-                var data = {{ distribution_data|safe }};
+            /* Plot Histogram */
 
-                /* Plot Histogram */
+            var histogramData = [];
+            $.each(data, function (key, value) {
+                histogramData.push(value)
+            });
 
-                var histogramData = [];
-                $.each(data, function (key, value) {
-                    histogramData.push(value)
+            var formatCount = d3.format(",.0f");
+
+            var svg = d3.select("#{{ resource|safe }}" + "-histogram"),
+                margin = {
+                    top: 10,
+                    right: 30,
+                    bottom: 30,
+                    left: 30
+                },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+            var x = d3.scaleLinear()
+                .domain(d3.extent(histogramData))
+                .rangeRound([0, width]);
+
+            var histogram = d3.histogram()
+                .domain(x.domain())
+                .thresholds(x.ticks(40));
+
+            var bins = histogram(histogramData);
+
+            var y = d3.scaleLinear()
+                .domain([0, d3.max(bins, function (d) {
+                    return d.length;
+                })])
+                .range([height, 0]);
+
+            var bar = g.selectAll(".bar")
+                .data(bins)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function (d) {
+                    return "translate(" + x(d.x0) + "," + y(d.length) + ")";
+                })
+                .on("mousemove", function (d) {
+                    tooltip
+                        .style("left", d3.event.pageX - 50 + "px")
+                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("display", "inline-block")
+                        .html((d.length) + "<br>" + "Pathways");
+                })
+                .on("mouseout", function (d) {
+                    tooltip.style("display", "none");
                 });
 
-                var formatCount = d3.format(",.0f");
+            bar.append("rect")
+                .attr("x", 1)
+                .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+                .attr("height", function (d) {
+                    return height - y(d.length);
+                });
 
-                var svg = d3.select("#{{ manager|safe }}" + "-histogram"),
-                    margin = {
-                        top: 10,
-                        right: 30,
-                        bottom: 30,
-                        left: 30
-                    },
-                    width = +svg.attr("width") - margin.left - margin.right,
-                    height = +svg.attr("height") - margin.top - margin.bottom,
-                    g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+            bar.append("text")
+                .attr("dy", ".75em")
+                .attr("y", 6)
+                .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+                .attr("text-anchor", "middle")
+                .text(function (d) {
+                    return formatCount(d.length);
+                });
 
-                var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
 
-                var x = d3.scaleLinear()
-                    .domain(d3.extent(histogramData))
-                    .rangeRound([0, width]);
-
-                var histogram = d3.histogram()
-                    .domain(x.domain())
-                    .thresholds(x.ticks(40));
-
-                var bins = histogram(histogramData);
-
-                var y = d3.scaleLinear()
-                    .domain([0, d3.max(bins, function (d) {
-                        return d.length;
-                    })])
-                    .range([height, 0]);
-
-                var bar = g.selectAll(".bar")
-                    .data(bins)
-                    .enter().append("g")
-                    .attr("class", "bar")
-                    .attr("transform", function (d) {
-                        return "translate(" + x(d.x0) + "," + y(d.length) + ")";
-                    })
-                    .on("mousemove", function (d) {
-                        tooltip
-                            .style("left", d3.event.pageX - 50 + "px")
-                            .style("top", d3.event.pageY - 70 + "px")
-                            .style("display", "inline-block")
-                            .html((d.length) + "<br>" + "Pathways");
-                    })
-                    .on("mouseout", function (d) {
-                        tooltip.style("display", "none");
-                    });
-
-                bar.append("rect")
-                    .attr("x", 1)
-                    .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
-                    .attr("height", function (d) {
-                        return height - y(d.length);
-                    });
-
-                bar.append("text")
-                    .attr("dy", ".75em")
-                    .attr("y", 6)
-                    .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
-                    .attr("text-anchor", "middle")
-                    .text(function (d) {
-                        return formatCount(d.length);
-                    });
-
-                g.append("g")
-                    .attr("class", "axis axis--x")
-                    .attr("transform", "translate(0," + height + ")")
-                    .call(d3.axisBottom(x));
-
-            {% endfor %}
         });
     </script>
 
@@ -157,7 +154,7 @@
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="page-header">
-            <h1>Pathway Size Distributions</h1>
+            <h1>{{ resource|upper }} Size Distributions</h1>
         </div>
         <div class="panel panel-default">
             <div class="panel-heading">Pathway Size Distribution</div>
@@ -165,55 +162,43 @@
                 <p>Explore the distribution of the pathway sizes across different resources. Each histogram contains 40
                     bins each one in the 50 unit range (from 0 to 50, 50 to 100...). The aim of this plot is just to
                     show the distribution and the outliers, in order to inspect and find the name of the outliers,
-                    please use the table in the section below. </p>
+                    please use the table in the section below.
+                </p>
 
-                {% for manager in pathway_distribution_dict.keys() %}
-
-                    <h3 class="text-center">{{ manager|upper }}</h3>
-                    <svg id="{{ manager }}-histogram" width="960" height="500"></svg>
-
-                    {% if not loop.last %}
-                        <hr>
-                    {% endif %}
-                {% endfor %}
+                <h3 class="text-center">{{ resource|upper }}</h3>
+                <svg id="{{ resource }}-histogram" width="960" height="500"></svg>
 
             </div>
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Pathway Overview</div>
+            <div class="panel-heading">Pathway Size Table</div>
             <div class="panel-body">
                 <p>Explore the size in detail using DataTable.</p>
 
-                {% for manager, distribution_data in pathway_distribution_dict.items() %}
+                <h3 class="text-center">{{ resource|upper }}</h3>
 
-                    <h3 class="text-center">{{ manager|upper }}</h3>
+                <table id="{{ resource }}-table" class="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th class="first-row">Pathway Name</th>
+                        <th class="first-row">Gene Set Size</th>
+                    </tr>
+                    </thead>
+                    <tbody>
 
-                    <table id="{{ manager }}-table" class="table table-striped table-hover">
-                        <thead>
+                    {% for pathway, size in distribution_data.items() %}
+
                         <tr>
-                            <th class="first-row">Pathway Name</th>
-                            <th class="first-row">Gene Set Size</th>
+                            <td> {{ pathway }}</td>
+                            <td>{{ size }}</td>
                         </tr>
-                        </thead>
-                        <tbody>
 
-                        {% for pathway, size in distribution_data.items() %}
+                    {% endfor %}
 
-                            <tr>
-                                <td> {{ pathway }}</td>
-                                <td>{{ size }}</td>
-                            </tr>
+                    </tbody>
 
-                        {% endfor %}
-
-                        </tbody>
-
-                    </table>
-                    {% if not loop.last %}
-                        <hr>
-                    {% endif %}
-                {% endfor %}
+                </table>
             </div>
         </div>
     </div>

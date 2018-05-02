@@ -152,14 +152,28 @@
                     as analyze the boundaries of databases.
                 </p>
                 <p>
-                    <a href="{{ url_for('analysis.pathway_distribution') }}"
-                       class="btn btn-primary">
-                        Pathway Distribution
-                    </a>
-                    <a href="{{ url_for('analysis.gene_distribution') }}"
-                       class="btn btn-primary">
-                        Gene Promiscuity
-                    </a>
+                    {% for resource in managers %}
+                        {% if resource not in BLACK_LIST %}
+
+                            <a href="{{ url_for('analysis.pathway_distribution', resource=resource) }}"
+                               class="btn btn-primary">
+                                {{ resource|upper }}
+                            </a>
+                        {% endif %}
+
+                    {% endfor %}
+                </p>
+                <p>
+                    {% for resource in managers %}
+                        {% if resource not in BLACK_LIST %}
+
+                            <a href="{{ url_for('analysis.gene_distribution', resource=resource) }}"
+                               class="btn btn-primary">
+                                {{ resource|upper }}
+                            </a>
+                        {% endif %}
+
+                    {% endfor %}
                 </p>
 
             </div>
