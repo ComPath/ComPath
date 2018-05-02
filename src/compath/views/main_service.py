@@ -66,6 +66,7 @@ def overview():
         managers_overlap=current_app.manager_overlap,
         resource_overview=current_app.resource_overview,
         managers=current_app.manager_dict.keys(),
+        distributions=current_app.resource_distributions,
         BLACK_LIST=BLACK_LIST
     )
 

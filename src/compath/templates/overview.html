@@ -36,6 +36,32 @@
             border-radius: 8px;
             opacity: 0;
         }
+
+        /* Histogram CSS */
+
+        .bar rect {
+            fill: steelblue;
+        }
+
+        .bar text {
+            fill: #fff;
+            font: 10px sans-serif;
+        }
+
+        .bar:hover {
+            fill: brown;
+        }
+
+        .toolTip {
+            position: absolute;
+            display: none;
+            min-width: 80px;
+            height: auto;
+            background: none repeat scroll 0 0 #ffffff;
+            border: 1px solid #6F257F;
+            padding: 14px;
+            text-align: center;
+        }
     </style>
 
 {% endblock %}
@@ -51,6 +77,8 @@
     <script type="text/javascript"
             src="https://benfred.github.io/venn.js/venn.js"></script>
     <script>
+
+        // Venn Diagram Script
 
         var data = {{ managers_overlap|safe }};
 
@@ -96,6 +124,93 @@
                     .style("fill-opacity", d.sets.length == 1 ? .25 : .0)
                     .style("stroke-opacity", 0);
             });
+
+    </script>
+
+    <script>
+        {% for resource, distribution in distributions.items() %}
+
+            var distribution = {{ distribution|safe }};
+
+            /* Plot Histogram */
+
+            var histogramData = [];
+            $.each(distribution, function (key, value) {
+                histogramData.push(value)
+            });
+
+            var formatCount = d3.format(",.0f");
+
+            var svg = d3.select("#{{ resource|safe }}" + "-svg"),
+                margin = {
+                    top: 10,
+                    right: 30,
+                    bottom: 30,
+                    left: 30
+                },
+                width = +svg.attr("width") - margin.left - margin.right,
+                height = +svg.attr("height") - margin.top - margin.bottom,
+                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+            var tooltip = d3.select("body").append("div").attr("class", "toolTip");
+
+            var x = d3.scaleLinear()
+                .domain(d3.extent(histogramData))
+                .rangeRound([0, width]);
+
+            var histogram = d3.histogram()
+                .domain(x.domain())
+                .thresholds(x.ticks(60));
+
+            var bins = histogram(histogramData);
+
+            var y = d3.scaleLinear()
+                .domain([0, d3.max(bins, function (d) {
+                    return d.length;
+                })])
+                .range([height, 0]);
+
+            var bar = g.selectAll(".bar")
+                .data(bins)
+                .enter().append("g")
+                .attr("class", "bar")
+                .attr("transform", function (d) {
+                    return "translate(" + x(d.x0) + "," + y(d.length) + ")";
+                })
+                .on("mousemove", function (d) {
+                    tooltip
+                        .style("left", d3.event.pageX - 50 + "px")
+                        .style("top", d3.event.pageY - 70 + "px")
+                        .style("display", "inline-block")
+                        .html((d.length) + "<br>" + "Pathways");
+                })
+                .on("mouseout", function (d) {
+                    tooltip.style("display", "none");
+                });
+
+            bar.append("rect")
+                .attr("x", 1)
+                .attr("width", x(bins[0].x1) - x(bins[0].x0) - 1)
+                .attr("height", function (d) {
+                    return height - y(d.length);
+                });
+
+            bar.append("text")
+                .attr("dy", ".75em")
+                .attr("y", 6)
+                .attr("x", (x(bins[0].x1) - x(bins[0].x0)) / 2)
+                .attr("text-anchor", "middle")
+                .text(function (d) {
+                    return formatCount(d.length);
+                });
+
+            g.append("g")
+                .attr("class", "axis axis--x")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(x));
+
+        {% endfor %}
+
 
     </script>
 {% endblock %}
@@ -155,15 +270,22 @@
                 <p>
                     {% for resource in managers %}
                         {% if resource not in BLACK_LIST %}
-
                             <a href="{{ url_for('analysis.pathway_distribution', resource=resource) }}"
                                class="btn btn-primary">
                                 {{ resource|upper }}
                             </a>
                         {% endif %}
-
                     {% endfor %}
                 </p>
+
+                {% for resource in managers %}
+                    {% if resource not in BLACK_LIST %}
+
+                        <svg id="{{ resource }}-svg" width="300" height="300"></svg>
+
+                    {% endif %}
+                {% endfor %}
+
 
             </div>
         </div>
