@@ -1,18 +1,24 @@
 # -*- coding: utf-8 -*-
 
+import math
 import unittest
 
 import numpy as np
 
-from compath.visualization.d3_dendrogram import create_similarity_matrix
-from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 from compath.utils import (
     process_form_gene_set,
     _prepare_hypergeometric_test,
+    filter_results,
+    get_top_matches,
+    get_most_similar_names
 )
+from compath.visualization.d3_dendrogram import create_similarity_matrix
+from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 
 class TestUtils(unittest.TestCase):
+    example_list = [(True, 1.0), (False, 0.5), (False, 0.2), (True, 0.61), (True, 0.7)]
+
     def test_process_text_area(self):
         query_test = ",,,GENE1_COMMA,  GENE2_COMMA\n     GENE3_NEW_LINE\n   GENE4_NEW_LINE, gene5_comma"
 
@@ -63,6 +69,44 @@ class TestUtils(unittest.TestCase):
         json = process_overlap_for_venn_diagram({'pathway1': {'A', 'B', 'C', 'D', 'E', 'F'}, 'pathway2': {'A', 'B'}})
 
         self.assertEqual(
-           3,
-           len(json)
+            3,
+            len(json)
         )
+
+    """Suggestion based on string matching"""
+
+    def test_filter_results(self):
+        """Test suggestion utils"""
+        filtered_list = filter_results(self.example_list, 0.6)
+
+        self.assertEqual(
+            filtered_list,
+            [(True, 1.0), (True, 0.61), (True, 0.7)]
+        )
+
+    def test_order_results(self):
+        """Test suggestion utils"""
+
+        ordered_list = get_top_matches(self.example_list, 3)
+
+        self.assertEqual(
+            ordered_list,
+            [(True, 1.0), (True, 0.7), (True, 0.61)]
+        )
+
+    def test_get_most_similar(self):
+        """Find best matches based on string similarity"""
+        most_similar_names = get_most_similar_names(
+            'healed',
+            ['healed', 'edward', 'sealed', 'theatre', 'non_sense_1', 'non_sense_2', 'non_sense_3', 'non_sense_4',
+             'non_sense_5']
+        )
+
+        similarity = {
+            'healed': 1.0,
+            'sealed': 0.8333333333333334,
+            'theatre': 0.6153846153846154
+        }
+
+        for similar_name, value in most_similar_names:
+            self.assertTrue(math.isclose(value, similarity[similar_name]))

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from difflib import SequenceMatcher
 
 import numpy as np
 from pandas import DataFrame, Series
@@ -224,6 +225,65 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
         manager_pathways_dict[manager_name][pathway_id]["q_value"] = round(q_values[i], 4)
 
     return manager_pathways_dict
+
+
+"""Suggestion utils"""
+
+
+def calculate_similarity(name_1, name_2):
+    """Calculates the string based similarity between two names
+
+    :param str name_1: name 1
+    :param str name_2: name 2
+    :rtype: float
+    :return: Levenshtein similarity
+    """
+    return SequenceMatcher(None, name_1, name_2).ratio()
+
+
+def get_top_matches(names, top):
+    """Orders list of tuples by second value and returns top values
+
+    :param list[tuple[str,float]] names: list of tuples
+    :param int top: top values to return
+    """
+    sorted_names = sorted(names, key=lambda x: x[1], reverse=True)
+
+    return sorted_names[0:top]
+
+
+def filter_results(results, threshold):
+    """Only present results with high similarity
+
+    :param list[tuple[str,float]] results: list of tuples
+    :param float threshold: thresholding
+    """
+    return [
+        (name, value)
+        for name, value in results
+        if value > threshold
+    ]
+
+
+def get_most_similar_names(reference_name, names, threshold=0.6, top=5):
+    """Returns the most similar names based on string matching
+
+    :param str reference_name:
+    :param list[str] names:
+    :param optional[float] threshold:
+    :param optional[int] top:
+    :return:
+    """
+
+    string_matching = [
+        (name, calculate_similarity(reference_name, name))
+        for name in names
+    ]
+
+    most_similar_names = filter_results(string_matching, threshold)
+
+    # Order pathways by descendent similarity
+    return get_top_matches(most_similar_names, top)
 
 
 """Export utils"""
