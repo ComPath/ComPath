@@ -136,20 +136,21 @@
         <div class="panel panel-default">
             <div class="panel-heading">Pathway Knowledge Coverage and Ignorome</div>
             <div class="panel-body">
-                <p>This Venn diagram plots the genetic coverage over all HGNC symbols known for all databases.</p>
+                <p>This Venn diagram shows the genetic coverage over all HGNC symbols known for all databases.</p>
                 <div id="coverage-venn-diagram">
                 </div>
             </div>
         </div>
 
+
         <div class="panel panel-default">
-            <div class="panel-heading">Distribution Overview</div>
+            <div class="panel-heading">Pathway Size Distribution</div>
             <div class="panel-body">
                 <p>
-                    Analyze the distribution of the pathway in each database or gene promiscuity. In other words, what
-                    are the biggest and smalles pathways and which genes appear in more or less in each database
-                    (promiscuity). This analysis might help you to interpret the results of enrichment analyses as well
-                    as analyze the boundaries of databases.
+                    Analyze the distribution of the pathways for each individual database. In other words, what are the
+                    biggest and smalles pathways. This analysis might help you to interpret the results of enrichment
+                    analyses as well as analyze the boundaries of databases. Click in the pathway database buttons to go
+                    to their dedicated pages.
                 </p>
                 <p>
                     {% for resource in managers %}
@@ -162,6 +163,18 @@
                         {% endif %}
 
                     {% endfor %}
+                </p>
+
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Gene Promiscuity</div>
+            <div class="panel-body">
+                <p>
+                    Analyze the gene promiscuity for each pathway database. In other words, which genes act and belong
+                    to more or less pathways in each database. Click in the pathway database buttons to go to their
+                    dedicated pages.
                 </p>
                 <p>
                     {% for resource in managers %}
@@ -178,6 +191,7 @@
 
             </div>
         </div>
+
     </div>
     {% include "footer.html" %}
 {% endblock %}
