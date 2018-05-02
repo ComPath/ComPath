@@ -80,17 +80,23 @@
             <div class="panel-heading">Establish New Pathway Mappings</div>
             <div class="panel-body">
                 <form id="curation-form" action="{{ url_for("curation.process_mapping") }}">
-                    <p>This form allows you to establish mappings between Pathway pairs. First, select the resource
-                        of the pathway to map, and then start typing the pathway in the left-side input which will be
-                        automatically autocompleted. Finally, ComPath allows for two types of mappings:
+                    <p>This form allows you to establish mappings between pathway pairs. First, select the resource
+                        of the pathway you want to map, and then start typing the pathway in the left-side input which
+                        will be
+                        automatically autocompleted.
+                    </p>
+
+                    <p>ComPath allows for two types of mappings. More description about the mapping types and protocol
+                        followed can be found <a href="{{ url_for('ui.curation_protocol') }}">here</a>.
                     </p>
                     <ul>
                         <li><b>equivalentTo</b>. This mapping type reflects that the pathway pair shares a high
-                            similary as well as the same specific focus. E.g., "Allograft rejection - Homo sapiens
+                            similarity as well as the same specific focus. E.g., "Allograft rejection - Homo sapiens
                             (human)" from KEGG equivalentTo "Allograft Rejection" from WikiPathways.
                         </li>
-                        <li><b>IsPartOf</b>. This type of mapping represents a hierarchical relationship between the
-                            pathway 1 (child) and 2 (parent). E.g., "Lipid metabolism" isPartOf "Metabolism".
+                        <li><b>isPartOf</b>. This type of mapping represents a hierarchical relationship between the two
+                            pathways (e.g., pathway 1 (child) isPartOf pathway 2 (parent)). A real world example of this
+                            mapping would be "Lipid metabolism" isPartOf "Metabolism".
                         </li>
                     </ul>
 
@@ -144,11 +150,12 @@
                                 <button type="submit" class="btn btn-primary btn-lg"
                                         data-toggle="popover" title="Create New Mapping"
                                         data-content="Creates a new mapping between the two selected pathways">Submit
+                                    Mapping
                                 </button>
                                 <a href="{{ url_for('curation.catalog') }}" class="btn btn-primary btn-lg"
                                    data-toggle="popover" title="Mapping Catalog"
                                    data-content="Go to the pathway mapping catalog page">
-                                    Catalog
+                                    Mapping Catalog
                                 </a>
                             </div>
                         </div>

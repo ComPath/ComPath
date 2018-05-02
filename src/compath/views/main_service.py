@@ -51,10 +51,10 @@ def about():
     return render_template('about.html', metadata=metadata)
 
 
-@ui_blueprint.route('/curation')
-def curation_overview():
+@ui_blueprint.route('/curation_protocol')
+def curation_protocol():
     """Renders Curation page"""
-    return render_template('curation.html')
+    return render_template('curation_protocol.html')
 
 
 @ui_blueprint.route('/overview')
