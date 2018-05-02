@@ -276,10 +276,10 @@ def suggest_mappings_by_name(pathway_name):
     # Remove suffix from KEGG
     pathways_lists = map(lambda x: str.replace(x, " - Homo sapiens (human)", ""), pathways_lists)
 
-    top_pathways = [
+    top_pathways = {
         pathway_name
         for pathway_name, value in get_most_similar_names(pathway_name, pathways_lists)
-    ]
+    }
 
     results = []
 
