@@ -97,9 +97,3 @@ def reactome_matrix():
 def wikipathways_matrix():
     """Renders the WikiPathways Matrix page powered by Clustergrammer"""
     return render_template('visualization/clustergrammer/wikipathways_overlap.html')
-
-
-@ui_blueprint.route('/msig_overlap')
-def msig_matrix():
-    """Renders the WikiPathways Matrix page powered by Clustergrammer"""
-    return render_template('visualization/clustergrammer/msig_overlap.html')
