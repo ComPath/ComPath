@@ -67,10 +67,15 @@ class VoteView(ModelView):
 
 @model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
+    """Renders the pathway view page"""
+
+    if resource not in current_app.manager_dict:
+        abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))
+
     pathway = get_pathway_model_by_id(current_app, resource, identifier)
 
     if not pathway:
-        abort(404, 'Pathway not found')
+        abort(404, 'Pathway not found for identifier "{}"'.format(identifier))
 
     mappings = current_app.manager.get_all_mappings_from_pathway(resource, identifier, pathway.name)
 
