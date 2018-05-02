@@ -8,12 +8,12 @@
 {% block styles %}
     {{ super() }}
     <style>
-        ul {
+        .pathways ul {
             margin: 1em 0;
             padding: 0 0 0 40px;
         }
 
-        li {
+        .pathways li {
             margin: 1em 0;
         }
     </style>
@@ -40,9 +40,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">{{ title }}</div>
             <div class="panel-body">
-                <ul>
+                <ul class="pathways">
                     {% for resource, identifier, name in pathways %}
-                        <li>
+                        <li class="pathways">
                             <span class="label {{ write_label(resource) }}">
                                 {{ resource|upper }}
                             </span>
