@@ -1,7 +1,7 @@
 click
 sqlalchemy==1.1.15
 bio2bel>=0.0.9
-compath_utils>=0.0.3
+compath_utils>=0.0.5
 compath_hgnc
 bio2bel_kegg>=0.0.6
 bio2bel_reactome>=0.0.5
