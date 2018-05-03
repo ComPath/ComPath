@@ -3,8 +3,6 @@
 import math
 import unittest
 
-import numpy as np
-
 from compath.utils import (
     process_form_gene_set,
     _prepare_hypergeometric_test,
@@ -14,6 +12,8 @@ from compath.utils import (
 )
 from compath.visualization.d3_dendrogram import create_similarity_matrix
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
+
+import numpy as np
 
 
 class TestUtils(unittest.TestCase):

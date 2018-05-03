@@ -2,10 +2,10 @@
 
 """This module contains tests for the data model of ComPath."""
 
-from tests.constants import DatabaseMixin, KEGG, REACTOME
 from compath.constants import EQUIVALENT_TO
-
 from compath.models import User
+
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestVotingSystem(DatabaseMixin):
