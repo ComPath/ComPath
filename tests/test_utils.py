@@ -17,9 +17,13 @@ from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 
 class TestUtils(unittest.TestCase):
+    """Test utilities"""
+
+    # String matching example
     example_list = [(True, 1.0), (False, 0.5), (False, 0.2), (True, 0.61), (True, 0.7)]
 
     def test_process_text_area(self):
+        """Test processing of text area in form"""
         query_test = ",,,GENE1_COMMA,  GENE2_COMMA\n     GENE3_NEW_LINE\n   GENE4_NEW_LINE, gene5_comma"
 
         processed_query = process_form_gene_set(query_test)
@@ -36,6 +40,7 @@ class TestUtils(unittest.TestCase):
         )
 
     def test_similarity_matrix(self):
+        """Test similarity matrix calculations"""
         gene_sets = {}
 
         gene_sets['Pathway1'] = {'A', 'B', 'C', 'D'}
@@ -65,7 +70,7 @@ class TestUtils(unittest.TestCase):
         )
 
     def test_venn_diagram_process(self):
-        """Venn Diagram"""
+        """Test Venn diagram"""
         json = process_overlap_for_venn_diagram({'pathway1': {'A', 'B', 'C', 'D', 'E', 'F'}, 'pathway2': {'A', 'B'}})
 
         self.assertEqual(

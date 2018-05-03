@@ -1,21 +1,24 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains tests for the parsing and processing of the curation exercises"""
+"""This module contains tests for the parsing and processing of the curation exercises."""
 
-from compath.constants import *
+from tests.constants import *
+
+import unittest
+from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.curation.utils import (
-    statement_syntax_checker,
-    ensure_two_pathways,
+    ensure_two_pathways, get_mapping_type,
     get_pathways_from_statement,
-    get_mapping_type,
-    remove_star_from_pathway_name
+    remove_star_from_pathway_name,
+    statement_syntax_checker
 )
-from .constants import *
 
 
 class TestCurationParser(unittest.TestCase):
+    """Test Curation Parser"""
+
     def test_valid_syntax_examples(self):
-        """Testing valid statements"""
+        """Test valid statements"""
         result_1 = statement_syntax_checker(VALID_MAPPING_1, PATHWAY_X)
         self.assertTrue(result_1)
 
@@ -29,7 +32,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertTrue(result_4)
 
     def test_unvalid_syntax_examples(self):
-        """Testing unvalid statements"""
+        """Test non valid statements"""
         result_1 = statement_syntax_checker(INVALID_MAPPING_1, PATHWAY_X)
         self.assertFalse(result_1)
 
@@ -61,7 +64,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertFalse(result_10)
 
     def test_two_pathways_in_statement(self):
-        """Testing two pathways statements"""
+        """Test two pathways statements"""
         result_1 = ensure_two_pathways(INVALID_MAPPING_5, IS_PART_OF)
         self.assertFalse(result_1)
 
@@ -83,7 +86,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertEqual(object, PATHWAY_X)
 
     def test_get_mapping_type(self):
-        """Testing get mapping type"""
+        """Test get mapping type"""
         result_1 = get_mapping_type(VALID_MAPPING_1)
         self.assertEqual(result_1, 'isPartOf')
 
@@ -94,7 +97,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertEqual(result_3, None)
 
     def test_remove_star(self):
-        """Testing get mapping type"""
+        """Test get mapping type"""
         result_1 = remove_star_from_pathway_name(VALID_MAPPING_1)
 
         self.assertEqual(result_1, 'Pathway X isPartOf Pathway Parent')

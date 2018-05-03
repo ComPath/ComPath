@@ -3,13 +3,13 @@
 """ This module contains tests for the data model of ComPath"""
 
 from tests.constants import DatabaseMixin, KEGG, REACTOME
-from compath.constants import IS_PART_OF, EQUIVALENT_TO
+from compath.constants import EQUIVALENT_TO
 
 from compath.models import User
 
 
 class TestVotingSystem(DatabaseMixin):
-    """Test Voting"""
+    """Test Voting System."""
 
     def test_missing_manager_1(self):
         """Test that the mapping can't be created if the first manager can't be looked up"""
