@@ -88,7 +88,6 @@ def infer_hierarchy():
       200:
         description:
     """
-
     resource = request.args.get('resource')
     if not resource:
         flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')

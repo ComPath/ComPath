@@ -9,8 +9,8 @@ import numpy as np
 import pandas as pd
 import scipy
 import scipy.cluster
-import scipy.stats
 from scipy.spatial.distance import pdist
+import scipy.stats
 
 
 def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matrix):
@@ -80,12 +80,14 @@ def add_node(node, parent):
     :param dict parent:
     """
     # First create the new node and append it to its parent's children
-    newNode = dict(node_id=node.id, children=[])
-    parent["children"].append(newNode)
+    new_node = dict(node_id=node.id, children=[])
+    parent["children"].append(new_node)
 
     # Recursively add the current node's children
-    if node.left: add_node(node.left, newNode)
-    if node.right: add_node(node.right, newNode)
+    if node.left:
+        add_node(node.left, new_node)
+    if node.right:
+        add_node(node.right, new_node)
 
 
 def label_tree(id_name_dict, name_manager_dict, cluster_to_x, tree):

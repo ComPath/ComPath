@@ -78,7 +78,6 @@ def get_mappings(compath_manager, only_accepted=True):
     :param compath.manager.Manager compath_manager: ComPath Manager
     :param bool only_accepted: only accepted (True) or all (False)
     """
-
     if only_accepted:
         mappings = compath_manager.get_all_accepted_mappings()
     else:
@@ -107,7 +106,6 @@ def get_pathway_model_by_name(manager_dict, resource, pathway_name):
     :rtype: Optional[Pathway]
     :return: pathway if exists
     """
-
     manager = manager_dict.get(resource.lower())
 
     if not manager:
@@ -125,7 +123,6 @@ def get_pathway_model_by_id(app, resource, pathway_id):
     :rtype: Optional[Pathway]
     :return: pathway if exists
     """
-
     manager = app.manager_dict.get(resource.lower())
 
     return manager.get_pathway_by_id(pathway_id)
@@ -139,7 +136,6 @@ def get_gene_sets_from_pathway_names(app, pathways):
     :rtype: tuple[dict[str,set[str]],dict[str,str]]
     :return: gene sets
     """
-
     gene_sets = {}
 
     pathway_manager_dict = {}
@@ -202,7 +198,6 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
     :rtype: dict[str,dict[str,dict]]
     :return: manager_pathways_dict with p value info
     """
-
     manager_p_values = dict()
 
     for manager_name, pathways in manager_pathways_dict.items():
@@ -274,7 +269,6 @@ def get_most_similar_names(reference_name, names, threshold=0.4, top=5):
     :param optional[int] top:
     :return:
     """
-
     string_matching = [
         (name, calculate_similarity(reference_name, name))
         for name in names

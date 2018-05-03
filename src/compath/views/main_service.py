@@ -24,25 +24,25 @@ ui_blueprint = Blueprint('ui', __name__)
 
 @ui_blueprint.route('/')
 def home():
-    """ComPath home page"""
+    """ComPath home page."""
     return render_template('home.html')
 
 
 @ui_blueprint.route('/imprint')
 def imprint():
-    """Render the Imprint page"""
+    """Render the Imprint page."""
     return render_template('imprint.html')
 
 
 @ui_blueprint.route('/terms_and_conditions')
 def terms_and_conditions():
-    """Render the Terms and conditiosn page"""
+    """Render the Terms and conditiosn page."""
     return render_template('terms_conditions.html')
 
 
 @ui_blueprint.route('/about')
 def about():
-    """Render About page"""
+    """Render About page."""
     metadata = [
         ('Python Version', sys.version),
         ('Deployed', time_instantiated)
@@ -60,7 +60,6 @@ def curation_protocol():
 @ui_blueprint.route('/overview')
 def overview():
     """Render Overview page."""
-
     return render_template(
         'overview.html',
         managers_overlap=current_app.manager_overlap,

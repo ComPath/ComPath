@@ -1,13 +1,12 @@
 # -*- coding: utf-8 -*-
 
+"""Command line interface."""
+
 from __future__ import print_function
 
 import datetime
 import logging
 import sys
-
-import click
-from flask_security import SQLAlchemyUserDatastore
 
 from compath import managers
 from compath.constants import DEFAULT_CACHE_CONNECTION, ADMIN_EMAIL
@@ -16,14 +15,19 @@ from compath.curation.parser import parse_curation_template
 from compath.manager import RealManager
 from compath.models import Base, Role, User
 
+import click
+from flask_security import SQLAlchemyUserDatastore
+
 log = logging.getLogger(__name__)
 
 
 def set_debug(level):
+    """Set debug."""
     log.setLevel(level=level)
 
 
 def set_debug_param(debug):
+    """Set parameter."""
     if debug == 1:
         set_debug(20)
     elif debug == 2:

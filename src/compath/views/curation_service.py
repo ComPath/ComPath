@@ -47,7 +47,6 @@ def create_mapping():
 @curation_blueprint.route('/mapping_catalog')
 def catalog():
     """Render the mapping catalog page."""
-
     if request.args.get(EQUIVALENT_TO):
         mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
         flash('You are visualizing the catalog of equivalent mappings')
@@ -80,7 +79,6 @@ def export_mappings():
       200:
         description: A tsv file with mappings
     """
-
     mappings = get_mappings(current_app.manager, only_accepted=False if request.args.get('all') else True)
 
     string = StringIO()
@@ -103,7 +101,6 @@ def process_vote(mapping_id, type):
     :param int mapping_id: id of the mapping to process the vote info
     :param int type: 0 if down vote and 1 if up vote
     """
-
     if type not in {0, 1}:
         return abort(500, "Invalid vote type {}. Vote type should be 0 or 1".format(type))
 
@@ -132,7 +129,6 @@ def accept_mapping(mapping_id):
 
     :param int mapping_id: id of the mapping to be accepted by the admin
     """
-
     mapping, created = current_app.manager.accept_mapping(mapping_id)
 
     if not mapping:
@@ -179,9 +175,8 @@ def process_mapping():
       200:
         description: Mapping created
     """
-
     mapping_type = request.args.get('mapping-type')
-    if not mapping_type or not mapping_type in MAPPING_TYPES:
+    if not mapping_type or mapping_type not in MAPPING_TYPES:
         flash("Missing or incorrect mapping type", category='warning')
         return redirect(url_for('.create_mapping'))
 
@@ -261,7 +256,6 @@ def suggest_mappings_by_name(pathway_name):
 
     :param str pathway_name:
     """
-
     # Get all pathway names from each resource
     pathways_dict = {
         manager: external_manager.get_all_pathway_names()

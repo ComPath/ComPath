@@ -259,7 +259,6 @@ class Manager(object):
         :rtype: bool
         :return: if mapping was assigned to user
         """
-
         if user in mapping.creators:
             return False
 

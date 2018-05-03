@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the common views across all pathway bio2bel repos"""
+"""This module contains the common views across all pathway bio2bel repos."""
 
 import logging
+
+from compath.constants import EQUIVALENT_TO, IS_PART_OF
+from compath.models import PathwayMapping, Vote
+from compath.utils import get_pathway_model_by_id
 
 from flask import (
     Blueprint,
@@ -10,11 +14,8 @@ from flask import (
     current_app,
     abort
 )
-from flask_admin.contrib.sqla import ModelView
 
-from compath.constants import EQUIVALENT_TO, IS_PART_OF
-from compath.models import PathwayMapping, Vote
-from compath.utils import get_pathway_model_by_id
+from flask_admin.contrib.sqla import ModelView
 
 log = logging.getLogger(__name__)
 model_blueprint = Blueprint('model', __name__)

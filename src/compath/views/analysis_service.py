@@ -22,10 +22,10 @@ from compath.constants import BLACK_LIST
 from compath.forms import GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
-    process_form_gene_set,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
-    perform_hypergeometric_test
+    perform_hypergeometric_test,
+    process_form_gene_set
 
 )
 from compath.visualization.d3_dendrogram import get_dendrogram_tree

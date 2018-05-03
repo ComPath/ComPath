@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Utils to generate the Venn Diagram"""
+"""Utils to generate the Venn Diagram."""
 
 from itertools import combinations
 
