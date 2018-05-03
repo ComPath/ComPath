@@ -20,7 +20,6 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
     :param Optional[int] index_mapping_column: index of the column containing the mappings
     :param str admin_email: email of the admin. Needs to be already in the database
     """
-
     # Loads the installed managers
     manager_dict = {
         name: ExternalManager(connection=DEFAULT_CACHE_CONNECTION)

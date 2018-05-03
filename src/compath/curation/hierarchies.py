@@ -20,7 +20,6 @@ def _reactome_wrapper(pathways):
     :rtype: list[Pathway]
     :return: human pathways
     """
-
     return [
         pathway
         for pathway in pathways
@@ -67,7 +66,6 @@ def load_hierarchy(curator_email=None):
 
     :param Optional[str] curator_email: email of the admin
     """
-
     compath_manager = RealManager()
 
     curator = compath_manager.get_user_by_email(email=curator_email if curator_email else ADMIN_EMAIL)

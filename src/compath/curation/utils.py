@@ -23,7 +23,6 @@ def get_pathways_from_statement(mapping_statement, mapping_type):
     :param str mapping_type: type of relationship
     :rtype: tuple[str,str]
     """
-
     _pathways = mapping_statement.split(mapping_type)
 
     return _pathways[0].strip(), _pathways[1].strip()
@@ -36,7 +35,6 @@ def ensure_two_pathways(mapping_statement, mapping_type):
     :param str mapping_type: type of relationship
     :rtype: bool
     """
-
     _pathways = mapping_statement.split(mapping_type)
 
     if len(_pathways) != 2:
@@ -53,7 +51,6 @@ def load_curation_template(path, index_mapping_column=2):
     :rtype: pandas.core.series.Series
     :return: pathways with mappings
     """
-
     data_frame = pd.read_excel(path, header=0, index_col=0)
 
     mapping_statements = data_frame.iloc[:, index_mapping_column]
@@ -67,7 +64,6 @@ def get_mapping_type(mapping_statement):
     :param str mapping_statement:
     :rtype: Optional[str]
     """
-
     if EQUIVALENT_TO in mapping_statement:
         return EQUIVALENT_TO
 
@@ -84,7 +80,6 @@ def statement_syntax_checker(mapping_statement, pathway_reference):
     :param str pathway_reference: name of the pathway of reference
     :rtype: bool
     """
-
     # Checks type
     if not isinstance(mapping_statement, str):
         return False

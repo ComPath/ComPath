@@ -58,7 +58,6 @@ def create_similarity_matrix(gene_sets):
     :rtype: pandas.DataFrame
     :returns: similarity matrix
     """
-
     index = sorted(gene_sets.keys())
     similarity_dataframe = pd.DataFrame(0.0, index=index, columns=index)
 

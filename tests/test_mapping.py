@@ -32,7 +32,6 @@ class TestMapping(DatabaseMixin):
 
     def test_create_mapping(self):
         """Test simple mapping add it."""
-
         current_user = User()
 
         mapping_1, _ = self.manager.get_or_create_mapping(
@@ -125,7 +124,6 @@ class TestMapping(DatabaseMixin):
 
     def test_create_double_mapping_different_users(self):
         """Test duplicate mappings for different users."""
-
         user_1 = User(email='mycool@email.com')
         user_2 = User(email='myawesome@email.com')
 
@@ -224,7 +222,6 @@ class TestMapping(DatabaseMixin):
 
     def test_create_double_mapping_different_types_same_users(self):
         """Test duplicate mappings for same users."""
-
         current_user = User()
 
         mapping_1, created_1 = self.manager.get_or_create_mapping(
