@@ -1,20 +1,21 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the common views across all pathway bio2bel repos"""
+"""This module contains the common views across all pathway bio2bel repos."""
 
 import logging
-
-from flask import (
-    Blueprint,
-    render_template,
-    current_app,
-    abort
-)
-from flask_admin.contrib.sqla import ModelView
 
 from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
+
+from flask import (
+    abort,
+    Blueprint,
+    current_app,
+    render_template
+)
+
+from flask_admin.contrib.sqla import ModelView
 
 log = logging.getLogger(__name__)
 model_blueprint = Blueprint('model', __name__)
@@ -23,7 +24,7 @@ model_blueprint = Blueprint('model', __name__)
 
 
 class MappingView(ModelView):
-    """Mapping view in Flask-admin"""
+    """Mapping view in Flask-admin."""
     column_searchable_list = (
         PathwayMapping.service_1_name,
         PathwayMapping.service_1_pathway_id,
@@ -67,7 +68,7 @@ class VoteView(ModelView):
 
 @model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
-    """Renders the pathway view page"""
+    """Render the pathway view page."""
 
     if resource not in current_app.manager_dict:
         abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))

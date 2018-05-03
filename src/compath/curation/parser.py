@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains all the curation processing methods to integrate curated mappings to ComPath"""
+"""This module contains all the curation processing methods to integrate curated mappings to ComPath."""
 
 import logging
 
@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 
 def parse_curation_template(path, reference_pathway_db, compared_pathway_db, index_mapping_column=2, admin_email=None):
-    """Loads the curation template excel sheet into a pandas Dataframe
+    """Load the curation template excel sheet into a pandas Dataframe.
 
     :param str path: path of the excel sheet
     :param str reference_pathway_db: name of the manager of the reference pathway_db
@@ -20,7 +20,6 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, ind
     :param Optional[int] index_mapping_column: index of the column containing the mappings
     :param str admin_email: email of the admin. Needs to be already in the database
     """
-
     # Loads the installed managers
     manager_dict = {
         name: ExternalManager(connection=DEFAULT_CACHE_CONNECTION)

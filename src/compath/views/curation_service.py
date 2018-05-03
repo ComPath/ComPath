@@ -1,30 +1,30 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the curation views in ComPath"""
+"""This module contains the curation views in ComPath."""
 
 import logging
 from io import StringIO, BytesIO
 
 from flask import (
-    Blueprint,
-    render_template,
-    flash,
-    current_app,
-    request,
     abort,
+    Blueprint,
+    current_app,
+    flash,
+    jsonify,
     redirect,
-    url_for,
+    render_template,
+    request,
     send_file,
-    jsonify
+    url_for
 )
 from flask_security import current_user, login_required, roles_required
 
-from compath.constants import BLACK_LIST, MAPPING_TYPES, EQUIVALENT_TO, IS_PART_OF
+from compath.constants import BLACK_LIST, EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES
 from compath.utils import (
-    get_pathway_model_by_name,
     get_mappings,
-    to_csv,
-    get_most_similar_names
+    get_most_similar_names,
+    get_pathway_model_by_name,
+    to_csv
 )
 
 log = logging.getLogger(__name__)
@@ -36,7 +36,7 @@ curation_blueprint = Blueprint('curation', __name__)
 @curation_blueprint.route('/curate')
 @login_required
 def create_mapping():
-    """Renders the curation page"""
+    """Render the curation page."""
     return render_template(
         'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
@@ -46,8 +46,7 @@ def create_mapping():
 
 @curation_blueprint.route('/mapping_catalog')
 def catalog():
-    """Renders the mapping catalog page"""
-
+    """Render the mapping catalog page."""
     if request.args.get(EQUIVALENT_TO):
         mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
         flash('You are visualizing the catalog of equivalent mappings')
@@ -68,7 +67,7 @@ def catalog():
 
 @curation_blueprint.route('/export_mappings')
 def export_mappings():
-    """Export mappings
+    """Export mappings.
     ---
     tags:
       - mappings
@@ -80,7 +79,6 @@ def export_mappings():
       200:
         description: A tsv file with mappings
     """
-
     mappings = get_mappings(current_app.manager, only_accepted=False if request.args.get('all') else True)
 
     string = StringIO()
@@ -98,12 +96,11 @@ def export_mappings():
 @curation_blueprint.route('/vote/<int:mapping_id>/<int:type>')
 @login_required
 def process_vote(mapping_id, type):
-    """Processes the vote
+    """Processes the vote.
 
     :param int mapping_id: id of the mapping to process the vote info
     :param int type: 0 if down vote and 1 if up vote
     """
-
     if type not in {0, 1}:
         return abort(500, "Invalid vote type {}. Vote type should be 0 or 1".format(type))
 
@@ -128,11 +125,10 @@ def process_vote(mapping_id, type):
 @curation_blueprint.route('/mapping/<int:mapping_id>/accept')
 @roles_required('admin')
 def accept_mapping(mapping_id):
-    """Processes the vote
+    """Process a vote.
 
     :param int mapping_id: id of the mapping to be accepted by the admin
     """
-
     mapping, created = current_app.manager.accept_mapping(mapping_id)
 
     if not mapping:
@@ -152,7 +148,7 @@ def accept_mapping(mapping_id):
 @curation_blueprint.route('/map_pathways')
 @login_required
 def process_mapping():
-    """Processes the mapping between two pathways
+    """Process the mapping between two pathways.
 
     ---
     tags:
@@ -179,9 +175,8 @@ def process_mapping():
       200:
         description: Mapping created
     """
-
     mapping_type = request.args.get('mapping-type')
-    if not mapping_type or not mapping_type in MAPPING_TYPES:
+    if not mapping_type or mapping_type not in MAPPING_TYPES:
         flash("Missing or incorrect mapping type", category='warning')
         return redirect(url_for('.create_mapping'))
 
@@ -257,11 +252,10 @@ def process_mapping():
 
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
 def suggest_mappings_by_name(pathway_name):
-    """Returns list of top matches based on string similarity
+    """Return list of top matches based on string similarity.
 
     :param str pathway_name:
     """
-
     # Get all pathway names from each resource
     pathways_dict = {
         manager: external_manager.get_all_pathway_names()

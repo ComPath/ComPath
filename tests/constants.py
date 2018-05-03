@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
-
-""" This module contains all test constants"""
+"""This module contains all test constants."""
 
 import os
 import tempfile
@@ -30,8 +29,10 @@ INVALID_MAPPING_7 = []
 
 
 class DatabaseMixin(unittest.TestCase):
+    """Database Mixin."""
+
     def setUp(self):
-        """Create temporary file"""
+        """Create temporary file."""
 
         self.fd, self.path = tempfile.mkstemp()
         self.connection = 'sqlite:///' + self.path
@@ -40,7 +41,7 @@ class DatabaseMixin(unittest.TestCase):
         self.manager = RealManager(connection=self.connection)
 
     def tearDown(self):
-        """Closes the connection in the manager and deletes the temporary database"""
+        """Close the connection in the manager and deletes the temporary database."""
         self.manager.drop_all()
         self.manager.session.close()
         os.close(self.fd)

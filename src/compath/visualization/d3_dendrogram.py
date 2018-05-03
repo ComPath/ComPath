@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455"""
+"""Utils to generate the D3.js dendrogram. This module is adapted from https://gist.github.com/mdml/7537455."""
 
 import itertools as itt
 import math
@@ -9,12 +9,12 @@ import numpy as np
 import pandas as pd
 import scipy
 import scipy.cluster
-import scipy.stats
 from scipy.spatial.distance import pdist
+import scipy.stats
 
 
 def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matrix):
-    """Remove column and row in matrix after value error to proceed with clustering
+    """Remove column and row in matrix after value error to proceed with clustering.
 
     :param numpy.ndarray distance_matrix:
     :param dict pathway_manager_dict:
@@ -52,13 +52,12 @@ def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matr
 
 
 def create_similarity_matrix(gene_sets):
-    """Creates a similarity matrix for a given pathway-geneset dataset
+    """Create a similarity matrix for a given pathway-geneset dataset.
 
     :param dict gene_sets: pathway gene set dictionary
     :rtype: pandas.DataFrame
     :returns: similarity matrix
     """
-
     index = sorted(gene_sets.keys())
     similarity_dataframe = pd.DataFrame(0.0, index=index, columns=index)
 
@@ -74,22 +73,24 @@ def create_similarity_matrix(gene_sets):
 
 
 def add_node(node, parent):
-    """Create a nested dictionary from the ClusterNode's returned by SciPy
+    """Create a nested dictionary from the ClusterNode's returned by SciPy.
 
     :param node:
     :param dict parent:
     """
     # First create the new node and append it to its parent's children
-    newNode = dict(node_id=node.id, children=[])
-    parent["children"].append(newNode)
+    new_node = dict(node_id=node.id, children=[])
+    parent["children"].append(new_node)
 
     # Recursively add the current node's children
-    if node.left: add_node(node.left, newNode)
-    if node.right: add_node(node.right, newNode)
+    if node.left:
+        add_node(node.left, new_node)
+    if node.right:
+        add_node(node.right, new_node)
 
 
 def label_tree(id_name_dict, name_manager_dict, cluster_to_x, tree):
-    """Labels the tree in a recursive way with names, resource and cluster information
+    """Label the tree in a recursive way with names, resource and cluster information.
 
     :param dict[str,str] id_name_dict: node_id to name dictionary
     :param dict[str,str] name_manager_dict: node name to resource ditionary
@@ -121,7 +122,7 @@ def label_tree(id_name_dict, name_manager_dict, cluster_to_x, tree):
 
 
 def get_dendrogram_tree(gene_sets, pathway_manager_dict):
-    """Returns json data
+    """Return ready to plot json data.
 
     :param dict[str,set[str]] gene_sets: pathway gene sets dict
     :param dict[str,str] pathway_manager_dict: pathway name to manager dictionary

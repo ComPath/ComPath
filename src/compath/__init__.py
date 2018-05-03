@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-An interactive and extensible web application for comparative analysis of pathway databases
+An interactive and extensible web application for comparative analysis of pathway databases.
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
@@ -17,10 +17,9 @@ New pathway/gene signatures resources can be added by forking the `ComPath Templ
 
 import logging
 
-from compath_utils import CompathManager
-from pkg_resources import VersionConflict, iter_entry_points
-
 from compath.constants import MODULE_NAME
+from compath_utils import CompathManager
+from pkg_resources import iter_entry_points, VersionConflict
 
 log = logging.getLogger(__name__)
 

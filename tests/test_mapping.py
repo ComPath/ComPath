@@ -1,24 +1,29 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains tests for the data model of ComPath"""
+"""This module contains tests for the data model of ComPath"""
 
 import unittest
 
 from tests.constants import DatabaseMixin, KEGG, REACTOME
 
-from compath.constants import IS_PART_OF, EQUIVALENT_TO
+from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.manager import _flip_service_order
 from compath.models import User
 
 
 class TestServiceOrder(unittest.TestCase):
+    """Test alphabetical order of the services."""
+
     def test_same(self):
+        """Test same resource so it does not flip them."""
         self.assertFalse(_flip_service_order(KEGG, KEGG))
 
     def test_no_flip(self):
+        """Test right order so it does not flip them."""
         self.assertFalse(_flip_service_order(KEGG, REACTOME))
 
     def test_flip(self):
+        """Test wrong order so it does flip them."""
         self.assertTrue(_flip_service_order(REACTOME, KEGG))
 
 
@@ -26,8 +31,7 @@ class TestMapping(DatabaseMixin):
     """Test Mapping in Database"""
 
     def test_create_mapping(self):
-        """Test simple mapping add it"""
-
+        """Test simple mapping add it."""
         current_user = User()
 
         mapping_1, _ = self.manager.get_or_create_mapping(
@@ -45,7 +49,7 @@ class TestMapping(DatabaseMixin):
         self.assertEqual(1, self.manager.count_votes(), msg='Vote was not added')
 
     def test_create_double_mapping_same_users(self):
-        """Test duplicate mappings for same users"""
+        """Test duplicate mappings for same users."""
 
         current_user = User()
 
@@ -119,8 +123,7 @@ class TestMapping(DatabaseMixin):
         self.assertEqual(3, self.manager.count_votes(), msg='Something wrong with isPartOf mappings')
 
     def test_create_double_mapping_different_users(self):
-        """Test duplicate mappings for different users"""
-
+        """Test duplicate mappings for different users."""
         user_1 = User(email='mycool@email.com')
         user_2 = User(email='myawesome@email.com')
 
@@ -158,7 +161,7 @@ class TestMapping(DatabaseMixin):
         self.assertEqual(emails, [user_1.email, user_2.email])
 
     def test_get_accepted_mappings(self):
-        """Test duplicate mappings for different users"""
+        """Test duplicate mappings for different users."""
 
         user_1 = User(email='mycool@email.com')
         user_2 = User(email='myawesome@email.com')
@@ -218,8 +221,7 @@ class TestMapping(DatabaseMixin):
         self.assertEqual(accepted_mappings[0], mapping_3, 'Only one mapping was accepted')
 
     def test_create_double_mapping_different_types_same_users(self):
-        """Test duplicate mappings for same users"""
-
+        """Test duplicate mappings for same users."""
         current_user = User()
 
         mapping_1, created_1 = self.manager.get_or_create_mapping(
@@ -249,10 +251,12 @@ class TestMapping(DatabaseMixin):
         self.assertEqual(2, self.manager.count_mappings(), msg='Only one mapping was created')
         self.assertEqual(2, self.manager.count_votes(), msg='Problem with voting')
 
-        result_1 = self.manager.get_mappings_from_pathway_with_relationship(EQUIVALENT_TO, REACTOME, '2', 'reactome pathway')
+        result_1 = self.manager.get_mappings_from_pathway_with_relationship(EQUIVALENT_TO, REACTOME, '2',
+                                                                            'reactome pathway')
         self.assertEqual(result_1[0], mapping_1, msg='Query not working')
         self.assertIn(mapping_1, result_1, msg='Query not working')
 
-        result_2 = self.manager.get_mappings_from_pathway_with_relationship(IS_PART_OF, REACTOME, '2', 'reactome pathway')
+        result_2 = self.manager.get_mappings_from_pathway_with_relationship(IS_PART_OF, REACTOME, '2',
+                                                                            'reactome pathway')
         self.assertEqual(result_2[0], mapping_2, msg='Query not working')
         self.assertIn(mapping_2, result_2, msg='Query not working')
