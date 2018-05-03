@@ -9,7 +9,7 @@ class TestCascades(DatabaseMixin):
     """Test that votes are cascaded properly."""
 
     def setUp(self):
-        """Create fakes emails"""
+        """Create fakes emails."""
         super().setUp()
 
         self.u1 = User(email='my_email')
@@ -40,8 +40,8 @@ class TestCascades(DatabaseMixin):
             self.u2
         )
 
-        v1 = self.manager.get_or_create_vote(self.u2, self.mapping_1)
-        v1 = self.manager.get_or_create_vote(self.u1, self.mapping_2)
+        _ = self.manager.get_or_create_vote(self.u2, self.mapping_1)
+        _ = self.manager.get_or_create_vote(self.u1, self.mapping_2)
 
         self.manager.session.commit()
 
@@ -50,7 +50,7 @@ class TestCascades(DatabaseMixin):
         self.assertEqual(4, self.manager.count_votes())
 
     def test_drop_all_mappings(self):
-        """Test dropping all mappings"""
+        """Test dropping all mappings."""
         self.manager.delete_all_mappings()
 
         self.assertEqual(2, self.manager.count_users())
@@ -58,7 +58,7 @@ class TestCascades(DatabaseMixin):
         self.assertEqual(0, self.manager.count_votes())
 
     def test_drop_mapping(self):
-        """Test dropping a mapping"""
+        """Test dropping a mapping."""
         self.manager.session.delete(self.mapping_1)
         self.manager.session.commit()
 

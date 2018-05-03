@@ -15,10 +15,10 @@ from compath.curation.utils import (
 
 
 class TestCurationParser(unittest.TestCase):
-    """Test Curation Parser"""
+    """Test Curation Parser."""
 
     def test_valid_syntax_examples(self):
-        """Test valid statements"""
+        """Test valid statements."""
         result_1 = statement_syntax_checker(VALID_MAPPING_1, PATHWAY_X)
         self.assertTrue(result_1)
 
@@ -32,7 +32,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertTrue(result_4)
 
     def test_unvalid_syntax_examples(self):
-        """Test non valid statements"""
+        """Test non valid statements."""
         result_1 = statement_syntax_checker(INVALID_MAPPING_1, PATHWAY_X)
         self.assertFalse(result_1)
 
@@ -64,7 +64,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertFalse(result_10)
 
     def test_two_pathways_in_statement(self):
-        """Test two pathways statements"""
+        """Test two pathways statements."""
         result_1 = ensure_two_pathways(INVALID_MAPPING_5, IS_PART_OF)
         self.assertFalse(result_1)
 
@@ -75,7 +75,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertTrue(result_3)
 
     def test_get_pathways_from_statement(self):
-        """Testing getting the pathways fr om statements"""
+        """Testing getting the pathways fr om statements."""
         subject, object = get_pathways_from_statement(VALID_MAPPING_2, EQUIVALENT_TO)
 
         self.assertEqual(subject, PATHWAY_X)
@@ -86,7 +86,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertEqual(object, PATHWAY_X)
 
     def test_get_mapping_type(self):
-        """Test get mapping type"""
+        """Test get mapping type."""
         result_1 = get_mapping_type(VALID_MAPPING_1)
         self.assertEqual(result_1, 'isPartOf')
 
@@ -97,7 +97,7 @@ class TestCurationParser(unittest.TestCase):
         self.assertEqual(result_3, None)
 
     def test_remove_star(self):
-        """Test get mapping type"""
+        """Test get mapping type."""
         result_1 = remove_star_from_pathway_name(VALID_MAPPING_1)
 
         self.assertEqual(result_1, 'Pathway X isPartOf Pathway Parent')
