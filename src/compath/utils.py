@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 
-import logging
+"""This module contains miscellaneous methods."""
+
 from difflib import SequenceMatcher
+import logging
 
 import numpy as np
 from pandas import DataFrame, Series

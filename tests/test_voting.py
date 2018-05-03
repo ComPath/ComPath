@@ -64,7 +64,6 @@ class TestVotingSystem(DatabaseMixin):
 
     def test_double_voting(self):
         """Test voting."""
-
         current_user_1 = User()
         current_user_2 = User()
 

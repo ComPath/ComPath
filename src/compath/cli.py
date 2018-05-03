@@ -7,16 +7,15 @@ from __future__ import print_function
 import datetime
 import logging
 import sys
+import click
+from flask_security import SQLAlchemyUserDatastore
 
 from compath import managers
-from compath.constants import DEFAULT_CACHE_CONNECTION, ADMIN_EMAIL
+from compath.constants import ADMIN_EMAIL, DEFAULT_CACHE_CONNECTION
 from compath.curation.hierarchies import load_hierarchy
 from compath.curation.parser import parse_curation_template
 from compath.manager import RealManager
 from compath.models import Base, Role, User
-
-import click
-from flask_security import SQLAlchemyUserDatastore
 
 log = logging.getLogger(__name__)
 
@@ -36,6 +35,7 @@ def set_debug_param(debug):
 
 @click.group(help='ComPath at {}'.format(DEFAULT_CACHE_CONNECTION))
 def main():
+    """Main click method"""
     logging.basicConfig(level=20, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 
@@ -116,10 +116,8 @@ def drop_databases(debug, yes, connection):
 @click.option('--curator')
 def add_mappings(path, reference, compare, curator):
     """Add mappings from template."""
-
-    # Example: python3 -m compath add_mappings '/my/path' 'kegg' 'wikipathways'
-
     set_debug_param(2)
+    # Example: python3 -m compath add_mappings '/my/path' 'kegg' 'wikipathways'
 
     parse_curation_template(path, reference, compare, admin_email=curator)
 
@@ -127,10 +125,10 @@ def add_mappings(path, reference, compare, curator):
 @main.command()
 @click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
 def load_hierarchies(email):
-    """Loads pathway databases with hierarchies."""
+    """Load pathway databases with hierarchies."""
+    set_debug_param(2)
 
     # Example: python3 -m compath load_hierarchies --email='your@email.com'
-    set_debug_param(2)
 
     load_hierarchy(curator_email=email)
 
@@ -140,10 +138,8 @@ def load_hierarchies(email):
 @click.argument('password')
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def make_user(connection, email, password):
-    """Makes a pre-existing user an admin."""
-
+    """Create a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com password
-
     manager = RealManager(connection=connection)
     Base.metadata.bind = manager.engine
     Base.query = manager.session.query_property()
@@ -161,10 +157,8 @@ def make_user(connection, email, password):
 @click.argument('email')
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def make_admin(connection, email):
-    """Makes a pre-existing user an admin."""
-
+    """Make a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com
-
     manager = RealManager(connection=connection)
     Base.metadata.bind = manager.engine
     Base.query = manager.session.query_property()

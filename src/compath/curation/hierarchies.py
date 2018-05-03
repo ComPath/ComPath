@@ -4,11 +4,11 @@
 
 import logging
 
-from tqdm import tqdm
-
 from compath import managers
 from compath.constants import ADMIN_EMAIL, IS_PART_OF
 from compath.manager import RealManager
+
+from tqdm import tqdm
 
 log = logging.getLogger(__name__)
 

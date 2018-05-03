@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" This module the database manager of ComPath"""
+"""This module the database manager of ComPath."""
 
 import datetime
 import logging
@@ -8,10 +8,10 @@ import logging
 from bio2bel.utils import get_connection
 from sqlalchemy import and_
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
+from sqlalchemy.orm import scoped_session, sessionmaker
 
 from . import managers
-from .constants import MODULE_NAME, EQUIVALENT_TO, MAPPING_TYPES, IS_PART_OF
+from .constants import EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES, MODULE_NAME
 from .models import Base, PathwayMapping, User, Vote
 
 __all__ = [
@@ -40,7 +40,7 @@ def _ensure_manager(name):
 
 
 class Manager(object):
-    """Database manager"""
+    """Database manager."""
 
     """Query methods"""
 
@@ -178,7 +178,7 @@ class Manager(object):
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
                               pathway_2_name, mapping_type, user):
-        """Gets or creates a mapping.
+        """Get or creates a mapping.
 
         :param str service_1_name: manager name of the service 1
         :param str pathway_1_name: pathway 1 name
@@ -310,7 +310,7 @@ class Manager(object):
             PathwayMapping.has_pathway(service_name, pathway_id, pathway_name)).all()
 
     def get_all_pathways_from_db_with_mappings(self, pathway_database):
-        """Get all mappings that contain a pathway from a given database
+        """Get all mappings that contain a pathway from a given database.
 
         :param str service_name: service name
         :param str pathway_id: original pathway identifer
@@ -322,7 +322,7 @@ class Manager(object):
             PathwayMapping.has_database_pathway(pathway_database)).all()
 
     def infer_hierarchy(self, resource, pathway_id, pathway_name):
-        """Returns the possible hierarchy of a given pathway based on its equivalent mappings
+        """Infer the possible hierarchy of a given pathway based on its equivalent mappings.
 
         :param str type: mapping type
         :param str resource: service name

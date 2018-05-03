@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the main views of ComPath"""
+"""This module contains the main views of ComPath."""
 
 import datetime
-import logging
 import sys
+
+import logging
+
+from compath.constants import BLACK_LIST
 
 from flask import (
     Blueprint,
-    render_template,
-    current_app
+    current_app,
+    render_template
 )
-from flask_security import login_required, current_user
-
-from compath.constants import BLACK_LIST
+from flask_security import current_user, login_required
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())

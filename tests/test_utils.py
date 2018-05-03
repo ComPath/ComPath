@@ -4,12 +4,13 @@ import math
 import unittest
 
 from compath.utils import (
-    process_form_gene_set,
-    _prepare_hypergeometric_test,
     filter_results,
+    get_most_similar_names,
     get_top_matches,
-    get_most_similar_names
+    process_form_gene_set,
+    _prepare_hypergeometric_test
 )
+
 from compath.visualization.d3_dendrogram import create_similarity_matrix
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 

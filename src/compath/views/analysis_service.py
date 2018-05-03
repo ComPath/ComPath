@@ -1,22 +1,10 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the analysis views in ComPath"""
+"""This module contains the analysis views in ComPath."""
 
 import itertools
-import logging
 from io import StringIO
-
-from flask import (
-    Blueprint,
-    render_template,
-    make_response,
-    flash,
-    redirect,
-    current_app,
-    request,
-    jsonify,
-    abort
-)
+import logging
 
 from compath.constants import BLACK_LIST
 from compath.forms import GeneSetForm
@@ -26,10 +14,21 @@ from compath.utils import (
     get_gene_sets_from_pathway_names,
     perform_hypergeometric_test,
     process_form_gene_set
-
 )
 from compath.visualization.d3_dendrogram import get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
+
+from flask import (
+    abort,
+    Blueprint,
+    current_app,
+    flash,
+    jsonify,
+    make_response,
+    redirect,
+    render_template,
+    request
+)
 
 log = logging.getLogger(__name__)
 analysis_blueprint = Blueprint('analysis', __name__)
@@ -52,7 +51,6 @@ def similarity_network():
 @analysis_blueprint.route('/query/overlap')
 def calculate_overlap():
     """Return the overlap between different pathways in order to generate a Venn diagram."""
-
     pathways_list = request.args.getlist('pathways[]')
     resources_list = request.args.getlist('resources[]')
 
@@ -90,7 +88,6 @@ def pathway_distribution(resource):
 
     :param str resource: name of the pathway database to visualize its distribution
     """
-
     if resource not in current_app.resource_distributions:
         return abort(500, 'Invalid request. Not a valid manager')
 
@@ -107,7 +104,6 @@ def gene_distribution(resource):
 
     :param str resource: name of the pathway database to visualize its distribution
     """
-
     if resource not in current_app.resource_distributions:
         return abort(500, 'Invalid request. Not a valid manager')
 
@@ -123,8 +119,7 @@ def gene_distribution(resource):
 
 @analysis_blueprint.route('/query')
 def query():
-    """Returns the Query page"""
-
+    """Return the Query page"""
     form = GeneSetForm()
     return render_template('query.html', form=form)
 
@@ -162,7 +157,6 @@ def process_gene_set():
 @analysis_blueprint.route('/compare_pathways')
 def compare_pathways():
     """Render a visualization comparing pathways."""
-
     if not any(arg in request.args for arg in ("analysis", "pathways[]")):
         return abort(500, 'Invalid request. Missing analysis or pathways[] arguments in the request')
 
@@ -227,7 +221,6 @@ def export_gene_set(resource):
 
     :param str resource: name of the pathway database to visualize its distribution
     """
-
     resource_manager = current_app.manager_dict.get(resource)
 
     if not resource_manager:
@@ -256,8 +249,7 @@ def export_gene_set(resource):
 
 @analysis_blueprint.route('/api/autocompletion/pathway_name')
 def api_resource_autocompletion():
-    """Autocompletion for pathway name"""
-
+    """Autocompletion for pathway name."""
     q = request.args.get('q')
     resource = request.args.get('resource')
 

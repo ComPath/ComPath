@@ -4,13 +4,13 @@
 
 import datetime
 
+from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
+
 from flask_security import RoleMixin, UserMixin
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table
-from sqlalchemy import and_, or_
+
+from sqlalchemy import and_, or_, Boolean, Column, DateTime, ForeignKey, Integer, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
-
-from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
 
 Base = declarative_base()
 
@@ -39,6 +39,7 @@ mappings_users = Table(
 
 class User(Base, UserMixin):
     """User table."""
+
     __tablename__ = USER_TABLE_NAME
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
@@ -49,10 +50,11 @@ class User(Base, UserMixin):
 
     @property
     def is_admin(self):
-        """Is this user an administrator?"""
+        """Is this user an administrator?."""
         return self.has_role('admin')
 
     def __str__(self):
+        """Return email."""
         return self.email
 
 
@@ -64,11 +66,13 @@ class Role(Base, RoleMixin):
     description = Column(String(255))
 
     def __str__(self):
+        """Return name of the role."""
         return self.name
 
 
 class PathwayMapping(Base):
     """Mapping table."""
+
     __tablename__ = MAPPING_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
@@ -87,7 +91,9 @@ class PathwayMapping(Base):
     creators = relationship('User', secondary=mappings_users, backref='mappings')
 
     def __str__(self):
-        return 'Mapping from {}:{} to {}:{}'.format(
+        """Return mapping info"""
+        return '{} mapping from {}:{} to {}:{}'.format(
+            self.type,
             self.service_1_name,
             self.service_1_pathway_name,
             self.service_2_name,
@@ -201,6 +207,7 @@ class PathwayMapping(Base):
 
 class Vote(Base):
     """Vote table."""
+
     __tablename__ = VOTE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)

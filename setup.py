@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""ComPath setup.py."""
+
 import codecs
 import os
 import re

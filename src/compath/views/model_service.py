@@ -9,10 +9,10 @@ from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
 
 from flask import (
+    abort,
     Blueprint,
-    render_template,
     current_app,
-    abort
+    render_template
 )
 
 from flask_admin.contrib.sqla import ModelView
