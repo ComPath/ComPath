@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains all the constants used in ComPath repo"""
+"""This module contains all the constants used in ComPath repo."""
 
 import os
 

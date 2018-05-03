@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module loads the hierarchical pathway databases into ComPath"""
+"""This module loads the hierarchical pathway databases into ComPath."""
 
 import logging
 
@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 
 def _reactome_wrapper(pathways):
-    """Filter down the human pathways
+    """Filter down the human pathways.
 
     :param list[Pathway] pathways: list of pathways
     :rtype: list[Pathway]
@@ -29,7 +29,7 @@ def _reactome_wrapper(pathways):
 
 
 def create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator):
-    """Iterate over pathway objects and creates hierarchies if exist
+    """Iterate over pathway objects and creates hierarchies if exist.
 
     :param list[Pathway] pathways: list of pathways
     :param compath.manager.RealManager compath_manager: ComPath Manager
@@ -63,7 +63,7 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
 
 
 def load_hierarchy(curator_email=None):
-    """Loads the hierarchical relationships for the managers containing them
+    """Load the hierarchical relationships for the managers containing them.
 
     :param Optional[str] curator_email: email of the admin
     """

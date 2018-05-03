@@ -6,7 +6,7 @@ from itertools import combinations
 
 
 def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
-    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/
+    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/.
 
     :param dict[str,set] gene_sets: pathway to gene sets dictionary
     :param bool skip_gene_set_info: include gene set overlap data

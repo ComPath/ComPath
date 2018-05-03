@@ -37,7 +37,7 @@ def main():
 
 @main.command()
 def ls():
-    """Display registered Bio2BEL pathway managers"""
+    """Display registered Bio2BEL pathway managers."""
     for manager in managers:
         click.echo(manager)
 
@@ -46,7 +46,7 @@ def ls():
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def web(debug, connection):
-    """Run web service"""
+    """Run web service."""
     set_debug_param(debug)
 
     from compath.web import create_app
@@ -59,7 +59,7 @@ def web(debug, connection):
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('-d', '--delete-first', is_flag=True)
 def populate(debug, connection, delete_first):
-    """Populate all registered Bio2BEL pathway packages"""
+    """Populate all registered Bio2BEL pathway packages."""
     set_debug_param(debug)
 
     for name, Manager in managers.items():
@@ -80,7 +80,7 @@ def populate(debug, connection, delete_first):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(debug, yes, connection):
-    """Drop all databases"""
+    """Drop all databases."""
     set_debug_param(debug)
 
     if yes or click.confirm('Do you really want to delete the ComPath DB'):
@@ -95,7 +95,7 @@ def drop(debug, yes, connection):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop_databases(debug, yes, connection):
-    """Drop all databases"""
+    """Drop all databases."""
     set_debug_param(debug)
 
     if yes or click.confirm('Do you really want to delete the databases for {}?'.format(', '.join(managers))):
@@ -111,7 +111,7 @@ def drop_databases(debug, yes, connection):
 @click.argument('compare')
 @click.option('--curator')
 def add_mappings(path, reference, compare, curator):
-    """Add mappings from template"""
+    """Add mappings from template."""
 
     # Example: python3 -m compath add_mappings '/my/path' 'kegg' 'wikipathways'
 
@@ -123,7 +123,7 @@ def add_mappings(path, reference, compare, curator):
 @main.command()
 @click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
 def load_hierarchies(email):
-    """Loads pathway databases with hierarchies"""
+    """Loads pathway databases with hierarchies."""
 
     # Example: python3 -m compath load_hierarchies --email='your@email.com'
     set_debug_param(2)
@@ -136,7 +136,7 @@ def load_hierarchies(email):
 @click.argument('password')
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def make_user(connection, email, password):
-    """Makes a pre-existing user an admin"""
+    """Makes a pre-existing user an admin."""
 
     # Example: python3 -m compath make_admin xxx@xxx.com password
 
@@ -157,7 +157,7 @@ def make_user(connection, email, password):
 @click.argument('email')
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def make_admin(connection, email):
-    """Makes a pre-existing user an admin"""
+    """Makes a pre-existing user an admin."""
 
     # Example: python3 -m compath make_admin xxx@xxx.com
 

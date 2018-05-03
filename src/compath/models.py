@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""ComPath database model"""
+"""ComPath database model."""
 
 import datetime
 
@@ -38,7 +38,7 @@ mappings_users = Table(
 
 
 class User(Base, UserMixin):
-    """User table"""
+    """User table."""
     __tablename__ = USER_TABLE_NAME
     id = Column(Integer, primary_key=True)
     email = Column(String(255), unique=True)
@@ -57,6 +57,7 @@ class User(Base, UserMixin):
 
 
 class Role(Base, RoleMixin):
+    """Role table."""
     __tablename__ = ROLE_TABLE_NAME
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True)
@@ -67,7 +68,7 @@ class Role(Base, RoleMixin):
 
 
 class PathwayMapping(Base):
-    """Mapping Table"""
+    """Mapping table."""
     __tablename__ = MAPPING_TABLE_NAME
 
     id = Column(Integer, primary_key=True)
@@ -94,7 +95,7 @@ class PathwayMapping(Base):
         )
 
     def get_complement_mapping_info(self, service_name, pathway_id, pathway_name):
-        """Returns the info corresponding to the other pathway in a mapping
+        """Return the info corresponding to the other pathway in a mapping.
 
         :param PathwayMapping mapping:
         :param str service_name: reference service name
@@ -113,7 +114,7 @@ class PathwayMapping(Base):
 
     @staticmethod
     def has_pathway_tuple(type, service_name, pathway_id, pathway_name):
-        """Returns a filter to get all mappings matching type, service and pathway name and id"""
+        """Return a filter to get all mappings matching type, service and pathway name and id."""
         return or_(
             and_(
                 PathwayMapping.service_1_name == service_name,
@@ -131,7 +132,7 @@ class PathwayMapping(Base):
 
     @staticmethod
     def has_pathway(service_name, pathway_id, pathway_name):
-        """Returns a filter to get all mappings matching service and pathway name and id"""
+        """Return a filter to get all mappings matching service and pathway name and id."""
         return or_(
             and_(
                 PathwayMapping.service_1_name == service_name,
@@ -147,7 +148,7 @@ class PathwayMapping(Base):
 
     @staticmethod
     def has_database_pathway(service_name):
-        """Returns a filter to get all mappings matching service a name"""
+        """Return a filter to get all mappings matching service a name."""
         return or_(
             PathwayMapping.service_1_name == service_name,
             PathwayMapping.service_2_name == service_name,
@@ -155,7 +156,7 @@ class PathwayMapping(Base):
 
     @property
     def count_votes(self):
-        """Return the number of votes for this mapping
+        """Return the number of votes for this mapping.
 
         :rtype: int
         """
@@ -163,7 +164,7 @@ class PathwayMapping(Base):
 
     @property
     def count_creators(self):
-        """Return the number of creator that claimed this mapping
+        """Return the number of creator that claimed this mapping.
 
         :rtype: int
         """
@@ -171,7 +172,7 @@ class PathwayMapping(Base):
 
     @property
     def count_up_votes(self):
-        """Return the number of up votes for this mapping
+        """Return the number of up votes for this mapping.
 
         :rtype: int
         """
@@ -179,7 +180,7 @@ class PathwayMapping(Base):
 
     @property
     def count_down_votes(self):
-        """Return the number of down votes for this mapping
+        """Return the number of down votes for this mapping.
 
         :rtype: int
         """
@@ -187,19 +188,19 @@ class PathwayMapping(Base):
 
     @property
     def is_acceptable(self):
-        """Returns true if the mapping has enough votes to be accepted
+        """Return true if the mapping has enough votes to be accepted.
 
         :rtype: bool
         """
         return self.votes.filter(Vote.type == True).count() >= VOTE_ACCEPTANCE
 
     def get_user_vote(self, user):
-        """Returns votes given by the user"""
+        """Return votes given by the user."""
         return self.votes.filter(Vote.user == user).one_or_none()
 
 
 class Vote(Base):
-    """Vote Table"""
+    """Vote table."""
     __tablename__ = VOTE_TABLE_NAME
 
     id = Column(Integer, primary_key=True)

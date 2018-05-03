@@ -39,7 +39,7 @@ analysis_blueprint = Blueprint('analysis', __name__)
 
 @analysis_blueprint.route('/similarity_network')
 def similarity_network():
-    """Renders the Similarity network powered by Cytoscape"""
+    """Render the Similarity network powered by Cytoscape."""
     return render_template(
         'visualization/similarity_network.html',
         manager_names=current_app.manager_dict.keys(),
@@ -51,7 +51,7 @@ def similarity_network():
 
 @analysis_blueprint.route('/query/overlap')
 def calculate_overlap():
-    """Returns the overlap between different pathways in order to generate a Venn diagram"""
+    """Return the overlap between different pathways in order to generate a Venn diagram."""
 
     pathways_list = request.args.getlist('pathways[]')
     resources_list = request.args.getlist('resources[]')
@@ -73,7 +73,7 @@ def calculate_overlap():
 
 @analysis_blueprint.route('/pathway_overlap')
 def pathway_overlap():
-    """Renders the Pathway Overlap page"""
+    """Render the Pathway Overlap page."""
     return render_template(
         'visualization/venn_diagram/venn_diagram_view.html',
         manager_names=current_app.manager_dict.keys(),
@@ -86,7 +86,10 @@ def pathway_overlap():
 
 @analysis_blueprint.route('/pathway_distribution/<resource>')
 def pathway_distribution(resource):
-    """Renders the Pathway Size distribution page"""
+    """Render the Pathway Size distribution page.
+
+    :param str resource: name of the pathway database to visualize its distribution
+    """
 
     if resource not in current_app.resource_distributions:
         return abort(500, 'Invalid request. Not a valid manager')
@@ -100,7 +103,10 @@ def pathway_distribution(resource):
 
 @analysis_blueprint.route('/gene_promiscuity/<resource>')
 def gene_distribution(resource):
-    """Renders how many times genes are present in pathways page"""
+    """Render how many times genes are present in pathways page.
+
+    :param str resource: name of the pathway database to visualize its distribution
+    """
 
     if resource not in current_app.resource_distributions:
         return abort(500, 'Invalid request. Not a valid manager')
@@ -125,7 +131,7 @@ def query():
 
 @analysis_blueprint.route('/query/results', methods=['POST'])
 def process_gene_set():
-    """Process the gene set POST form"""
+    """Process the gene set POST form."""
     form = GeneSetForm()
 
     if not form.validate_on_submit():
@@ -155,7 +161,7 @@ def process_gene_set():
 
 @analysis_blueprint.route('/compare_pathways')
 def compare_pathways():
-    """Renders a visualization comparing pathways"""
+    """Render a visualization comparing pathways."""
 
     if not any(arg in request.args for arg in ("analysis", "pathways[]")):
         return abort(500, 'Invalid request. Missing analysis or pathways[] arguments in the request')
@@ -217,7 +223,10 @@ def compare_pathways():
 
 @analysis_blueprint.route('/export/<resource>')
 def export_gene_set(resource):
-    """Export gene set to excel"""
+    """Export gene set to excel.
+
+    :param str resource: name of the pathway database to visualize its distribution
+    """
 
     resource_manager = current_app.manager_dict.get(resource)
 

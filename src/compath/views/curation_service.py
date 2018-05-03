@@ -36,7 +36,7 @@ curation_blueprint = Blueprint('curation', __name__)
 @curation_blueprint.route('/curate')
 @login_required
 def create_mapping():
-    """Renders the curation page"""
+    """Render the curation page."""
     return render_template(
         'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
@@ -46,7 +46,7 @@ def create_mapping():
 
 @curation_blueprint.route('/mapping_catalog')
 def catalog():
-    """Renders the mapping catalog page"""
+    """Render the mapping catalog page."""
 
     if request.args.get(EQUIVALENT_TO):
         mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
@@ -68,7 +68,7 @@ def catalog():
 
 @curation_blueprint.route('/export_mappings')
 def export_mappings():
-    """Export mappings
+    """Export mappings.
     ---
     tags:
       - mappings
@@ -98,7 +98,7 @@ def export_mappings():
 @curation_blueprint.route('/vote/<int:mapping_id>/<int:type>')
 @login_required
 def process_vote(mapping_id, type):
-    """Processes the vote
+    """Processes the vote.
 
     :param int mapping_id: id of the mapping to process the vote info
     :param int type: 0 if down vote and 1 if up vote
@@ -128,7 +128,7 @@ def process_vote(mapping_id, type):
 @curation_blueprint.route('/mapping/<int:mapping_id>/accept')
 @roles_required('admin')
 def accept_mapping(mapping_id):
-    """Processes the vote
+    """Process a vote.
 
     :param int mapping_id: id of the mapping to be accepted by the admin
     """
@@ -152,7 +152,7 @@ def accept_mapping(mapping_id):
 @curation_blueprint.route('/map_pathways')
 @login_required
 def process_mapping():
-    """Processes the mapping between two pathways
+    """Process the mapping between two pathways.
 
     ---
     tags:
@@ -257,7 +257,7 @@ def process_mapping():
 
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
 def suggest_mappings_by_name(pathway_name):
-    """Returns list of top matches based on string similarity
+    """Return list of top matches based on string similarity.
 
     :param str pathway_name:
     """

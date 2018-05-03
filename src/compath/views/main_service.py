@@ -30,19 +30,19 @@ def home():
 
 @ui_blueprint.route('/imprint')
 def imprint():
-    """Renders the Imprint page"""
+    """Render the Imprint page"""
     return render_template('imprint.html')
 
 
 @ui_blueprint.route('/terms_and_conditions')
 def terms_and_conditions():
-    """Renders the Terms and conditiosn page"""
+    """Render the Terms and conditiosn page"""
     return render_template('terms_conditions.html')
 
 
 @ui_blueprint.route('/about')
 def about():
-    """Renders About page"""
+    """Render About page"""
     metadata = [
         ('Python Version', sys.version),
         ('Deployed', time_instantiated)
@@ -53,13 +53,13 @@ def about():
 
 @ui_blueprint.route('/curation_protocol')
 def curation_protocol():
-    """Renders Curation page"""
+    """Render Curation page."""
     return render_template('curation_protocol.html')
 
 
 @ui_blueprint.route('/overview')
 def overview():
-    """Renders Overview page"""
+    """Render Overview page."""
 
     return render_template(
         'overview.html',
@@ -73,14 +73,14 @@ def overview():
 
 @ui_blueprint.route('/similarity')
 def similarity():
-    """Renders Similarity page"""
+    """Render Similarity page."""
     return render_template('similarity.html')
 
 
 @ui_blueprint.route('/user')
 @login_required
 def user_activity():
-    """Renders the user activity page"""
+    """Render the user activity page."""
     return render_template('user/activity.html', user=current_user)
 
 
@@ -89,17 +89,17 @@ def user_activity():
 
 @ui_blueprint.route('/kegg_overlap')
 def kegg_matrix():
-    """Renders the KEGG Matrix page powered by Clustergrammer"""
+    """Render the KEGG Matrix page powered by Clustergrammer."""
     return render_template('visualization/clustergrammer/kegg_overlap.html')
 
 
 @ui_blueprint.route('/reactome_overlap')
 def reactome_matrix():
-    """Renders the Reactome Matrix page powered by Clustergrammer"""
+    """Render the Reactome Matrix page powered by Clustergrammer."""
     return render_template('visualization/clustergrammer/reactome_overlap.html')
 
 
 @ui_blueprint.route('/wikipathways_overlap')
 def wikipathways_matrix():
-    """Renders the WikiPathways Matrix page powered by Clustergrammer"""
+    """Render the WikiPathways Matrix page powered by Clustergrammer."""
     return render_template('visualization/clustergrammer/wikipathways_overlap.html')

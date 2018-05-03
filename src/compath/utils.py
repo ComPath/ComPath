@@ -18,7 +18,7 @@ log = logging.getLogger(__name__)
 # modified from https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths
 
 def dict_to_pandas_df(d):
-    """Transforms pandas df into a dict
+    """Transform pandas df into a dict.
 
     :param dict d:
     :rtype: pandas.DataFrame
@@ -31,7 +31,7 @@ def dict_to_pandas_df(d):
 
 
 def process_form_gene_set(form_field):
-    """Process the string containing gene symbols and returns a gene set
+    """Process the string containing gene symbols and returns a gene set.
 
     :param str form_field: string to be processed
     :rtype: set[str]
@@ -49,7 +49,7 @@ def process_form_gene_set(form_field):
 
 
 def get_genes_without_assigned_pathways(manager_list, gene_set):
-    """Returns the genes without any known pathway assigned
+    """Returns the genes without any known pathway assigned.
 
     :param list manager_list: list of managers
     :param set[str] gene_set: gene set queried
@@ -59,7 +59,7 @@ def get_genes_without_assigned_pathways(manager_list, gene_set):
 
 
 def get_enriched_pathways(manager_list, gene_set):
-    """Return the results of the queries for every registered manager
+    """Return the results of the queries for every registered manager.
 
     :param dict[str, Manager] manager_list: list of managers
     :param set[str] gene_set: gene set queried
@@ -73,7 +73,7 @@ def get_enriched_pathways(manager_list, gene_set):
 
 
 def get_mappings(compath_manager, only_accepted=True):
-    """Returns a pandas dataframe with mappings information as an excel sheet file
+    """Return a pandas dataframe with mappings information as an excel sheet file.
 
     :param compath.manager.Manager compath_manager: ComPath Manager
     :param bool only_accepted: only accepted (True) or all (False)
@@ -99,7 +99,7 @@ def get_mappings(compath_manager, only_accepted=True):
 
 
 def get_pathway_model_by_name(manager_dict, resource, pathway_name):
-    """Returns the pathway object from the resource manager
+    """Return the pathway object from the resource manager.
 
     :param dict manager_dict: manager name to manager instances dictionary
     :param str resource: name of the manager
@@ -117,7 +117,7 @@ def get_pathway_model_by_name(manager_dict, resource, pathway_name):
 
 
 def get_pathway_model_by_id(app, resource, pathway_id):
-    """Returns the pathway object from the resource manager
+    """Return the pathway object from the resource manager.
 
     :param flask.Flask app: current app
     :param str resource: name of the manager
@@ -132,7 +132,7 @@ def get_pathway_model_by_id(app, resource, pathway_id):
 
 
 def get_gene_sets_from_pathway_names(app, pathways):
-    """Returns the gene sets for a given pathway/resource tuple
+    """Return the gene sets for a given pathway/resource tuple.
 
     :param flask.Flask app: current app
     :param list[tuple[str,str] pathways: pathway/resource tuples
@@ -174,7 +174,7 @@ def get_gene_sets_from_pathway_names(app, pathways):
 
 
 def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe):
-    """Prepares the matrix for hypergeometric test calculations
+    """Prepare the matrix for hypergeometric test calculations.
 
     :param set[str] query_gene_set: gene set to test against pathway
     :param set[str] pathway_gene_set: pathway gene set
@@ -194,7 +194,7 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
 
 
 def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
-    """
+    """Perform hypergeometric tests
 
     :param set[str] gene_set: gene set to test against pathway
     :param dict[str,dict[str,dict]] manager_pathways_dict: manager to pathways
@@ -231,7 +231,7 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
 
 
 def calculate_similarity(name_1, name_2):
-    """Calculates the string based similarity between two names
+    """Calculate the string based similarity between two names.
 
     :param str name_1: name 1
     :param str name_2: name 2
@@ -242,7 +242,7 @@ def calculate_similarity(name_1, name_2):
 
 
 def get_top_matches(names, top):
-    """Orders list of tuples by second value and returns top values
+    """Order list of tuples by second value and returns top values.
 
     :param list[tuple[str,float]] names: list of tuples
     :param int top: top values to return
@@ -253,7 +253,7 @@ def get_top_matches(names, top):
 
 
 def filter_results(results, threshold):
-    """Only present results with high similarity
+    """Filter a tuple based iterator given a threshold.
 
     :param list[tuple[str,float]] results: list of tuples
     :param float threshold: thresholding
@@ -266,7 +266,7 @@ def filter_results(results, threshold):
 
 
 def get_most_similar_names(reference_name, names, threshold=0.4, top=5):
-    """Returns the most similar names based on string matching
+    """Return the most similar names based on string matching.
 
     :param str reference_name:
     :param list[str] names:
@@ -290,7 +290,7 @@ def get_most_similar_names(reference_name, names, threshold=0.4, top=5):
 
 
 def to_csv(triplets, file=None, sep='\t'):
-    """Writes triplets as a tab-separated:
+    """Writs triplets as a tab-separated.
 
     :param iterable[tuple[str,str,str]] triplets: iterable of triplets
     :param file file: A writable file or file-like. Defaults to stdout.

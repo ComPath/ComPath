@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains tests for the data model of ComPath"""
+"""This module contains tests for the data model of ComPath."""
 
 from tests.constants import DatabaseMixin, KEGG, REACTOME
 from compath.constants import EQUIVALENT_TO
@@ -12,17 +12,17 @@ class TestVotingSystem(DatabaseMixin):
     """Test Voting System."""
 
     def test_missing_manager_1(self):
-        """Test that the mapping can't be created if the first manager can't be looked up"""
+        """Test that the mapping can't be created if the first manager can't be looked up."""
         with self.assertRaises(ValueError):
             self.manager.get_or_create_mapping('missing manager 1', '', '', REACTOME, '', '', '', '')
 
     def test_missing_manager_2(self):
-        """Test that the mapping can't be created if the second manager can't be looked up"""
+        """Test that the mapping can't be created if the second manager can't be looked up."""
         with self.assertRaises(ValueError):
             self.manager.get_or_create_mapping(REACTOME, '', '', '' 'missing manager 2', '', '', '', '')
 
     def test_vote_up(self):
-        """Test if votes are adding"""
+        """Test if votes are adding."""
         current_user = User()
 
         mapping_1, _ = self.manager.get_or_create_mapping(
@@ -42,7 +42,7 @@ class TestVotingSystem(DatabaseMixin):
         self.assertEqual(True, vote.type, msg='Vote type is wrong')
 
     def test_vote_down(self):
-        """Test if votes are adding"""
+        """Test if votes are adding."""
         current_user = User()
 
         mapping_1, created = self.manager.get_or_create_mapping(
@@ -63,7 +63,7 @@ class TestVotingSystem(DatabaseMixin):
         self.assertFalse(vote.type, msg='Vote type is wrong')
 
     def test_double_voting(self):
-        """Test voting"""
+        """Test voting."""
 
         current_user_1 = User()
         current_user_2 = User()

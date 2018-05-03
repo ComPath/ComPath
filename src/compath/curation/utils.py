@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains all the utils for curation processing"""
+"""This module contains all the utils for curation processing."""
 
 import pandas as pd
 
@@ -9,7 +9,7 @@ from compath.utils import get_pathway_model_by_name
 
 
 def remove_star_from_pathway_name(pathway_name):
-    """Removes the star that label the reference pathway in isPartOf statements
+    """Remove the star that label the reference pathway in isPartOf statements.
 
     :param str statements: pathway name
     """
@@ -17,7 +17,7 @@ def remove_star_from_pathway_name(pathway_name):
 
 
 def get_pathways_from_statement(mapping_statement, mapping_type):
-    """Returns the subject, object of the mapping
+    """Return the subject, object of the mapping.
 
     :param str mapping_statement: statement
     :param str mapping_type: type of relationship
@@ -30,7 +30,7 @@ def get_pathways_from_statement(mapping_statement, mapping_type):
 
 
 def ensure_two_pathways(mapping_statement, mapping_type):
-    """Ensures only two pathways are there when splitting the statement
+    """Ensure that only two pathways are there when splitting the statement.
 
     :param str mapping_statement: statement
     :param str mapping_type: type of relationship
@@ -62,7 +62,7 @@ def load_curation_template(path, index_mapping_column=2):
 
 
 def get_mapping_type(mapping_statement):
-    """Returns the mapping type from a given statement
+    """Return the mapping type from a given statement
 
     :param str mapping_statement:
     :rtype: Optional[str]
@@ -78,7 +78,7 @@ def get_mapping_type(mapping_statement):
 
 
 def statement_syntax_checker(mapping_statement, pathway_reference):
-    """Checks if a particular mapping contains syntax errors
+    """Check if a particular mapping contains syntax errors.
 
     :param str mapping_statement: mapping statement
     :param str pathway_reference: name of the pathway of reference
@@ -117,14 +117,13 @@ def statement_syntax_checker(mapping_statement, pathway_reference):
 
 
 def is_valid_pathway(manager_dict, resource, pathway_name):
-    """Checks if pathway exists in pathway database
+    """Check if pathway exists in pathway database.
 
     :param dict manager_dict: manager name to manager instances dictionary
     :param str resource: resource name
     :param str pathway_name: pathway name
     :rtype: bool
     """
-
     pathway = get_pathway_model_by_name(manager_dict, resource, pathway_name)
 
     if not pathway:
@@ -134,17 +133,17 @@ def is_valid_pathway(manager_dict, resource, pathway_name):
 
 
 def ensure_syntax(statements):
-    """Ensure syntax
+    """Ensure syntax.
 
     :param pandas.core.series.Series statements: Statements list
     """
-
     for reference_pathway, cell in statements.iteritems():
 
         for mapping_statement in cell.split('|'):
 
             if statement_syntax_checker(mapping_statement, reference_pathway) is False:
                 print(
-                    'Problem with cell "{}" given the reference pathway: "{}"'.format(mapping_statement,
-                                                                                      reference_pathway)
+                    'Problem with cell "{}" given the reference pathway: "{}"'.format(
+                        mapping_statement,
+                        reference_pathway)
                 )

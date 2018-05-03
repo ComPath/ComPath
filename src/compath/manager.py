@@ -22,7 +22,7 @@ log = logging.getLogger(__name__)
 
 
 def _flip_service_order(service_1_name, service_2_name):
-    """Decides whether the service order should be flipped (true if they should be)
+    """Decide whether the service order should be flipped (true if they should be).
 
     :param str service_1_name:
     :param str service_2_name:
@@ -45,63 +45,53 @@ class Manager(object):
     """Query methods"""
 
     def count_votes(self):
-        """Counts the votes in the database
+        """Count the votes in the database.
 
         :rtype: int
         """
         return self.session.query(Vote).count()
 
     def count_mappings(self):
-        """Counts the mappings in the database
+        """Count the mappings in the database.
 
         :rtype: int
         """
         return self.session.query(PathwayMapping).count()
 
     def count_users(self):
-        """Counts the Users in the database
+        """Count the Users in the database.
 
         :rtype: int
         """
         return self.session.query(User).count()
 
     def get_all_mappings(self):
-        """Get all mappings in the database
+        """Get all mappings in the database.
 
         :rtype: list[PathwayMapping]
         """
         return self.session.query(PathwayMapping).all()
 
     def get_all_accepted_mappings(self):
-        """Get all accepted mappings in the database
+        """Get all accepted mappings in the database.
 
         :rtype: list[PathwayMapping]
         """
         return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
 
-    def get_mappings_by_type(self, type):
-        """Get all mappings in the database
+    def get_mappings_by_type(self, mapping_type):
+        """Get all mappings in the database.
 
+        :param str mapping_type: type of the mapping
         :rtype: list[PathwayMapping]
         """
-        if type not in MAPPING_TYPES:
-            raise ValueError('{} is not valid mapping type'.format(type))
+        if mapping_type not in MAPPING_TYPES:
+            raise ValueError('{} is not valid mapping mapping_type'.format(mapping_type))
 
-        return self.session.query(PathwayMapping).filter(PathwayMapping.type == type).all()
-
-    def get_pathway_mappings(self, mapping_type, service_name, pathway_name):
-        """Returns all the specific mappings given a service and pathway names
-
-        :param str mapping_type: type of mapping
-        :param str service_name: name of the service
-        :param str pathway_name: name of the pathway
-        :rtype: Optional[PathwayMapping]
-        :return: pathways if exist
-        """
-        return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
+        return self.session.query(PathwayMapping).filter(PathwayMapping.type == mapping_type).all()
 
     def get_vote_by_id(self, vote_id):
-        """Gets a vote by its id
+        """Get a vote by its id.
 
         :param str vote_id: identifier
         :rtype: Optional[Vote]
@@ -109,7 +99,7 @@ class Manager(object):
         return self.session.query(Vote).filter(Vote.id == vote_id).one_or_none()
 
     def get_vote(self, user, mapping):
-        """Gets a vote
+        """Get a vote.
 
         :param User user: User instance
         :param PathwayMapping mapping: Mapping instance
@@ -118,7 +108,7 @@ class Manager(object):
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
     def get_user_by_email(self, email):
-        """Gets a vote by its id
+        """Get a vote by its id.
 
         :param str email: identifier
         :rtype: Optional[Vote]
@@ -127,7 +117,7 @@ class Manager(object):
 
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
                     mapping_type):
-        """Query mapping in the database
+        """Query mapping in the database.
 
         :param str service_1_name: manager name of the service 1
         :param str pathway_1_id: pathway 1 id
@@ -151,7 +141,7 @@ class Manager(object):
         return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
 
     def get_mapping_by_id(self, mapping_id):
-        """Gets a mapping by its id
+        """Get a mapping by its id.
 
         :param int mapping_id: mapping id
         :rtype: Optional[PathwayMapping]
@@ -159,7 +149,7 @@ class Manager(object):
         return self.session.query(PathwayMapping).filter(PathwayMapping.id == mapping_id).one_or_none()
 
     def get_or_create_vote(self, user, mapping, vote_type=True):
-        """Gets or create vote
+        """Get or create vote.
 
         :param User user: User instance
         :param PathwayMapping mapping: Mapping instance
@@ -188,7 +178,7 @@ class Manager(object):
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
                               pathway_2_name, mapping_type, user):
-        """Gets or creates a mapping
+        """Gets or creates a mapping.
 
         :param str service_1_name: manager name of the service 1
         :param str pathway_1_name: pathway 1 name
@@ -254,7 +244,7 @@ class Manager(object):
         return mapping, True
 
     def delete_all_mappings(self):
-        """Delets all the votes then all the mappings"""
+        """Delete all the votes then all the mappings."""
         self.session.query(Vote).delete()
         self.session.query(PathwayMapping).delete()
         self.session.commit()
@@ -262,7 +252,7 @@ class Manager(object):
     """Custom Model Manipulations"""
 
     def claim_mapping(self, mapping, user):
-        """Checks if user has already established the mapping, if not claims it
+        """Check if user has already established the mapping, if not claims it.
 
         :param PathwayMapping mapping: Mapping instance
         :param User user: User
@@ -278,7 +268,7 @@ class Manager(object):
         return True
 
     def accept_mapping(self, mapping_id):
-        """Accepts established mapping (from user or curator consensus)
+        """Accept established mapping (from user or curator consensus).
 
         :param int mapping_id: mapping id
         :rtype: tuple[PathwayMapping,bool]
@@ -297,7 +287,7 @@ class Manager(object):
         return mapping, True
 
     def get_mappings_from_pathway_with_relationship(self, type, service_name, pathway_id, pathway_name):
-        """Get all mappings matching pathway and service name
+        """Get all mappings matching pathway and service name.
 
         :param str service_name: service name
         :param str pathway_id: original pathway identifier
@@ -309,7 +299,7 @@ class Manager(object):
             PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
 
     def get_all_mappings_from_pathway(self, service_name, pathway_id, pathway_name):
-        """Get all mappings matching pathway and service name
+        """Get all mappings matching pathway and service name.
 
         :param str service_name: service name
         :param str pathway_id: original pathway identifier
@@ -370,6 +360,8 @@ class Manager(object):
 
 
 class RealManager(Manager):
+    """Real ComPath manager."""
+
     def __init__(self, connection=None):
         self.connection = get_connection(MODULE_NAME, connection)
         self.engine = create_engine(self.connection)
@@ -380,9 +372,9 @@ class RealManager(Manager):
         # Add all available managers
 
     def create_all(self, check_first=True):
-        """Create tables for ComPath"""
+        """Create tables for ComPath."""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
     def drop_all(self, check_first=True):
-        """Drop all tables for ComPath"""
+        """Drop all tables for ComPath."""
         Base.metadata.drop_all(self.engine, checkfirst=check_first)

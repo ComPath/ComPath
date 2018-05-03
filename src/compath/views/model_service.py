@@ -23,7 +23,7 @@ model_blueprint = Blueprint('model', __name__)
 
 
 class MappingView(ModelView):
-    """Mapping view in Flask-admin"""
+    """Mapping view in Flask-admin."""
     column_searchable_list = (
         PathwayMapping.service_1_name,
         PathwayMapping.service_1_pathway_id,
@@ -67,7 +67,7 @@ class VoteView(ModelView):
 
 @model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
-    """Renders the pathway view page"""
+    """Render the pathway view page."""
 
     if resource not in current_app.manager_dict:
         abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))

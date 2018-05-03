@@ -20,14 +20,14 @@ time_instantiated = str(datetime.datetime.now())
 @db_blueprint.route('/admin/configuration')
 @roles_required('admin')
 def view_config():
-    """Render the configuration"""
+    """Render the configuration."""
     return render_template('admin/config.html', config=current_app.config)
 
 
 @db_blueprint.route('/admin/delete/db/')
 @roles_required('admin')
 def delete_db():
-    """Destroys the database and recreates it"""
+    """Destroy the database and recreates it."""
     log.info('Deleting the database')
     current_app.manager.drop_all()
     return jsonify(
@@ -39,7 +39,7 @@ def delete_db():
 @db_blueprint.route('/admin/user/<int:user_id>')
 @roles_required('admin')
 def view_user(user_id):
-    """Returns the given user's history
+    """Return the given user's history.
 
     :param int user_id: The identifier of the user to summarize
     """
@@ -50,14 +50,14 @@ def view_user(user_id):
 @db_blueprint.route('/admin/users')
 @roles_required('admin')
 def view_users():
-    """Renders a list of users"""
+    """Render a list of users."""
     return render_template('admin/users.html', users=current_app.manager.session.query(User))
 
 
 @db_blueprint.route('/admin/delete/mappings')
 @roles_required('admin')
 def delete_mappings():
-    """Delete all mappings"""
+    """Delete all mappings."""
     current_app.manager.delete_all_mappings()
 
     return jsonify(
@@ -68,7 +68,7 @@ def delete_mappings():
 
 @db_blueprint.route('/pathway/infer/hierarchy')
 def infer_hierarchy():
-    """Infers hierarchy for a given pathway
+    """Infer hierarchy for a given pathway.
 
     ---
     tags:

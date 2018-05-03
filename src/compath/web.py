@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-""" This module contains the flask-admin application to visualize the db"""
+"""This module contains the flask-admin application."""
 
 import logging
 import os
@@ -36,7 +36,7 @@ swagger = Swagger()
 
 
 def create_app(connection=None):
-    """Creates a Flask application
+    """Create the Flask application.
 
     :type connection: Optional[str]
     :rtype: flask.Flask
@@ -47,7 +47,7 @@ def create_app(connection=None):
 
     @app.template_filter('remove_prefix')
     def remove_prefix(text, prefix):
-        """Remove prefix from string
+        """Remove prefix from string.
 
         :param str text: string from which the prefix would be subtracted
         :param str prefix: prefix to delete
@@ -80,12 +80,14 @@ def create_app(connection=None):
     db = SQLAlchemy(app)
 
     class WebManager(Manager):
+        """Web manager class"""
+
         def __init__(self):
             self.session = db.session
             self.engine = db.engine
 
         def drop_all(self):
-            """Drop all tables for ComPath"""
+            """Drop all tables for ComPath."""
             Base.metadata.drop_all(self.engine)
             Base.metadata.create_all(self.engine)
 
