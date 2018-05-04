@@ -4,7 +4,7 @@
 {% import "bootstrap/fixes.html" as fixes %}
 {% import "bootstrap/utils.html" as util %}
 
-{% block title %}Similarity Network{% endblock %}
+{% block title %}Pathway Knowledge Network{% endblock %}
 
 
 {% block styles %}
@@ -68,9 +68,17 @@
     {{ super() }}
     {% include "dependencies/common.html" %}
     {% include "dependencies/cytoscape.html" %}
-    {% include "dependencies/slider.html" %}
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/graph_controller.js', version='20181602') }}">
+     <script type="text/javascript"
+            src="{{ url_for('static', filename='js/pathway_knowledge_graph_controller.js', version='20180510') }}">
+    </script>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            var mappingsData = {{ cytoscape_graph|safe }};
+            startCy(mappingsData); // Generate the default Network
+
+        });
     </script>
 
 {% endblock %}
@@ -79,7 +87,7 @@
     <div class="container">
 
         <div class="text-center">
-            <h2>Pathway Similarity Network</h2>
+            <h2>Pathway Knowledge Network</h2>
         </div>
 
         <div class="row">
@@ -104,71 +112,10 @@
                 </ul>
                 <div class="tab-content">
                     <div class="tab-pane active" id="network-panel" role="tabpanel">
-                        <button type="button" id="refresh-network" class="btn btn-primary not-rounded full-width">
-                            Refresh Network
-                        </button>
                         <p class="preamble">
-                            Please select the pair of Pathway Databases to compare and the minimum threshold of
-                            similarity. Then, click on the "Refresh Network" button.
                         </p>
                         <hr>
                         <div id="config" class="config">
-                            <form>
-                                <div class="form-inline">
-                                    <p>Select Pathway Database Pair</p>
-                                    <label for="resource-input-1"></label>
-
-                                    <select type="text" class="form-control" id="resource-input-1">
-                                        <option value="reactome">Reactome</option>
-                                        <option value="kegg">KEGG</option>
-                                        <option value="wikipathways" selected>Wikipathways</option>
-                                    </select>
-
-                                    <label for="resource-input-2"></label>
-
-                                    <select type="text" class="form-control" id="resource-input-2">
-                                        <option value="reactome">Reactome</option>
-                                        <option value="kegg">KEGG</option>
-                                        <option value="wikipathways" selected>Wikipathways</option>
-                                    </select>
-                                </div>
-                                <div class="form-inline">
-                                    <p>Minimum Similarity Threshold</p>
-
-                                    <label for="similarity-range"></label>
-                                    <select type="text" class="form-control" id="similarity-range">
-
-                                        <option>10</option>
-                                        <option>20</option>
-                                        <option>30</option>
-                                        <option>40</option>
-                                        <option>50</option>
-                                        <option>60</option>
-                                        <option>70</option>
-                                        <option>80</option>
-                                        <option selected>90</option>
-                                        <option>100</option>
-                                    </select>
-                                </div>
-                            </form>
-                            <div class="tab-pane not-rounded" id="highlight-threshold" role="tabpanel">
-                                <div class="panel-body">
-
-                                    <p>
-                                    <center>
-                                        Highlight the edges with a similarity in the range falling on the slider
-                                        threshold.
-                                    </center>
-                                    </p>
-                                    <center><input id="threshold-slider" type="text" value="" data-slider-min="0"
-                                                   data-slider-max="1"
-                                                   data-slider-step="0.01" data-slider-value="[0.5,1]"
-                                                   class="col-lg-10"/>
-                                    </center>
-                                </div>
-                            </div>
-
-
                             <div class="param">
                             </div>
                         </div>

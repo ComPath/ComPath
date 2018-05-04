@@ -12,11 +12,17 @@ from compath.utils import (
     dict_to_pandas_df,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
+    get_pathway_info,
     perform_hypergeometric_test,
     process_form_gene_set
 )
 from compath.visualization.d3_dendrogram import get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
+from compath.visualization.cytoscape import (
+    mappings_to_cytoscape_js,
+    mappings_to_networkx,
+    networkx_to_cytoscape_js
+)
 
 from flask import (
     abort,
@@ -170,6 +176,7 @@ def compare_pathways():
     if len(pathways) <= 1:
         return abort(500, 'At least two pathways should be sent as arguments.')
 
+    # Gene sets as well as pathway->manager name dictionary
     gene_sets, pathway_manager_dict = get_gene_sets_from_pathway_names(current_app, pathways)
 
     if not gene_sets:
@@ -180,7 +187,7 @@ def compare_pathways():
         )
 
     if analysis_type == 'venn':
-
+        # Process the overlap and send the json needed for venn diagram view
         processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 
         return render_template(
@@ -189,7 +196,7 @@ def compare_pathways():
         )
 
     elif analysis_type == 'dendrogram':
-
+        # Calculate dendrogram and send it to the view
         tree_json, number_of_pathways = get_dendrogram_tree(gene_sets, pathway_manager_dict)
 
         return render_template(
@@ -199,10 +206,23 @@ def compare_pathways():
         )
 
     elif analysis_type == 'network':
-        # TODO: Create new cytoscape template
+
+        # Get pathways triplet info to get their mappings in ComPath
+        pathway_info = get_pathway_info(current_app, pathways)
+
+        # Get the mappings corresponding to each pathway queried
+        mappings = [
+            current_app.manager.get_all_mappings_from_pathway(resource, pathway_id, pathway_name)
+            for resource, pathway_id, pathway_name in pathway_info
+        ]
+
+        mappings = [item for sublist in mappings for item in sublist]  # Flat list of lists
+
+        cytoscape_graph = mappings_to_cytoscape_js(mappings)
+
         return render_template(
-            'visualization/similarity_network.html',
-            manager_names=current_app.manager_dict.keys(),
+            'visualization/pathway_neighbourhood.html',
+            cytoscape_graph=cytoscape_graph
         )
 
     else:

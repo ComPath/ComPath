@@ -45,6 +45,10 @@ REACTOME = 'reactome'
 WIKIPATHWAYS = 'wikipathways'
 MSIG = 'msig'
 
+KEGG_URL = 'http://www.kegg.jp/kegg-bin/show_pathway?map=map{}&show_description=show'
+REACTOME_URL = 'https://reactome.org/PathwayBrowser/#/{}'
+WIKIPATHWAYS_URL = 'https://www.wikipathways.org/index.php/Pathway:{}'
+
 # Managers with hierarchical information
 HIERARCHY_MANAGERS = {REACTOME}
 

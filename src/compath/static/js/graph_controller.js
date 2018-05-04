@@ -224,7 +224,7 @@ function startCy(urlPath) {
                     data['edges'][i]['data']['width'] = value['data']['similarity'] * range2 + 1;
                 });
 
-                var cy = window.cy = cytoscape({
+                var cy = cytoscape({
 
                     boxSelectionEnabled: false,
 
@@ -328,7 +328,6 @@ function startCy(urlPath) {
 
                 // Edge check list
                 var edges = cy.filter('edge');
-                var edgesNames = [];
                 var edgePanel = $("#edge-list"); // Edge submit_data div
 
                 edgePanel.append("<ul id='edge-list-ul' class='list-group checked-list-box not-rounded'></ul>");

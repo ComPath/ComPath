@@ -168,6 +168,29 @@ def get_gene_sets_from_pathway_names(app, pathways):
     return gene_sets, pathway_manager_dict
 
 
+def get_pathway_info(app, pathways):
+    """Return the gene sets for a given pathway/resource tuple.
+
+    :param flask.Flask app: current app
+    :param list[tuple[str,str] pathways: pathway/resource tuples
+    :rtype: list
+    :return: pathway info
+    """
+    pathway_info = []
+
+    for name, resource in pathways:
+
+        pathway = get_pathway_model_by_name(app.manager_dict, resource, name)
+
+        if not pathway:
+            log.warning('{} pathway not found'.format(name))
+            continue
+
+        pathway_info.append((resource, pathway.resource_id, pathway.name))
+
+    return pathway_info
+
+
 """Statistical utils"""
 
 
