@@ -224,6 +224,9 @@ function startCy(urlPath) {
                     data['edges'][i]['data']['width'] = value['data']['similarity'] * range2 + 1;
                 });
 
+                // Add edge width styling to stylesheet
+                style[1]["style"]["width"] = "data(width)";
+
                 var cy = cytoscape({
 
                     boxSelectionEnabled: false,

@@ -143,7 +143,7 @@ function startCy(data) {
                     'nodes': data["nodes"],
                     'edges': data["edges"]
                 },
-                // style: style
+                style: style
             });
 
 

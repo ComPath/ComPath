@@ -1,5 +1,4 @@
 [
-
   {
     "selector": "node",
     "style": {
@@ -14,7 +13,6 @@
     "selector": "edge",
     "style": {
       "label": "data(label)",
-      "width": "data(width)",
       "line-color": "#ccc"
     }
   },
