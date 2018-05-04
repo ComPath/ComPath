@@ -68,14 +68,20 @@
     {{ super() }}
     {% include "dependencies/common.html" %}
     {% include "dependencies/cytoscape.html" %}
-     <script type="text/javascript"
+    <script type="text/javascript"
             src="{{ url_for('static', filename='js/pathway_knowledge_graph_controller.js', version='20180510') }}">
     </script>
     <script type="text/javascript">
 
         $(document).ready(function () {
             var mappingsData = {{ cytoscape_graph|safe }};
-            startCy(mappingsData); // Generate the default Network
+
+            if ($.isEmptyObject(mappingsData)) {
+                alert('There are no mappings associated to the selected pathways')
+            }
+            else {
+                startCy(mappingsData); // Generate the default Network
+            }
         });
     </script>
 
