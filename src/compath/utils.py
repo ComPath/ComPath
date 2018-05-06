@@ -32,16 +32,16 @@ def dict_to_pandas_df(d):
     })
 
 
-def process_form_gene_set(form_field):
+def process_form_gene_set(text):
     """Process the string containing gene symbols and returns a gene set.
 
-    :param str form_field: string to be processed
+    :param str text: string to be processed
     :rtype: set[str]
     :return: gene set
     """
     return {
         word.strip().upper()
-        for line in form_field.split('\n')
+        for line in text.split('\n')
         for word in line.split(',')
         if word
     }

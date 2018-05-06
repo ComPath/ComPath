@@ -11,19 +11,17 @@ from wtforms.validators import DataRequired
 
 class GeneSetForm(FlaskForm):
     """Pathway enrichment form."""
-
     geneset = TextAreaField('Geneset', id="geneset-input", validators=[DataRequired()])
     submit = SubmitField('Submit')
 
 
 class GeneSetFileForm(FlaskForm):
-    """Build the form for uploading gene sets with weight."""
-
+    """Build the form for uploading gene sets."""
     file = FileField(
         'Gene Set File',
         validators=[
             DataRequired(),
-            FileAllowed(['csv'], 'Only files with the *.csv extension are allowed')
-        ],
+            FileAllowed(['txt', 'gmt'], 'Only files with the .txt and .gmt extension are allowed')
+        ]
     )
     submit = SubmitField('Submit File')

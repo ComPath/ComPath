@@ -7,7 +7,7 @@ from io import StringIO
 import logging
 
 from compath.constants import BLACK_LIST
-from compath.forms import GeneSetForm
+from compath.forms import GeneSetForm, GeneSetFileForm
 from compath.utils import (
     dict_to_pandas_df,
     get_enriched_pathways,
@@ -20,9 +20,8 @@ from compath.visualization.d3_dendrogram import get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 from compath.visualization.cytoscape import (
     mappings_to_cytoscape_js,
-    mappings_to_networkx,
-    networkx_to_cytoscape_js
 )
+from werkzeug import secure_filename
 
 from flask import (
     abort,
@@ -126,20 +125,30 @@ def gene_distribution(resource):
 @analysis_blueprint.route('/query')
 def query():
     """Return the Query page"""
-    form = GeneSetForm()
-    return render_template('query.html', form=form)
+    text_form = GeneSetForm()
+    file_form = GeneSetFileForm()
+    return render_template(
+        'query.html',
+        text_form=text_form,
+        file_form=file_form
+    )
 
 
 @analysis_blueprint.route('/query/results', methods=['POST'])
 def process_gene_set():
     """Process the gene set POST form."""
-    form = GeneSetForm()
+    text_form = GeneSetForm()
+    file_form = GeneSetFileForm()
 
-    if not form.validate_on_submit():
+    if text_form.validate_on_submit():
+        gene_sets = process_form_gene_set(text_form.geneset.data)
+
+    elif file_form.validate_on_submit():
+        gene_sets = process_form_gene_set(file_form.file.data.stream.read().decode("utf-8"))
+
+    else:
         flash('The submitted gene set is not valid')
         return redirect('/query')
-
-    gene_sets = process_form_gene_set(form.geneset.data)
 
     enrichment_results = get_enriched_pathways(current_app.manager_dict, gene_sets)
 

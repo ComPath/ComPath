@@ -38,15 +38,18 @@
             </div>
             <div class="panel-body">
                 <div class="col-lg-6 col-md-6 col-sm-6">
-                    <p>
-                        Choose an input file to upload with the gene set in csv file format. If you have a weighted
-                        gene set, the weight of each gene can follow each gene symbol. The membership level is a
-                        number. This tool accepts number between 0.0 and 1.0, where the weight of 0.0 will
-                        completely discard the gene from the enrichment analysis and the weight of 1.0 is the
-                        maximum.
-                    </p>
 
-                    <input name="file" id="file-chooser" type="file">
+                    <form action="{{ url_for('analysis.process_gene_set') }}" method="post"
+                          enctype="multipart/form-data">
+                        <p>
+                            Choose an file to upload with the gene set in txt or gmt file format.
+                        </p>
+                        {{ file_form.hidden_tag() }}
+                        {{ file_form.file }}
+                        <div class="text-center" style="margin-top: 20px">
+                            {{ file_form.submit(class="btn btn-primary btn-lg") }}
+                        </div>
+                    </form>
 
                 </div>
 
@@ -55,15 +58,15 @@
                     <form action="{{ url_for('analysis.process_gene_set') }}" method="post">
                         <div class="form-group">
 
-                            {{ form.hidden_tag() }}
+                            {{ text_form.hidden_tag() }}
                             <label style="font-weight: normal;" for="geneset-input">Or paste your gene set row wise or
                                 comma separated. Click <a
                                         href="#" id="geneset-example" onclick="return insertExample();">
                                     here</a> to see an example. </label>
-                            {{ form.geneset(rows="5", class="form-control")|safe }}
+                            {{ text_form.geneset(rows="5", class="form-control")|safe }}
 
                             <div class="text-center" style="margin-top: 20px">
-                                {{ form.submit(class="btn btn-primary btn-lg") }}
+                                {{ text_form.submit(class="btn btn-primary btn-lg") }}
                             </div>
                         </div>
 

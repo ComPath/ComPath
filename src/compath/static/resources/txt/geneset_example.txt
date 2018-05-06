@@ -1,1 +1,2 @@
-Search for genes that are in both kegg and reactome
+AKT1
+APP
