@@ -57,27 +57,35 @@ these packages are already installed in your Python environment. You can check t
 
 Curation Interface
 ------------------
-- Load hierarchical mappings from a pathway database already containg that information (e.g., Reactome):
+Load hierarchical mappings from a pathway database already containg that information (e.g., Reactome)
 
-:code:`python3 -m compath load_hierarchies`
+.. code-block:: sh
 
-- Load mappings from template:
+    $ python3 -m compath load_hierarchies`
 
-:code:`python3 -m compath add_mappings 'path/to/file/' 'pathway_database_1', pathway_database_2' 'curator_email'`
+Load mappings from template
 
-- Create a user:
+.. code-block:: sh
 
-:code:`python3 -m compath make_user 'email' 'password'`
+    $ python3 -m compath add_mappings 'path/to/file/' 'pathway_database_1', pathway_database_2' 'curator_email'
 
-- Make user admin:
-:code:`python3 -m compath make_admin 'email'`
+Create a user
+
+.. code-block:: sh
+
+    $ python3 -m compath make_user 'email' 'password'
+
+Make user admin:
+
+.. code-block:: sh
+
+    $ python3 -m compath make_admin 'email'
 
 
-The web application runs locally by default on port 5000 -> http://localhost:5000).
+The web application runs locally by default on port 5000 -> http://localhost:5000.
 
 Mapping across gene/protein identifiers
 ---------------------------------------
-
 In order to load the gene sets from default packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
 has been already installed and populated. This package is required to perform the mapping from multiple Protein/Gene identifiers to HGNC symbols. The following steps are needed to install Bio2BEL HGNC:
 
