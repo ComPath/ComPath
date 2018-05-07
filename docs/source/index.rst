@@ -9,6 +9,9 @@ ComPath
    manager
    models
    constants
+   curation
+   views
+   visualization
    web
 
 Indices and tables
