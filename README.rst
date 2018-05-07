@@ -82,8 +82,6 @@ Make user admin:
     $ python3 -m compath make_admin 'email'
 
 
-The web application runs locally by default on port 5000 -> http://localhost:5000.
-
 Mapping across gene/protein identifiers
 ---------------------------------------
 In order to load the gene sets from default packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
@@ -100,7 +98,7 @@ The application can be run simply with
 
     python3 -m compath web
 
-This runs the Flask development server locally, by default on port 5000. See http://localhost:5000.
+This runs the Flask development server locally, by default on port 5000 (http://localhost:5000).
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
     :target: https://travis-ci.org/ComPath/ComPath
