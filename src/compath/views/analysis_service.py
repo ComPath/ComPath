@@ -3,37 +3,26 @@
 """This module contains the analysis views in ComPath."""
 
 import itertools
-from io import StringIO
 import logging
+from io import StringIO
+
+from flask import (Blueprint, abort, current_app, flash, jsonify, make_response, redirect, render_template, request)
 
 from compath.constants import BLACK_LIST
-from compath.forms import GeneSetForm, GeneSetFileForm
+from compath.forms import GeneSetFileForm, GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
     get_pathway_info,
     perform_hypergeometric_test,
-    process_form_gene_set
+    process_form_gene_set,
 )
-from compath.visualization.d3_dendrogram import get_dendrogram_tree
-from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 from compath.visualization.cytoscape import (
     mappings_to_cytoscape_js,
 )
-from werkzeug import secure_filename
-
-from flask import (
-    abort,
-    Blueprint,
-    current_app,
-    flash,
-    jsonify,
-    make_response,
-    redirect,
-    render_template,
-    request
-)
+from compath.visualization.d3_dendrogram import get_dendrogram_tree
+from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
 analysis_blueprint = Blueprint('analysis', __name__)

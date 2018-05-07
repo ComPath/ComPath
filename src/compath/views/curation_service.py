@@ -3,19 +3,10 @@
 """This module contains the curation views in ComPath."""
 
 import logging
-from io import StringIO, BytesIO
+from io import BytesIO, StringIO
 
 from flask import (
-    abort,
-    Blueprint,
-    current_app,
-    flash,
-    jsonify,
-    redirect,
-    render_template,
-    request,
-    send_file,
-    url_for
+    Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, send_file, url_for,
 )
 from flask_security import current_user, login_required, roles_required
 
@@ -24,7 +15,7 @@ from compath.utils import (
     get_mappings,
     get_most_similar_names,
     get_pathway_model_by_name,
-    to_csv
+    to_csv,
 )
 
 log = logging.getLogger(__name__)

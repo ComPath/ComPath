@@ -4,18 +4,12 @@
 
 import logging
 
+from flask import (Blueprint, abort, current_app, render_template)
+from flask_admin.contrib.sqla import ModelView
+
 from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
-
-from flask import (
-    abort,
-    Blueprint,
-    current_app,
-    render_template
-)
-
-from flask_admin.contrib.sqla import ModelView
 
 log = logging.getLogger(__name__)
 model_blueprint = Blueprint('model', __name__)

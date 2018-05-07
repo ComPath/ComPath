@@ -4,13 +4,12 @@
 
 import datetime
 
-from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
-
 from flask_security import RoleMixin, UserMixin
-
-from sqlalchemy import and_, or_, Boolean, Column, DateTime, ForeignKey, Integer, String, Table
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
+
+from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
 
 Base = declarative_base()
 

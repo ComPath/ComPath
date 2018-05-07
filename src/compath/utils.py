@@ -2,8 +2,8 @@
 
 """This module contains miscellaneous methods."""
 
-from difflib import SequenceMatcher
 import logging
+from difflib import SequenceMatcher
 
 import numpy as np
 from pandas import DataFrame, Series

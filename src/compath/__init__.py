@@ -39,9 +39,10 @@ has been already installed and populated. This package is required to perform th
 
 import logging
 
-from compath.constants import MODULE_NAME
 from compath_utils import CompathManager
-from pkg_resources import iter_entry_points, VersionConflict
+from pkg_resources import VersionConflict, iter_entry_points
+
+from compath.constants import MODULE_NAME
 
 log = logging.getLogger(__name__)
 

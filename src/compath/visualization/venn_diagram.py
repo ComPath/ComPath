@@ -41,18 +41,20 @@ def process_overlap_for_venn_diagram(gene_sets, skip_gene_set_info=False):
         # Only minimum info is returned
         if skip_gene_set_info:
             overlaps_venn_diagram.append(
-                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-                 'size': len(set_1_values.intersection(set_2_values)),
-                 }
+                {
+                    'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                    'size': len(set_1_values.intersection(set_2_values)),
+                }
             )
         # Returns gene set overlap/intersection information as well
         else:
             overlaps_venn_diagram.append(
-                {'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
-                 'size': len(set_1_values.intersection(set_2_values)),
-                 'gene_set': list(set_1_values.intersection(set_2_values)),
-                 'intersection': set_1_name + ' &#8745 ' + set_2_name
-                 }
+                {
+                    'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                    'size': len(set_1_values.intersection(set_2_values)),
+                    'gene_set': list(set_1_values.intersection(set_2_values)),
+                    'intersection': set_1_name + ' &#8745 ' + set_2_name
+                }
             )
 
     return overlaps_venn_diagram

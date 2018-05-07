@@ -4,9 +4,9 @@
 
 from collections import defaultdict
 
-from compath.constants import KEGG, KEGG_URL, REACTOME, REACTOME_URL, WIKIPATHWAYS, WIKIPATHWAYS_URL
-
 from networkx import Graph
+
+from compath.constants import KEGG, KEGG_URL, REACTOME, REACTOME_URL, WIKIPATHWAYS, WIKIPATHWAYS_URL
 
 
 def mappings_to_cytoscape_js(mappings):

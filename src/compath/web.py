@@ -2,22 +2,9 @@
 
 """This module contains the flask-admin application."""
 
+import logging
 import os
 import time
-
-from compath import managers
-from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
-from compath.manager import Manager
-from compath.models import Base, PathwayMapping, Role, User, Vote
-from compath.views.analysis_service import analysis_blueprint
-from compath.views.curation_service import curation_blueprint
-from compath.views.db_service import db_blueprint
-from compath.views.main_service import ui_blueprint
-from compath.views.model_service import MappingView, VoteView
-from compath.views.model_service import model_blueprint
-from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
-
-import logging
 
 from bio2bel_hgnc.manager import Manager as HgncManager
 from flasgger import Swagger
@@ -28,6 +15,17 @@ from flask_bootstrap import Bootstrap
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+
+from compath import managers
+from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
+from compath.manager import Manager
+from compath.models import Base, PathwayMapping, Role, User, Vote
+from compath.views.analysis_service import analysis_blueprint
+from compath.views.curation_service import curation_blueprint
+from compath.views.db_service import db_blueprint
+from compath.views.main_service import ui_blueprint
+from compath.views.model_service import MappingView, VoteView, model_blueprint
+from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
 
@@ -76,7 +74,7 @@ def create_app(connection=None):
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'
     app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
 
-    csrf = CSRFProtect(app)
+    CSRFProtect(app)
     bootstrap.init_app(app)
     db = SQLAlchemy(app)
 

@@ -6,8 +6,7 @@ import datetime
 import logging
 
 from bio2bel.utils import get_connection
-from sqlalchemy import and_
-from sqlalchemy import create_engine
+from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
 from . import managers
