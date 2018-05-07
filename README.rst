@@ -13,15 +13,41 @@ packages:
 
 New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
 
-How to Use
-----------
+Setup
+-----
 
 1. Install and load the required packages
 
 - If you just cloned the repo, you can run the sh script "load_compath.sh" by typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the database.
 - If you have already installed the packages, but not loaded the data. First, load `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that these packages are already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 
-2. The final step is to start the web application locally (runs by default on port 5000 -> http://localhost:5000) by running :code:`python3 -m compath web`
+Running the application
+-----------------------
+
+:code:`python3 -m compath web`
+
+The web application runs locally by default on port 5000 -> http://localhost:5000).
+
+Curation interface
+-----------------------
+
+- Load hierarchical mappings from a pathway database already containg that information (e.g., Reactome):
+
+:code:`python3 -m compath load_hierarchies`
+
+- Load mappings from template:
+
+:code:`python3 -m compath add_mappings 'path/to/file/' 'pathway_database_1', pathway_database_2' 'curator_email'`
+
+- Create a user:
+
+:code:`python3 -m compath make_user 'email' 'password'`
+
+- Make user admin:
+:code:`python3 -m compath make_admin 'email'`
+
+
+The web application runs locally by default on port 5000 -> http://localhost:5000).
 
 Mapping across gene/protein identifiers
 ---------------------------------------
@@ -31,7 +57,6 @@ has been already installed and populated. This package is required to perform th
 
 1. :code:`python3 -m pip install bio2bel_hgnc`
 2. :code:`python3 -m bio2bel_hgnc populate`
-
 
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
