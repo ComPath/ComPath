@@ -13,24 +13,50 @@ packages:
 
 New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
 
+Installation |pypi_version| |python_versions| |pypi_license|
+------------------------------------------------------------
+``compath`` can be installed easily from `PyPI <https://pypi.python.org/pypi/compath>`_ with the
+following code in your favorite terminal:
+
+.. code-block:: sh
+
+    $ python3 -m pip install compath
+
+or from the latest code on `GitHub <https://github.com/compath/compath>`_ with:
+
+.. code-block:: sh
+
+    $ python3 -m pip install git+https://github.com/bio2bel/compath.git@master
+
 Setup
 -----
+Easiest
+~~~~~~~
+After installing ``compath``, run from the command line:
 
-1. Install and load the required packages
+.. code-block:: sh
 
-- If you just cloned the repo, you can run the sh script "load_compath.sh" by typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the database.
-- If you have already installed the packages, but not loaded the data. First, load `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that these packages are already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
+    $ python3 -m compath populate
 
-Running the application
------------------------
+This command populates all of the relevant Bio2BEL repositories for the default list, and if any optional ComPath
+repositories have been registered with entry points, will also populated.
 
-:code:`python3 -m compath web`
+For Developers
+~~~~~~~~~~~~~~
+If you just cloned the repo and installed it from the source code, you can run the sh script ``load_compath.sh`` by
+typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the
+database.
 
-The web application runs locally by default on port 5000 -> http://localhost:5000).
+If you have already installed the packages, but not loaded the data. First, load
+`Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database
+packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that
+these packages are already installed in your Python environment. You can check the packages installed by running
+:code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running:
+:code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
+:code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 
-Curation interface
------------------------
-
+Curation Interface
+------------------
 - Load hierarchical mappings from a pathway database already containg that information (e.g., Reactome):
 
 :code:`python3 -m compath load_hierarchies`
@@ -58,6 +84,15 @@ has been already installed and populated. This package is required to perform th
 1. :code:`python3 -m pip install bio2bel_hgnc`
 2. :code:`python3 -m bio2bel_hgnc populate`
 
+Running the Web Application
+---------------------------
+The application can be run simply with
+
+.. code-block:: bash
+
+    python3 -m compath web
+
+This runs the Flask development server locally, by default on port 5000. See http://localhost:5000.
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
     :target: https://travis-ci.org/ComPath/ComPath
@@ -71,4 +106,15 @@ has been already installed and populated. This package is required to perform th
     :target: https://compath.readthedocs.io/en/latest/
     :alt: Documentation Status
 
+.. |climate| image:: https://codeclimate.com/github/compath/compath/badges/gpa.svg
+    :target: https://codeclimate.com/github/compath/compath
+    :alt: Code Climate
 
+.. |python_versions| image:: https://img.shields.io/pypi/pyversions/compath.svg
+    :alt: Stable Supported Python Versions
+
+.. |pypi_version| image:: https://img.shields.io/pypi/v/compath.svg
+    :alt: Current version on PyPI
+
+.. |pypi_license| image:: https://img.shields.io/pypi/l/compath.svg
+    :alt: MIT License
