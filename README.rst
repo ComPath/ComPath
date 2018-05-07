@@ -1,5 +1,5 @@
-ComPath |build| |coverage| |docs|
-=================================
+ComPath |build| |coverage| |docs| |zenodo|
+==========================================
 An interactive and extensible web application for comparative analysis of pathway databases
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
@@ -126,3 +126,6 @@ This runs the Flask development server locally, by default on port 5000. See htt
 
 .. |pypi_license| image:: https://img.shields.io/pypi/l/compath.svg
     :alt: MIT License
+
+.. |zenodo| image:: https://zenodo.org/badge/118578699.svg
+    :target: https://zenodo.org/badge/latestdoi/118578699
