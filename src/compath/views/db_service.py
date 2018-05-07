@@ -83,7 +83,6 @@ def infer_hierarchy():
       - name: pathway-id
         type: string
         required: true
-
     responses:
       200:
         description:
