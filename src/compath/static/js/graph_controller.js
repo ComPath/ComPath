@@ -128,81 +128,6 @@ function displayEdgeInfo(edge) {
     });
 }
 
-/**
- * Resets default styles for nodes/edges/text
- */
-function resetAttributes() {
-    // Reset visibility and opacity
-    cy.filter('node').style("opacity", "1");
-    cy.filter('edge').style("opacity", "1");
-}
-
-/**
- * Highlights nodes from array using property as filter and changes the opacity of the rest of nodes
- * @param {array} nodeArray
- * @param {string} property of the edge to filter
- */
-function highlightNodes(nodeArray, property) {
-
-    nodes = cy.filter("node");
-
-
-    // Filter not mapped nodes to change opacity
-    var nodesNotInArray = nodes.filter(function (nodeObject) {
-        return nodeArray.indexOf(nodeObject.data(property)) < 0;
-    });
-
-    // Not mapped links
-    var notMappedEdges = cy.filter("edge").filter(function (edgeObject) {
-        // Source and target should be present in the edge
-        return !(nodeArray.indexOf(nodes[edgeObject.data('source')].data(property)) >= 0 || nodeArray.indexOf(nodes[edgeObject.data('target')].data(property)) >= 0);
-    });
-
-
-    nodesNotInArray.style("opacity", "0.3");
-    notMappedEdges.style("opacity", "0.2");
-}
-
-/**
- * Changes the opacity to 0.1 of edges that are not in array
- * @param {array} edgeArray
- * @param {string} property of the edge to filter
- */
-function highlightEdges(edgeArray, property) {
-
-    // Array with names of the nodes in the selected edge
-    var nodesInEdges = [];
-    nodes = cy.filter("node");
-
-    // Filtered not selected links
-
-    var edgesNotInArray = cy.filter("edge").filter(function (edgeObject) {
-        if (edgeArray.indexOf(nodes[edgeObject.data('source')].data(property) + " &lt;-&gt; " + nodes[edgeObject.data('target')].data(property)) >= 0) {
-            nodesInEdges.push(nodes[edgeObject.data('source')].data(property));
-            nodesInEdges.push(nodes[edgeObject.data('target')].data(property));
-        }
-        else return edgeObject;
-    });
-
-    var nodesNotInEdges = cy.filter("node").filter(function (nodeObject) {
-        return (nodesInEdges.indexOf(nodeObject.data(property)) < 0);
-    });
-
-    nodesNotInEdges.style("opacity", "0.3");
-    edgesNotInArray.style("opacity", "0.2");
-
-}
-
-/**
- * Resets default styles for nodes/edges/text on double click
- */
-function resetAttributesDoubleClick() {
-    // TODO: On double click
-    cy.on('tap', function (event) {
-        cy.filter("node").style("opacity", "1");
-        cy.filter("edge").style("opacity", "1");
-    });
-}
 
 function startCy(urlPath) {
     $.getJSON(urlPath, function (data) {
@@ -397,6 +322,84 @@ function startCy(urlPath) {
                     });
                 }
 
+                /**
+                 * Changes the opacity to 0.1 of edges that are not in array
+                 * @param {array} edgeArray
+                 * @param {string} property of the edge to filter
+                 */
+                function highlightEdges(edgeArray, property) {
+
+                    // Array with names of the nodes in the selected edge
+                    var nodesInEdges = [];
+                    nodes = cy.filter("node");
+
+                    // Filtered not selected links
+
+                    var edgesNotInArray = cy.filter("edge").filter(function (edgeObject) {
+                        if (edgeArray.indexOf(nodes[edgeObject.data('source')].data(property) + " &lt;-&gt; " + nodes[edgeObject.data('target')].data(property)) >= 0) {
+                            nodesInEdges.push(nodes[edgeObject.data('source')].data(property));
+                            nodesInEdges.push(nodes[edgeObject.data('target')].data(property));
+                        }
+                        else return edgeObject;
+                    });
+
+                    var nodesNotInEdges = cy.filter("node").filter(function (nodeObject) {
+                        return (nodesInEdges.indexOf(nodeObject.data(property)) < 0);
+                    });
+
+                    nodesNotInEdges.style("opacity", "0.3");
+                    edgesNotInArray.style("opacity", "0.2");
+
+                }
+
+
+                /**
+                 * Resets default styles for nodes/edges/text
+                 */
+                function resetAttributes() {
+                    // Reset visibility and opacity
+                    cy.filter('node').style("opacity", "1");
+                    cy.filter('edge').style("opacity", "1");
+                }
+
+                /**
+                 * Highlights nodes from array using property as filter and changes the opacity of the rest of nodes
+                 * @param {array} nodeArray
+                 * @param {string} property of the edge to filter
+                 */
+                function highlightNodes(nodeArray, property) {
+
+                    nodes = cy.filter("node");
+
+
+                    // Filter not mapped nodes to change opacity
+                    var nodesNotInArray = nodes.filter(function (nodeObject) {
+                        return nodeArray.indexOf(nodeObject.data(property)) < 0;
+                    });
+
+                    // Not mapped links
+                    var notMappedEdges = cy.filter("edge").filter(function (edgeObject) {
+                        // Source and target should be present in the edge
+                        return !(nodeArray.indexOf(nodes[edgeObject.data('source')].data(property)) >= 0 || nodeArray.indexOf(nodes[edgeObject.data('target')].data(property)) >= 0);
+                    });
+
+
+                    nodesNotInArray.style("opacity", "0.3");
+                    notMappedEdges.style("opacity", "0.2");
+                }
+
+
+                /**
+                 * Resets default styles for nodes/edges/text on double click
+                 */
+                function resetAttributesDoubleClick() {
+                    // TODO: On double click
+                    cy.on('tap', function (event) {
+                        cy.filter("node").style("opacity", "1");
+                        cy.filter("edge").style("opacity", "1");
+                    });
+                }
+
                 //Get checked nodes.
                 $("#get-checked-nodes").on("click", function (event) {
 
@@ -433,6 +436,7 @@ function startCy(urlPath) {
                 ///////////////////////////////////////
 
                 $("#threshold-slider").bind("change", function () {
+
                     nodes = cy.filter("node");
                     var edgesInThreshold = [];
 
