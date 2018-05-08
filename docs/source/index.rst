@@ -7,6 +7,7 @@ ComPath
    :caption: Contents:
 
    repositories
+   cli
    manager
    models
    constants

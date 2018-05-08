@@ -22,7 +22,7 @@ SWAGGER_CONFIG = {
     'version': '0.1.0',
 }
 
-"""Static files"""
+# Static files
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 STATIC_FOLDER = os.path.join(dir_path, 'static')
