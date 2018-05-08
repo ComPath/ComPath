@@ -14,6 +14,7 @@ ComPath
    curation
    visualization
    web
+   utils
 
 Indices and tables
 ==================
