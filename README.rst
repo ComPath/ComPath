@@ -61,7 +61,7 @@ Load hierarchical mappings from a pathway database already containg that informa
 
 .. code-block:: sh
 
-    $ python3 -m compath load_hierarchies`
+    $ python3 -m compath load_hierarchies
 
 Load mappings from template
 
