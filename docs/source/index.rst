@@ -10,7 +10,6 @@ ComPath
    models
    constants
    curation
-   views
    visualization
    web
 
