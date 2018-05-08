@@ -6,6 +6,7 @@ ComPath
    :maxdepth: 2
    :caption: Contents:
 
+   repositories
    manager
    models
    constants
