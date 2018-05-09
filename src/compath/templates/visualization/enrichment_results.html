@@ -115,11 +115,14 @@
             <hr>
             {{ util.flashed_messages(dismissible=True, container=False) }}
 
-            <p>The enriched pathways are presented in different tables for each resource loaded into ComPath.
-                The pathway enrichment is presented in the third column (adjusted <i>p</i>-values) by performing a
-                Fisher's Exact Test for each mapped pathway in all resources and adjusting the values using Benjamini &
-                Hochberg correction. The purpose of the adjusted <i>p</i>-values (rounded to 4 decimal places) is to
-                guide the user on what pathway selection should use for further analysis.
+            <p>The enriched pathways are presented in different tables for each resource loaded into ComPath. The table
+                links to the pathway info page where the genes in the pathway that has been submitted will be
+                highlighted and you can see the mappings with similar pathways. The second column will open the
+                pathway page in the original pathway database. The pathway enrichment is presented in the third column
+                (adjusted <i>p</i>-values) by performing a Fisher's Exact Test for each mapped pathway in all resources
+                and adjusting the values using Benjamini & Hochberg correction. The purpose of the adjusted <i>p</i>-values
+                (rounded to 4 decimal places) is to guide the user on what pathway selection should use for further
+                analysis.
             </p>
 
             <table class="table table-bordered table-striped table-hover">
@@ -192,7 +195,7 @@
                                     </label>
                                 </td>
                                 <td>
-                                    <a href="{{ url_for("model.pathway_view",resource=resource_name, identifier=enriched_pathway["pathway_id"] ) }}">
+                                    <a href="{{ url_for("model.pathway_view",resource=resource_name, identifier=enriched_pathway["pathway_id"], gene_set=submitted_gene_set ) }}">
                                         {{ enriched_pathway["pathway_name"] }}
                                     </a>
                                 </td>

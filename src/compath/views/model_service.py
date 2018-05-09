@@ -4,7 +4,7 @@
 
 import logging
 
-from flask import (Blueprint, abort, current_app, render_template)
+from flask import (Blueprint, abort, current_app, request, render_template)
 from flask_admin.contrib.sqla import ModelView
 
 from compath.constants import EQUIVALENT_TO, IS_PART_OF
@@ -63,7 +63,6 @@ class VoteView(ModelView):
 @model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
     """Render the pathway view page."""
-
     if resource not in current_app.manager_dict:
         abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))
 
@@ -130,5 +129,6 @@ def pathway_view(resource, identifier):
         resource=resource,
         equivalent_pathways=equivalent_pathways,
         sub_pathways=sub_pathways,
-        super_pathways=super_pathways
+        super_pathways=super_pathways,
+        submitted_gene_set=request.args.get('gene_set')
     )
