@@ -267,7 +267,7 @@ def calculate_szymkiewicz_simpson_coefficient(set_1, set_2):
 
     :param set set_1: set 1
     :param set set_2: set 2
-    :returns similarity
+    :return: similarity of the two sets
     :rtype: float
     """
 
