@@ -9,6 +9,17 @@ from networkx import Graph
 from compath.constants import KEGG, KEGG_URL, REACTOME, REACTOME_URL, WIKIPATHWAYS, WIKIPATHWAYS_URL
 
 
+def pathways_to_similarity_network(manager_dict, pathways):
+    """Pathways to similarity network
+
+    :param dict manager_dict:
+    :param list[tuple(str,str,str)] pathways:
+    :rtype: networkx.Graph
+    """
+
+
+
+
 def mappings_to_cytoscape_js(mappings):
     """ComPath mappings to cytoscape js format
 
@@ -24,7 +35,7 @@ def mappings_to_networkx(mappings):
     """Create a graph with the mappings relationships
 
     :param iter mappings:
-    :rtype: networkx.graph
+    :rtype: networkx.Graph
     """
     graph = Graph()
     for mapping in mappings:

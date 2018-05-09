@@ -262,6 +262,21 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
 """Suggestion utils"""
 
 
+def calculate_szymkiewicz_simpson_coefficient(set_1, set_2):
+    """Calculate Szymkiewicz-Simpson coefficient between two sets.
+
+    :param set set_1: set 1
+    :param set set_2: set 2
+    :returns similarity
+    :rtype: float
+    """
+
+    intersection = len(set_1.intersection(set_2))
+    smaller_set = min(len(set_1), len(set_2))
+
+    return intersection / smaller_set
+
+
 def calculate_similarity(name_1, name_2):
     """Calculate the string based similarity between two names.
 
