@@ -153,8 +153,8 @@
         <p>First, select your pathways of interest and click in the type of analysis to perform. The "Venn Diagram"
             button displays the overlap between the selected pathways represented as Venn Diagrams, "Dendrogram"
             clusters the pathways and present a dendrogram where users can further investigate the pathway groups,
-            and finally, the "Network View" button represents the neighborhood of most similar pathways to the
-            selection.
+            and finally, the "Network" button renders the similarity between the selection of pathways as well as the
+            neighborhood of curated mappings linked with the selection.
         </p>
         <div class="text-center">
             <button class="btn btn-primary" name="analysis" value="venn" type="submit">Venn Diagram</button>
@@ -192,7 +192,9 @@
                                     </label>
                                 </td>
                                 <td>
-                                    {{ enriched_pathway["pathway_name"] }}
+                                    <a href="{{ url_for("model.pathway_view",resource=resource_name, identifier=enriched_pathway["pathway_id"] ) }}">
+                                        {{ enriched_pathway["pathway_name"] }}
+                                    </a>
                                 </td>
                                 <td>
                                     {% if resource_name == "reactome" %}

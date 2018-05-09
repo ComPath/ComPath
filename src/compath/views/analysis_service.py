@@ -145,8 +145,11 @@ def process_gene_set():
     valid_gene_sets = current_app.gene_universe.intersection(gene_sets)
 
     if valid_gene_sets:
-        enrichment_results = perform_hypergeometric_test(valid_gene_sets, enrichment_results,
-                                                         len(current_app.gene_universe))
+        enrichment_results = perform_hypergeometric_test(
+            valid_gene_sets,
+            enrichment_results,
+            len(current_app.gene_universe)
+        )
     else:
         flash('ComPath could not find any valid HGNC Symbol from the submitted list')
 
