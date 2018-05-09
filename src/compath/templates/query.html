@@ -21,13 +21,24 @@
             $('[data-toggle="tooltip"]').tooltip()
         })
     </script>
-    <script type="text/javascript" src="{{ url_for('static', filename='js/query.js', version='20180501') }}"></script>
+    <script type="text/javascript">
+        /** This JS controls the query page of ComPath
+         **
+         * @requires: jquery
+         */
+        function insertExample() {
+            $.get('static/resources/txt/geneset_example.txt', function (data) {
+                $('textarea#geneset-input').val(data);
+            });
+            return false;
+        }
+    </script>
 {% endblock %}
 
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Gene Sets Query</h1>
+            <h1>Pathway Enrichment</h1>
         </div>
 
         {{ util.flashed_messages(dismissible=True, container=False) }}
@@ -46,8 +57,8 @@
                         </p>
                         {{ file_form.hidden_tag() }}
                         {{ file_form.file }}
-                        <div class="text-center" style="margin-top: 20px">
-                            {{ file_form.submit(class="btn btn-primary btn-lg") }}
+                        <div style="margin-top: 20px">
+                            {{ file_form.submit(class="btn btn-primary") }}
                         </div>
                     </form>
 
@@ -66,7 +77,7 @@
                             {{ text_form.geneset(rows="5", class="form-control")|safe }}
 
                             <div class="text-center" style="margin-top: 20px">
-                                {{ text_form.submit(class="btn btn-primary btn-lg") }}
+                                {{ text_form.submit(class="btn btn-primary") }}
                             </div>
                         </div>
 
