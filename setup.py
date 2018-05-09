@@ -32,10 +32,6 @@ INSTALL_REQUIRES = [
     'bio2bel>=0.0.9',
     'compath_utils>=0.0.3',
     'bio2bel_hgnc',
-    'bio2bel_kegg>=0.0.6',
-    'bio2bel_reactome>=0.0.5',
-    'bio2bel_wikipathways>=0.0.6',
-    'bio2bel_msig>=0.0.2',
     'wtforms',
     'flask_wtf',
     'flask',
@@ -51,6 +47,14 @@ INSTALL_REQUIRES = [
 ENTRY_POINTS = {
     'console_scripts': [
         '{mname} = {mname}.cli:main'.format(mname=MODULE),
+    ]
+}
+EXTRAS_REQUIRE = {
+    'standard': [
+        'bio2bel_kegg>=0.0.6',
+        'bio2bel_reactome>=0.0.6',
+        'bio2bel_wikipathways>=0.0.6',
+        'bio2bel_msig>=0.0.2',
     ]
 }
 
@@ -102,4 +106,5 @@ if __name__ == '__main__':
         package_dir={'': 'src'},
         install_requires=INSTALL_REQUIRES,
         entry_points=ENTRY_POINTS,
+        extras_require=EXTRAS_REQUIRE,
     )
