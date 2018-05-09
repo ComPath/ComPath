@@ -129,7 +129,7 @@
             <table class="table table-bordered table-striped table-hover">
                 <tbody>
                 <tr>
-                    <td>Gene Symbols Submitted</td>
+                    <td>Gene Symbols Submitted ({{ submitted_gene_set|length }})</td>
                     <td>
                         {% for hgnc_symbol in submitted_gene_set %}
                             <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
