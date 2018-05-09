@@ -43,99 +43,138 @@
             </div>
             <div class="panel-body">
                 <div class="col-sm-12 col-md-12 col-lg-12">
-                    <div class="thumbnail">
-                        <div class="caption">
-                            <h3>Resources</h3>
-                            <p>
-                                Resources from <a href="http://www.kegg.jp/">KEGG</a>,
-                                <a href="https://reactome.org/">Reactome</a>,
-                                <a href="https://www.wikipathways.org/">WikiPathways</a>, and
-                                <a href="http://software.broadinstitute.org/gsea/msigdb/">MSigDB</a>
-                                have been used to build this package and application.
-                            </p>
-                            <b>KEGG References:</b>
-                            <ul>
-                                <li>Kanehisa, Furumichi, M., Tanabe, M., Sato, Y., and Morishima, K.; KEGG: new
-                                    perspectives
-                                    on genomes, pathways, diseases and drugs. Nucleic Acids Res. 45, D353-D361
-                                    (2017).
-                                </li>
-                                <li>Kanehisa, M., Sato, Y., Kawashima, M., Furumichi, M., and Tanabe, M.; KEGG as a
-                                    reference resource for gene and protein annotation. Nucleic Acids Res. 44,
-                                    D457-D462
-                                    (2016).
-                                </li>
-                                <li> Kanehisa, M. and Goto, S.; KEGG: Kyoto Encyclopedia of Genes and Genomes.
-                                    Nucleic Acids
-                                    Res. 28, 27-30 (2000).
-                                </li>
-                            </ul>
-                            <b>Reactome References:</b>
-                            <ul>
-                                <li>Fabregat, Antonio et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids
-                                    Research 44.Database issue (2016): D481–D487. PMC. Web. 6 Oct. 2017.
-                                </li>
-                                <li>Croft, David et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids Research
-                                    42.Database issue (2014): D472–D477. PMC. Web. 6 Oct. 2017.
-                                </li>
-                            </ul>
-                            <b>WikiPathways References:</b>
-                            <ul>
-                                <li>Slenter DN, Kutmon M, Hanspers K, Riutta A, Windsor J, Nunes N, Mélius J, Cirillo E,
-                                    Coort SL, Digles D, Ehrhart F, Giesbertz P, Kalafati M, Martens M, Miller R, Nishida
-                                    K,
-                                    Rieswijk L, Waagmeester A, Eijssen LMT, Evelo CT, Pico AR, Willighagen EL.
-                                    WikiPathways:
-                                    a multifaceted pathway database bridging metabolomics to other omics research
-                                    Nucleic
-                                    Acids Research, (2017)doi.org/10.1093/nar/gkx1064
-                                </li>
-                                <li>Kutmon M, Riutta A, Nunes N, Hanspers K, Willighagen EL, Bohler A, Mélius J,
-                                    Waagmeester
-                                    A, Sinha SR, Miller R, Coort SL, Cirillo E, Smeets B, Evelo CT, Pico AR.
-                                    WikiPathways:
-                                    capturing the full diversity of pathway knowledge Nucl. Acids Res., 44, D488-D494
-                                    (2016)
-                                    doi:10.1093/nar/gkv1024
-                                </li>
-                                <li>Kelder T, van Iersel MP, Hanspers K, Kutmon M, Conklin BR, Evelo C, Pico AR.
-                                    WikiPathways: building research communities on biological pathways. Nucleic Acids
-                                    Res.
-                                    2012 Jan;40(Database issue):D1301-7
-                                </li>
-                            </ul>
-                            <b>MSigDB References:</b>
-                            <p>The MSig gene sets loaded exclude the BioCarta and AAAS/STKE Cell Signaling Database gene
-                                sets.</p>
-                            <ul>
-                                <li>Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette,
-                                    M. A., ... & Mesirov, J. P. (2005). Gene set enrichment analysis: a knowledge-based
-                                    approach for interpreting genome-wide expression profiles. Proceedings of the
-                                    National Academy of Sciences, 102(43), 15545-15550.
-                                </li>
-                            </ul>
+                    <h3>Resources</h3>
+                    <p>
+                        Resources from <a href="http://www.kegg.jp/">KEGG</a>,
+                        <a href="https://reactome.org/">Reactome</a>,
+                        <a href="https://www.wikipathways.org/">WikiPathways</a>, and
+                        <a href="http://software.broadinstitute.org/gsea/msigdb/">MSigDB</a>
+                        have been used to build this package and application.
+                    </p>
+                    <h3><b>KEGG</b></h3>
 
-                            <h3>Visualization Tools</h3>
-                            <p>
-                                This application makes use of other dedicated bioinformatics software such as <a
-                                    href="http://amp.pharm.mssm.edu/clustergrammer/">
-                                Clustergrammer</a> and <a href="http://js.cytoscape.org/">
-                                Cytoscape JS</a>:
-                            </p>
-                            <ul>
-                                <li>Fernandez, N. F. et al. Clustergrammer, a web-based heatmap visualization and
-                                    analysis
-                                    tool for high-dimensional biological data. Sci. Data 4:170151 doi:
-                                    <a href="https://www.nature.com/articles/sdata2017151">10.1038/sdata.2017.151 </a>(2017).
-                                </li>
-                                <li>
-                                    Franz, M., Lopes, C. T., Huck, G., Dong, Y., Sumer, O., & Bader, G. D. (2015).
-                                    Cytoscape. js: a graph theory library for visualisation and analysis.
-                                    Bioinformatics, 32(2), 309-311.
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <h4>License</h4>
+                    <p>KEGG gene sets are downloaded via the <a href="http://www.kegg.jp/kegg/rest/">KEGG API</a> for
+                        academic purposes (<a
+                                href="http://www.kegg.jp/kegg/legal.html">Terms and
+                            conditions</a>). More info at <a href="https://github.com/bio2bel/kegg">Bio2BEL KEGG</a>.
+                    </p>
+
+                    <h4>References</h4>
+
+                    <ul>
+                        <li>Kanehisa, Furumichi, M., Tanabe, M., Sato, Y., and Morishima, K.; KEGG: new
+                            perspectives
+                            on genomes, pathways, diseases and drugs. Nucleic Acids Res. 45, D353-D361
+                            (2017).
+                        </li>
+                        <li>Kanehisa, M., Sato, Y., Kawashima, M., Furumichi, M., and Tanabe, M.; KEGG as a
+                            reference resource for gene and protein annotation. Nucleic Acids Res. 44,
+                            D457-D462
+                            (2016).
+                        </li>
+                        <li> Kanehisa, M. and Goto, S.; KEGG: Kyoto Encyclopedia of Genes and Genomes.
+                            Nucleic Acids
+                            Res. 28, 27-30 (2000).
+                        </li>
+                    </ul>
+                    <h4><b>Reactome</b></h4>
+
+                    <h3>License</h3>
+                    <p>Reactome gene sets are downloaded via the <a href="https://reactome.org/download-data">Reactome
+                        API</a> for academic purposes (<a
+                            href="https://reactome.org/ContentService/about/license-agreement">Terms and
+                        conditions</a>). More info at <a href="https://github.com/bio2bel/reactome">Bio2BEL
+                        Reactome</a>.
+                    </p>
+                    <h3>References</h3>
+
+                    <ul>
+                        <li>Fabregat, Antonio et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids
+                            Research 44.Database issue (2016): D481–D487. PMC. Web. 6 Oct. 2017.
+                        </li>
+                        <li>Croft, David et al. “The Reactome Pathway Knowledgebase.” Nucleic Acids Research
+                            42.Database issue (2014): D472–D477. PMC. Web. 6 Oct. 2017.
+                        </li>
+                    </ul>
+                    <h3><b>WikiPathways</b></h3>
+
+                    <h4>License</h4>
+                    <p>WikiPathways gene sets are downloaded via the <a>WikiPathways
+                        API</a> for academic purposes (<a
+                            href="https://www.wikipathways.org/index.php/WikiPathways:License_Terms">Terms and
+                        conditions</a>). More info at <a href="https://github.com/bio2bel/wikipathways">Bio2BEL
+                        WikiPathways</a>.
+                    </p>
+                    <h4>References</h4>
+
+                    <ul>
+                        <li>Slenter DN, Kutmon M, Hanspers K, Riutta A, Windsor J, Nunes N, Mélius J, Cirillo E,
+                            Coort SL, Digles D, Ehrhart F, Giesbertz P, Kalafati M, Martens M, Miller R, Nishida
+                            K,
+                            Rieswijk L, Waagmeester A, Eijssen LMT, Evelo CT, Pico AR, Willighagen EL.
+                            WikiPathways:
+                            a multifaceted pathway database bridging metabolomics to other omics research
+                            Nucleic
+                            Acids Research, (2017)doi.org/10.1093/nar/gkx1064
+                        </li>
+                        <li>Kutmon M, Riutta A, Nunes N, Hanspers K, Willighagen EL, Bohler A, Mélius J,
+                            Waagmeester
+                            A, Sinha SR, Miller R, Coort SL, Cirillo E, Smeets B, Evelo CT, Pico AR.
+                            WikiPathways:
+                            capturing the full diversity of pathway knowledge Nucl. Acids Res., 44, D488-D494
+                            (2016)
+                            doi:10.1093/nar/gkv1024
+                        </li>
+                        <li>Kelder T, van Iersel MP, Hanspers K, Kutmon M, Conklin BR, Evelo C, Pico AR.
+                            WikiPathways: building research communities on biological pathways. Nucleic Acids
+                            Res.
+                            2012 Jan;40(Database issue):D1301-7
+                        </li>
+                    </ul>
+                    <h3><b>MSigDB</b></h3>
+
+                    <h4>License</h4>
+                    <p>Only MSig gene sets with <a href="http://creativecommons.org/licenses/by/4.0/">(CC BY 4.0)</a>
+                        are used in ComPath (<a
+                                href="http://software.broadinstitute.org/gsea/msigdb_license_terms.jsp">Terms and
+                            conditions</a>). More info at <a href="https://github.com/bio2bel/msig">Bio2BEL
+                            MSig</a>.
+                    </p>
+                    <p>The MSig gene sets loaded exclude the BioCarta and AAAS/STKE Cell Signaling Database gene
+                        sets.
+                    </p>
+
+
+                    <h4>References</h4>
+                    <ul>
+                        <li>Subramanian, A., Tamayo, P., Mootha, V. K., Mukherjee, S., Ebert, B. L., Gillette,
+                            M. A., ... & Mesirov, J. P. (2005). Gene set enrichment analysis: a knowledge-based
+                            approach for interpreting genome-wide expression profiles. Proceedings of the
+                            National Academy of Sciences, 102(43), 15545-15550.
+                        </li>
+                    </ul>
+
+                    <h3>Visualization Tools</h3>
+                    <p>
+                        This application makes use of other dedicated bioinformatics software such as <a
+                            href="http://amp.pharm.mssm.edu/clustergrammer/">
+                        Clustergrammer</a> and <a href="http://js.cytoscape.org/">
+                        Cytoscape JS</a>:
+                    </p>
+                    <ul>
+                        <li>Fernandez, N. F. et al. Clustergrammer, a web-based heatmap visualization and
+                            analysis
+                            tool for high-dimensional biological data. Sci. Data 4:170151 doi:
+                            <a href="https://www.nature.com/articles/sdata2017151">10.1038/sdata.2017.151 </a>(2017).
+                        </li>
+                        <li>
+                            Franz, M., Lopes, C. T., Huck, G., Dong, Y., Sumer, O., & Bader, G. D. (2015).
+                            Cytoscape. js: a graph theory library for visualisation and analysis.
+                            Bioinformatics, 32(2), 309-311.
+                        </li>
+                    </ul>
+
                 </div>
             </div>
         </div>
