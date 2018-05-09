@@ -15,6 +15,7 @@ ComPath
    visualization
    web
    utils
+   license
 
 Indices and tables
 ==================
