@@ -15,7 +15,7 @@
         div.kegg {
             width: 20px;
             height: 20px;
-            background: #ff2200;
+            background: #5cb85c;
             -moz-border-radius: 60px;
             -webkit-border-radius: 60px;
             border-radius: 60px;
@@ -24,7 +24,7 @@
         div.reactome {
             width: 20px;
             height: 20px;
-            background: #f279aa;
+            background: #d9534f;
             -moz-border-radius: 60px;
             -webkit-border-radius: 60px;
             border-radius: 60px;
@@ -33,7 +33,7 @@
         div.wikipathways {
             width: 20px;
             height: 20px;
-            background: #00add9;
+            background: #5bc0de;
             -moz-border-radius: 60px;
             -webkit-border-radius: 60px;
             border-radius: 60px;
@@ -42,7 +42,7 @@
         div.msig {
             width: 20px;
             height: 20px;
-            background: #5ba629;
+            background: #777777;
             -moz-border-radius: 60px;
             -webkit-border-radius: 60px;
             border-radius: 60px;
@@ -60,7 +60,7 @@
         div.neurommsig_pd {
             width: 20px;
             height: 20px;
-            background: #282040;
+            background: #ff69b4;
             -moz-border-radius: 60px;
             -webkit-border-radius: 60px;
             border-radius: 60px;
@@ -120,13 +120,14 @@
     <script>
 
         //Node Color Dictionary
-        var nodeColors = {
-            "kegg": "#ff2200",
-            "reactome": "#f279aa",
-            "wikipathways": "#00add9",
-            "msig": "#5ba629",
+        var nodeColors = { // Object resource name -> colour
+            "reactome": "#d9534f",
+            "kegg": "#5cb85c",
+            "wikipathways": "#5bc0de",
+            "msig": "#777777",
             "neurommsig_ad": "#e5c339",
-            "neurommsig_pd": "#282040"
+            "neurommsig_pd": "#ff69b4"
+
         };
 
         var defaultLinkColor = "#ccc";
