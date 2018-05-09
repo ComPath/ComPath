@@ -34,7 +34,7 @@ span.after-hr {
 div.kegg {
     width: 20px;
     height: 20px;
-    background: #ff2200;
+    background: #5cb85c;
     -moz-border-radius: 60px;
     -webkit-border-radius: 60px;
     border-radius: 60px;
@@ -43,7 +43,7 @@ div.kegg {
 div.reactome {
     width: 20px;
     height: 20px;
-    background: #f279aa;
+    background: #d9534f;
     -moz-border-radius: 60px;
     -webkit-border-radius: 60px;
     border-radius: 60px;
@@ -52,7 +52,7 @@ div.reactome {
 div.wikipathways {
     width: 20px;
     height: 20px;
-    background: #00add9;
+    background: #5bc0de;
     -moz-border-radius: 60px;
     -webkit-border-radius: 60px;
     border-radius: 60px;
@@ -61,7 +61,7 @@ div.wikipathways {
 div.msig {
     width: 20px;
     height: 20px;
-    background: #5ba629;
+    background: #777777;
     -moz-border-radius: 60px;
     -webkit-border-radius: 60px;
     border-radius: 60px;
