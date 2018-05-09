@@ -50,14 +50,26 @@ def process_form_gene_set(text):
 """Query utils"""
 
 
-def get_genes_without_assigned_pathways(manager_list, gene_set):
+def get_genes_without_assigned_pathways(enrichment_results, genes_query):
     """Returns the genes without any known pathway assigned.
 
-    :param list manager_list: list of managers
-    :param set[str] gene_set: gene set queried
+    :param dict gene_set: list of managers
+    :param set[str] genes_query: gene set queried
     :return:
     """
-    NotImplemented
+    # Get genes in all pathways
+    genes_in_pathways = {
+        gene
+        for resource_pathways in enrichment_results.values()
+        for pathway_dict in resource_pathways.values()
+        for gene in pathway_dict['pathway_gene_set']
+    }
+    # Find the genes not in pathways
+    return {
+        gene
+        for gene in genes_query
+        if gene not in genes_in_pathways
+    }
 
 
 def get_enriched_pathways(manager_list, gene_set):

@@ -138,6 +138,15 @@
                     </td>
                 </tr>
                 <tr>
+                    <td>Genes not in any pathway ({{ genes_not_in_pathways|length }})</td>
+                    <td>
+                        {% for hgnc_symbol in genes_not_in_pathways %}
+                            <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
+                            {{ "," if not loop.last }}
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
                     <td>Number of Pathways Mapped</td>
                     <td>{{ number_of_pathways }}</td>
                 </tr>

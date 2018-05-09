@@ -14,6 +14,7 @@ from compath.utils import (
     dict_to_pandas_df,
     get_enriched_pathways,
     get_gene_sets_from_pathway_names,
+    get_genes_without_assigned_pathways,
     get_pathway_info,
     perform_hypergeometric_test,
     process_form_gene_set,
@@ -157,7 +158,8 @@ def process_gene_set():
         'visualization/enrichment_results.html',
         query_results=enrichment_results,
         submitted_gene_set=valid_gene_sets,
-        number_of_pathways=len(list(itertools.chain(*enrichment_results.values())))
+        number_of_pathways=len(list(itertools.chain(*enrichment_results.values()))),
+        genes_not_in_pathways=get_genes_without_assigned_pathways(enrichment_results, valid_gene_sets)
     )
 
 
