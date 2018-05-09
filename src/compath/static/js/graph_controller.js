@@ -5,10 +5,10 @@
 
 
 var colours_resource = { // Object resource name -> colour
-    reactome: "#f279aa",
-    kegg: "#ff2200",
-    wikipathways: "#00add9",
-    msig: "#5ba629"
+    reactome: "#d9534f",
+    kegg: "#5cb85c",
+    wikipathways: "#5bc0de",
+    msig: "#777777"
 };
 
 
