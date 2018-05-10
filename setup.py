@@ -40,6 +40,7 @@ INSTALL_REQUIRES = [
     'flask_security',
     'flask_sqlalchemy',
     'scipy',
+    'tqdm',
     'numpy',
     'statsmodels',
     'xlrd'

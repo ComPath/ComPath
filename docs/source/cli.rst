@@ -23,7 +23,7 @@ Curation
 ~~~~~~~~
 Curation related commmands.
 
-.. autofunction:: compath.cli.add_mappings
+.. autofunction:: compath.cli.load_mappings
 .. autofunction:: compath.cli.load_hierarchies
 .. autofunction:: compath.cli.make_user
 .. autofunction:: compath.cli.make_admin

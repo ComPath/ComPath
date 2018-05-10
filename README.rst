@@ -63,11 +63,11 @@ Load hierarchical mappings from a pathway database already containg that informa
 
     $ python3 -m compath load_hierarchies
 
-Load mappings from template
+Load mappings from GitHub
 
 .. code-block:: sh
 
-    $ python3 -m compath add_mappings 'path/to/file/' 'pathway_database_1', pathway_database_2' 'curator_email'
+    $ python3 -m compath load_mappings 'curator_email'
 
 Create a user
 
