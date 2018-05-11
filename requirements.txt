@@ -12,6 +12,7 @@ flask
 flask-bootstrap
 flask_admin
 wtforms
+networkx==1.11
 flask_wtf
 flask_security
 flask_sqlalchemy

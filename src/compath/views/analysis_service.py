@@ -20,10 +20,10 @@ from compath.utils import (
     process_form_gene_set,
 )
 from compath.visualization.cytoscape import (
-    pathways_to_similarity_network,
     enrich_graph_with_mappings,
-    networkx_to_cytoscape_js
-
+    filter_network_by_similarity,
+    networkx_to_cytoscape_js,
+    pathways_to_similarity_network
 )
 from compath.visualization.d3_dendrogram import get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
@@ -228,6 +228,10 @@ def compare_pathways():
             mappings = [item for sublist in mappings for item in sublist]  # Flat list of lists
 
             enrich_graph_with_mappings(similarity_graph, mappings)
+
+        similarity_filter = request.args.get('filter', type=float)
+        if similarity_filter is not None:
+            filter_network_by_similarity(similarity_graph, similarity_filter)
 
         cytoscape_graph = networkx_to_cytoscape_js(similarity_graph)
 

@@ -11,8 +11,21 @@ from compath.constants import KEGG, KEGG_URL, REACTOME, REACTOME_URL, WIKIPATHWA
 from compath.utils import calculate_szymkiewicz_simpson_coefficient
 
 
+def filter_network_by_similarity(graph, min_similarity):
+    """Remove edges with similarity less than the minimum given.
+
+    :param networkx.Graph graph: graph
+    :param float min_similarity: minimum similarity required to keep an edge
+    """
+
+    for source, target, data in graph.edges(data=True):
+
+        if 'similarity' in data and data['similarity'] < min_similarity:
+            del graph[source][target]
+
+
 def pathways_to_similarity_network(manager_dict, pathways):
-    """Pathways to similarity network
+    """Create a graph with the given pathways related by their similarity
 
     :param dict manager_dict:
     :param list[tuple(str,str,str)] pathways:
@@ -41,7 +54,7 @@ def pathways_to_similarity_network(manager_dict, pathways):
 
 
 def enrich_graph_with_mappings(graph, mappings):
-    """Create a graph with the mappings relationships.
+    """Enrich a graph with the mapping information.
 
     :param graph networkx.Graph:
     :param iter mappings:

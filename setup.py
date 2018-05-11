@@ -39,6 +39,7 @@ INSTALL_REQUIRES = [
     'flask_admin',
     'flask_security',
     'flask_sqlalchemy',
+    'networkx==1.11',
     'scipy',
     'tqdm',
     'numpy',
