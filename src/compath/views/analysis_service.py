@@ -20,7 +20,10 @@ from compath.utils import (
     process_form_gene_set,
 )
 from compath.visualization.cytoscape import (
-    mappings_to_cytoscape_js,
+    pathways_to_similarity_network,
+    enrich_graph_with_mappings,
+    networkx_to_cytoscape_js
+
 )
 from compath.visualization.d3_dendrogram import get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
@@ -213,15 +216,20 @@ def compare_pathways():
         # Get pathways triplet info to get their mappings in ComPath
         pathway_info = get_pathway_info(current_app, pathways)
 
-        # Get the mappings corresponding to each pathway queried
-        mappings = [
-            current_app.manager.get_all_mappings_from_pathway(resource, pathway_id, pathway_name)
-            for resource, pathway_id, pathway_name in pathway_info
-        ]
+        similarity_graph = pathways_to_similarity_network(current_app.manager_dict, pathway_info)
 
-        mappings = [item for sublist in mappings for item in sublist]  # Flat list of lists
+        if 'mappings' in request.args:
+            # Get the mappings corresponding to each pathway queried
+            mappings = [
+                current_app.manager.get_all_mappings_from_pathway(resource, pathway_id, pathway_name)
+                for resource, pathway_id, pathway_name in pathway_info
+            ]
 
-        cytoscape_graph = mappings_to_cytoscape_js(mappings)
+            mappings = [item for sublist in mappings for item in sublist]  # Flat list of lists
+
+            enrich_graph_with_mappings(similarity_graph, mappings)
+
+        cytoscape_graph = networkx_to_cytoscape_js(similarity_graph)
 
         return render_template(
             'visualization/pathway_neighbourhood.html',

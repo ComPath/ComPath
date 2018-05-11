@@ -11,6 +11,9 @@ var colours_resource = { // Object resource name -> colour
     msig: "#777777"
 };
 
+function showMappings(url) {
+    window.location = url + "&mappings=True";
+}
 
 function getProperty(dict, prop) {
     if (dict[prop] !== undefined) return dict[prop];
@@ -21,23 +24,6 @@ function getProperty(dict, prop) {
  * Creates a new row in Node/Edge info table
  */
 function insertRow(table, row, column1, column2) {
-    /*
-    <div class="panel panel-default">
-    <
-    dl
-    class
-    = "dl-horizontal" >
-        < dt > Node
-    x < /dt>
-    < dt > Definition < /dd>
-    < dd > Foo < /dt>
-    < dt > Definition2 < /dt>
-    < dd > Foo2 < /dt>
-    < dt > Definition3 < /dd>
-    < dd > Foo3 < /dd>
-    < /dl>
-    < /div>*/
-
     row = table.insertRow(row);
     var cell1 = row.insertCell(0);
     var cell2 = row.insertCell(1);
@@ -102,6 +88,9 @@ function displayEdgeInfo(edge) {
     if (edge.data('type')) {
         edgeObject["Mapping type"] = edge.data('type');
     }
+    if (edge.data('similarity')) {
+        edgeObject["Similarity"] = edge.data('similarity');
+    }
 
     var row = 0;
     $.each(edgeObject, function (key, value) {
@@ -117,11 +106,32 @@ function startCy(data) {
         })
         .then(function (style) {
 
+            var range2 = 20 - 1; // Max value range x,y to normalize
+            var defaultEdgeWidth = 1;
+
             //Set style atributes
             data['nodes'].forEach(function (value, i) {
                 data['nodes'][i]['data']['label'] = value['data']['name'];
                 data['nodes'][i]['data']['color'] = getProperty(colours_resource, value['data']['resource']);
             });
+
+            data['edges'].forEach(function (value, i) {
+
+                if ('similarity' in value['data']) {
+                    // If edge belongs to original pathway set comparison, set width of the edge based on similarity
+                    data['edges'][i]['data']['width'] = value['data']['similarity'] * range2 + 1;
+                }
+                else {
+                    // Edge is a mapping, set different color
+                    // TODO: Color edge differently
+
+                    data['edges'][i]['data']['width'] = defaultEdgeWidth;
+
+                }
+            });
+
+            // Add edge width styling to stylesheet
+            style[1]["style"]["width"] = "data(width)";
 
             var cy = cytoscape({
 
@@ -130,8 +140,8 @@ function startCy(data) {
                 autounselectify: true,
 
                 layout: {
+                    fit: true,
                     name: 'grid',
-                    cols: 5
                 },
 
                 // TODO: Fix Max zoom

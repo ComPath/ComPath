@@ -2,11 +2,13 @@
 
 """Utils to generate the Cytoscape.js network."""
 
+import itertools as itt
 from collections import defaultdict
 
 from networkx import Graph
 
 from compath.constants import KEGG, KEGG_URL, REACTOME, REACTOME_URL, WIKIPATHWAYS, WIKIPATHWAYS_URL
+from compath.utils import calculate_szymkiewicz_simpson_coefficient
 
 
 def pathways_to_similarity_network(manager_dict, pathways):
@@ -16,36 +18,40 @@ def pathways_to_similarity_network(manager_dict, pathways):
     :param list[tuple(str,str,str)] pathways:
     :rtype: networkx.Graph
     """
+    gene_set_dict = {
+        identifier: manager_dict[resource].get_pathway_by_id(identifier).get_gene_set()
+        for resource, identifier, name in pathways
+    }
 
-
-
-
-def mappings_to_cytoscape_js(mappings):
-    """ComPath mappings to cytoscape js format
-
-    :param iter mappings:
-    :rtype: dict
-    """
-    graph = mappings_to_networkx(mappings)
-
-    return networkx_to_cytoscape_js(graph)
-
-
-def mappings_to_networkx(mappings):
-    """Create a graph with the mappings relationships
-
-    :param iter mappings:
-    :rtype: networkx.Graph
-    """
     graph = Graph()
+
+    for (resource_1, identifier_1, name_1), (resource_2, identifier_2, name_2) in itt.combinations(pathways, r=2):
+        similarity = calculate_szymkiewicz_simpson_coefficient(gene_set_dict[identifier_1], gene_set_dict[identifier_2])
+
+        if similarity == 0:
+            continue
+
+        graph.add_edge(
+            (resource_1, identifier_1, name_1),
+            (resource_2, identifier_2, name_2),
+            similarity=similarity
+        )
+
+    return graph
+
+
+def enrich_graph_with_mappings(graph, mappings):
+    """Create a graph with the mappings relationships.
+
+    :param graph networkx.Graph:
+    :param iter mappings:
+    """
     for mapping in mappings:
         graph.add_edge(
             (mapping.service_1_name, mapping.service_1_pathway_id, mapping.service_1_pathway_name),
             (mapping.service_2_name, mapping.service_2_pathway_id, mapping.service_2_pathway_name),
             type=mapping.type
         )
-
-    return graph
 
 
 def networkx_to_cytoscape_js(graph):
@@ -85,7 +91,12 @@ def networkx_to_cytoscape_js(graph):
         nx["data"] = {}
         nx["data"]["source"] = info_to_id[source]
         nx["data"]["target"] = info_to_id[target]
-        nx["data"]["type"] = data['type']
+
+        if 'type' in data:
+            nx["data"]["type"] = data['type']
+
+        if 'similarity' in data:
+            nx["data"]["similarity"] = data['similarity']
 
         network_dict["edges"].append(nx)
 
