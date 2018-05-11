@@ -63,20 +63,20 @@ Load mappings between pathways directly from the `ComPath Curation <https://gith
 
     $ python3 -m compath load_mappings
 
-Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome)
+Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome).
 
 .. code-block:: sh
 
     $ python3 -m compath load_hierarchies
 
 
-Create a user
+Create a user.
 
 .. code-block:: sh
 
     $ python3 -m compath make_user 'email' 'password'
 
-Make user admin:
+Make user admin.
 
 .. code-block:: sh
 
