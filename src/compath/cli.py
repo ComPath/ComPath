@@ -4,11 +4,11 @@
 
 from __future__ import print_function
 
+import datetime
 import logging
 import sys
 
 import click
-import datetime
 from flask_security import SQLAlchemyUserDatastore
 
 from compath import managers
@@ -115,7 +115,6 @@ def drop_databases(debug, yes, connection):
 def load_mappings(curator):
     """Load mappings from template."""
     set_debug_param(2)
-    # Example: python3 -m compath add_mappings 'email'
 
     parse_curation_template(
         'https://github.com/ComPath/curation/raw/master/mappings/kegg_wikipathways.xlsx',
@@ -133,7 +132,8 @@ def load_mappings(curator):
         'https://github.com/ComPath/curation/raw/master/mappings/wikipathways_reactome.xlsx',
         'wikipathways',
         'reactome',
-        admin_email=curator)
+        admin_email=curator
+    )
 
 
 @main.command()

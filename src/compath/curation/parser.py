@@ -92,6 +92,15 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
                 if "*" in pathway_1:
                     pathway_1 = remove_star_from_pathway_name(pathway_1)
 
+                    valid_pathway_1 = is_valid_pathway(manager_dict, reference_pathway_db, pathway_1)
+                    valid_pathway_2 = is_valid_pathway(manager_dict, compared_pathway_db, pathway_2)
+
+                    if valid_pathway_1 is False:
+                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, reference_pathway_db))
+
+                    if valid_pathway_2 is False:
+                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_2, compared_pathway_db))
+
                     mapping, _ = compath_manager.get_or_create_mapping(
                         reference_pathway_db,
                         manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).resource_id,
@@ -107,6 +116,15 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
 
                 else:
                     pathway_2 = remove_star_from_pathway_name(pathway_2)
+
+                    valid_pathway_1 = is_valid_pathway(manager_dict, compared_pathway_db, pathway_1)
+                    valid_pathway_2 = is_valid_pathway(manager_dict, reference_pathway_db, pathway_2)
+
+                    if valid_pathway_1 is False:
+                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, compared_pathway_db))
+
+                    if valid_pathway_2 is False:
+                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_2, reference_pathway_db))
 
                     mapping, _ = compath_manager.get_or_create_mapping(
                         compared_pathway_db,
