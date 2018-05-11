@@ -90,8 +90,8 @@ def load_hierarchy(curator_email=None):
         if pathway_database == 'reactome':
             pathways = _reactome_wrapper(pathways)
 
-        log.info("Searching for hierarchical relationships in {} pathways".format(len(pathways)))
+        log.info("Searching for hierarchical relationships in {} {} pathways".format(len(pathways), pathway_database))
 
-        mapping_created = create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator)
+        counter_mappings_created = create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator)
 
-        log.info("{} hierarchical mappings created in {}".format(mapping_created, pathway_database))
+        log.info("{} hierarchical mappings created in {}".format(counter_mappings_created, pathway_database))

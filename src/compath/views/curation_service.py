@@ -35,7 +35,7 @@ def create_mapping():
     )
 
 
-@curation_blueprint.route('/mapping_catalog')
+@curation_blueprint.route('/catalog')
 def catalog():
     """Render the mapping catalog page."""
     if request.args.get(EQUIVALENT_TO):
