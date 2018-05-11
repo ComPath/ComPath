@@ -49,10 +49,7 @@ function displayNodeInfo(node) {
         nodeObject["Node"] = node.data('id') + " (ID: " + node.data('id') + ")";
     }
     if (node.data('name')) {
-        nodeObject["Pathway Name"] = node.data('name');
-    }
-    if (node.data('resource')) {
-        nodeObject["Pathway Database"] = node.data('resource');
+        nodeObject["Pathway Name"] = "<a target='_blank' href='/pathway/" + node.data('resource') + "/"+ node.data('resource_id')+"'>" + node.data('name') + "</a>";
     }
     if (node.data('url')) {
         nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "</a>";
@@ -141,7 +138,7 @@ function startCy(data) {
 
                 layout: {
                     fit: true,
-                    name: 'grid',
+                    name: 'grid'
                 },
 
                 // TODO: Fix Max zoom
@@ -155,7 +152,6 @@ function startCy(data) {
                 },
                 style: style
             });
-
 
             var params = {
                 name: 'cola',
@@ -174,6 +170,19 @@ function startCy(data) {
                 running = false;
             });
 
+
+            cy.$('node').on('grab', function (e) {
+                var ele = e.target;
+                ele.connectedEdges().style({'line-color': 'red'});
+            });
+
+
+            cy.$('node').on('free', function (e) {
+                var ele = e.target;
+                ele.connectedEdges().style({'line-color': 'black'});
+            });
+
+
             layout.run();
 
             var $config = $('#config');
@@ -185,17 +194,10 @@ function startCy(data) {
                     label: '<i class="fa fa-random"></i>',
                     layoutOpts: {
                         randomize: true,
-                        flow: null
-                    }
-                },
-                {
-                    label: '<i class="fa fa-long-arrow-down"></i>',
-                    layoutOpts: {
-                        flow: {axis: 'y', minSeparation: 30}
+                        flow: {axis: 'x', minSeparation: 50}
                     }
                 }
             ];
-
 
             buttons.forEach(makeButton);
 
@@ -264,6 +266,28 @@ function startCy(data) {
                     layout = makeLayout(opts.layoutOpts);
                     layout.run();
                 });
+            }
+
+
+            function makeSlider(opts, divId) {
+                var $input = $('<input style="width: 80%"></input>');
+                var $targetId = $('#' + divId);
+
+                $targetId.append('<span class="label label-default"></span>');
+                $targetId.append($input);
+
+                var p = $input.slider({
+                    min: opts.min,
+                    max: opts.max,
+                    max: opts.max,
+                    value: params[opts.param]
+                }).on('slide', _.throttle(function () {
+                    params[opts.param] = p.getValue();
+
+                    layout.stop();
+                    layout = makeLayout();
+                    layout.run();
+                }, 16)).data('slider');
             }
 
             /**
@@ -371,6 +395,33 @@ function startCy(data) {
                 highlightEdges(checkedItems, 'name');
 
                 resetAttributesDoubleClick();
+            });
+
+
+            $("#threshold-slider").bind("change", function () {
+
+                nodes = cy.filter("node");
+                var edgesInThreshold = [];
+
+                var range = $('#threshold-slider').val().split(','); // Array of size two with min,max value of the range
+
+                $.each(cy.filter("edge"), function (key, value) {
+                    similarity = value.data('similarity');
+
+                    if (similarity) {
+                        if (similarity <= range[1] && similarity >= range[0]) {
+                            edgesInThreshold.push(nodes[value.data('source')].data('name') + " &lt;-&gt; " + nodes[value.data('target')].data('name'));
+                        }
+                    }
+
+                });
+
+                resetAttributes();
+
+                highlightEdges(edgesInThreshold, 'name');
+
+                resetAttributesDoubleClick();
+
             });
 
 

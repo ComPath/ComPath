@@ -218,13 +218,7 @@ function startCy(urlPath) {
                         label: '<i class="fa fa-random"></i>',
                         layoutOpts: {
                             randomize: true,
-                            flow: null
-                        }
-                    },
-                    {
-                        label: '<i class="fa fa-long-arrow-down"></i>',
-                        layoutOpts: {
-                            flow: {axis: 'y', minSeparation: 30}
+                            flow: {axis: 'x', minSeparation: 50}
                         }
                     }
                 ];

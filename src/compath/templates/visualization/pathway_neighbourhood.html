@@ -68,20 +68,23 @@
     {{ super() }}
     {% include "dependencies/common.html" %}
     {% include "dependencies/cytoscape.html" %}
+    {% include "dependencies/slider.html" %}
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/pathway_knowledge_graph_controller.js', version='20180510') }}">
     </script>
     <script type="text/javascript">
 
         $(document).ready(function () {
-            var mappingsData = {{ cytoscape_graph|safe }};
+            var graph = {{ cytoscape_graph|safe }};
 
-            if ($.isEmptyObject(mappingsData)) {
-                alert('There are no mappings associated to the selected pathways')
+            if ($.isEmptyObject(graph)) {
+                alert('There is no link between the selected pathways. Please select other pathways.')
             }
             else {
-                startCy(mappingsData); // Generate the default Network
+                startCy(graph); // Generate the default Network
             }
+
+            var slider = new Slider('#threshold-slider', {}); // Initialize slider
         });
     </script>
 
@@ -117,20 +120,30 @@
                 <div class="tab-content">
                     <div class="tab-pane active" id="network-panel" role="tabpanel">
                         <a onclick="showMappings(window.location.href)" class="btn btn-primary not-rounded full-width">
-                            Add Mappings to the Graph
+                            Add Mapping Information
                         </a>
-                        <p class="preamble">
-                            Please select the pair of Pathway Databases to compare and the minimum threshold of
-                            similarity. Then, click on the "Refresh Network" button.
+                        <p class="panel-body preamble">
+                            Click on the button above to add the mapped pathways to all the pathways in the graph.
+                            Use the button below, to randomly position the nodes. Finally, the slider below allows to
+                            highlight the edges if they fall on the similarity range selected.
                         </p>
-                        <hr>
-                        <div id="config" class="config">
-                            <div class="param">
+
+                        <div class="tab-pane not-rounded" id="highlight-threshold" role="tabpanel">
+                            <div class="panel-body">
+                                <center><input id="threshold-slider" type="text" value="" data-slider-min="0"
+                                               data-slider-max="1"
+                                               data-slider-step="0.01" data-slider-value="[0.5,1]"
+                                               class="col-lg-10"/>
+                                </center>
+                            </div>
+                            <div id="config" class="config col-lg-2">
+                                <div class="param">
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="tab-pane not-rounded" id="nodes-panel" role="tabpanel">
-                        <p class="text-center" style="margin-top: 10px;"><b> Modify Node Spacing</b></p>
                         <div id="node-slider" class="center-slider"></div>
                         <button class='btn btn-primary not-rounded full-width' id='get-checked-nodes'>Show
                             Selected Nodes
@@ -147,7 +160,6 @@
                         </div>
                     </div>
                     <div class="tab-pane not-rounded" id="edges-panel" role="tabpanel">
-                        <p class="text-center" style="margin-top: 10px ;"><b> Modify Links Length</b></p>
                         <div id="edge-slider" class="center-slider"></div>
 
                         <button class='btn btn-primary not-rounded full-width' id='get-checked-edges'>Show
