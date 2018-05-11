@@ -73,7 +73,12 @@
                             <label style="font-weight: normal;" for="geneset-input">Or paste your gene set row wise or
                                 comma separated. Click <a
                                         href="#" id="geneset-example" onclick="return insertExample();">
-                                    here</a> to see an example. </label>
+                                    here</a> to use an example
+                                <i class="glyphicon glyphicon-info-sign" data-toggle="modal"
+                                   data-target="#gene-set-info">
+                                </i>.
+                            </label>
+
                             {{ text_form.geneset(rows="5", class="form-control")|safe }}
 
                             <div class="text-center" style="margin-top: 20px">
@@ -88,6 +93,34 @@
 
         </div>
 
+    </div>
+
+    <!-- Modal -->
+    <div id="gene-set-info" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Information about the Example Gene Set</h4>
+                </div>
+                <div class="modal-body">
+                    <p>The gene set used an example describes a panel of genes and genetic loci that have been
+                        associated with the development of Parkinson’s disease (PD)/parkinsonism by <a
+                                href="https://www.cell.com/cell/abstract/S0092-8674(15)00062-8"><i>José Brás, et al.
+                            2015</i></a>.
+
+                    </p>
+                    <p>Brás, J., Guerreiro, R., & Hardy, J. (2015). SnapShot: genetics of Parkinson’s disease. Cell,
+                        160(3), 570-570.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     {% include "footer.html" %}
