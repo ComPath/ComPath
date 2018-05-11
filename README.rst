@@ -57,17 +57,18 @@ these packages are already installed in your Python environment. You can check t
 
 Curation Interface
 ------------------
-Load hierarchical mappings from a pathway database already containg that information (e.g., Reactome)
+Load mappings between pathways directly from the `ComPath Curation <https://github.com/compath/curation>`_ package.
+
+.. code-block:: sh
+
+    $ python3 -m compath load_mappings
+
+Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome)
 
 .. code-block:: sh
 
     $ python3 -m compath load_hierarchies
 
-Load mappings from GitHub
-
-.. code-block:: sh
-
-    $ python3 -m compath load_mappings 'curator_email'
 
 Create a user
 
