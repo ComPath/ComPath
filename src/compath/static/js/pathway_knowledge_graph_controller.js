@@ -173,13 +173,13 @@ function startCy(data) {
 
             cy.$('node').on('grab', function (e) {
                 var ele = e.target;
-                ele.connectedEdges().style({'line-color': 'red'});
+                ele.connectedEdges().style({'line-color': 'black'});
             });
 
 
             cy.$('node').on('free', function (e) {
                 var ele = e.target;
-                ele.connectedEdges().style({'line-color': 'black'});
+                ele.connectedEdges().style({'line-color': '#cccccc'});
             });
 
 
