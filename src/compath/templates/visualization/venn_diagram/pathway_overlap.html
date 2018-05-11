@@ -60,8 +60,10 @@
 
         vennDiv.attr("align", "center"); // Align center the diagram
 
-        var ignorome = venn.VennDiagram(); // Plot the Venn Diagram
-        vennDiv.datum(data).call(ignorome); // Stick data
+        var diagram = venn.VennDiagram();
+            //TODO .width(1000)
+            // .height(1500); // Plot the Venn Diagram
+        vennDiv.datum(data).call(diagram); // Stick data
 
         // add a tooltip
         var tooltip = d3.select("body").append("div")
