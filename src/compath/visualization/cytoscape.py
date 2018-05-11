@@ -73,7 +73,11 @@ def networkx_to_cytoscape_js(graph):
         node_object["data"]["id"] = node_id
         node_object["data"]["resource"] = node[0]
         node_object["data"]["resource_id"] = node[1]
-        node_object["data"]["name"] = node[2]
+
+        if node[0] == 'kegg':
+            node_object["data"]["name"] = node[2].replace(" - Homo sapiens (human)", "")
+        else:
+            node_object["data"]["name"] = node[2]
 
         if node[0] == REACTOME:
             node_object["data"]["url"] = REACTOME_URL.format(node[2])
