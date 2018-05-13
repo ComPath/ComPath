@@ -14,7 +14,7 @@ from flask_security import SQLAlchemyUserDatastore
 from compath import managers
 from compath.constants import ADMIN_EMAIL, DEFAULT_CACHE_CONNECTION
 from compath.curation.hierarchies import load_hierarchy
-from compath.curation.parser import parse_curation_template
+from compath.curation.parser import parse_curation_template, parse_special_mappings
 from compath.manager import RealManager
 from compath.models import Base, Role, User
 
@@ -132,6 +132,11 @@ def load_mappings(curator):
         'https://github.com/ComPath/curation/raw/master/mappings/wikipathways_reactome.xlsx',
         'wikipathways',
         'reactome',
+        admin_email=curator
+    )
+
+    parse_special_mappings(
+        'https://github.com/ComPath/curation/raw/master/mappings/special_mappings.xlsx',
         admin_email=curator
     )
 

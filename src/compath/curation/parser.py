@@ -3,9 +3,9 @@
 """This module contains all the curation processing methods to integrate curated mappings to ComPath."""
 
 import logging
-from tqdm import tqdm
 
 import pandas as pd
+from tqdm import tqdm
 
 from compath import managers
 from compath.constants import *
@@ -13,6 +13,63 @@ from compath.curation.utils import *
 from compath.manager import RealManager
 
 log = logging.getLogger(__name__)
+
+
+def parse_special_mappings(path, admin_email=None):
+    """Parse special mapping file.
+
+    :param str path: path of the excel sheet
+    :param str admin_email: email of the admin. Needs to be already in the database
+    """
+    df = pd.read_excel(path, header=1)
+
+    # Loads the installed managers
+    manager_dict = {
+        name: ExternalManager(connection=DEFAULT_CACHE_CONNECTION)
+        for name, ExternalManager in managers.items()
+    }
+
+    compath_manager = RealManager()
+
+    curator = compath_manager.get_user_by_email(email=admin_email if admin_email else ADMIN_EMAIL)
+
+    if not curator:
+        raise EnvironmentError(
+            'There is no user with the email "{}". Please create it with the "make_user" command using '
+            'the command line interface of Compath'
+        )
+
+    for index, row in tqdm(df.iterrows(), desc='Loading special mappings'):
+
+        resource_1 = row['Resource 1'].lower()
+        resource_2 = row['Resource 2'].lower()
+        pathway_1_id = row['Pathway identifier 1']
+        pathway_2_id = row['Pathway identifier 2']
+
+        valid_pathway_1 = is_valid_pathway_by_id(manager_dict, resource_1, pathway_1_id)
+        valid_pathway_2 = is_valid_pathway_by_id(manager_dict, resource_2, pathway_2_id)
+
+        if valid_pathway_1 is False:
+            raise ValueError("Invalid Pathway Identifier: {} in {}".format(pathway_1_id, resource_1))
+
+        if valid_pathway_2 is False:
+            raise ValueError("Invalid Pathway Identifier: {} in {}".format(pathway_2_id, resource_2))
+
+        pathway_1 = manager_dict[resource_1].get_pathway_by_id(pathway_1_id)
+        pathway_2 = manager_dict[resource_2].get_pathway_by_id(pathway_2_id)
+
+        mapping, _ = compath_manager.get_or_create_mapping(
+            resource_1,
+            pathway_1.resource_id,
+            pathway_1.name,
+            resource_1,
+            pathway_2.resource_id,
+            pathway_2.name,
+            row['Mapping type'],
+            curator
+        )
+
+        mapping, _ = compath_manager.accept_mapping(mapping.id)
 
 
 def parse_curation_template(path, reference_pathway_db, compared_pathway_db, admin_email=None):
@@ -41,7 +98,8 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
             'the command line interface of Compath'
         )
 
-    for index, row in tqdm(df.iterrows(), desc='Loading mappings for {}-{}'.format(reference_pathway_db, compared_pathway_db)):
+    for index, row in tqdm(df.iterrows(),
+                           desc='Loading mappings for {}-{}'.format(reference_pathway_db, compared_pathway_db)):
 
         # Add equivalent mappings
         equivalent_to_mappings = row['equivalentTo Mappings']
@@ -55,8 +113,8 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
 
                 pathway_1, pathway_2 = get_pathways_from_statement(mapping_statement, "equivalentTo")
 
-                valid_pathway_1 = is_valid_pathway(manager_dict, reference_pathway_db, pathway_1)
-                valid_pathway_2 = is_valid_pathway(manager_dict, compared_pathway_db, pathway_2)
+                valid_pathway_1 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_1)
+                valid_pathway_2 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_2)
 
                 if valid_pathway_1 is False:
                     raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, reference_pathway_db))
@@ -92,8 +150,8 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
                 if "*" in pathway_1:
                     pathway_1 = remove_star_from_pathway_name(pathway_1)
 
-                    valid_pathway_1 = is_valid_pathway(manager_dict, reference_pathway_db, pathway_1)
-                    valid_pathway_2 = is_valid_pathway(manager_dict, compared_pathway_db, pathway_2)
+                    valid_pathway_1 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_1)
+                    valid_pathway_2 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_2)
 
                     if valid_pathway_1 is False:
                         raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, reference_pathway_db))
@@ -117,8 +175,8 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
                 else:
                     pathway_2 = remove_star_from_pathway_name(pathway_2)
 
-                    valid_pathway_1 = is_valid_pathway(manager_dict, compared_pathway_db, pathway_1)
-                    valid_pathway_2 = is_valid_pathway(manager_dict, reference_pathway_db, pathway_2)
+                    valid_pathway_1 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_1)
+                    valid_pathway_2 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_2)
 
                     if valid_pathway_1 is False:
                         raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, compared_pathway_db))
