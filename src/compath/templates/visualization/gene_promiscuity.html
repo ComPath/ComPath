@@ -53,7 +53,7 @@
 
         $(document).ready(function () {
 
-            $("#{{ resource|safe }}" + "-table").DataTable(
+            $("#overview-table").DataTable(
                 {
                     dom: "<'row'<'col-sm-2'l><'col-sm-3'f><'col-sm-5'B>>" +
                     "<'row'<'col-sm-12'tr>>" +
@@ -75,7 +75,7 @@
 
             var formatCount = d3.format(",.0f");
 
-            var svg = d3.select("#{{ resource|safe }}" + "-histogram"),
+            var svg = d3.select("#histogram"),
                 margin = {
                     top: 10,
                     right: 30,
@@ -116,7 +116,7 @@
                         .style("left", d3.event.pageX - 50 + "px")
                         .style("top", d3.event.pageY - 70 + "px")
                         .style("display", "inline-block")
-                        .html((d.length) + "<br>" + "Pathways");
+                        .html((d.length) + "<br>" + "Genes");
                 })
                 .on("mouseout", function (d) {
                     tooltip.style("display", "none");
@@ -168,7 +168,7 @@
 
 
                 <h3 class="text-center">{{ resource|upper }}</h3>
-                <svg id="{{ resource }}-histogram" width="960" height="500"></svg>
+                <svg id="histogram" width="960" height="500"></svg>
 
             </div>
         </div>
@@ -181,7 +181,7 @@
 
                 <h3 class="text-center">{{ resource|upper }}</h3>
 
-                <table id="{{ resource }}-table" class="table table-striped table-hover">
+                <table id="overview-table" class="table table-striped table-hover">
                     <thead>
                     <tr>
                         <th class="first-row">Gene Symbol</th>
