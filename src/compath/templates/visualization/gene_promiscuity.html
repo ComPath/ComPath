@@ -51,6 +51,24 @@
 
     <script>
 
+        var databaseName = '{{ resource|safe }}';
+        // If a new database is added the number of bins needs to be here (otherwise you would be by default 40)
+        var databaseNumberOfBins = {
+            'kegg': 30,
+            'reactome': 25,
+            'wikipathways': 25,
+            'neurommsig_ad': 10,
+            'neurommsig_pd': 10
+        };
+
+        var numberOfBins;
+        if (databaseName in databaseNumberOfBins) {
+            numberOfBins = databaseNumberOfBins[databaseName]
+        }
+        else {
+            numberOfBins = 40;
+        }
+
         $(document).ready(function () {
 
             $("#overview-table").DataTable(
@@ -75,26 +93,31 @@
 
             var formatCount = d3.format(",.0f");
 
-            var svg = d3.select("#histogram"),
-                margin = {
+            var margin = {
                     top: 10,
                     right: 30,
                     bottom: 30,
                     left: 30
                 },
-                width = +svg.attr("width") - margin.left - margin.right,
-                height = +svg.attr("height") - margin.top - margin.bottom,
-                g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+                width = $('.panel-body').width() - (margin.right + margin.left),
+                height = 300;
+
+            var svg = d3.select("#histogram").append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform",
+                    "translate(" + margin.left + "," + margin.top + ")");
 
             var tooltip = d3.select("body").append("div").attr("class", "toolTip");
 
             var x = d3.scaleLinear()
-                .domain(d3.extent(histogramData))
+                .domain([0, 50])
                 .rangeRound([0, width]);
 
             var histogram = d3.histogram()
                 .domain(x.domain())
-                .thresholds(x.ticks(40));
+                .thresholds(x.ticks(numberOfBins));
 
             var bins = histogram(histogramData);
 
@@ -104,7 +127,7 @@
                 })])
                 .range([height, 0]);
 
-            var bar = g.selectAll(".bar")
+            var bar = svg.selectAll(".bar")
                 .data(bins)
                 .enter().append("g")
                 .attr("class", "bar")
@@ -138,7 +161,7 @@
                     return formatCount(d.length);
                 });
 
-            g.append("g")
+            svg.append("g")
                 .attr("class", "axis axis--x")
                 .attr("transform", "translate(0," + height + ")")
                 .call(d3.axisBottom(x));
@@ -159,16 +182,18 @@
         <div class="panel panel-default">
             <div class="panel-heading">Gene Distribution over Pathways</div>
             <div class="panel-body">
-                <p>Explore the distribution of the all the genes in databases across pathways. Each histogram contains
-                    40
-                    bins each one in the 50 unit range (from 0 to 50, 50 to 100...). The aim of this plot is just to
-                    show the more promiscuous genes in pathway databases, in order to inspect and find the name of the
-                    outliers,
-                    please use the table in the section below. </p>
-
+                <p>Explore the distribution of the all the genes in databases across pathways. The aim of this plot
+                    is just to show the more promiscuous genes in pathway databases, in order to inspect and find the
+                    name of the outliers, please use the table in the section below. Based on the distributions
+                    of KEGG, Reactome, and WikiPathways, we decided to show only the distribution of genes functionally
+                    annotated from zero to fifty pathways (x axis ranges from [0,50]). The reason for this is that
+                    there are a few genes acting in 100 pathways or more and disrupt that distort the plot.
+                    In order to pintpoint the most promiscuous genes, please the sorting functionality of the table
+                    below.
+                </p>
 
                 <h3 class="text-center">{{ resource|upper }}</h3>
-                <svg id="histogram" width="960" height="500"></svg>
+                <div id="histogram"></div>
 
             </div>
         </div>
