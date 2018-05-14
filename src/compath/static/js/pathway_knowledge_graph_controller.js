@@ -49,7 +49,7 @@ function displayNodeInfo(node) {
         nodeObject["Node"] = node.data('id') + " (ID: " + node.data('id') + ")";
     }
     if (node.data('name')) {
-        nodeObject["Pathway Name"] = "<a target='_blank' href='/pathway/" + node.data('resource') + "/"+ node.data('resource_id')+"'>" + node.data('name') + "</a>";
+        nodeObject["Pathway Name"] = "<a target='_blank' href='/pathway/" + node.data('resource') + "/" + node.data('resource_id') + "'>" + node.data('name') + "</a>";
     }
     if (node.data('url')) {
         nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "</a>";
@@ -104,7 +104,7 @@ function startCy(data) {
         .then(function (style) {
 
             var range2 = 20 - 1; // Max value range x,y to normalize
-            var defaultEdgeWidth = 1;
+            var defaultEdgeWidth = 3;
 
             //Set style atributes
             data['nodes'].forEach(function (value, i) {
@@ -117,18 +117,18 @@ function startCy(data) {
                 if ('similarity' in value['data']) {
                     // If edge belongs to original pathway set comparison, set width of the edge based on similarity
                     data['edges'][i]['data']['width'] = value['data']['similarity'] * range2 + 1;
+                    data['edges'][i]['data']['style'] = 'solid';
                 }
                 else {
-                    // Edge is a mapping, set different color
-                    // TODO: Color edge differently
-
+                    // The edge represents as a mapping: set different color and width
                     data['edges'][i]['data']['width'] = defaultEdgeWidth;
-
+                    data['edges'][i]['data']['style'] = 'dashed';
                 }
             });
 
-            // Add edge width styling to stylesheet
+            // Add edge property styling to stylesheet
             style[1]["style"]["width"] = "data(width)";
+            style[1]["style"]["line-style"] = "data(style)";
 
             var cy = cytoscape({
 
