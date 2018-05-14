@@ -56,13 +56,32 @@
     <script>
         var data = {{ venn_diagram_data|tojson|safe }};
 
+        // Adjust the height depending on the size of the Euler diagram
+        var numberOfIntersections = data.length;
+
+        var height;
+
+        if (numberOfIntersections < 10) {
+            height = 400;
+        }
+        else if (10 <= numberOfIntersections && numberOfIntersections < 30) {
+            height = 600;
+        }
+        else {
+            height = 800;
+        }
+
+        if (numberOfIntersections > 5000) {
+            alert('You have selected a large amount of pathways, the visualization need some time to be cooked :)')
+        }
+
         var vennDiv = d3.select("#venn-diagram");
 
         vennDiv.attr("align", "center"); // Align center the diagram
 
-        var diagram = venn.VennDiagram();
-            //TODO .width(1000)
-            // .height(1500); // Plot the Venn Diagram
+        var diagram = venn.VennDiagram()
+            .width($('.panel-body').width() - 100) // Default width of the panel
+            .height(height); // Plot the Venn Diagram
         vennDiv.datum(data).call(diagram); // Stick data
 
         // add a tooltip
@@ -168,7 +187,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <p class="pull-right">Click in the circles to expand info</p>
+                <p class="pull-right">Click to see information about overlaps</p>
                 <div id="venn-diagram">
                 </div>
             </div>
