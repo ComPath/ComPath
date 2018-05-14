@@ -80,7 +80,7 @@
         div.datum(data).call(vennD); // Stick data
 
         // Colors the circles depending on the name of the db
-        var databaseColors = {
+        var databaseToChangeColor = {
             'REACTOME': '#df3f18',
             'WIKIPATHWAYS': '#5bc0de',
             'KEGG': '#5cb85c',
@@ -88,19 +88,31 @@
             'GENE UNIVERSE': '#f4ce42'
         };
 
+        var databaseToChangeName = {
+            'NEUROMMSIG_AD': 'NMMSIG AD',
+            'NEUROMMSIG_PD': 'NMMSIG PD'
+        };
+
         var circles = d3.select("body").selectAll(".venn-circle");
 
         circles.nodes().forEach(function (element) {
 
+
             var dataBase = element.childNodes[1].textContent;
 
-            if (dataBase in databaseColors) {
-                element.childNodes[1].style.fill = databaseColors[dataBase];
-                element.childNodes[0].style.fill = databaseColors[dataBase];
+            // Change the name of the database so it is not too long
+            if (dataBase in databaseToChangeName) {
+                element.childNodes[1].innerHTML = databaseToChangeName[dataBase];
+            }
+
+            // Change to default database colors to match with the other visualizations
+            if (dataBase in databaseToChangeColor) {
+                element.childNodes[1].style.fill = databaseToChangeColor[dataBase];
+                element.childNodes[0].style.fill = databaseToChangeColor[dataBase];
             }
         });
 
-         // add a tooltip
+        // add a tooltip
         var tooltip = d3.select("body").append("div")
             .attr("class", "venntooltip");
 
