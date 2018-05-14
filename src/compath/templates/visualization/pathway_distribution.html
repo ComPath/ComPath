@@ -51,6 +51,28 @@
 
     <script>
 
+
+        var databaseName = '{{ resource|safe }}';
+        // If a new database is added the number of bins needs to be here (otherwise you would be by default 40)
+        var databaseNumberOfBins = {
+            'kegg': 40,
+            'reactome': 25,
+            'wikipathways': 40,
+            'neurommsig_ad': 10,
+            'neurommsig_pd': 10
+        };
+
+        var numberOfBins;
+        if (databaseName in databaseNumberOfBins) {
+            numberOfBins = databaseNumberOfBins[databaseName]
+        }
+        else {
+            numberOfBins = 40;
+        }
+
+        console.log(numberOfBins)
+        console.log(databaseName)
+
         $(document).ready(function () {
 
             $("#info-table").DataTable(
@@ -100,7 +122,7 @@
 
             var histogram = d3.histogram()
                 .domain(x.domain())
-                .thresholds(x.ticks(40));
+                .thresholds(x.ticks(numberOfBins));
 
             var bins = histogram(histogramData);
 
@@ -183,10 +205,9 @@
         <div class="panel panel-default">
             <div class="panel-heading">Pathway Size Distribution</div>
             <div class="panel-body">
-                <p>Explore the distribution of the pathway sizes across different resources. Each histogram contains 40
-                    bins each one in the 50 unit range (from 0 to 50, 50 to 100...). The aim of this plot is just to
-                    show the distribution and the outliers, in order to inspect and find the name of the outliers,
-                    please use the table in the section below.
+                <p>Explore the distribution of the pathway sizes across different resources. The aim of this plot is
+                    just to show the distribution and the outliers, in order to inspect and find the name of the
+                    outliers, please use the table in the section below.
                 </p>
 
                 <h3 class="text-center">{{ resource|upper }}</h3>
