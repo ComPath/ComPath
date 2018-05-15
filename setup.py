@@ -28,7 +28,6 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     'click',
     'sqlalchemy==1.1.15',
-    'pandas',
     'bio2bel>=0.0.9',
     'compath_utils>=0.0.3',
     'bio2bel_hgnc',
@@ -40,11 +39,11 @@ INSTALL_REQUIRES = [
     'flask_security',
     'flask_sqlalchemy',
     'networkx==1.11',
+    'pandas',
     'scipy',
     'tqdm',
     'numpy',
-    'statsmodels',
-    'xlrd'
+    'statsmodels'
 ]
 ENTRY_POINTS = {
     'console_scripts': [
