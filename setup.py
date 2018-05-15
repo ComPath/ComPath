@@ -51,14 +51,6 @@ ENTRY_POINTS = {
         '{mname} = {mname}.cli:main'.format(mname=MODULE),
     ]
 }
-EXTRAS_REQUIRE = {
-    'standard': [
-        'bio2bel_kegg>=0.0.6',
-        'bio2bel_reactome>=0.0.6',
-        'bio2bel_wikipathways>=0.0.6',
-        'bio2bel_msig>=0.0.2',
-    ]
-}
 
 HERE = os.path.abspath(os.path.dirname(__file__))
 
