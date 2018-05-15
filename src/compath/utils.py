@@ -226,12 +226,14 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     )
 
 
-def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
+def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe, apply_threshold=False, threshold=0.05):
     """Perform hypergeometric tests
 
     :param set[str] gene_set: gene set to test against pathway
     :param dict[str,dict[str,dict]] manager_pathways_dict: manager to pathways
     :param int gene_universe: number of HGNC symbols
+    :param Optional[bool] apply_threshold: return only significant pathways
+    :param Optional[float] threshold: significance threshold (by default 0.05)
     :rtype: dict[str,dict[str,dict]]
     :return: manager_pathways_dict with p value info
     """
@@ -254,7 +256,13 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe):
 
     # Update original dict with p value corrections
     for i, (manager_name, pathway_id) in enumerate(manager_pathway_id):
-        manager_pathways_dict[manager_name][pathway_id]["q_value"] = round(q_values[i], 4)
+
+        q_value = round(q_values[i], 4)
+        manager_pathways_dict[manager_name][pathway_id]["q_value"] = q_value
+
+        # [Optional] Delete the pathway if does not pass the threshold
+        if apply_threshold and q_value > threshold:
+            del manager_pathways_dict[manager_name][pathway_id]
 
     return manager_pathways_dict
 

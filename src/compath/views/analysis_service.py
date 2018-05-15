@@ -17,7 +17,7 @@ from compath.utils import (
     get_genes_without_assigned_pathways,
     get_pathway_info,
     perform_hypergeometric_test,
-    process_form_gene_set,
+    process_form_gene_set
 )
 from compath.visualization.cytoscape import (
     enrich_graph_with_mappings,
@@ -135,9 +135,11 @@ def process_gene_set():
 
     if text_form.validate_on_submit():
         gene_sets = process_form_gene_set(text_form.geneset.data)
+        filter_by_significance = text_form.filter_non_significant.data
 
     elif file_form.validate_on_submit():
         gene_sets = process_form_gene_set(file_form.file.data.stream.read().decode("utf-8"))
+        filter_by_significance = False # TODO: Enable it from file too
 
     else:
         flash('The submitted gene set is not valid')
@@ -152,10 +154,12 @@ def process_gene_set():
         enrichment_results = perform_hypergeometric_test(
             valid_gene_sets,
             enrichment_results,
-            len(current_app.gene_universe)
+            len(current_app.gene_universe),
+            filter_by_significance
         )
     else:
         flash('ComPath could not find any valid HGNC Symbol from the submitted list')
+
 
     return render_template(
         'visualization/enrichment_results.html',

@@ -5,13 +5,14 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import TextAreaField
-from wtforms.fields import SubmitField
+from wtforms.fields import SubmitField, BooleanField
 from wtforms.validators import DataRequired
 
 
 class GeneSetForm(FlaskForm):
     """Pathway enrichment form."""
     geneset = TextAreaField('Geneset', id="geneset-input", validators=[DataRequired()])
+    filter_non_significant = BooleanField('Filter Non-Significant Pathways (FDR>5%)')
     submit = SubmitField('Submit')
 
 

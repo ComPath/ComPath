@@ -76,7 +76,8 @@
                                     here</a> to use an example <i class="glyphicon glyphicon-info-sign"
                                                                   data-toggle="modal"
                                                                   data-target="#gene-set-info">
-                                </i>.
+                                </i>. Click here to show only significant
+                                pathways (FDR<5%){{ text_form.filter_non_significant() }}.
                             </label>
 
                             {{ text_form.geneset(rows="5", class="form-control")|safe }}
