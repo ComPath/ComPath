@@ -31,7 +31,7 @@ INSTALL_REQUIRES = [
     'pandas',
     'bio2bel>=0.0.9',
     'compath_utils>=0.0.3',
-    'bio2bel_hgnc',
+    'bio2bel_hgnc==0.0.7',
     'wtforms',
     'flask_wtf',
     'flask',
