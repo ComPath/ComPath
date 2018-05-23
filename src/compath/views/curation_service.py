@@ -254,30 +254,34 @@ def suggest_mappings_by_name(pathway_name):
         if manager not in BLACK_LIST
     }
 
-    # Flat list of lists
-    pathways_lists = [pathway for pathway_list in pathways_dict.values() for pathway in pathway_list]
+    # Flat list of lists (list with all pathways in all resources)
+    pathways_lists = [
+        pathway for pathway_list in pathways_dict.values()
+        for pathway in pathway_list
+    ]
 
     # TODO: Do this dynamically
     # Remove suffix from KEGG
     pathways_lists = map(lambda x: str.replace(x, " - Homo sapiens (human)", ""), pathways_lists)
 
     top_pathways = {
-        pathway_name
-        for pathway_name, value in get_most_similar_names(pathway_name, pathways_lists)
+        pathway_name: similarity
+        for pathway_name, similarity in get_most_similar_names(pathway_name, pathways_lists)
     }
 
     results = []
 
-    for pathway in top_pathways:
+    for pathway, similarity in top_pathways.items():
         # Find to which manager the pathway belongs to and get identifier
         for manager, pathways in pathways_dict.items():
 
-            if pathway in pathways:
+            if pathway in pathways and pathway != pathway_name:
                 results.append(
                     [
                         manager,
                         current_app.manager_dict[manager].get_pathway_by_name(pathway).resource_id,
-                        pathway
+                        pathway,
+                        round(similarity, 4)
                     ]
                 )
 

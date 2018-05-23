@@ -16,6 +16,17 @@
         .pathways li {
             margin: 1em 0;
         }
+
+        #button-row {
+            padding-bottom: 20px;
+        }
+
+        #info-table {
+            border-radius: 5px;
+            width: 95%;
+            margin: 0px auto;
+            float: none;
+        }
     </style>
 {% endblock %}
 
@@ -128,7 +139,7 @@
                 {{ write_pathways(super_pathways, "Super-Pathways") }}
                 {{ write_pathways(sub_pathways, "Sub-Pathways") }}
 
-                <div class="row">
+                <div class="row" id="button-row">
                     <div class="text-center">
                         <div class="btn-group btn-space">
                             <button class="btn btn-primary" id="suggest-by-content"

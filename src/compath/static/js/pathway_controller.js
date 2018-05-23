@@ -19,6 +19,10 @@ function insertRow(table, row, columnNumber, pathwayInfo) {
     var row = table.insertRow(row);
     var cell = row.insertCell(columnNumber);
     cell.innerHTML = addHyperLinkPathway(pathwayInfo[0], pathwayInfo[1], pathwayInfo[2]);
+
+    var cell = row.insertCell(1);
+    cell.innerHTML = pathwayInfo[3];
+
 }
 
 /**
@@ -30,7 +34,14 @@ function updateDynamicTable(tableId, rows) {
 
     var table = document.getElementById(tableId);
 
-    var row = 0;
+    var row = table.insertRow(0);
+    var pathwayName = row.insertCell(0);
+    pathwayName.innerHTML = "<b>Pathway Name</b>";
+
+    var similarityHeading = row.insertCell(1);
+    similarityHeading.innerHTML = "<b>Similarity</b>";
+
+    var row = 1;
     $.each(rows, function (key, value) {
         insertRow(table, row, 0, value);
         row++
