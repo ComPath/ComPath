@@ -5,6 +5,7 @@
 import logging
 from io import BytesIO, StringIO
 
+from collections import defaultdict
 from flask import (
     Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, send_file, url_for,
 )
@@ -12,9 +13,12 @@ from flask_security import current_user, login_required, roles_required
 
 from compath.constants import BLACK_LIST, EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES
 from compath.utils import (
+    calculate_szymkiewicz_simpson_coefficient,
     get_mappings,
     get_most_similar_names,
     get_pathway_model_by_name,
+    get_pathway_model_by_id,
+    get_top_matches,
     to_csv,
 )
 
@@ -273,13 +277,13 @@ def suggest_mappings_by_name(pathway_name):
 
     for pathway, similarity in top_pathways.items():
         # Find to which manager the pathway belongs to and get identifier
-        for manager, pathways in pathways_dict.items():
+        for resource, pathways in pathways_dict.items():
 
             if pathway in pathways and pathway != pathway_name:
                 results.append(
                     [
-                        manager,
-                        current_app.manager_dict[manager].get_pathway_by_name(pathway).resource_id,
+                        resource,
+                        current_app.manager_dict[resource].get_pathway_by_name(pathway).resource_id,
                         pathway,
                         round(similarity, 4)
                     ]
@@ -287,3 +291,64 @@ def suggest_mappings_by_name(pathway_name):
 
     # Return the top 5 most similar ones
     return jsonify(results)
+
+
+@curation_blueprint.route('/suggest_mappings/content/<resource>/<pathway_id>')
+def suggest_mappings_by_content(resource, pathway_id):
+    """Return list of top matches based on gene set similarity.
+
+    :param str resource: name of the database
+    :param str pathway_id: identifier of the pathway
+    """
+
+    reference_pathway = get_pathway_model_by_id(current_app, resource, pathway_id)
+
+    if reference_pathway is None:
+        return abort(500, "Pathway '{}' not found in manager '{}'".format(pathway_id, resource))
+
+    reference_gene_set = reference_pathway.get_gene_set()
+
+    # Get all pathway names from each resource
+    pathways_dict = {
+        manager: external_manager.get_all_pathways()
+        for manager, external_manager in current_app.manager_dict.items()
+        if manager not in BLACK_LIST
+    }
+
+    log.info('Calculating similarity for pathway {} in {}'.format(reference_pathway.name, resource))
+
+    similar_pathways = defaultdict(list)
+
+    for resource, pathway_list in pathways_dict.items():
+
+        for pathway in pathway_list:
+
+            if len(pathway.get_gene_set()) == 0:
+                continue
+
+            similarity = calculate_szymkiewicz_simpson_coefficient(reference_gene_set, pathway.get_gene_set())
+
+            if similarity == 0:
+                continue
+
+            similar_pathways[resource].append((pathway.resource_id, similarity))
+
+        log.info('Calculated for all {} pathways'.format(resource))
+
+    results = defaultdict(list)
+
+    for resource, pathway_list in similar_pathways.items():
+
+        top_matches = get_top_matches(pathway_list, 5)
+
+        for pathway_id, similarity in top_matches:
+            results[resource].append(
+                [
+                    resource,
+                    pathway_id,
+                    current_app.manager_dict[resource].get_pathway_by_id(pathway_id).name,
+                    round(similarity, 4)
+                ]
+            )
+
+    return jsonify(dict(results))

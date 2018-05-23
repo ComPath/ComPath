@@ -296,13 +296,13 @@ def calculate_similarity(name_1, name_2):
     return SequenceMatcher(None, name_1, name_2).ratio()
 
 
-def get_top_matches(names, top):
+def get_top_matches(matches, top):
     """Order list of tuples by second value and returns top values.
 
-    :param list[tuple[str,float]] names: list of tuples
+    :param list[tuple[str,float]] matches: list of tuples
     :param int top: top values to return
     """
-    sorted_names = sorted(names, key=lambda x: x[1], reverse=True)
+    sorted_names = sorted(matches, key=lambda x: x[1], reverse=True)
 
     return sorted_names[0:top]
 

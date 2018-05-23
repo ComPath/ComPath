@@ -3,6 +3,7 @@
  * @requires: jquery
  */
 
+
 function addHyperLinkPathway(resource, pathwayId, pathwayName) {
     return '<a target="_blank" href="/pathway/' + resource + '/' + pathwayId + '">' + pathwayName + '</a>'
 }
@@ -11,13 +12,12 @@ function addHyperLinkPathway(resource, pathwayId, pathwayName) {
  * Creates a new row in Node/Edge info table
  * @param {object} table: table object
  * @param {int} row: row number
- * @param {string} columnNumber: number of column
  * @param {string} pathwayInfo: string for the column
  */
-function insertRow(table, row, columnNumber, pathwayInfo) {
+function insertRow(table, row, pathwayInfo) {
 
     var row = table.insertRow(row);
-    var cell = row.insertCell(columnNumber);
+    var cell = row.insertCell(0);
     cell.innerHTML = addHyperLinkPathway(pathwayInfo[0], pathwayInfo[1], pathwayInfo[2]);
 
     var cell = row.insertCell(1);
@@ -26,7 +26,7 @@ function insertRow(table, row, columnNumber, pathwayInfo) {
 }
 
 /**
- * Clear table rows
+ *
  * @param {str} tableId id of the table
  * @param {array} rows
  */
@@ -43,8 +43,39 @@ function updateDynamicTable(tableId, rows) {
 
     var row = 1;
     $.each(rows, function (key, value) {
-        insertRow(table, row, 0, value);
+        insertRow(table, row, value);
         row++
+    });
+}
+
+
+/**
+ *
+ * @param {str} tableId id of the table
+ * @param {array} rows
+ */
+function pathwaySimilarityTable(tableId, rows) {
+
+    var table = document.getElementById(tableId);
+
+
+    var rowNumber = 0;
+    $.each(rows, function (resource, pathways) {
+
+        var row = table.insertRow(rowNumber);
+        var pathwayName = row.insertCell(0);
+        pathwayName.innerHTML = "<b>" + resource.toUpperCase() + " Pathway</b>";
+
+        var similarityHeading = row.insertCell(1);
+        similarityHeading.innerHTML = "<b>Similarity</b>";
+
+        rowNumber++;
+
+        $.each(pathways, function (key, pathway) {
+            insertRow(table, rowNumber, pathway);
+            rowNumber++;
+
+        });
     });
 }
 
@@ -62,7 +93,26 @@ function clearTable(tableId) {
     }
 }
 
+
 $(document).ready(function () {
+
+    /**
+     * Spinner on Ajax call
+     */
+    $body = $("body");
+
+    $(document).on({
+        ajaxStart: function () {
+            $body.addClass("loading");
+        },
+        ajaxStop: function () {
+            $body.removeClass("loading");
+        },
+        ajaxError: function () {
+            $body.removeClass("loading");
+            alert("An error occurred. Please reload the page.");
+        }
+    });
 
     $("#infer-mappings").on('click', function (e) {
 
@@ -75,12 +125,10 @@ $(document).ready(function () {
                 'pathway_id': pathwayId
             },
             dataType: "json",
-            global: false,
             error: function (request) {
                 alert('Problem with request');
             },
             success: function (response) {
-                console.log(response);
 
                 clearTable('info-table');
 
@@ -96,7 +144,6 @@ $(document).ready(function () {
             type: "GET",
             url: "/suggest_mappings/name/" + pathwayName,
             dataType: "json",
-            global: false,
             error: function (request) {
                 alert('Problem with request');
             },
@@ -110,6 +157,24 @@ $(document).ready(function () {
 
     });
 
+    $("#suggest-by-content").on('click', function (e) {
+
+        $.ajax({
+            type: "GET",
+            url: "/suggest_mappings/content/" + resource + "/" + pathwayId,
+            dataType: "json",
+            error: function (request) {
+                alert('Problem with request');
+            },
+            success: function (response) {
+
+                clearTable('info-table');
+
+                pathwaySimilarityTable('info-table', response);
+            }
+        });
+
+    });
 
 });
 

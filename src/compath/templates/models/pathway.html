@@ -27,6 +27,28 @@
             margin: 0px auto;
             float: none;
         }
+
+        /* Modal loading */
+        .loading_modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, .8) url(/../../static/img/gif/loading.gif) 50% 50% no-repeat;
+        }
+
+        body.loading {
+            overflow: hidden;
+        }
+
+        body.loading .loading_modal {
+            display: block;
+        }
+
+
     </style>
 {% endblock %}
 
@@ -144,8 +166,8 @@
                         <div class="btn-group btn-space">
                             <button class="btn btn-primary" id="suggest-by-content"
                                     data-toggle="popover" title="Suggest Pathways"
-                                    data-content="Suggests the most similar pathways according to genetic overlap">
-                                Suggest Mappings By Overlap
+                                    data-content="Suggests the most similar pathways according to content">
+                                Suggest Mappings By Content
                             </button>
                             <button class="btn btn-primary" id="suggest-by-name"
                                     data-toggle="popover" title="Suggest Pathways"
@@ -167,5 +189,8 @@
             </div>
         </div>
     </div>
+
+    <div class="loading_modal"><!-- Spinner div --></div>
+
     {% include "footer.html" %}
 {% endblock %}
