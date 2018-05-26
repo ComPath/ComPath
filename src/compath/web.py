@@ -20,6 +20,7 @@ from compath import managers
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
+from compath.utils import set_list_intersection, simulate_pathway_enrichment
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.curation_service import curation_blueprint
 from compath.views.db_service import db_blueprint
@@ -119,41 +120,73 @@ def create_app(connection=None):
     app.register_blueprint(db_blueprint)
 
     app.manager_dict = {
-        name: ExternalManager(connection=connection)
-        for name, ExternalManager in managers.items()
+        resource: ExternalManager(connection=connection)
+        for resource, ExternalManager in managers.items()
     }
 
     log.info('Loading pathway distributions')
 
     app.resource_distributions = {
-        name: manager.get_pathway_size_distribution()
-        for name, manager in app.manager_dict.items()
-        if name not in BLACK_LIST
+        resource: manager.get_pathway_size_distribution()
+        for resource, manager in app.manager_dict.items()
+        if resource not in BLACK_LIST
     }
 
     log.info('Loading gene distributions')
 
     app.gene_distributions = {
-        name: dict(manager.get_gene_distribution())
-        for name, manager in app.manager_dict.items()
-        if name not in BLACK_LIST
+        resource: dict(manager.get_gene_distribution())
+        for resource, manager in app.manager_dict.items()
+        if resource not in BLACK_LIST
+    }
+
+    log.info('Loading gene sets')
+    resource_gene_sets = {
+        resource: manager.export_gene_sets()
+        for resource, manager in app.manager_dict.items()
+        if resource not in BLACK_LIST
     }
 
     log.info('Loading overlap across pathway databases')
-
-    resource_gene_sets = {
-        name: manager.get_all_hgnc_symbols()
-        for name, manager in app.manager_dict.items()
-        if name not in BLACK_LIST
+    # Flat all genes in all pathways in each resource to calculate overlap at the database level
+    resource_all_genes = {
+        resource: {
+            gene
+            for pathway, genes in pathways.items()
+            for gene in genes
+        }
+        for resource, pathways in resource_gene_sets.items()
     }
+
+    # TODO: select the databases (resource) to compare in the simulation
+    simulate_resources = ['kegg', 'reactome', 'wikipathways']
+
+    log.info('Perform simulation with shared genes between {}'.format(simulate_resources))
+
+    shared_genes = set_list_intersection(
+        [
+            gene_set
+            for resource, gene_set in resource_all_genes.items()
+            if resource in simulate_resources
+        ]
+    )
+
+    app.simulation_results = simulate_pathway_enrichment(
+        {
+            resource: value
+            for resource, value in resource_gene_sets.items()
+            if resource in simulate_resources
+        },
+        shared_genes,
+        runs=200
+    )
 
     log.info('Loading resource overview')
 
     app.resource_overview = {
-        name: (len(manager.get_all_pathways()), len(resource_gene_sets[name]))
-        # dict(Manager name: tuple(#pathways, #genes))
-        for name, manager in app.manager_dict.items()
-        if name not in BLACK_LIST
+        resource: (len(pathways), len(resource_all_genes[resource]))
+        # dict(Manager resource name: tuple(#pathways, #genes))
+        for resource, pathways in resource_gene_sets.items()
     }
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
@@ -161,17 +194,17 @@ def create_app(connection=None):
 
     hgnc_manager = HgncManager()
 
-    resource_gene_sets['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
+    resource_all_genes['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
 
-    app.gene_universe = resource_gene_sets['Gene Universe']
+    app.gene_universe = resource_all_genes['Gene Universe']
 
-    if len(resource_gene_sets['Gene Universe']) < 40000:
+    if len(resource_all_genes['Gene Universe']) < 40000:
         log.warning(
             'The number of HGNC symbols loaded is smaller than 40000. Please check that HGNC database has been'
             'properly loaded'
         )
 
-    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_gene_sets, skip_gene_set_info=True)
+    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_all_genes, skip_gene_set_info=True)
 
     hgnc_manager.session.close()
 

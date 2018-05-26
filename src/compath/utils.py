@@ -3,8 +3,9 @@
 """This module contains miscellaneous methods."""
 
 import logging
+from collections import defaultdict
 from difflib import SequenceMatcher
-
+import math
 import numpy as np
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
@@ -45,6 +46,114 @@ def process_form_gene_set(text):
         for word in line.split(',')
         if word
     }
+
+
+"""Simulation of pathway enrichment.
+This set of methods perform a simulation of pathway enrichment. Given a genes, it calculates how many pathways
+have at least x genes in a pathway.
+"""
+
+
+def set_list_intersection(set_list):
+    """Return the intersection between a list of sets.
+
+    :param list set_list: list of sets
+    :rtype: set
+    """
+    if not set_list:
+        return set()
+    result = set_list[0]
+    for s in set_list[1:]:
+        result &= s
+    return result
+
+
+def calculate_relative_enrichments(results, total_pathways_by_resource):
+    """Calculate relative enrichment of pathways (enriched pathways/total pathways).
+
+    :param dict results: result enrichment
+    :param total_pathways_by_resource dict : resource to number of pathways
+    :rtype: dict
+    """
+    return {
+        resource: len(enriched_pathways) / total_pathways_by_resource[resource]
+        for resource, enriched_pathways in results.items()
+    }
+
+
+def count_genes_in_pathway(pathways_gene_sets, genes):
+    """Calculate how many of the genes are associated to each pathway gene set.
+
+    :param dict pathways_gene_sets: pathways and their gene sets
+    :param set genes: genes queried
+    :rtype: dict
+    """
+    return {
+        pathway: len(gene_set.intersection(genes))
+        for pathway, gene_set in pathways_gene_sets.items()
+    }
+
+
+def apply_filter(results, threshold):
+    """Run one simulation with a given threshold.
+
+    :param dict results: resource with pathways
+    :param int threshold: necessary genes to enrich a pathway
+    :rtype: dict
+    """
+    filtered_results = {}
+
+    for database_name, pathways in results.items():
+
+        pathways_pass_filter = []
+
+        for pathway_name, genes_mapped in pathways.items():
+
+            if genes_mapped < threshold:
+                continue
+
+            pathways_pass_filter.append(pathway_name)
+
+        filtered_results[database_name] = pathways_pass_filter
+
+    return filtered_results
+
+
+def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
+    """Simulate pathway enrichment.
+
+    :param resource_gene_sets: resource and their gene sets
+    :param gene_set_query: shared genes between all resources
+    :param runs: number of simulation
+    :rtype: dict[list[tuple]]
+    """
+
+    # How many pathways each resource (Database) has
+    total_pathways_by_resource = {
+        resource: len(pathways_gene_sets)
+        for resource, pathways_gene_sets in resource_gene_sets.items()
+    }
+
+    # How many genes of the 'gene_set_query' are in each pathway
+    enriched_pathways = {
+        resource: count_genes_in_pathway(pathways_gene_sets, gene_set_query)
+        for resource, pathways_gene_sets in resource_gene_sets.items()
+    }
+
+    results = defaultdict(list)
+
+    # Calculate the percentage of pathways in the database with a minimum of genes in the pathway
+    for threshold in range(1, runs):
+        filtered_results = apply_filter(enriched_pathways, threshold)
+
+        relative_enrichments = calculate_relative_enrichments(
+            filtered_results, total_pathways_by_resource
+        )
+
+        for resource, result in relative_enrichments.items():
+            results[resource].append(round(result,3))
+
+    return results
 
 
 """Query utils"""

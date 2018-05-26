@@ -42,6 +42,16 @@ def similarity_network():
         manager_names=current_app.manager_dict.keys(),
     )
 
+"""Simulation view"""
+
+
+@analysis_blueprint.route('/simulation')
+def simulation_view():
+    """Return the Simulation page"""
+    return render_template(
+        'visualization/simulation.html',
+        results=current_app.simulation_results,
+    )
 
 """Venn Diagram views"""
 
@@ -268,10 +278,10 @@ def export_gene_set(resource):
     log.info("Querying the database")
 
     if resource == 'reactome':
-        genesets = dict_to_pandas_df(resource_manager.export_genesets(species='Homo sapiens'))
+        genesets = dict_to_pandas_df(resource_manager.export_gene_sets(species='Homo sapiens'))
 
     else:
-        genesets = dict_to_pandas_df(resource_manager.export_genesets())
+        genesets = dict_to_pandas_df(resource_manager.export_gene_sets())
 
     sio = StringIO()
 
