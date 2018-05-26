@@ -5,7 +5,7 @@
 import logging
 from collections import defaultdict
 from difflib import SequenceMatcher
-import math
+
 import numpy as np
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
@@ -72,7 +72,7 @@ def calculate_relative_enrichments(results, total_pathways_by_resource):
     """Calculate relative enrichment of pathways (enriched pathways/total pathways).
 
     :param dict results: result enrichment
-    :param total_pathways_by_resource dict : resource to number of pathways
+    :param dict total_pathways_by_resource: resource to number of pathways
     :rtype: dict
     """
     return {
@@ -151,7 +151,7 @@ def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
         )
 
         for resource, result in relative_enrichments.items():
-            results[resource].append(round(result,3))
+            results[resource].append(round(result, 3))
 
     return results
 
