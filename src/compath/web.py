@@ -5,6 +5,8 @@
 import logging
 import os
 import time
+from functools import reduce
+from operator import and_
 
 from bio2bel_hgnc.manager import Manager as HgncManager
 from flasgger import Swagger
@@ -20,7 +22,7 @@ from compath import managers
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
-from compath.utils import set_list_intersection, simulate_pathway_enrichment
+from compath.utils import simulate_pathway_enrichment
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.curation_service import curation_blueprint
 from compath.views.db_service import db_blueprint
@@ -120,71 +122,70 @@ def create_app(connection=None):
     app.register_blueprint(db_blueprint)
 
     app.manager_dict = {
-        resource: ExternalManager(connection=connection)
-        for resource, ExternalManager in managers.items()
+        resource_name: ExternalManager(connection=connection)
+        for resource_name, ExternalManager in managers.items()
     }
 
     log.info('Loading pathway distributions')
 
     app.resource_distributions = {
-        resource: manager.get_pathway_size_distribution()
-        for resource, manager in app.manager_dict.items()
-        if resource not in BLACK_LIST
+        resource_name: manager.get_pathway_size_distribution()
+        for resource_name, manager in app.manager_dict.items()
+        if resource_name not in BLACK_LIST
     }
 
     log.info('Loading gene distributions')
     # TODO @cthoyt too slow
     app.gene_distributions = {
-        resource: dict(manager.get_gene_distribution())
-        for resource, manager in app.manager_dict.items()
-        if resource not in BLACK_LIST
+        resource_name: dict(manager.get_gene_distribution())
+        for resource_name, manager in app.manager_dict.items()
+        if resource_name not in BLACK_LIST
     }
 
     log.info('Loading gene sets')
     resource_gene_sets = {
-        resource: manager.export_gene_sets()
-        for resource, manager in app.manager_dict.items()
-        if resource not in BLACK_LIST
+        resource_name: manager.export_gene_sets()
+        for resource_name, manager in app.manager_dict.items()
+        if resource_name not in BLACK_LIST
     }
 
     log.info('Loading overlap across pathway databases')
     # Flat all genes in all pathways in each resource to calculate overlap at the database level
     resource_all_genes = {
-        resource: manager.get_all_hgnc_symbols()
-        for resource, manager in app.manager_dict.items()
-        if resource not in BLACK_LIST
+        resource: {
+            gene
+            for pathway, genes in pathways.items()
+            for gene in genes
+        }
+        for resource, pathways in resource_gene_sets.items()
     }
 
-
     # TODO: select the databases (resource) to compare in the simulation
-    simulate_resources = ['reactome', 'wikipathways']
+    simulate_resources = ['kegg', 'reactome', 'wikipathways']
 
-    log.info('Perform simulation with shared genes between {}'.format(simulate_resources))
+    log.info('Performing simulation with {}'.format(simulate_resources))
 
-    shared_genes = set_list_intersection(
-        [
-            gene_set
-            for resource, gene_set in resource_all_genes.items()
-            if resource in simulate_resources
-        ]
-    )
+    common_genes_simulated_resources = reduce(and_, [
+        gene_set
+        for resource_name, gene_set in resource_all_genes.items()
+        if resource_name in simulate_resources
+    ])
 
     app.simulation_results = simulate_pathway_enrichment(
         {
-            resource: value
-            for resource, value in resource_gene_sets.items()
-            if resource in simulate_resources
+            resource_name: value
+            for resource_name, value in resource_gene_sets.items()
+            if resource_name in simulate_resources
         },
-        shared_genes,
-        runs=300
+        common_genes_simulated_resources,
+        runs=200
     )
 
     log.info('Loading resource overview')
-
     app.resource_overview = {
-        resource: (len(pathways), len(resource_all_genes[resource]))
+        resource_name: (len(pathways), len(resource_all_genes[resource_name]))
         # dict(Manager resource name: tuple(#pathways, #genes))
-        for resource, pathways in resource_gene_sets.items()
+        for resource_name, pathways in resource_gene_sets.items()
     }
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session

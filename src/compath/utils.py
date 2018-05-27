@@ -54,20 +54,6 @@ have at least x genes in a pathway.
 """
 
 
-def set_list_intersection(set_list):
-    """Return the intersection between a list of sets.
-
-    :param list set_list: list of sets
-    :rtype: set
-    """
-    if not set_list:
-        return set()
-    result = set_list[0]
-    for s in set_list[1:]:
-        result &= s
-    return result
-
-
 def calculate_relative_enrichments(results, total_pathways_by_resource):
     """Calculate relative enrichment of pathways (enriched pathways/total pathways).
 
