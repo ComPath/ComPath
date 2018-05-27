@@ -150,7 +150,7 @@ def create_app(connection=None):
     log.info('Loading overlap across pathway databases')
     # Flat all genes in all pathways in each resource to calculate overlap at the database level
     resource_all_genes = {
-        resource: dict(manager.get_all_hgnc_symbols())
+        resource: manager.get_all_hgnc_symbols()
         for resource, manager in app.manager_dict.items()
         if resource not in BLACK_LIST
     }
