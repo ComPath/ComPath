@@ -150,13 +150,11 @@ def create_app(connection=None):
     log.info('Loading overlap across pathway databases')
     # Flat all genes in all pathways in each resource to calculate overlap at the database level
     resource_all_genes = {
-        resource: {
-            gene
-            for pathway, genes in pathways.items()
-            for gene in genes
-        }
-        for resource, pathways in resource_gene_sets.items()
+        resource: dict(manager.get_all_hgnc_symbols())
+        for resource, manager in app.manager_dict.items()
+        if resource not in BLACK_LIST
     }
+
 
     # TODO: select the databases (resource) to compare in the simulation
     simulate_resources = ['reactome', 'wikipathways']
