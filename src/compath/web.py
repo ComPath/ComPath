@@ -133,7 +133,7 @@ def create_app(connection=None):
     }
 
     log.info('Loading gene distributions')
-
+    # TODO @cthoyt too slow
     app.gene_distributions = {
         resource: dict(manager.get_gene_distribution())
         for resource, manager in app.manager_dict.items()
@@ -159,7 +159,7 @@ def create_app(connection=None):
     }
 
     # TODO: select the databases (resource) to compare in the simulation
-    simulate_resources = ['kegg', 'reactome', 'wikipathways']
+    simulate_resources = ['reactome', 'wikipathways']
 
     log.info('Perform simulation with shared genes between {}'.format(simulate_resources))
 
@@ -178,7 +178,7 @@ def create_app(connection=None):
             if resource in simulate_resources
         },
         shared_genes,
-        runs=200
+        runs=300
     )
 
     log.info('Loading resource overview')
