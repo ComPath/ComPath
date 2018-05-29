@@ -45,7 +45,7 @@ def create_app(connection=None, template_folder='/templates',static_folder='/sta
     """
     t = time.time()
 
-    app = Flask(__name__, template_folder, static_folder)
+    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
 
     @app.template_filter('remove_prefix')
     def remove_prefix(text, prefix):
