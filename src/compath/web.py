@@ -207,7 +207,7 @@ def create_app(connection=None):
             'properly loaded'
         )
 
-    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_all_genes, skip_gene_set_info=True)
+    app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resourgice_all_genes, skip_gene_set_info=True)
 
     hgnc_manager.session.close()
 
