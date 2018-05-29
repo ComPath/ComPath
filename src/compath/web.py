@@ -163,23 +163,27 @@ def create_app(connection=None):
     # TODO: select the databases (resource) to compare in the simulation
     simulate_resources = ['kegg', 'reactome', 'wikipathways']
 
-    log.info('Performing simulation with {}'.format(simulate_resources))
+    if resource_all_genes:
+        log.info('Performing simulation with {}'.format(simulate_resources))
 
-    common_genes_simulated_resources = reduce(and_, [
-        gene_set
-        for resource_name, gene_set in resource_all_genes.items()
-        if resource_name in simulate_resources
-    ])
-
-    app.simulation_results = simulate_pathway_enrichment(
-        {
-            resource_name: value
-            for resource_name, value in resource_gene_sets.items()
+        common_genes_simulated_resources = reduce(and_, [
+            gene_set
+            for resource_name, gene_set in resource_all_genes.items()
             if resource_name in simulate_resources
-        },
-        common_genes_simulated_resources,
-        runs=200
-    )
+        ])
+
+        app.simulation_results = simulate_pathway_enrichment(
+            {
+                resource_name: value
+                for resource_name, value in resource_gene_sets.items()
+                if resource_name in simulate_resources
+            },
+            common_genes_simulated_resources,
+            runs=200
+        )
+
+    else:
+        log.warning('No data has been fetched')
 
     log.info('Loading resource overview')
     app.resource_overview = {
