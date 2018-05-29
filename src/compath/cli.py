@@ -50,14 +50,16 @@ def ls():
 @main.command()
 @click.option('--host', default='0.0.0.0', help='Flask host. Defaults to 0.0.0.0')
 @click.option('--port', type=int, default=5000, help='Flask port. Defaults to 5000')
+@click.option('--template-folder', default='/templates', help="Template folder. Defaults to 'templates'")
+@click.option('--static-folder', default='/static', help="Template folder. Defaults to 'static'")
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def web(host, port, debug, connection):
+def web(host, port, template_folder, static_folder, debug, connection):
     """Run web service."""
     set_debug_param(debug)
 
     from compath.web import create_app
-    app = create_app(connection=connection)
+    app = create_app(connection=connection, template_folder=template_folder, static_folder=static_folder)
     app.run(host=host, port=port)
 
 

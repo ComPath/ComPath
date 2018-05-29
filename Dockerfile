@@ -18,4 +18,4 @@ RUN pip3 install .
 EXPOSE 5000
 
 ENTRYPOINT ["python"]
-CMD ["-m", "compath", "web", "--host", "0.0.0.0", "--port", "5000"]
+CMD ["-m", "compath", "web", "--host", "0.0.0.0", "--port", "5000", "--template-folder", "/app/src/compath/templates", "--static-folder", "/app/src/compath/static"]

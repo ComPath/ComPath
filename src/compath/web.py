@@ -37,7 +37,7 @@ security = Security()
 swagger = Swagger()
 
 
-def create_app(connection=None):
+def create_app(connection=None, template_folder='/templates',static_folder='/static'):
     """Create the Flask application.
 
     :type connection: Optional[str]
@@ -45,7 +45,7 @@ def create_app(connection=None):
     """
     t = time.time()
 
-    app = Flask(__name__, template_folder='./templates')
+    app = Flask(__name__, template_folder, static_folder)
 
     @app.template_filter('remove_prefix')
     def remove_prefix(text, prefix):
