@@ -15,5 +15,7 @@ WORKDIR /app
 
 RUN pip3 install .
 
-#ENTRYPOINT ["python"]
-#CMD ["-m", "compath", "web", "--host", "0.0.0.0"]
+EXPOSE 5000
+
+ENTRYPOINT ["python"]
+CMD ["-m", "compath", "web", "--host", "0.0.0.0", "--port", "5000"]
