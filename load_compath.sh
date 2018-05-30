@@ -1,17 +1,13 @@
 #!/usr/bin/env bash
-# Install requirements packages
 
-python3 -m pip install compath bio2bel_hgnc bio2bel_kegg bio2bel_reactome bio2bel_wikipathways bio2bel_msig
+# Create ComPath Container
 
-# Populate PyHGNC
+docker create -v /data --name compath-data docker.arty.scai.fraunhofer.de/compath:latest 
 
-python3 -m bio2bel_hgnc populate
+# Create the Normal Execution Container
 
-python3 -m bio2bel_kegg populate
+# TODO: Copy from Juergen
 
-python3 -m bio2bel_reactome populate
+docker run --name=compath --volumes-from compath-data --restart=always -d -p 10005:8080 docker.arty.scai.fraunhofer.de/compath:latest
 
-python3 -m bio2bel_wikipathways populate
-
-python3 -m bio2bel_msig populate
-
+docker exec -t -it compath /app/load_data.sh
