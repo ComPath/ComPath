@@ -21,9 +21,3 @@ python3 -m bio2bel_wikipathways populate
 # python3 -m bio2bel_reactome populate
 
 # python3 -m bio2bel_msig populate
-
-# TODO: Create Email/Admin. 
-
-# Options for python email library: ksi.scai.fraunhofer.de as a SMTP host and SSMTP as protocol
-
-# TODO: Load mappings
