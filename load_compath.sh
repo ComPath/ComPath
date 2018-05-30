@@ -8,6 +8,6 @@ docker create -v /data --name compath-data docker.arty.scai.fraunhofer.de/compat
 
 # TODO: Copy from Juergen
 
-docker run --name=compath --volumes-from compath-data --restart=always -d -p 10005:8080 docker.arty.scai.fraunhofer.de/compath:latest
+docker run --name=compath --volumes-from compath-data --restart=always -t -d -p 30050:5000 docker.arty.scai.fraunhofer.de/compath:latest
 
 docker exec -t -it compath /app/load_data.sh
