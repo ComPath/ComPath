@@ -100,6 +100,30 @@ Make user admin.
 
     $ python3 -m compath make_admin 'email'
 
+Docker Instructions
+~~~~~~~~~~~~~~~~~~~
+
+Build Docker Image
+------------------
+
+docker build -t compath:0.0.1 .
+
+
+Create Docker Containers
+------------------------
+
+sh create_and_build_container.sh
+
+Load Data
+---------
+
+docker exec -t -it compath /opt/compath/src/bin/load_data.sh
+
+Restart Container
+-----------------
+
+docker restart compath
+
 
 This runs the Flask development server locally, by default on port 5000 (http://localhost:5000).
 

@@ -1,12 +1,11 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
-# Set BIO2BEL Variable
-
-export BIO2BEL_CONNECTION='/data'
+# Set connection to the database
+export BIO2BEL_CONNECTION='sqlite:////data/bio2bel.db'
 
 # Install requirements packages
 
-python3 -m pip install compath bio2bel_chebi bio2bel_kegg bio2bel_reactome bio2bel_wikipathways bio2bel_msig
+python3 -m pip install --user compath bio2bel_chebi bio2bel_kegg bio2bel_reactome bio2bel_wikipathways bio2bel_msig
 
 # Load Pathway Data
 
@@ -21,3 +20,4 @@ python3 -m bio2bel_wikipathways populate
 # python3 -m bio2bel_reactome populate
 
 # python3 -m bio2bel_msig populate
+
