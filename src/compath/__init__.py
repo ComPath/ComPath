@@ -40,7 +40,7 @@ has been already installed and populated. This package is required to perform th
 import logging
 
 from compath_utils import CompathManager
-from pkg_resources import VersionConflict, iter_entry_points
+from pkg_resources import VersionConflict, iter_entry_points, UnknownExtra
 
 from compath.constants import MODULE_NAME
 
@@ -53,6 +53,9 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
 
     try:
         bio2bel_module = entry_point.load()
+    except UnknownExtra:
+        log.warning('Unknown extra in %s', entry)
+        continue
     except VersionConflict:
         log.warning('Version conflict in %s', entry)
         continue
