@@ -37,7 +37,7 @@ security = Security()
 swagger = Swagger()
 
 
-def create_app(connection=None, template_folder='/templates',static_folder='/static'):
+def create_app(connection=None, template_folder='templates',static_folder='static'):
     """Create the Flask application.
 
     :type connection: Optional[str]
