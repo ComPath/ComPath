@@ -5,7 +5,7 @@ import os
 import tempfile
 import unittest
 
-from compath.manager import RealManager
+from compath.manager import Manager
 
 # Manager names
 KEGG = 'kegg'
@@ -38,7 +38,7 @@ class DatabaseMixin(unittest.TestCase):
         self.connection = 'sqlite:///' + self.path
 
         # create temporary database
-        self.manager = RealManager(connection=self.connection)
+        self.manager = Manager.from_connection(connection=self.connection)
 
     def tearDown(self):
         """Close the connection in the manager and deletes the temporary database."""

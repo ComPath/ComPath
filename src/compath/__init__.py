@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""
-An interactive and extensible web application for comparative analysis of pathway databases.
+"""An interactive and extensible web application for comparative analysis of pathway databases.
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
@@ -33,16 +32,14 @@ has been already installed and populated. This package is required to perform th
 1. :code:`python3 -m pip install bio2bel_hgnc`
 2. :code:`python3 -m bio2bel_hgnc populate`
 
-
-
 """
 
 import logging
 
-from compath_utils import CompathManager
 from pkg_resources import VersionConflict, iter_entry_points, UnknownExtra
 
 from compath.constants import MODULE_NAME
+from compath_utils import CompathManager
 
 log = logging.getLogger(__name__)
 

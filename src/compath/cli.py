@@ -15,7 +15,7 @@ from compath import managers
 from compath.constants import ADMIN_EMAIL, DEFAULT_CACHE_CONNECTION
 from compath.curation.hierarchies import load_hierarchy
 from compath.curation.parser import parse_curation_template, parse_special_mappings
-from compath.manager import RealManager
+from compath.manager import Manager
 from compath.models import Base, Role, User
 
 log = logging.getLogger(__name__)
@@ -93,7 +93,7 @@ def drop(debug, yes, connection):
     set_debug_param(debug)
 
     if yes or click.confirm('Do you really want to delete the ComPath DB'):
-        m = RealManager(connection=connection)
+        m = Manager.from_connection(connection=connection)
         click.echo('Deleting ComPath DB')
         m.drop_all()
         m.create_all()
@@ -115,8 +115,9 @@ def drop_databases(debug, yes, connection):
 
 
 @main.command()
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('--curator')
-def load_mappings(curator):
+def load_mappings(connection, curator):
     """Load mappings from template."""
     set_debug_param(2)
 
@@ -124,36 +125,41 @@ def load_mappings(curator):
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_wikipathways.xlsx',
         'kegg',
         'wikipathways',
-        admin_email=curator
+        admin_email=curator,
+        connection=connection,
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_reactome.xlsx',
         'kegg',
         'reactome',
-        admin_email=curator
+        admin_email=curator,
+        connection=connection,
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/wikipathways_reactome.xlsx',
         'wikipathways',
         'reactome',
-        admin_email=curator
+        admin_email=curator,
+        connection=connection,
     )
 
     parse_special_mappings(
         'https://github.com/ComPath/resources/raw/master/mappings/special_mappings.xlsx',
-        admin_email=curator
+        admin_email=curator,
+        connection=connection,
     )
 
 
 @main.command()
+@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 @click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
-def load_hierarchies(email):
+def load_hierarchies(connection, email):
     """Load pathway databases with hierarchies."""
     set_debug_param(2)
 
     # Example: python3 -m compath load_hierarchies --email='your@email.com'
 
-    load_hierarchy(curator_email=email)
+    load_hierarchy(connection=connection, curator_email=email)
 
 
 @main.command()
@@ -163,7 +169,7 @@ def load_hierarchies(email):
 def make_user(connection, email, password):
     """Create a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com password
-    manager = RealManager(connection=connection)
+    manager = Manager.from_connection(connection=connection)
     Base.metadata.bind = manager.engine
     Base.query = manager.session.query_property()
     manager.create_all()
@@ -173,6 +179,7 @@ def make_user(connection, email, password):
 
     if user is None:
         user = User(email=email, password=password, confirmed_at=datetime.datetime.utcnow())
+        manager.session.add(user)
         ds.commit()
 
 
@@ -182,7 +189,7 @@ def make_user(connection, email, password):
 def make_admin(connection, email):
     """Make a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com
-    manager = RealManager(connection=connection)
+    manager = Manager.from_connection(connection=connection)
     Base.metadata.bind = manager.engine
     Base.query = manager.session.query_property()
     manager.create_all()

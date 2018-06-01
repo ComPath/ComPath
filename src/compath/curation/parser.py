@@ -10,12 +10,12 @@ from tqdm import tqdm
 from compath import managers
 from compath.constants import *
 from compath.curation.utils import *
-from compath.manager import RealManager
+from compath.manager import Manager
 
 log = logging.getLogger(__name__)
 
 
-def parse_special_mappings(path, admin_email=None):
+def parse_special_mappings(path, admin_email=None, connection=None):
     """Parse special mapping file.
 
     :param str path: path of the excel sheet
@@ -29,7 +29,7 @@ def parse_special_mappings(path, admin_email=None):
         for name, ExternalManager in managers.items()
     }
 
-    compath_manager = RealManager()
+    compath_manager = Manager.from_connection(connection)
 
     curator = compath_manager.get_user_by_email(email=admin_email if admin_email else ADMIN_EMAIL)
 
@@ -72,7 +72,7 @@ def parse_special_mappings(path, admin_email=None):
         mapping, _ = compath_manager.accept_mapping(mapping.id)
 
 
-def parse_curation_template(path, reference_pathway_db, compared_pathway_db, admin_email=None):
+def parse_curation_template(path, reference_pathway_db, compared_pathway_db, admin_email=None, connection=None):
     """Load the curation template excel sheet into a pandas Dataframe.
 
     :param str path: path of the excel sheet
@@ -88,7 +88,7 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
         for name, ExternalManager in managers.items()
     }
 
-    compath_manager = RealManager()
+    compath_manager = Manager.from_connection(connection)
 
     curator = compath_manager.get_user_by_email(email=admin_email if admin_email else ADMIN_EMAIL)
 

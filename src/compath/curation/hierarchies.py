@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from compath import managers
 from compath.constants import ADMIN_EMAIL, IS_PART_OF
-from compath.manager import RealManager
+from compath.manager import Manager
 
 log = logging.getLogger(__name__)
 
@@ -31,7 +31,7 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
     """Iterate over pathway objects and creates hierarchies if exist.
 
     :param list[Pathway] pathways: list of pathways
-    :param compath.manager.RealManager compath_manager: ComPath Manager
+    :param compath.manager.Manager compath_manager: ComPath Manager
     :param str pathway_database: Name of the pathway database
     :param compath.models.User curator: Curator user
     :return: number of created mappings
@@ -58,15 +58,17 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
 
             if created:
                 mappings_created += 1
+
     return mappings_created
 
 
-def load_hierarchy(curator_email=None):
+def load_hierarchy(*, connection=None, curator_email=None):
     """Load the hierarchical relationships for the managers containing them.
 
+    :param Optional[str] connection:
     :param Optional[str] curator_email: email of the admin
     """
-    compath_manager = RealManager()
+    compath_manager = Manager.from_connection(connection)
 
     curator = compath_manager.get_user_by_email(email=curator_email if curator_email else ADMIN_EMAIL)
 

@@ -5,7 +5,7 @@
 import datetime
 import logging
 
-from bio2bel.utils import get_connection
+from bio2bel import get_connection
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -35,11 +35,32 @@ def _flip_service_order(service_1_name, service_2_name):
 
 def _ensure_manager(name):
     if name not in managers:
-        raise ValueError('Manager does not exist for {}'.format(name))
+        raise ValueError('Manager does not exist for {}. Available: {}'.format(name, managers))
 
 
 class Manager(object):
     """Database manager."""
+
+    def __init__(self, engine, session):
+        self.engine = engine
+        self.session = session
+        self.create_all()
+
+    @staticmethod
+    def from_connection(connection=None):
+        connection = get_connection(MODULE_NAME, connection)
+        engine = create_engine(connection)
+        session_maker = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
+        session = scoped_session(session_maker)
+        return Manager(engine, session)
+
+    def create_all(self, check_first=True):
+        """Create tables for ComPath."""
+        Base.metadata.create_all(self.engine, checkfirst=check_first)
+
+    def drop_all(self, check_first=True):
+        """Drop all tables for ComPath."""
+        Base.metadata.drop_all(self.engine, checkfirst=check_first)
 
     """Query methods"""
 
@@ -355,24 +376,3 @@ class Manager(object):
                 ))
 
         return inferred_mappings
-
-
-class RealManager(Manager):
-    """Real ComPath manager."""
-
-    def __init__(self, connection=None):
-        self.connection = get_connection(MODULE_NAME, connection)
-        self.engine = create_engine(self.connection)
-        self.session_maker = sessionmaker(bind=self.engine, autoflush=False, expire_on_commit=False)
-        self.session = scoped_session(self.session_maker)
-        self.create_all()
-
-        # Add all available managers
-
-    def create_all(self, check_first=True):
-        """Create tables for ComPath."""
-        Base.metadata.create_all(self.engine, checkfirst=check_first)
-
-    def drop_all(self, check_first=True):
-        """Drop all tables for ComPath."""
-        Base.metadata.drop_all(self.engine, checkfirst=check_first)
