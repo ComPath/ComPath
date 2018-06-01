@@ -1,7 +1,7 @@
 click
 sqlalchemy
 bio2bel>=0.0.12
-compath_utils>=0.0.3
+compath_utils>=0.0.5
 bio2bel_hgnc
 wtforms
 flask_wtf

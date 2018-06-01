@@ -29,7 +29,7 @@ INSTALL_REQUIRES = [
     'click',
     'sqlalchemy',
     'bio2bel>=0.0.12',
-    'compath_utils>=0.0.3',
+    'compath_utils>=0.0.5',
     'bio2bel_hgnc',
     'wtforms',
     'flask_wtf',
@@ -44,6 +44,11 @@ INSTALL_REQUIRES = [
     'tqdm',
     'numpy',
     'statsmodels'
+]
+TESTS_REQUIRE = [
+    'bio2bel_kegg',
+    'bio2bel_reactome',
+    'bio2bel_wikipathways',
 ]
 ENTRY_POINTS = {
     'console_scripts': [
@@ -98,5 +103,6 @@ if __name__ == '__main__':
         packages=PACKAGES,
         package_dir={'': 'src'},
         install_requires=INSTALL_REQUIRES,
+        tests_require=TESTS_REQUIRE,
         entry_points=ENTRY_POINTS,
     )
