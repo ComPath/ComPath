@@ -13,6 +13,7 @@ matrix:
   allow_failures:
     - env: TOXENV=flake8
 install:
+- pip install --upgrade pip
 - pip install tox
 - pip install codecov
 - pip install coverage
