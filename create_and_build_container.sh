@@ -2,11 +2,11 @@
 
 # Create ComPath Container
 
-docker create -v /data --name compath-data compath:0.0.2
+docker create -v /data --name compath-data docker.arty.scai.fraunhofer.de/compath:latest
 
 # Create the Normal Execution Container
 
-docker run --name=compath --volumes-from compath-data --restart=always -d -p 8080:5000 compath:0.0.2
+docker run --name=compath --volumes-from compath-data --restart=always -d -p 30050:5000 docker.arty.scai.fraunhofer.de/compath:latest
 
 
 # TODO: Create Email/Admin. 
