@@ -72,6 +72,8 @@ The application can be run simply with
 
     python3 -m compath web
 
+This command the Flask development server locally, by default on port 5000 (http://localhost:5000).
+
 
 Curation Interface
 ------------------
@@ -132,8 +134,6 @@ Restart Container
 
     docker restart compath
 
-
-This runs the Flask development server locally, by default on port 5000 (http://localhost:5000).
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
     :target: https://travis-ci.org/ComPath/ComPath
