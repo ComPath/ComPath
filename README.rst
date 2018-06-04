@@ -20,13 +20,13 @@ following code in your favorite terminal:
 
 .. code-block:: sh
 
-    $ python3 -m pip install compath
+    python3 -m pip install compath
 
 or from the latest code on `GitHub <https://github.com/compath/compath>`_ with:
 
 .. code-block:: sh
 
-    $ python3 -m pip install git+https://github.com/bio2bel/compath.git@master
+    python3 -m pip install git+https://github.com/bio2bel/compath.git@master
 
 Setup
 -----
@@ -36,7 +36,7 @@ After installing ``compath``, run from the command line:
 
 .. code-block:: sh
 
-    $ python3 -m compath populate
+    python3 -m compath populate
 
 This command populates all of the relevant Bio2BEL repositories for the default list, and if any optional ComPath
 repositories have been registered with entry points, will also populated.
@@ -79,26 +79,26 @@ Load mappings between pathways directly from the `ComPath Curation <https://gith
 
 .. code-block:: sh
 
-    $ python3 -m compath load_mappings
+    python3 -m compath load_mappings
 
 Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome).
 
 .. code-block:: sh
 
-    $ python3 -m compath load_hierarchies
+    python3 -m compath load_hierarchies
 
 
 Create a user.
 
 .. code-block:: sh
 
-    $ python3 -m compath make_user 'email' 'password'
+    python3 -m compath make_user 'email' 'password'
 
 Make user admin.
 
 .. code-block:: sh
 
-    $ python3 -m compath make_admin 'email'
+    python3 -m compath make_admin 'email'
 
 Docker Instructions
 ~~~~~~~~~~~~~~~~~~~
@@ -106,23 +106,31 @@ Docker Instructions
 Build Docker Image
 ------------------
 
-docker build -t compath:0.0.1 .
+.. code-block:: sh
+
+    docker build -t compath:0.0.1 .
 
 
 Create Docker Containers
 ------------------------
 
-sh create_and_build_container.sh
+.. code-block:: sh
+
+    sh create_and_build_container.sh
 
 Load Data
 ---------
 
-docker exec -t -it compath /opt/compath/src/bin/load_data.sh
+.. code-block:: sh
+
+    docker exec -t -it compath /opt/compath/src/bin/load_data.sh
 
 Restart Container
 -----------------
 
-docker restart compath
+.. code-block:: sh
+
+    docker restart compath
 
 
 This runs the Flask development server locally, by default on port 5000 (http://localhost:5000).
