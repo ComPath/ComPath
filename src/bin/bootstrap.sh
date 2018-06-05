@@ -18,7 +18,7 @@ shut_down() {
 
 trap 'shut_down' SIGKILL SIGTERM SIGHUP SIGINT EXIT
 
-python -m compath web --host 0.0.0.0 --port 5000 --template-folder="/opt/compath/src/compath/templates" --static-folder="/opt/compath/src/compath/static" >> /data/logs/compath.log 2>&1
+python -m compath web --host 0.0.0.0 --port 5000 --template-folder="/opt/compath/src/compath/templates" --static-folder="/opt/compath/src/compath/static" --connection="sqlite:////data/bio2bel.db" >> /data/logs/compath.log 2>&1
 
 
 # this script must end with a persistent foreground process
