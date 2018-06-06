@@ -4,7 +4,7 @@
 # You can set these variables from the command line.
 SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
-SPHINXPROJ    = Bio2BELComPath
+SPHINXPROJ    = ComPath
 SOURCEDIR     = source
 BUILDDIR      = build
 
