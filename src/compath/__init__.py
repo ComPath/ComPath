@@ -68,7 +68,7 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
 
     managers[entry] = ExternalManager
 
-__version__ = '0.0.2-dev'
+__version__ = '0.0.2'
 
 __title__ = 'compath'
 __description__ = "A web application for exploring and comparing the overlaps across pathway resources"
