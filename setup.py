@@ -43,7 +43,8 @@ INSTALL_REQUIRES = [
     'scipy',
     'tqdm',
     'numpy',
-    'statsmodels'
+    'statsmodels',
+    'xlrd'
 ]
 TESTS_REQUIRE = [
     'bio2bel_kegg',
