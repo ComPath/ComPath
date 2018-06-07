@@ -47,7 +47,7 @@
         #overlap-venn-diagram svg text {
             fill: white;
             font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-            {#font-size: 12px !important;#}
+        {#font-size: 12px !important;#}
         }
 
         .venntooltip {
@@ -84,8 +84,11 @@
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
                 <form id="venn-diagram-form">
-                    <p>Select the pathway of interest to plot a Venn diagram to visualize their gene set overlap. Double
-                        click in the circles to see information about the pathways and their overlap.</p>
+                    <p>Select the database of interest in the second box, and then type the name of a pathway in this
+                        database.
+                        After selecting two or more pathways, click in the "Render Plot" button to see
+                        the Euler diagram representing the overlaps between the pathway selection.
+                        To explore the overlap, double click in the circles to reveal the pathway overlap.</p>
                     <div data-role="dynamic-fields">
                         <div class="form-inline">
                             <div class="form-group">
