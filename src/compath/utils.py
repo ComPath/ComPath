@@ -10,6 +10,7 @@ import numpy as np
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
 from statsmodels.sandbox.stats.multicomp import multipletests
+from compath.models import User
 
 from .constants import BLACK_LIST
 
@@ -144,6 +145,17 @@ def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
 
 """Query utils"""
 
+def _iterate_user_strings(manager_):
+    """Iterates over strings to print describing users
+    :param compath.manager.Manager manager_:
+    :rtype: iter[str]
+    """
+    for user in manager_.session.query(User).all():
+        yield '{email}\t{password}\t{roles}'.format(
+            email=user.email,
+            password=user.password,
+            roles=','.join(sorted(r.name for r in user.roles)),
+)
 
 def get_genes_without_assigned_pathways(enrichment_results, genes_query):
     """Returns the genes without any known pathway assigned.

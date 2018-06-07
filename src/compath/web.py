@@ -37,7 +37,17 @@ security = Security()
 swagger = Swagger()
 
 
-def create_app(connection=None, template_folder='templates',static_folder='static'):
+class ComPathSQLAlchemy(SQLAlchemy):
+    """ComPath"""
+
+    def init_app(self, app):
+        """Overwrite init app method."""
+        super().init_app(app)
+
+        self.manager = Manager(engine=self.engine, session=self.session)
+
+
+def create_app(connection=None, template_folder='templates', static_folder='static'):
     """Create the Flask application.
 
     :type connection: Optional[str]
@@ -79,21 +89,7 @@ def create_app(connection=None, template_folder='templates',static_folder='stati
 
     CSRFProtect(app)
     bootstrap.init_app(app)
-    db = SQLAlchemy(app)
-
-    class WebManager(Manager):
-        """Web manager class."""
-
-        def __init__(self):
-            self.session = db.session
-            self.engine = db.engine
-
-        def drop_all(self):
-            """Drop all tables for ComPath."""
-            Base.metadata.drop_all(self.engine)
-            Base.metadata.create_all(self.engine)
-
-    app.manager = WebManager()
+    db = ComPathSQLAlchemy(app)
 
     with app.app_context():
         Base.metadata.bind = db.engine
@@ -103,6 +99,8 @@ def create_app(connection=None, template_folder='templates',static_folder='stati
             db.create_all()
         except Exception:
             log.exception('Failed to create all')
+
+    app.manager = db.manager
 
     user_datastore = SQLAlchemyUserDatastore(app.manager, User, Role)
 

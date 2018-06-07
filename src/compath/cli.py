@@ -17,6 +17,7 @@ from compath.curation.hierarchies import load_hierarchy
 from compath.curation.parser import parse_curation_template, parse_special_mappings
 from compath.manager import Manager
 from compath.models import Base, Role, User
+from compath.utils import _iterate_user_strings
 
 log = logging.getLogger(__name__)
 
@@ -38,6 +39,23 @@ def set_debug_param(debug):
 def main():
     """Main click method"""
     logging.basicConfig(level=20, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
+
+
+@main.group()
+@click.option('-c', '--connection', help='Cache connection. Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
+@click.pass_context
+def manage(ctx, connection):
+    """Manage the database"""
+    ctx.obj = Manager.from_connection(connection)
+    Base.metadata.bind = ctx.obj.engine
+    Base.query = ctx.obj.session.query_property()
+    ctx.obj.create_all()
+
+
+@manage.group()
+def users():
+    """User group"""
+    pass
 
 
 @main.command()
@@ -162,49 +180,53 @@ def load_hierarchies(connection, email):
     load_hierarchy(connection=connection, curator_email=email)
 
 
-@main.command()
+@users.command()
+@click.pass_obj
+def ls(manager):
+    """Lists all users"""
+    for s in _iterate_user_strings(manager):
+        click.echo(s)
+
+
+@users.command()
 @click.argument('email')
 @click.argument('password')
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def make_user(connection, email, password):
+@click.pass_obj
+def make_user(manager, email, password):
     """Create a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com password
-    manager = Manager.from_connection(connection=connection)
-    Base.metadata.bind = manager.engine
-    Base.query = manager.session.query_property()
-    manager.create_all()
 
     ds = SQLAlchemyUserDatastore(manager, User, Role)
     user = ds.find_user(email=email)
 
     if user is None:
-        user = User(email=email, password=password, confirmed_at=datetime.datetime.utcnow())
-        manager.session.add(user)
+        ds.create_user(email=email, password=password, confirmed_at=datetime.datetime.utcnow())
         ds.commit()
+        click.echo('User {} was successfully created'.format(email))
+
+    else:
+        click.echo('User {} already exists'.format(email))
 
 
-@main.command()
+@users.command()
 @click.argument('email')
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def make_admin(connection, email):
+@click.pass_obj
+def make_admin(manager, email):
     """Make a pre-existing user an admin."""
     # Example: python3 -m compath make_admin xxx@xxx.com
-    manager = Manager.from_connection(connection=connection)
-    Base.metadata.bind = manager.engine
-    Base.query = manager.session.query_property()
-    manager.create_all()
 
     ds = SQLAlchemyUserDatastore(manager, User, Role)
     user = ds.find_user(email=email)
 
     if user is None:
-        click.echo('Not user found')
+        click.echo('User not found')
         sys.exit(0)
 
     admin = ds.find_or_create_role('admin')
 
     ds.add_role_to_user(user, admin)
     ds.commit()
+    click.echo('User {} is now admin'.format(email))
 
 
 if __name__ == '__main__':
