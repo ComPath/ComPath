@@ -12,7 +12,7 @@ from wtforms.validators import DataRequired
 class GeneSetForm(FlaskForm):
     """Pathway enrichment form."""
     geneset = TextAreaField('Geneset', id="geneset-input", validators=[DataRequired()])
-    filter_non_significant = BooleanField('Filter Non-Significant Pathways (FDR>5%)')
+    filter_non_significant = BooleanField(default="checked", description='Filter Non-Significant Pathways (FDR>5%)')
     submit = SubmitField('Submit')
 
 
