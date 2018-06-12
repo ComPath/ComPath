@@ -120,6 +120,13 @@ Create Docker Containers
 
     sh create_and_build_container.sh
 
+Start Docker execution container
+--------------------------------
+
+.. code-block:: sh
+
+    docker run --name=compath --volumes-from compath-data --restart=always -d -p 30050:5000 docker.arty.scai.fraunhofer.de/compath:latest
+
 Load Data
 ---------
 
