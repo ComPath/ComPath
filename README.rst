@@ -94,13 +94,13 @@ Create a user.
 
 .. code-block:: sh
 
-    python3 -m compath make_user 'email' 'password'
+    python3 -m compath manage --connection="sqlite:////data/bio2bel.db" users make_user  'email' 'password'
 
 Make user admin.
 
 .. code-block:: sh
 
-    python3 -m compath make_admin 'email'
+    python3 -m compath manage --connection="sqlite:////data/bio2bel.db" users make_admin 'email'
 
 Docker Instructions
 ~~~~~~~~~~~~~~~~~~~
@@ -119,6 +119,13 @@ Create Docker Containers
 .. code-block:: sh
 
     sh create_and_build_container.sh
+
+Start Docker execution container
+--------------------------------
+
+.. code-block:: sh
+
+    docker run --name=compath --volumes-from compath-data --restart=always -d -p 30050:5000 docker.arty.scai.fraunhofer.de/compath:latest
 
 Load Data
 ---------
