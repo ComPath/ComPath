@@ -111,21 +111,11 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Query Results</h1>
+            <h1>Query Results <i class="glyphicon glyphicon-info-sign"
+                                 data-toggle="modal"
+                                 data-target="#legend"></i></h1>
             <hr>
             {{ util.flashed_messages(dismissible=True, container=False) }}
-
-            <p>
-                The enriched pathways are presented in different tables for each resource loaded into ComPath. Each
-                table links the pathway info page where the genes in the pathway that has been submitted will be
-                highlighted. Furthermore, this page presents you the curated mappings with similar pathways. The second
-                column will open the pathway page in the original pathway database. The pathway enrichment is presented
-                in the third column (adjusted <i>p</i>-values) by performing a Fisher's Exact Test for each mapped
-                pathway in all resources and adjusting the <i>p</i>-values for multiple testing using Benjamini &
-                Hochberg correction (rounded to 4 decimal places). The adjusted <i>p</i>-values (<i>q</i>-values)
-                measures
-                in a certain degree how enriched is pathway is as a way of filtering pathways for further analysis.
-            </p>
 
             <table class="table table-bordered table-striped table-hover">
                 <tbody>
@@ -164,7 +154,8 @@
         <form id="compare-pathways-form" method="get" action="{{ url_for('analysis.compare_pathways') }}">
         </form>
 
-        <p>First, select your pathways of interest and then, choose the type of analysis to perform. The "Overlap
+        <p>
+            First, select your pathways of interest and then, choose the type of analysis to perform. The "Overlap
             View" displays the boundaries between the selected pathways represented as Venn or Euler diagrams. The
             "Cluster View" renders an interactive dendrogram of the pathways clustered based on their distances.
             Finally, the "Network View" displays the knowledge around the selected pathways as well as the similarity
@@ -247,6 +238,59 @@
                 </div>
             </div>
         {% endfor %}
+    </div>
+
+    <!-- Modal -->
+    <div id="legend" class="modal fade" role="dialog">
+        <div class="modal-dialog">
+
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Pathway Enrichment Legend</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        The enriched pathways are presented in different tables for each resource loaded into ComPath.
+                        Each table presents the following information:
+                    </p>
+
+                    <table id="pathway-info" class="table table-bordered table-striped table-hover">
+                        <thead>
+                        <tr>
+                            <td>Column 1</td>
+                            <td>Column 2</td>
+                            <td>Column 3</td>
+                            <td>Column 4</td>
+                            <td>Column 5</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>Pathway name and link to the ComPath pathway page.
+                            </td>
+                            <td>Pathway identifier and link to the pathway description.
+                            </td>
+                            <td>Adjusted <i>p</i>-values) by performing a Fisher's Exact Test for each mapped pathway in
+                                all resources and adjusting the <i>p</i>-values for multiple testing using
+                                Benjamini & Hochberg correction (rounded to 4 decimal places)
+                            </td>
+                            <td>Number of genes in the pathway from the query
+                            </td>
+                            <td>Number of genes in the pathway
+                            </td>
+                        </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+
+        </div>
     </div>
 
     {% include "footer.html" %}
