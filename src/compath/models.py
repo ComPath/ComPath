@@ -24,15 +24,15 @@ MAPPING_USER_TABLE_NAME = '{}_mappings_users'.format(TABLE_PREFIX)
 roles_users = Table(
     ROLES_USERS_TABLE_NAME,
     Base.metadata,
-    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME))),
-    Column('role_id', Integer(), ForeignKey('{}.id'.format(ROLE_TABLE_NAME)))
+    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME)), primary_key=True),
+    Column('role_id', Integer(), ForeignKey('{}.id'.format(ROLE_TABLE_NAME)), primary_key=True)
 )
 
 mappings_users = Table(
     MAPPING_USER_TABLE_NAME,
     Base.metadata,
-    Column('mapping_id', Integer(), ForeignKey('{}.id'.format(MAPPING_TABLE_NAME))),
-    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME)))
+    Column('mapping_id', Integer(), ForeignKey('{}.id'.format(MAPPING_TABLE_NAME)), primary_key=True),
+    Column('user_id', Integer(), ForeignKey('{}.id'.format(USER_TABLE_NAME)), primary_key=True),
 )
 
 
@@ -87,7 +87,8 @@ class PathwayMapping(Base):
     type = Column(String(255), doc='Type of Mapping (isPartOf or equivalentTo)')
 
     accepted = Column(Boolean, doc='accepted mapping by the admin/curator consensus')
-    creators = relationship('User', secondary=mappings_users, backref='mappings')
+    creators = relationship('User', secondary=mappings_users, backref=backref('mappings', lazy='dynamic'),
+                            lazy='dynamic')
 
     def __str__(self):
         """Return mapping info"""

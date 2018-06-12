@@ -154,6 +154,7 @@
         {% for resource, distribution in distributions.items() %}
 
             var distribution = {{ distribution|safe }};
+            var resource = {{ resource|safe }};
 
             /* Plot Histogram */
 
@@ -164,7 +165,7 @@
 
             var formatCount = d3.format(",.0f");
 
-            var svg = d3.select("#{{ resource|safe }}" + "-svg"),
+            var svg = d3.select("#" + resource + "-svg"),
                 margin = {
                     top: 10,
                     right: 30,
@@ -176,6 +177,13 @@
                 g = svg.append("g").attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
             var tooltipHistogram = d3.select("body").append("div").attr("class", "toolTip");
+
+            svg.append("text")
+                .attr("x", (width / 2))
+                .attr("y", 0 - (margin.top / 2))
+                .attr("text-anchor", "middle")
+                .style("font-size", "16px")
+                .text(resource);
 
             var x = d3.scaleLinear()
                 .domain(d3.extent(histogramData))

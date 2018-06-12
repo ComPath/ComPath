@@ -42,7 +42,7 @@ def parse_special_mappings(path, admin_email=None, connection=None):
             'the command line interface of Compath'
         )
 
-    for index, row in tqdm(df.iterrows(), desc='Loading special mappings'):
+    for index, row in tqdm(df.iterrows(), total=len(df.index), desc='Loading special mappings'):
 
         resource_1 = row['Resource 1'].lower()
         resource_2 = row['Resource 2'].lower()
@@ -104,7 +104,7 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
             'the command line interface of Compath'
         )
 
-    for index, row in tqdm(df.iterrows(),
+    for index, row in tqdm(df.iterrows(), total=len(df.index),
                            desc='Loading mappings for {}-{}'.format(reference_pathway_db, compared_pathway_db)):
 
         # Add equivalent mappings

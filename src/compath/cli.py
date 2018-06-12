@@ -107,7 +107,7 @@ def populate(debug, connection, delete_first):
 @click.option('-y', '--yes', is_flag=True)
 @click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
 def drop(debug, yes, connection):
-    """Drop all databases."""
+    """Drop ComPath DB."""
     set_debug_param(debug)
 
     if yes or click.confirm('Do you really want to delete the ComPath DB'):

@@ -152,6 +152,10 @@
                                                href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </a>
+                                            <a class="btn btn-default"
+                                               href="{{ url_for('db.delete_mapping',identifier=mapping.id) }}">
+                                                Delete Mapping
+                                            </a>
                                         {% else %}
                                             <span class="glyphicon glyphicon-remove"></span>
                                         {% endif %}

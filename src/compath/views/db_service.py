@@ -36,6 +36,24 @@ def delete_db():
     )
 
 
+@db_blueprint.route('/admin/delete/mapping/<identifier>')
+@roles_required('admin')
+def delete_mapping(identifier):
+    """Delete mapping by id."""
+    deleted = current_app.manager.delete_mapping_by_id(identifier)
+
+    if deleted is True:
+        return jsonify(
+            status=200,
+            message='Mapping deleted',
+        )
+    else:
+        return jsonify(
+            status=404,
+            message='Not Found Mapping',
+        )
+
+
 @db_blueprint.route('/admin/user/<int:user_id>')
 @roles_required('admin')
 def view_user(user_id):

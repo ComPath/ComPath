@@ -269,6 +269,20 @@ class Manager(object):
         self.session.query(PathwayMapping).delete()
         self.session.commit()
 
+    def delete_mapping_by_id(self, mapping_id):
+        """Delete a mapping by its id.
+
+        :param int mapping_id: mapping id
+        :rtype: bool
+        """
+        mapping = self.get_mapping_by_id(mapping_id)
+
+        if mapping:
+            self.session.delete(mapping)
+            self.session.commit()
+            return True
+        return False
+
     """Custom Model Manipulations"""
 
     def claim_mapping(self, mapping, user):
