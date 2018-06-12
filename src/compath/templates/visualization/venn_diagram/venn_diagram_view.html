@@ -83,40 +83,52 @@
         <div class="panel panel-default">
             <div class="panel-heading">Visualize Gene Set Overlap across Pathways</div>
             <div class="panel-body">
-                <form id="venn-diagram-form">
-                    <p>Select the database of interest, and then type the name of a pathway in this database. After
+                <div>
+                    <p>
+                        Select the database of interest, and then type the name of a pathway in this database. After
                         selecting two or more pathways, click in the "Render Plot" button to see the Euler diagram
                         representing the overlaps between the pathway selection.
-                        To explore the overlap, <b>double click</b> in the circles to reveal the pathway overlap.</p>
-                    <div data-role="dynamic-fields">
-                        <div class="form-inline">
-                            <div class="form-group">
-                                <label class="sr-only" for="pathway">Pathways</label>
+                        To explore the overlap, <b>double click</b> in the circles to reveal the pathway overlap.
+                    </p>
 
-                                <select type="text" class="form-control" name="resources[]" id="select-1">
-                                    {% for manager in manager_names %}
-                                        {% if manager not in BLACK_LIST %}
-                                            <option value="{{ manager }}">{{ manager|upper }}</option>
-                                        {% endif %}
-                                    {% endfor %}
-                                    <input type="text" class="form-control" name="pathways[]" id="input-1"
-                                           placeholder="Select the Pathway to compare"
-                                           style=" min-width: 500px;">
-                                </select>
-                            </div>
-                            <button class="btn btn-danger" data-role="remove">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            <button class="btn btn-primary" data-role="add">
-                                <span class="glyphicon glyphicon-plus"></span>
-                            </button>
-                        </div>  <!-- /div.form-inline -->
-                    </div> <!-- /div[data-role="dynamic-fields"] -->
-                    <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
-                        <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
-                    </div>
-                    <div id="overlap-venn-diagram"></div>
-                </form>
+                    <p>
+                        <b>Use Case:</b> Investigate the overlaps between the Alzheimer's disease pathways in KEGG,
+                        Reactome, and WikiPathways. For that, select the corresponding databases and type "Alzheimer"
+                        and select the corresponding pathways in each database. Finally, click in "Render Plot".
+                    </p>
+                </div>
+                <div>
+                    <form id="venn-diagram-form">
+                        <div data-role="dynamic-fields">
+                            <div class="form-inline">
+                                <div class="form-group">
+                                    <label class="sr-only" for="pathway">Pathways</label>
+
+                                    <select type="text" class="form-control" name="resources[]" id="select-1">
+                                        {% for manager in manager_names %}
+                                            {% if manager not in BLACK_LIST %}
+                                                <option value="{{ manager }}">{{ manager|upper }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <input type="text" class="form-control" name="pathways[]" id="input-1"
+                                               placeholder="Select the Pathway to compare"
+                                               style=" min-width: 500px;">
+                                    </select>
+                                </div>
+                                <button class="btn btn-danger" data-role="remove">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                                <button class="btn btn-primary" data-role="add">
+                                    <span class="glyphicon glyphicon-plus"></span>
+                                </button>
+                            </div>  <!-- /div.form-inline -->
+                        </div> <!-- /div[data-role="dynamic-fields"] -->
+                        <div class="text-center" style="margin-top: 20px; margin-bottom: 20px">
+                            <input class="btn btn-primary btn-lg" value="Render Plot" type="submit">
+                        </div>
+                        <div id="overlap-venn-diagram"></div>
+                    </form>
+                </div>
             </div>
             <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
         </div>
