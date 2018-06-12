@@ -23,13 +23,16 @@ def parse_special_mappings(path, admin_email=None, connection=None):
     """
     df = pd.read_excel(path, header=1)
 
+    if not connection:
+        connection = DEFAULT_CACHE_CONNECTION
+
     # Loads the installed managers
     manager_dict = {
-        name: ExternalManager(connection=DEFAULT_CACHE_CONNECTION)
+        name: ExternalManager(connection=connection)
         for name, ExternalManager in managers.items()
     }
 
-    compath_manager = Manager.from_connection(connection)
+    compath_manager = Manager.from_connection(connection=connection)
 
     curator = compath_manager.get_user_by_email(email=admin_email if admin_email else ADMIN_EMAIL)
 
@@ -82,13 +85,16 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, adm
     """
     df = pd.read_excel(path, index_col=0)
 
+    if not connection:
+        connection = DEFAULT_CACHE_CONNECTION
+
     # Loads the installed managers
     manager_dict = {
-        name: ExternalManager(connection=DEFAULT_CACHE_CONNECTION)
+        name: ExternalManager(connection=connection)
         for name, ExternalManager in managers.items()
     }
 
-    compath_manager = Manager.from_connection(connection)
+    compath_manager = Manager.from_connection(connection=connection)
 
     curator = compath_manager.get_user_by_email(email=admin_email if admin_email else ADMIN_EMAIL)
 

@@ -193,7 +193,7 @@ def create_app(connection=None, template_folder='templates', static_folder='stat
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
 
-    hgnc_manager = HgncManager()
+    hgnc_manager = HgncManager(connection=connection)
 
     resource_all_genes['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
 
