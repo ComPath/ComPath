@@ -257,9 +257,11 @@ def process_mapping():
 
     else:
         message = Markup(
-            "<h3>You have established a new mapping between {} and {} with the mapping type {}</h3>".format(
+            "<h3>You have established a new mapping between {} ({}) and {} ({}) with the mapping type {}</h3>".format(
                 pathway_1_model.name,
+                resource_1,
                 pathway_2_model.name,
+                resource_2,
                 mapping_type
             ))
 
