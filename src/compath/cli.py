@@ -134,8 +134,7 @@ def drop_databases(debug, yes, connection):
 
 @main.command()
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-@click.option('--curator')
-def load_mappings(connection, curator):
+def load_mappings(connection):
     """Load mappings from template."""
     set_debug_param(2)
 
@@ -143,27 +142,27 @@ def load_mappings(connection, curator):
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_wikipathways.xlsx',
         'kegg',
         'wikipathways',
-        admin_email=curator,
-        connection=connection,
+        curator_emails=['daniel.domingo.fernandez@scai.fraunhofer.de','carlos.bobis@scai.fraunhofer.de', 'josepmarinllao@gmail.com'],
+        connection=connection
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_reactome.xlsx',
         'kegg',
         'reactome',
-        admin_email=curator,
-        connection=connection,
+        curator_emails=['daniel.domingo.fernandez@scai.fraunhofer.de','carlos.bobis@scai.fraunhofer.de', 'josepmarinllao@gmail.com'],
+        connection=connection
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/wikipathways_reactome.xlsx',
         'wikipathways',
         'reactome',
-        admin_email=curator,
-        connection=connection,
+        curator_emails=['daniel.domingo.fernandez@scai.fraunhofer.de','carlos.bobis@scai.fraunhofer.de', 'josepmarinllao@gmail.com'],
+        connection=connection
     )
 
     parse_special_mappings(
         'https://github.com/ComPath/resources/raw/master/mappings/special_mappings.xlsx',
-        admin_email=curator,
+        curator_emails=['daniel.domingo.fernandez@scai.fraunhofer.de','carlos.bobis@scai.fraunhofer.de', 'josepmarinllao@gmail.com'],
         connection=connection,
     )
 

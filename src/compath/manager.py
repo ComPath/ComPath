@@ -131,7 +131,7 @@ class Manager(object):
         """Get a vote by its id.
 
         :param str email: identifier
-        :rtype: Optional[Vote]
+        :rtype: Optional[User]
         """
         return self.session.query(User).filter(User.email == email).one_or_none()
 
