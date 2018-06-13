@@ -11,7 +11,7 @@ from flask import (
 )
 from flask_security import current_user, login_required, roles_required
 
-from compath.constants import BLACK_LIST, EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES
+from compath.constants import BLACK_LIST, EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES, STYLED_NAMES
 from compath.utils import (
     calculate_szymkiewicz_simpson_coefficient,
     get_mappings,
@@ -35,7 +35,8 @@ def create_mapping():
     return render_template(
         'curation/create_mapping.html',
         manager_names=current_app.manager_dict.keys(),
-        BLACK_LIST=BLACK_LIST
+        BLACK_LIST=BLACK_LIST,
+        STYLED_NAMES=STYLED_NAMES
     )
 
 
@@ -55,6 +56,7 @@ def catalog():
 
     return render_template(
         'curation/catalog.html',
+        STYLED_NAMES=STYLED_NAMES,
         mappings=mappings,
         all='all'
     )

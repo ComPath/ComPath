@@ -38,6 +38,8 @@
     </script>
 {% endblock %}
 
+{% import "macros.html" as compath %}
+
 {% block content %}
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
@@ -66,24 +68,25 @@
                                 </a>
                             </td>
                             <td>
-                                {{ mapping.service_1_name|upper }}
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, mapping.service_1_name) }}
+
                             </td>
                             <td>
                                 <a href="{{ url_for("model.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
                                     {{ mapping.service_2_pathway_name }}
                                 </a></td>
                             <td>
-                                {{ mapping.service_2_name|upper }}
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, mapping.service_2_name) }}
                             </td>
                             <td>
                                 <div class="btn-group">
                                     <div class="btn btn-primary">
-                                        <span class="badge"> {{ mapping.count_up_votes() }}</span>
+                                        <span class="badge"> {{ mapping.count_up_votes }}</span>
                                         <span class="glyphicon glyphicon-thumbs-up"></span>
                                     </div>
 
                                     <div class="btn btn-danger">
-                                        <span class="badge"> {{ mapping.count_down_votes() }}</span>
+                                        <span class="badge"> {{ mapping.count_down_votes }}</span>
                                         <span class="glyphicon glyphicon-thumbs-down"></span>
                                     </div>
                                 </div>
@@ -120,7 +123,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ vote.mapping.service_1_name|upper }}
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, vote.mapping.service_1_name) }}
                             </td>
                             <td>
                                 <a href="{{ url_for("model.pathway_view",resource=vote.mapping.service_2_name, identifier=vote.mapping.service_2_pathway_id ) }}">
@@ -128,7 +131,7 @@
                                 </a>
                             </td>
                             <td>
-                                {{ vote.mapping.service_2_name|upper }}
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, vote.mapping.service_2_name) }}
                             </td>
                             <td>
                                 {% if vote.type %}
@@ -149,5 +152,5 @@
             </div>
         </div>
     </div>
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

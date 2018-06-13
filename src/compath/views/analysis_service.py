@@ -8,7 +8,7 @@ from io import StringIO
 
 from flask import (Blueprint, abort, current_app, flash, jsonify, make_response, redirect, render_template, request)
 
-from compath.constants import BLACK_LIST
+from compath.constants import BLACK_LIST, STYLED_NAMES
 from compath.forms import GeneSetFileForm, GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
@@ -83,7 +83,8 @@ def pathway_overlap():
     return render_template(
         'visualization/venn_diagram/venn_diagram_view.html',
         manager_names=current_app.manager_dict.keys(),
-        BLACK_LIST=BLACK_LIST
+        BLACK_LIST=BLACK_LIST,
+        STYLED_NAMES=STYLED_NAMES
     )
 
 
@@ -104,6 +105,7 @@ def database_distributions(resource):
         pathway_data=current_app.resource_distributions[resource],
         gene_data=current_app.resource_distributions[resource],
         resource=resource,
+        STYLED_NAMES=STYLED_NAMES
     )
 
 

@@ -53,43 +53,7 @@
 {% endblock %}
 
 
-{% macro write_label(resource) -%}
-    {% if resource == 'kegg' %}
-        label-success
-    {% elif resource == 'reactome' %}
-        label-danger
-    {% elif resource == 'wikipathways' %}
-        label-info
-    {% elif resource == 'msig' %}
-        label-default
-    {% else %}
-        label-warning
-    {% endif %}
-{%- endmacro %}
 
-
-{% macro write_pathways(pathways, title) -%}
-    {% if pathways|length > 0 %}
-        <div class="panel panel-default">
-            <div class="panel-heading">{{ title }}</div>
-            <div class="panel-body">
-                <ul class="pathways">
-                    {% for resource, identifier, name in pathways %}
-                        <li class="pathways">
-                            <span class="label {{ write_label(resource) }}">
-                                {{ resource|upper }}
-                            </span>
-                            &nbsp;
-                            <a href="{{ url_for('model.pathway_view', resource=resource, identifier=identifier) }}">
-                                {{ name }}
-                            </a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-        </div>
-    {% endif %}
-{%- endmacro %}
 
 {% block scripts %}
     {{ super() }}
@@ -113,6 +77,9 @@
     </script>
 {% endblock %}
 
+{% import "macros.html" as compath %}
+
+
 {% block content %}
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
@@ -132,7 +99,7 @@
                     <tr>
                         <td>Resource</td>
                         <td>
-                            {{ resource|upper }}
+                            {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
                         </td>
                     </tr>
                     <tr>
@@ -157,9 +124,9 @@
                     </tbody>
                 </table>
 
-                {{ write_pathways(equivalent_pathways, "Equivalent Pathways") }}
-                {{ write_pathways(super_pathways, "Super-Pathways") }}
-                {{ write_pathways(sub_pathways, "Sub-Pathways") }}
+                {{ compath.write_pathways(equivalent_pathways, "Equivalent Pathways") }}
+                {{ compath.write_pathways(super_pathways, "Super-Pathways") }}
+                {{ compath.write_pathways(sub_pathways, "Sub-Pathways") }}
 
                 <div class="row" id="button-row">
                     <div class="text-center">
@@ -192,5 +159,5 @@
 
     <div class="loading_modal"><!-- Spinner div --></div>
 
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

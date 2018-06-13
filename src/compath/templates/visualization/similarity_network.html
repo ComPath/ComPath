@@ -10,7 +10,9 @@
 {% block styles %}
     {{ super() }}
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/graph_explorer.css') }}">
 
     <style>
@@ -86,8 +88,8 @@
             <div class="col-lg-8 col-md-8 col-xs-8" id="network"></div>
             <div class="panel panel-default col-lg-4 col-md-4 col-xs-4"
                  style="max-height: 585px;height: 585px;padding-right: 0;padding-left: 0; margin-bottom:0">
-                <ul class="nav nav-tabs nav-center-tabs">
-                    <li class="active">
+                <ul class="nav nav-tabs">
+                      <li class="active">
                         <a class="nav-link" data-toggle="tab" href="#network-panel"><i
                                 class="fa fa-cog" aria-hidden="true"></i> Modify Network</a>
                     </li>
@@ -132,8 +134,8 @@
 
                                     <select type="text" class="form-control" id="resource-input-2">
                                         <option value="reactome">Reactome</option>
-                                        <option value="kegg">KEGG</option>
-                                        <option value="wikipathways" selected>Wikipathways</option>
+                                        <option value="kegg">Kegg</option>
+                                        <option value="wikipathways" selected>WikiPathways</option>
                                     </select>
                                 </div>
                                 <div class="form-inline">
@@ -218,5 +220,5 @@
     </div>
     {% include "visualization/dendrogram/legend.html" %}
 
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

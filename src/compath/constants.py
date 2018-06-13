@@ -63,5 +63,12 @@ MAPPING_TYPES = {
     'isPartOf'
 }
 
+STYLED_NAMES = {
+    KEGG: 'Kegg',
+    REACTOME: 'Reactome',
+    WIKIPATHWAYS: 'WikiPathways',
+    MSIG: 'MSig'
+}
+
 EQUIVALENT_TO = 'equivalentTo'
 IS_PART_OF = 'isPartOf'

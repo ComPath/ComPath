@@ -67,6 +67,9 @@
     </style>
 {% endblock %}
 
+{% import "macros.html" as compath %}
+
+
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
@@ -107,7 +110,7 @@
                                     <select type="text" class="form-control" name="resources[]" id="select-1">
                                         {% for manager in manager_names %}
                                             {% if manager not in BLACK_LIST %}
-                                                <option value="{{ manager }}">{{ manager|upper }}</option>
+                                                <option value="{{ manager }}">{{ compath.stylize_plugin_name(STYLED_NAMES, manager) }}</option>
                                             {% endif %}
                                         {% endfor %}
                                         <input type="text" class="form-control" name="pathways[]" id="input-1"
@@ -133,5 +136,5 @@
             <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
         </div>
     </div>
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

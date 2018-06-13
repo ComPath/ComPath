@@ -13,7 +13,7 @@ from flask import (
 )
 from flask_security import current_user, login_required
 
-from compath.constants import BLACK_LIST
+from compath.constants import BLACK_LIST, STYLED_NAMES
 
 log = logging.getLogger(__name__)
 time_instantiated = str(datetime.datetime.now())
@@ -31,13 +31,13 @@ def home():
 @ui_blueprint.route('/imprint')
 def imprint():
     """Render the Imprint page."""
-    return render_template('imprint.html')
+    return render_template('meta/imprint.html')
 
 
 @ui_blueprint.route('/terms_and_conditions')
 def terms_and_conditions():
     """Render the Terms and conditiosn page."""
-    return render_template('terms_conditions.html')
+    return render_template('meta/terms_conditions.html')
 
 
 @ui_blueprint.route('/about')
@@ -48,7 +48,7 @@ def about():
         ('Deployed', time_instantiated)
     ]
 
-    return render_template('about.html', metadata=metadata)
+    return render_template('meta/about.html', metadata=metadata)
 
 
 @ui_blueprint.route('/curation_protocol')
@@ -66,7 +66,9 @@ def overview():
         resource_overview=current_app.resource_overview,
         managers=current_app.manager_dict.keys(),
         distributions=current_app.resource_distributions,
-        BLACK_LIST=BLACK_LIST
+        BLACK_LIST=BLACK_LIST,
+        STYLED_NAMES=STYLED_NAMES
+
     )
 
 
@@ -80,7 +82,7 @@ def similarity():
 @login_required
 def user_activity():
     """Render the user activity page."""
-    return render_template('user/activity.html', user=current_user)
+    return render_template('user/activity.html', user=current_user, STYLED_NAMES=STYLED_NAMES)
 
 
 """Clustergrammer views"""

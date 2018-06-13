@@ -246,6 +246,10 @@
     </script>
 {% endblock %}
 
+{
+{% import "macros.html" as compath %}
+
+
 {% block content %}
     <div class="container">
         {{ util.flashed_messages(dismissible=True, container=False) }}
@@ -267,7 +271,7 @@
 
                     {% for resource, (number_of_pathways, number_of_genes) in resource_overview.items() %}
                         <tr>
-                            <td> {{ resource|upper }}</td>
+                            <td> {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}</td>
                             <td>{{ number_of_pathways }}</td>
                             <td>{{ number_of_genes }}</td>
                         </tr>
@@ -303,7 +307,7 @@
                         {% if resource not in BLACK_LIST %}
                             <a href="{{ url_for('analysis.database_distributions', resource=resource) }}"
                                class="btn btn-primary">
-                                {{ resource|upper }}
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
                             </a>
                         {% endif %}
                     {% endfor %}
@@ -311,13 +315,11 @@
 
                 {% for resource in managers %}
                     {% if resource not in BLACK_LIST %}
-
                         <svg id="{{ resource }}-svg" width="300" height="300"></svg>
-
                     {% endif %}
                 {% endfor %}
             </div>
         </div>
     </div>
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

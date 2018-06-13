@@ -72,6 +72,9 @@
 
 {% endblock %}
 
+
+{% import "macros.html" as compath %}
+
 {% block content %}
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
@@ -109,7 +112,7 @@
                                 <select type="text" class="form-control" name="resource-1" id="select-1">
                                     {% for manager in manager_names|sort %}
                                         {% if manager not in BLACK_LIST %}
-                                            <option value="{{ manager }}">{{ manager|upper }}</option>
+                                            <option value="{{ manager }}">{{ compath.stylize_plugin_name(STYLED_NAMES, manager) }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
@@ -125,7 +128,7 @@
                                 <select type="text" class="form-control" name="resource-2" id="select-2">
                                     {% for manager in manager_names|sort %}
                                         {% if manager not in BLACK_LIST %}
-                                            <option value="{{ manager }}">{{ manager|upper }}</option>
+                                            <option value="{{ manager }}">{{ compath.stylize_plugin_name(STYLED_NAMES, manager) }}</option>
                                         {% endif %}
                                     {% endfor %}
                                 </select>
@@ -167,5 +170,5 @@
             </div>
         </div>
     </div>
-    {% include "footer.html" %}
+    {% include "meta/footer.html" %}
 {% endblock %}

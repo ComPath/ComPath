@@ -9,6 +9,7 @@ from flask import Blueprint, abort, current_app, flash, jsonify, redirect, rende
 from flask_security import roles_required
 
 from compath.models import User
+from compath.constants import STYLED_NAMES
 from compath.utils import get_pathway_model_by_id, get_pathway_model_by_name
 
 log = logging.getLogger(__name__)
@@ -62,7 +63,7 @@ def view_user(user_id):
     :param int user_id: The identifier of the user to summarize
     """
     user = current_app.manager.session.query(User).get(user_id)
-    return render_template('user/activity.html', user=user)
+    return render_template('user/activity.html', user=user, STYLED_NAMES=STYLED_NAMES)
 
 
 @db_blueprint.route('/admin/users')

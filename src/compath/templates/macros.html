@@ -1,0 +1,54 @@
+{% macro stylize_plugin_name(styled_names, resource) -%}
+    {% if resource in styled_names %}
+        {{ styled_names.get(resource) }}
+    {% else %}
+        {{ resource }}
+    {% endif %}
+{%- endmacro %}
+
+{% macro write_label(resource) -%}
+    {% if resource == 'kegg' %}
+        label-success
+    {% elif resource == 'reactome' %}
+        label-danger
+    {% elif resource == 'wikipathways' %}
+        label-info
+    {% elif resource == 'msig' %}
+        label-default
+    {% else %}
+        label-warning
+    {% endif %}
+{%- endmacro %}
+
+{% macro translate_relation(mapping_type) -%}
+    {% if mapping_type == 'equivalentTo' %}
+        Equivalent
+    {% elif mapping_type == 'isPartOf' %}
+        Part Of
+    {% else %}
+        -
+    {% endif %}
+{%- endmacro %}
+
+{% macro write_pathways(pathways, title) -%}
+    {% if pathways|length > 0 %}
+        <div class="panel panel-default">
+            <div class="panel-heading">{{ title }}</div>
+            <div class="panel-body">
+                <ul class="pathways">
+                    {% for resource, identifier, name in pathways %}
+                        <li class="pathways">
+                            <span class="label {{ write_label(resource) }}">
+                                {{ stylize_plugin_name(STYLED_NAMES, resource) }}
+                            </span>
+                            &nbsp;
+                            <a href="{{ url_for('model.pathway_view', resource=resource, identifier=identifier) }}">
+                                {{ name }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    {% endif %}
+{%- endmacro %}
