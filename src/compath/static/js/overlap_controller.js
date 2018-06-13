@@ -123,14 +123,24 @@ function populateInfoTable(data) {
     }
 
     tableObject["Gene Set Size"] = data["size"];
-    tableObject["Gene Set"] = data["gene_set"].join(', ');
 
+    tableObject["Gene Set"] = data["gene_set"].join(", ") + ' <a id="export-link" href="#"><span onclick="exportGenes();" class=\"glyphicon glyphicon-new-window\"></span></a>';
+
+    window.gene_set = data["gene_set"];
 
     var row = 0;
     $.each(tableObject, function (key, value) {
         insertRow(dynamicTable, row, key, value);
         row++
     });
+
+}
+
+function exportGenes() {
+    var anchor = document.querySelector('#export-link');
+
+    anchor.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(window.gene_set.join("\n"));
+    anchor.download = 'gene_set.txt';
 
 }
 
