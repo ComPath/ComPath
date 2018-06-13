@@ -9,6 +9,7 @@
 
 {% block styles %}
     {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
 
     <style>
         /* VennDiagram CSS */
@@ -243,6 +244,36 @@
         {% endfor %}
 
 
+        $('#pathway-autocompletion').autocomplete({
+            source: function (request, response) {
+                $.getJSON("/api/autocompletion/pathway/" + request.term, function (data) {
+                    response($.map(data, function (pathwayInfo, key) {
+
+                        return {
+                            label: pathwayInfo[1] + " (" + pathwayInfo[0] + ")",
+                            value: "/pathway/" + pathwayInfo[0] + "/" + pathwayInfo[2]
+                        }
+                    }));
+                });
+            },
+            minLength: 4,
+            delay: 100
+        });
+
+        //Action go to pathway page
+        $("#pathway-info").on("click", function () {
+
+            var selectedPathway = $("#pathway-autocompletion").val();
+
+            if (selectedPathway) {
+                window.location = selectedPathway;
+            }
+            else{
+                alert("Please select a pathway before")
+            }
+        });
+
+
     </script>
 {% endblock %}
 
@@ -318,6 +349,25 @@
                         <svg id="{{ resource }}-svg" width="300" height="300"></svg>
                     {% endif %}
                 {% endfor %}
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Pathway and Gene Information</div>
+            <div class="panel-body">
+                <p>
+                    Browse over all pathways and genes loaded in ComPath. Select the Pathway of interest to access its
+                    page. Similarly, you can investigate what are the pathways associated with a particular gene.
+                </p>
+
+                <div class="form-inline">
+                    <label for="pathway-autocompletion"></label><input
+                        id="pathway-autocompletion" type="text"
+                        class="form-control"
+                        placeholder="Type a pathway name"
+                        style="max-width: 500px; min-width: 400px">
+                    <input class="btn btn-primary" value="Explore Pathway" id="pathway-info" type="submit">
+                </div>
             </div>
         </div>
     </div>
