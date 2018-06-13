@@ -93,13 +93,13 @@ def networkx_to_cytoscape_js(graph):
             node_object["data"]["name"] = node[2]
 
         if node[0] == REACTOME:
-            node_object["data"]["url"] = REACTOME_URL.format(node[2])
+            node_object["data"]["url"] = REACTOME_URL.format(node[1])
 
         elif node[0] == KEGG:
-            node_object["data"]["url"] = KEGG_URL.format(node[2])
+            node_object["data"]["url"] = KEGG_URL.format(node[1].strip('path:hsa'))
 
         elif node[0] == WIKIPATHWAYS:
-            node_object["data"]["url"] = WIKIPATHWAYS_URL.format(node[2])
+            node_object["data"]["url"] = WIKIPATHWAYS_URL.format(node[1])
 
         network_dict["nodes"].append(node_object.copy())
 

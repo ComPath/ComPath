@@ -87,7 +87,7 @@ function displayNodeInfo(node) {
         nodeObject["Pathway Name"] = node.data('name');
     }
     if (node.data('url')) {
-        nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "</a>";
+        nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase() + "<span class=\"glyphicon glyphicon-new-window\"></span></a>" + "</a>";
     }
 
     var row = 0;
