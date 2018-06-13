@@ -237,10 +237,10 @@ def process_mapping():
 
     mapping, created = current_app.manager.get_or_create_mapping(
         resource_1,
-        getattr(pathway_1_model, '{}_id'.format(resource_1)),
+        getattr(pathway_1_model, 'resource_id'),
         pathway_1_model.name,
         resource_2,
-        getattr(pathway_2_model, '{}_id'.format(resource_2)),
+        getattr(pathway_2_model, 'resource_id'),
         pathway_2_model.name,
         mapping_type,
         current_user
