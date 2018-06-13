@@ -64,7 +64,7 @@ MAPPING_TYPES = {
 }
 
 STYLED_NAMES = {
-    KEGG: 'Kegg',
+    KEGG: 'KEGG',
     REACTOME: 'Reactome',
     WIKIPATHWAYS: 'WikiPathways',
     MSIG: 'MSig'
