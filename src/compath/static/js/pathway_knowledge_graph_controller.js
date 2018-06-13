@@ -11,6 +11,8 @@ var colours_resource = { // Object resource name -> colour
     msig: "#777777"
 };
 
+var defaultEdgeOpacity = 0.7;
+
 function showMappings(url) {
     window.location = url + "&mappings=True";
 }
@@ -296,7 +298,7 @@ function startCy(data) {
             function resetAttributes() {
                 // Reset visibility and opacity
                 cy.filter('node').style("opacity", "1");
-                cy.filter('edge').style("opacity", "1");
+                cy.filter('edge').style("opacity", defaultEdgeOpacity);
             }
 
             /**
@@ -359,10 +361,8 @@ function startCy(data) {
              * Resets default styles for nodes/edges/text on double click
              */
             function resetAttributesDoubleClick() {
-                // TODO: On double click
-                cy.on('tap', function (event) {
-                    cy.filter("node").style("opacity", "1");
-                    cy.filter("edge").style("opacity", "1");
+                cy.on('tap', function () {
+                    resetAttributes();
                 });
             }
 
