@@ -46,12 +46,12 @@ def catalog():
     """Render the mapping catalog page."""
     if request.args.get(EQUIVALENT_TO):
         mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
-        message = Markup("<h3>'You are now visualizing the catalog of equivalent mappings'</h3>")
+        message = Markup("<h4>'You are now visualizing the catalog of equivalent mappings'</h4>")
         flash(message)
 
     elif request.args.get(IS_PART_OF):
         mappings = current_app.manager.get_mappings_by_type(IS_PART_OF)
-        message = Markup("<h3>'You are now visualizing the catalog of hierarchical mappings'</h3>")
+        message = Markup("<h4>'You are now visualizing the catalog of hierarchical mappings'</h4>")
         flash(message)
 
     else:
@@ -117,7 +117,7 @@ def process_vote(mapping_id, type):
         current_app.manager.session.add(vote)
         current_app.manager.session.commit()
 
-        message = Markup("<h3>'The mapping you just voted had enough number of votes to be accepted'</h3>")
+        message = Markup("<h4>'The mapping you just voted had enough number of votes to be accepted'</h4>")
         flash(message)
 
     return redirect(url_for('.catalog'))
@@ -136,10 +136,10 @@ def accept_mapping(mapping_id):
         return abort(404, "Missing mapping for ID {}".format(mapping_id))
 
     if created is False:
-        message = Markup("<h3>'The mapping was already accepted'</h3>")
+        message = Markup("<h4>'The mapping was already accepted'</h4>")
         flash(message)
 
-    message = Markup("<h3>'You have accepted the mapping between {} ({}) and {} ({})'</h3>".format(
+    message = Markup("<h4>'You have accepted the mapping between {} ({}) and {} ({})'</h4>".format(
         mapping.service_1_pathway_name,
         mapping.service_1_name,
         mapping.service_2_pathway_name,
@@ -182,42 +182,42 @@ def process_mapping():
     """
     mapping_type = request.args.get('mapping-type')
     if not mapping_type or mapping_type not in MAPPING_TYPES:
-        message = Markup("<h3>'Missing or incorrect mapping type'</h3>")
+        message = Markup("<h4>'Missing or incorrect mapping type'</h4>")
         flash(message, category='warning')
 
         return redirect(url_for('.create_mapping'))
 
     resource_1 = request.args.get('resource-1')
     if not resource_1:
-        message = Markup("<h3>'Invalid request. Missing 'resource-1' arguments in the request'</h3>")
+        message = Markup("<h4>'Invalid request. Missing 'resource-1' arguments in the request'</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
     if resource_1 not in current_app.manager_dict:
-        message = Markup("<h3>''{}' does not exist or has not been loaded in ComPath'</h3>".format(resource_1))
+        message = Markup("<h4>''{}' does not exist or has not been loaded in ComPath'</h4>".format(resource_1))
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
     resource_2 = request.args.get('resource-2')
     if not resource_2:
-        message = Markup("<h3>'Invalid request. Missing 'resource-2' arguments in the request'</h3>")
+        message = Markup("<h4>'Invalid request. Missing 'resource-2' arguments in the request'</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
     if resource_2 not in current_app.manager_dict:
-        message = Markup("<h3>''{}' does not exist or has not been loaded in ComPath'</h3>".format(resource_2))
+        message = Markup("<h4>''{}' does not exist or has not been loaded in ComPath'</h4>".format(resource_2))
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
     pathway_1 = request.args.get('pathway-1')
     if not pathway_1:
-        message = Markup("<h3>Missing pathway 1</h3>")
+        message = Markup("<h4>Missing pathway 1</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
     pathway_2 = request.args.get('pathway-2')
     if not pathway_2:
-        message = Markup("<h3>Missing pathway 2</h3>")
+        message = Markup("<h4>Missing pathway 2</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
@@ -225,7 +225,7 @@ def process_mapping():
     pathway_2_model = get_pathway_model_by_name(current_app.manager_dict, resource_2, pathway_2)
 
     if pathway_1_model == pathway_2_model:
-        message = Markup("<h3>Trying to establish a mapping between the same pathway</h3>")
+        message = Markup("<h4>Trying to establish a mapping between the same pathway</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
@@ -249,15 +249,15 @@ def process_mapping():
     if not created:
         claimed = current_app.manager.claim_mapping(mapping, current_user)
         if not claimed:
-            message = Markup("<h3>You already established this mapping</h3>")
+            message = Markup("<h4>You already established this mapping</h4>")
         else:
             message = Markup(
-                "<h3>Since this mapping was already established, you have been assigned as a creator of the mapping</h3>"
+                "<h4>Since this mapping was already established, you have been assigned as a creator of the mapping</h4>"
             )
 
     else:
         message = Markup(
-            "<h3>You have established a new mapping between {} ({}) and {} ({}) with the mapping type {}</h3>".format(
+            "<h4>You have established a new mapping between {} ({}) and {} ({}) with the mapping type {}</h4>".format(
                 pathway_1_model.name,
                 resource_1,
                 pathway_2_model.name,

@@ -2,9 +2,9 @@
 
 """This module the database manager of ComPath."""
 
-import datetime
 import logging
 
+import datetime
 from bio2bel import get_connection
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -211,6 +211,22 @@ class Manager(object):
         :return: PathwayMapping and boolean indicating if the mapping was created or not
         :rtype: tuple[PathwayMapping,bool]
         """
+        # Ensure maintaining the order of pathways if they belong to the same database
+        if mapping_type == EQUIVALENT_TO and \
+                service_1_name == service_2_name \
+                and _flip_service_order(pathway_1_name, pathway_2_name):
+            return self.get_or_create_mapping(
+                service_2_name,
+                pathway_2_id,
+                pathway_2_name,
+                service_1_name,
+                pathway_1_id,
+                pathway_1_name,
+                mapping_type,
+                user
+            )
+
+        # Ensure maintaining the order of the resources
         if mapping_type == EQUIVALENT_TO and _flip_service_order(service_1_name, service_2_name):
             return self.get_or_create_mapping(
                 service_2_name,
