@@ -239,10 +239,8 @@ def process_mapping():
             mapping_type)
         )
 
-    return render_template(
-        'curation/create_mapping.html',
-        manager_names=current_app.manager_dict.keys(),
-    )
+    return redirect(url_for('.create_mapping'))
+
 
 
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
