@@ -105,7 +105,7 @@
                     <div class="row">
 
                         <div class="form-group">
-                            <div class="col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-2 col-md-2 col-lg-2">
                                 <select type="text" class="form-control" name="resource-1" id="select-1">
                                     {% for manager in manager_names|sort %}
                                         {% if manager not in BLACK_LIST %}
@@ -114,14 +114,14 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
                                 <label class="sr-only" for="pathway">Pathways</label>
                                 <input type="text" class="form-control" name="pathway-1" id="input-1"
                                        placeholder="Select the first Pathway">
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="col-sm-2 col-md-2 col-lg-2">
+                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-2 col-md-2 col-lg-2">
                                 <select type="text" class="form-control" name="resource-2" id="select-2">
                                     {% for manager in manager_names|sort %}
                                         {% if manager not in BLACK_LIST %}
@@ -130,7 +130,7 @@
                                     {% endfor %}
                                 </select>
                             </div>
-                            <div class="col-sm-offset-2 col-md-offset-2 col-lg-offset-2 col-sm-6 col-md-6 col-lg-6">
+                            <div class="col-sm-6 col-md-6 col-lg-6">
                                 <label class="sr-only" for="pathway">Pathways</label>
                                 <input type="text" class="form-control" name="pathway-2" id="input-2"
                                        placeholder="Select the second Pathway">
