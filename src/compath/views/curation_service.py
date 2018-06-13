@@ -242,7 +242,6 @@ def process_mapping():
     return redirect(url_for('.create_mapping'))
 
 
-
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
 def suggest_mappings_by_name(pathway_name):
     """Return list of top matches based on string similarity.
