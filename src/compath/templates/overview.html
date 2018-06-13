@@ -154,7 +154,7 @@
         {% for resource, distribution in distributions.items() %}
 
             var distribution = {{ distribution|safe }};
-            var resource = {{ resource|safe }};
+            var resource = "{{ resource|safe }}";
 
             /* Plot Histogram */
 
@@ -290,18 +290,18 @@
 
 
         <div class="panel panel-default">
-            <div class="panel-heading">Pathway Size Distribution</div>
+            <div class="panel-heading">Pathway Database Distributions</div>
             <div class="panel-body">
                 <p>
-                    Analyze the distribution of the pathways for each individual database. In other words, what are the
-                    biggest and smallest pathways. This analysis might help you to interpret the results of enrichment
-                    analyses as well as analyze the boundaries of databases. Click in the pathway database buttons to
-                    zoom into a distribution.
+                    Analyze the distribution of the pathways and genes for each individual database. By clicking in the
+                    button of the databases below, you can see analyze the gene promiscuity and pathway size for that
+                    particular database. The distributions below can be zoomed after going into the dedicated pathway
+                    database page.
                 </p>
                 <p>
                     {% for resource in managers %}
                         {% if resource not in BLACK_LIST %}
-                            <a href="{{ url_for('analysis.pathway_distribution', resource=resource) }}"
+                            <a href="{{ url_for('analysis.database_distributions', resource=resource) }}"
                                class="btn btn-primary">
                                 {{ resource|upper }}
                             </a>
@@ -316,35 +316,8 @@
 
                     {% endif %}
                 {% endfor %}
-
-
             </div>
         </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Gene Promiscuity</div>
-            <div class="panel-body">
-                <p>
-                    Analyze the gene promiscuity for each pathway database. In other words, which genes act and belong
-                    to more or less pathways in each database. Click in the pathway database buttons to go to their
-                    dedicated pages.
-                </p>
-                <p>
-                    {% for resource in managers %}
-                        {% if resource not in BLACK_LIST %}
-
-                            <a href="{{ url_for('analysis.gene_distribution', resource=resource) }}"
-                               class="btn btn-primary">
-                                {{ resource|upper }}
-                            </a>
-                        {% endif %}
-
-                    {% endfor %}
-                </p>
-
-            </div>
-        </div>
-
     </div>
     {% include "footer.html" %}
 {% endblock %}
