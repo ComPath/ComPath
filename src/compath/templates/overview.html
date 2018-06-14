@@ -58,6 +58,11 @@
             padding: 14px;
             text-align: center;
         }
+
+        #gene-pathways-table_filter {
+            margin-top: 10px;
+        }
+
     </style>
 
 {% endblock %}
@@ -66,8 +71,12 @@
     {{ super() }}
     {% include "dependencies/common.html" %}
     {% include "dependencies/venn.html" %}
+    {% include "dependencies/datatables.html" %}
 
     <script>
+
+        // Hide Table Header
+        $('#gene-pathways-table').hide();
 
         // Venn Diagram Script
 
@@ -243,12 +252,13 @@
 
         {% endfor %}
 
-
+        /////////////////////
+        // Pathway Search //
+        ////////////////////
         $('#pathway-autocompletion').autocomplete({
             source: function (request, response) {
                 $.getJSON("/api/autocompletion/pathway/" + request.term, function (data) {
                     response($.map(data, function (pathwayInfo, key) {
-
                         return {
                             label: pathwayInfo[1] + " (" + pathwayInfo[0] + ")",
                             value: "/pathway/" + pathwayInfo[0] + "/" + pathwayInfo[2]
@@ -268,9 +278,83 @@
             if (selectedPathway) {
                 window.location = selectedPathway;
             }
-            else{
+            else {
                 alert("Please select a pathway before")
             }
+        });
+
+        /////////////////
+        // Gene Search //
+        /////////////////
+
+        $('#gene-autocompletion').autocomplete({
+            source: function (request, response) {
+                $.getJSON("/api/autocompletion/gene_symbol?q=" + request.term, function (data) {
+                    response($.map(data, function (gene) {
+                        return {
+                            label: gene,
+                            value: gene
+                        }
+                    }));
+                });
+            },
+            minLength: 2,
+            delay: 100
+        });
+
+        /**
+         * Adds  a new row in Pathway Information table
+         * @param {object} table: table object
+         * @param {string} column1: string for column1
+         * @param {string} column2: string for column2
+         * @param {string} column3: string for column3
+         * @param {string} column4: string for column4
+         */
+        function insertRow(table, column1, column2, column3, column4) {
+            table.append("<tr><td>" + column1 + "</td><td>" + column2 + "</td>   <td>" + column3 + "</td> <td>" + column4 + "</td></tr>");
+        }
+
+        /**
+         * Renders pathway info table
+         * @param {object} data object
+         */
+        function populateTable(data) {
+
+            var tableBody = $('#table-body');
+
+            tableBody.empty();
+
+            $.each(data, function (dbName, value) {
+                $.each(value, function (index, pathwayTuple) {
+                    insertRow(tableBody, dbName, pathwayTuple[0], pathwayTuple[1], pathwayTuple[2]);
+                });
+            });
+
+            var table = $('#gene-pathways-table');
+
+            table.DataTable(); // Create DataTable
+            table.show(); // Make it visible
+        }
+
+        //Action go to pathway page
+        $("#gene-info").on("click", function () {
+
+            var selectedGene = $("#gene-autocompletion").val();
+
+            $.ajax({
+                url: "/api/get_pathways_by_gene/" + selectedGene,
+                dataType: "json",
+                success: function (response) {
+
+                    if ($.isEmptyObject(response)) {
+                        alert("The selected gene was not found in the database")
+                    }
+                    else {
+                        populateTable(response);
+
+                    }
+                }
+            });
         });
 
 
@@ -368,6 +452,28 @@
                         style="max-width: 500px; min-width: 400px">
                     <input class="btn btn-primary" value="Explore Pathway" id="pathway-info" type="submit">
                 </div>
+
+                <div class="form-inline" style="margin-top: 10px;">
+                    <label for="gene-autocompletion"></label><input
+                        id="gene-autocompletion" type="text"
+                        class="form-control"
+                        placeholder="Type a gene symbol"
+                        style="max-width: 500px; min-width: 400px">
+                    <input class="btn btn-primary" value="Explore Gene" id="gene-info" type="submit">
+                </div>
+                <table id="gene-pathways-table" class="table table-bordered table-hover table-responsive">
+                    <thead>
+                    <tr>
+                        <th class="first-row">Database</th>
+                        <th class="first-row">Identifier</th>
+                        <th class="first-row">Name</th>
+                        <th class="first-row">Pathway Size</th>
+                    </tr>
+                    </thead>
+                    <tbody id="table-body">
+                    </tbody>
+                </table>
+
             </div>
         </div>
     </div>

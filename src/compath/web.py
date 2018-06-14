@@ -24,6 +24,7 @@ from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
 from compath.utils import simulate_pathway_enrichment
 from compath.views.analysis_service import analysis_blueprint
+from compath.views.api_service import api_blueprint
 from compath.views.curation_service import curation_blueprint
 from compath.views.db_service import db_blueprint
 from compath.views.main_service import ui_blueprint
@@ -118,6 +119,7 @@ def create_app(connection=None, template_folder='templates', static_folder='stat
     app.register_blueprint(model_blueprint)
     app.register_blueprint(analysis_blueprint)
     app.register_blueprint(db_blueprint)
+    app.register_blueprint(api_blueprint)
 
     app.manager_dict = {
         resource_name: ExternalManager(connection=connection)

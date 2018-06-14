@@ -194,6 +194,19 @@ def get_enriched_pathways(manager_list, gene_set):
         if manager_name not in BLACK_LIST
     }
 
+def get_gene_pathways(manager_list, gene):
+    """Return the pathways associated with a gene for every registered manager.
+
+    :param dict[str, Manager] manager_list: list of managers
+    :param str gene: HGNC symbol
+    :rtype: dict[str,dict[str,dict]]
+    """
+    return {
+        manager_name: instance.query_gene(gene)
+        for manager_name, instance in manager_list.items()
+        if manager_name not in BLACK_LIST
+    }
+
 
 def get_mappings(compath_manager, only_accepted=True):
     """Return a pandas dataframe with mappings information as an excel sheet file.

@@ -2,7 +2,7 @@
 
 """This module contains the analysis views in ComPath."""
 
-import itertools
+import itertools as itt
 import logging
 from io import StringIO
 
@@ -42,6 +42,7 @@ def similarity_network():
         manager_names=current_app.manager_dict.keys(),
     )
 
+
 """Simulation view"""
 
 
@@ -52,6 +53,7 @@ def simulation_view():
         'visualization/simulation.html',
         results=current_app.simulation_results,
     )
+
 
 """Venn Diagram views"""
 
@@ -136,7 +138,7 @@ def process_gene_set():
 
     elif file_form.validate_on_submit():
         gene_sets = process_form_gene_set(file_form.file.data.stream.read().decode("utf-8"))
-        filter_by_significance = False # TODO: Enable it from file too
+        filter_by_significance = False  # TODO: Enable it from file too
 
     else:
         flash('The submitted gene set is not valid')
@@ -157,12 +159,11 @@ def process_gene_set():
     else:
         flash('ComPath could not find any valid HGNC Symbol from the submitted list')
 
-
     return render_template(
         'visualization/enrichment_results.html',
         query_results=enrichment_results,
         submitted_gene_set=valid_gene_sets,
-        number_of_pathways=len(list(itertools.chain(*enrichment_results.values()))),
+        number_of_pathways=len(list(itt.chain(*enrichment_results.values()))),
         genes_not_in_pathways=get_genes_without_assigned_pathways(enrichment_results, valid_gene_sets)
     )
 
@@ -278,33 +279,3 @@ def export_gene_set(resource):
     output.headers["Content-Disposition"] = "attachment; filename={}_gene_sets.csv".format(resource)
     output.headers["Content-type"] = "text/csv"
     return output
-
-
-"""Autocompletion views"""
-
-
-@analysis_blueprint.route('/api/autocompletion/pathway_name')
-def api_resource_autocompletion():
-    """Autocompletion for pathway name."""
-    q = request.args.get('q')
-    resource = request.args.get('resource')
-
-    if not q or not resource:
-        return jsonify([])
-
-    resource = resource.lower()
-
-    manager = current_app.manager_dict.get(resource)
-
-    if not manager:
-        return jsonify([])
-
-    # Special method for ComPath HGNC since it does not have a pathway model but gene families
-    if resource == 'compath_hgnc':
-        return jsonify(manager.autocomplete_gene_families(q, 10))
-
-    return jsonify(list({
-        pathway.name
-        for pathway in manager.query_pathway_by_name(q, 10)  # Limits the results returned to 10
-        if pathway
-    }))

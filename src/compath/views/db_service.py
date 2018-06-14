@@ -8,8 +8,8 @@ import logging
 from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
 from flask_security import roles_required
 
+from compath.constants import STYLED_NAMES
 from compath.models import User
-from compath.constants import STYLED_NAMES, BLACK_LIST
 from compath.utils import get_pathway_model_by_id, get_pathway_model_by_name
 
 log = logging.getLogger(__name__)
@@ -130,26 +130,3 @@ def infer_hierarchy():
     inferred_hierarchies = current_app.manager.infer_hierarchy(resource, pathway_id, pathway_name)
 
     return jsonify(inferred_hierarchies)
-
-
-@db_blueprint.route('/api/autocompletion/pathway/<name>')
-def pathway_name_autocompletion(name):
-    """Pathway name autocompletion
-
-    :param str name: pathway name to search
-    """
-    similar_pathways = {}
-
-    for resource_name, ExternalManager in current_app.manager_dict.items():
-        if resource_name in BLACK_LIST:
-            continue
-
-        similar_pathways[resource_name] = ExternalManager.query_similar_pathways(name, top=5)
-
-    similar_pathways = [
-        (resource_name, pathway_id, pathway_name)
-        for resource_name, pathways in similar_pathways.items()
-        for pathway_name, pathway_id in pathways
-    ]
-
-    return jsonify(similar_pathways)
