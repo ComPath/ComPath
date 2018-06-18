@@ -67,7 +67,10 @@ STYLED_NAMES = {
     KEGG: 'KEGG',
     REACTOME: 'Reactome',
     WIKIPATHWAYS: 'WikiPathways',
-    MSIG: 'MSig'
+    MSIG: 'MSig',
+    'neurommsig_ad': 'NeuroMMSig AD',
+    'neurommsig_pd': 'NeuroMMSig PD'
+
 }
 
 EQUIVALENT_TO = 'equivalentTo'
