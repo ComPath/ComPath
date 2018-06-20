@@ -7,7 +7,7 @@ import logging
 from flask import (Blueprint, abort, current_app, request, render_template)
 from flask_admin.contrib.sqla import ModelView
 
-from compath.constants import EQUIVALENT_TO, IS_PART_OF
+from compath.constants import EQUIVALENT_TO, IS_PART_OF, STYLED_NAMES
 from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
 
@@ -130,5 +130,6 @@ def pathway_view(resource, identifier):
         equivalent_pathways=equivalent_pathways,
         sub_pathways=sub_pathways,
         super_pathways=super_pathways,
-        submitted_gene_set=request.args.get('gene_set')
+        submitted_gene_set=request.args.get('gene_set'),
+        STYLED_NAMES=STYLED_NAMES
     )
