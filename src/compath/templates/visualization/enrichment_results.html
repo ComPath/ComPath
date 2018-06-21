@@ -112,11 +112,10 @@
 {% block content %}
     <div class="container">
         <div class="page-header">
-            <h1>Query Results </h1>
-            <h3><i class="glyphicon glyphicon-info-sign"
+            <h1>Query Results <i class="glyphicon glyphicon-info-sign"
                    data-toggle="modal"
                    data-target="#legend"></i>
-            </h3>
+            </h1>
             <hr>
             {{ util.flashed_messages(dismissible=True, container=False) }}
 
@@ -175,7 +174,7 @@
 
             <div class="panel panel-default">
                 <div class="panel-heading">
-                    <h3 class="panel-title">{{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}</h3>
+                    <h3 class="panel-title">{{ compath.stylize_plugin_name(STYLED_NAMES, resource_name) }}</h3>
                 </div>
                 <div class="panel-body">
 

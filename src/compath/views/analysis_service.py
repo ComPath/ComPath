@@ -164,7 +164,8 @@ def process_gene_set():
         query_results=enrichment_results,
         submitted_gene_set=valid_gene_sets,
         number_of_pathways=len(list(itt.chain(*enrichment_results.values()))),
-        genes_not_in_pathways=get_genes_without_assigned_pathways(enrichment_results, valid_gene_sets)
+        genes_not_in_pathways=get_genes_without_assigned_pathways(enrichment_results, valid_gene_sets),
+        STYLED_NAMES=STYLED_NAMES
     )
 
 
