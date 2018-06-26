@@ -15,6 +15,22 @@
             <ul class="nav navbar-nav">
                 <li class="dropdown">
                     <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
+                       aria-expanded="false">Getting Started <span class="caret"></span></a>
+                    <ul class="dropdown-menu">
+                        <li>
+                            <a class="nav-header" href="{{ url_for('ui.about') }}">About ComPath</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="{{ url_for('ui.curation_protocol') }}">Curation Protocol</a>
+                        </li>
+                        <li>
+                            <a class="nav-header" href="{{ url_for('ui.terms_and_conditions') }}">Terms and
+                                Conditions</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="dropdown">
+                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
                        aria-expanded="false">SCAI Resources <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a class="nav-header"
@@ -29,22 +45,6 @@
                         </li>
                         <li>
                             <a class="nav-header" href="http://epad.scai.fraunhofer.de/">Study Viewer</a>
-                        </li>
-                    </ul>
-                </li>
-                <li class="dropdown">
-                    <a class="dropdown-toggle nav-header" data-toggle="dropdown" role="button" aria-haspopup="true"
-                       aria-expanded="false">Getting Started <span class="caret"></span></a>
-                    <ul class="dropdown-menu">
-                        <li>
-                            <a class="nav-header" href="{{ url_for('ui.about') }}">About ComPath</a>
-                        </li>
-                        <li>
-                            <a class="nav-header" href="{{ url_for('ui.curation_protocol') }}">Curation Protocol</a>
-                        </li>
-                        <li>
-                            <a class="nav-header" href="{{ url_for('ui.terms_and_conditions') }}">Terms and
-                                Conditions</a>
                         </li>
                     </ul>
                 </li>
