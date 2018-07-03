@@ -19,9 +19,20 @@ api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/api/get_pathways_by_gene/<hgnc_symbol>')
 def api_get_gene_pathways(hgnc_symbol):
-    """Query the pathways associated with a gene.
 
-    :param str hgnc_symbol: gene symbol
+    """Query the pathways associated with a gene.
+       ---
+       tags:
+         - miscellaneous
+       parameters:
+         - name: hgnc_symbol
+           type: string
+           description: gene symbol
+           required: true
+           x-example: APP
+       responses:
+         200:
+           description: pathway dict in JSON.
     """
     pathways = get_gene_pathways(current_app.manager_dict, hgnc_symbol)
 
@@ -33,7 +44,14 @@ def api_get_gene_pathways(hgnc_symbol):
 
 @api_blueprint.route('/api/autocompletion/gene_symbol')
 def api_gene_autocompletion_all_resources():
-    """Autocompletion for gene symbol."""
+    """Autocompletion for gene symbol.
+        ---
+        tags:
+          - autocompletion
+        responses:
+          200:
+            description: list of all hgnc_symbols in JSON for the autocompletion.
+     """
     q = request.args.get('q')
 
     # Return empty json if no request in the argument
@@ -66,7 +84,14 @@ def api_gene_autocompletion_all_resources():
 
 @api_blueprint.route('/api/autocompletion/pathway_name')
 def api_pathway_autocompletion_resource_specific():
-    """Autocompletion for pathway name given a database."""
+    """Autocompletion for pathway name given a database.
+        ---
+        tags:
+          - autocompletion
+        responses:
+          200:
+            description: returns a list for the autocompletion of 10 pathway in JSON.
+     """
     q = request.args.get('q')
     resource = request.args.get('resource')
 
@@ -94,9 +119,19 @@ def api_pathway_autocompletion_resource_specific():
 @api_blueprint.route('/api/autocompletion/pathway/<name>')
 def api_pathway_autocompletion_all_resources(name):
     """Pathway name autocompletion, looking at all databases/plugins installed.
+       ---
+       tags:
+         - autocompletion
+       parameters:
+         - name: name
+           type: string
+           x-example: 'AKT1'
+           description: pathway name to search
+       responses:
+         200:
+           description: returns a list for the autocompletion of 10 pathway in JSON.
 
-    :param str name: pathway name to search
-    """
+     """
     similar_pathways = {}
 
     for resource_name, ExternalManager in current_app.manager_dict.items():

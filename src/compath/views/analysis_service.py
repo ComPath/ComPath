@@ -93,7 +93,15 @@ def mapping_landscape(resource, pathway_id):
 
 @analysis_blueprint.route('/query/overlap')
 def calculate_overlap():
-    """Return the overlap between different pathways in order to generate a Venn diagram."""
+    """Return the overlap between different pathways in order to generate a Venn diagram.
+       ---
+       tags:
+         - miscellaneous
+       responses:
+         200:
+           description: processed venn diagram.
+    """
+
     pathways_list = request.args.getlist('pathways[]')
     resources_list = request.args.getlist('resources[]')
 
@@ -288,9 +296,20 @@ def compare_pathways():
 
 @analysis_blueprint.route('/export/<resource>')
 def export_gene_set(resource):
-    """Export gene set to excel.
 
-    :param str resource: name of the pathway database to visualize its distribution
+    """Export gene set to excel.
+       ---
+       tags:
+         - miscellaneous
+       parameters:
+         - name: resource
+           type: string
+           description: name of the pathway database to visualize its distribution
+           required: true
+           x-example: KEGG
+       responses:
+         200:
+           description: csv output file of the gene set.
     """
     resource_manager = current_app.manager_dict.get(resource)
 

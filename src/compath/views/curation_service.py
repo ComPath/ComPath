@@ -97,10 +97,25 @@ def export_mappings():
 @login_required
 def process_vote(mapping_id, type):
     """Processes the vote.
+    ---
+    tags:
+      - mappings
+    parameters:
+      - name: mapping_id
+        type: integer
+        description: id of the mapping to process the vote info
+        required: true
 
-    :param int mapping_id: id of the mapping to process the vote info
-    :param int type: 0 if down vote and 1 if up vote
+      - type: type
+        type: integer
+        description: 0 if down vote and 1 if up vote
+        required: true
+
+    responses:
+      200:
+        description: Redirects to mapping catalog
     """
+
     if type not in {0, 1}:
         return abort(500, "Invalid vote type {}. Vote type should be 0 or 1".format(type))
 
@@ -271,10 +286,22 @@ def process_mapping():
 
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
 def suggest_mappings_by_name(pathway_name):
-    """Return list of top matches based on string similarity.
 
-    :param str pathway_name:
-    """
+    """Return list of top matches based on string similarity.
+      ---
+      tags:
+        - mappings
+      parameters:
+        - name: pathway_name
+          type: string
+          description: textual name of the pathway
+          required: true
+          x-example: AKT1
+
+      responses:
+        200:
+          description: The top 5 most similar pathways by name in JASON
+      """
     # Get all pathway names from each resource
     pathways_dict = {
         manager: external_manager.get_all_pathway_names()
@@ -320,10 +347,23 @@ def suggest_mappings_by_name(pathway_name):
 @curation_blueprint.route('/suggest_mappings/content/<resource>/<pathway_id>')
 def suggest_mappings_by_content(resource, pathway_id):
     """Return list of top matches based on gene set similarity.
+         ---
+         tags:
+           - mappings
+         parameters:
+           - name: resource
+             type: string
+             description: name of the database
+             required: true
+           - name: pathway_id
+             type: string
+             description: identifier of the pathway
+             required: true
+         responses:
+           200:
+             description: The top 5 most similar pathways by content in JASON
+         """
 
-    :param str resource: name of the database
-    :param str pathway_id: identifier of the pathway
-    """
 
     reference_pathway = get_pathway_model_by_id(current_app, resource, pathway_id)
 

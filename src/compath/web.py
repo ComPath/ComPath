@@ -126,71 +126,71 @@ def create_app(connection=None, template_folder='templates', static_folder='stat
         for resource_name, ExternalManager in managers.items()
     }
 
-    log.info('Loading pathway distributions')
-
-    app.resource_distributions = {
-        resource_name: manager.get_pathway_size_distribution()
-        for resource_name, manager in app.manager_dict.items()
-        if resource_name not in BLACK_LIST
-    }
-
-    log.info('Loading gene distributions')
-    # TODO @cthoyt too slow
-    app.gene_distributions = {
-        resource_name: dict(manager.get_gene_distribution())
-        for resource_name, manager in app.manager_dict.items()
-        if resource_name not in BLACK_LIST
-    }
-
-    log.info('Loading gene sets')
-    resource_gene_sets = {
-        resource_name: manager.export_gene_sets()
-        for resource_name, manager in app.manager_dict.items()
-        if resource_name not in BLACK_LIST
-    }
-
-    log.info('Loading overlap across pathway databases')
-    # Flat all genes in all pathways in each resource to calculate overlap at the database level
-    resource_all_genes = {
-        resource: {
-            gene
-            for pathway, genes in pathways.items()
-            for gene in genes
-        }
-        for resource, pathways in resource_gene_sets.items()
-    }
-
-    # TODO: select the databases (resource) to compare in the simulation
-    simulate_resources = ['kegg', 'reactome', 'wikipathways']
-
-    if resource_all_genes:
-        log.info('Performing simulation with {}'.format(simulate_resources))
-
-        common_genes_simulated_resources = reduce(and_, [
-            gene_set
-            for resource_name, gene_set in resource_all_genes.items()
-            if resource_name in simulate_resources
-        ])
-
-        app.simulation_results = simulate_pathway_enrichment(
-            {
-                resource_name: value
-                for resource_name, value in resource_gene_sets.items()
-                if resource_name in simulate_resources
-            },
-            common_genes_simulated_resources,
-            runs=200
-        )
-
-    else:
-        log.warning('No data has been fetched')
-
-    log.info('Loading resource overview')
-    app.resource_overview = {
-        resource_name: (len(pathways), len(resource_all_genes[resource_name]))
-        # dict(Manager resource name: tuple(#pathways, #genes))
-        for resource_name, pathways in resource_gene_sets.items()
-    }
+    # log.info('Loading pathway distributions')
+    #
+    # app.resource_distributions = {
+    #     resource_name: manager.get_pathway_size_distribution()
+    #     for resource_name, manager in app.manager_dict.items()
+    #     if resource_name not in BLACK_LIST
+    # }
+    #
+    # log.info('Loading gene distributions')
+    # # TODO @cthoyt too slow
+    # app.gene_distributions = {
+    #     resource_name: dict(manager.get_gene_distribution())
+    #     for resource_name, manager in app.manager_dict.items()
+    #     if resource_name not in BLACK_LIST
+    # }
+    #
+    # log.info('Loading gene sets')
+    # resource_gene_sets = {
+    #     resource_name: manager.export_gene_sets()
+    #     for resource_name, manager in app.manager_dict.items()
+    #     if resource_name not in BLACK_LIST
+    # }
+    #
+    # log.info('Loading overlap across pathway databases')
+    # # Flat all genes in all pathways in each resource to calculate overlap at the database level
+    resource_all_genes = {}
+    #     resource: {
+    #         gene
+    #         for pathway, genes in pathways.items()
+    #         for gene in genes
+    #     }
+    #     for resource, pathways in resource_gene_sets.items()
+    # }
+    #
+    # # TODO: select the databases (resource) to compare in the simulation
+    # simulate_resources = ['kegg', 'reactome', 'wikipathways']
+    #
+    # if resource_all_genes:
+    #     log.info('Performing simulation with {}'.format(simulate_resources))
+    #
+    #     common_genes_simulated_resources = reduce(and_, [
+    #         gene_set
+    #         for resource_name, gene_set in resource_all_genes.items()
+    #         if resource_name in simulate_resources
+    #     ])
+    #
+    #     app.simulation_results = simulate_pathway_enrichment(
+    #         {
+    #             resource_name: value
+    #             for resource_name, value in resource_gene_sets.items()
+    #             if resource_name in simulate_resources
+    #         },
+    #         common_genes_simulated_resources,
+    #         runs=200
+    #     )
+    #
+    # else:
+    #     log.warning('No data has been fetched')
+    #
+    # log.info('Loading resource overview')
+    # app.resource_overview = {
+    #     resource_name: (len(pathways), len(resource_all_genes[resource_name]))
+    #     # dict(Manager resource name: tuple(#pathways, #genes))
+    #     for resource_name, pathways in resource_gene_sets.items()
+    # }
 
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
