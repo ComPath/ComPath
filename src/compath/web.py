@@ -2,12 +2,10 @@
 
 """This module contains the flask-admin application."""
 
+import time
+
 import logging
 import os
-import time
-from functools import reduce
-from operator import and_
-
 from bio2bel_hgnc.manager import Manager as HgncManager
 from flasgger import Swagger
 from flask import Flask
@@ -17,6 +15,8 @@ from flask_bootstrap import Bootstrap
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from functools import reduce
+from operator import and_
 
 from compath import managers
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
@@ -48,15 +48,21 @@ class ComPathSQLAlchemy(SQLAlchemy):
         self.manager = Manager(engine=self.engine, session=self.session)
 
 
-def create_app(connection=None, template_folder='templates', static_folder='static'):
+def create_app(connection=None, template_folder=None, static_folder=None):
     """Create the Flask application.
 
     :type connection: Optional[str]
+    :type template_folder: Optional[str]
+    :type static_folder: Optional[str]
     :rtype: flask.Flask
     """
     t = time.time()
 
-    app = Flask(__name__, template_folder=template_folder, static_folder=static_folder)
+    app = Flask(
+        __name__,
+        template_folder=(template_folder or 'templates'),
+        static_folder=(static_folder or 'static'),
+    )
 
     @app.template_filter('remove_prefix')
     def remove_prefix(text, prefix):

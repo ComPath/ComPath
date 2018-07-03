@@ -68,8 +68,8 @@ def ls():
 @main.command()
 @click.option('--host', default='0.0.0.0', help='Flask host. Defaults to 0.0.0.0')
 @click.option('--port', type=int, default=5000, help='Flask port. Defaults to 5000')
-@click.option('--template-folder', default='templates', help="Template folder. Defaults to 'templates'")
-@click.option('--static-folder', default='static', help="Template folder. Defaults to 'static'")
+@click.option('--template-folder', help="Template folder. Defaults to 'templates'")
+@click.option('--static-folder', help="Template folder. Defaults to 'static'")
 @click.option('-v', '--debug', count=True, help="Turn on debugging.")
 @click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
 def web(host, port, template_folder, static_folder, debug, connection):
