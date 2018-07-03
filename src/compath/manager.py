@@ -338,6 +338,7 @@ class Manager(object):
     def get_mappings_from_pathway_with_relationship(self, type, service_name, pathway_id, pathway_name):
         """Get all mappings matching pathway and service name.
 
+        :param str type: mapping type
         :param str service_name: service name
         :param str pathway_id: original pathway identifier
         :param str pathway_name: pathway name
