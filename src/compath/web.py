@@ -122,7 +122,7 @@ def create_app(connection=None, template_folder='templates', static_folder='stat
     app.register_blueprint(api_blueprint)
 
     app.manager_dict = {
-        resource_name: ExternalManager(connection=connection)
+        resource_name: ExternalManager.from_connection(connection=connection)
         for resource_name, ExternalManager in managers.items()
     }
 
@@ -195,7 +195,7 @@ def create_app(connection=None, template_folder='templates', static_folder='stat
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
 
-    hgnc_manager = HgncManager(connection=connection)
+    hgnc_manager = HgncManager.from_connection(connection=connection)
 
     resource_all_genes['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
 
