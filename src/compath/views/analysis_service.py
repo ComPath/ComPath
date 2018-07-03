@@ -8,7 +8,7 @@ from io import StringIO
 
 from flask import (Blueprint, abort, current_app, flash, jsonify, make_response, redirect, render_template, request)
 
-from compath.constants import BLACK_LIST, STYLED_NAMES
+from compath.constants import BLACK_LIST, STYLED_NAMES, EQUIVALENT_TO
 from compath.forms import GeneSetFileForm, GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
@@ -16,6 +16,7 @@ from compath.utils import (
     get_gene_sets_from_pathway_names,
     get_genes_without_assigned_pathways,
     get_pathway_info,
+    get_pathway_model_by_id,
     perform_hypergeometric_test,
     process_form_gene_set
 )
@@ -25,7 +26,7 @@ from compath.visualization.cytoscape import (
     networkx_to_cytoscape_js,
     pathways_to_similarity_network
 )
-from compath.visualization.d3_dendrogram import get_dendrogram_tree
+from compath.visualization.d3_dendrogram import create_mapping_dendrogram, get_dendrogram_tree
 from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 log = logging.getLogger(__name__)
@@ -53,6 +54,38 @@ def simulation_view():
         'visualization/simulation.html',
         results=current_app.simulation_results,
     )
+
+
+"""Mapping Landscape"""
+
+
+@analysis_blueprint.route('/mapping_landscape/<resource>/<pathway_id>')
+def mapping_landscape(resource, pathway_id):
+    """Visualizes the mapping landscape of a given pathway
+
+    :param str resource: name of the database
+    :param str pathway_id: identifier of the pathway
+    """
+    reference_pathway = get_pathway_model_by_id(current_app, resource, pathway_id)
+
+    if reference_pathway is None:
+        return abort(500, "Pathway '{}' not found in manager '{}'".format(pathway_id, resource))
+
+    equivalent_mappings = current_app.manager.get_mappings_from_pathway_with_relationship(
+        EQUIVALENT_TO,
+        resource,
+        pathway_id,
+        reference_pathway.name
+    )
+
+    # The queried pathway has an equivalent pathway
+    if equivalent_mappings:
+        # TODO: logic here
+        pass
+
+    d3_tree = create_mapping_dendrogram(current_app.manager, resource, pathway_id, reference_pathway.name)
+
+    return jsonify(d3_tree)
 
 
 """Venn Diagram views"""

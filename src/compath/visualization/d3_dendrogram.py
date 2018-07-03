@@ -12,6 +12,8 @@ import scipy.cluster
 import scipy.stats
 from scipy.spatial.distance import pdist
 
+from compath.constants import IS_PART_OF
+
 
 def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matrix):
     """Remove column and row in matrix after value error to proceed with clustering.
@@ -170,3 +172,76 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     label_tree(id_name_dict, pathway_manager_dict, cluster_to_x, d3_dendrogram["children"][0])
 
     return d3_dendrogram, len(pathways)
+
+
+def create_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
+    """Generates d3 dendrogram structure by using BFS.
+
+    :param manager: ComPath manager
+    :param str resource: resource name
+    :param str pathway_id: pathway identifier in the resource
+    :param str pathway_name: pathway name
+    :return:
+    """
+
+    d3_dendrogram = dict(children=[], name=pathway_name, pathway_id=pathway_id, resource=resource)
+
+    hierarchical_mappings = manager.get_mappings_from_pathway_with_relationship(
+        IS_PART_OF,
+        resource,
+        pathway_id,
+        pathway_name
+    )
+
+    if not hierarchical_mappings:
+        return []
+
+    root = [resource, pathway_id, pathway_name]
+
+    for mapping in hierarchical_mappings:
+
+        pathway = mapping.get_complement_mapping_info(root[0], root[1], root[2])
+
+        d3_dendrogram["children"].append(dict(resource=pathway[0], id=pathway[1], name=pathway[2], children=[]))
+
+    return d3_dendrogram
+
+
+
+
+def add_mapping_node(id_name_dict, name_manager_dict, cluster_to_x, tree):
+    """Label the tree in a recursive way with names, resource and cluster information.
+
+    :param dict[str,str] id_name_dict: node_id to name dictionary
+    :param dict[str,str] name_manager_dict: node name to resource ditionary
+    :param dict[tuple[int,int],float] cluster_to_x: node_id tuple of the cluster to distance
+    :param dict tree: tree like structure
+    :rtype: list
+    """
+    if len(tree["children"]) == 0:
+        leafs_ids = [tree["node_id"]]
+
+        node_name = id_name_dict[leafs_ids[0]]
+        tree["name"] = node_name
+        tree["color"] = name_manager_dict[node_name]
+        tree["y"] = 0
+
+        return []
+
+    result = [(tree["node_id"], list(tree["children"]))]
+
+    childs = []
+
+    for child in tree["children"]:  # Iterate over the two children
+        childs.append(child["node_id"])
+        result.extend(label_tree(id_name_dict, name_manager_dict, cluster_to_x, child))  # Recursive tree transversal
+
+    tree["y"] = cluster_to_x[childs[0], childs[1]]
+
+    return result
+
+
+
+
+
+
