@@ -103,6 +103,7 @@ if __name__ == '__main__':
         keywords=KEYWORDS,
         packages=PACKAGES,
         package_dir={'': 'src'},
+        include_package_data=True,
         install_requires=INSTALL_REQUIRES,
         tests_require=TESTS_REQUIRE,
         entry_points=ENTRY_POINTS,
