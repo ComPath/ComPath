@@ -36,8 +36,14 @@ def imprint():
 
 @ui_blueprint.route('/terms_and_conditions')
 def terms_and_conditions():
-    """Render the Terms and conditiosn page."""
+    """Render the Terms and conditions page."""
     return render_template('meta/terms_conditions.html')
+
+
+@ui_blueprint.route('/rdfs')
+def rdf():
+    """RDF about page."""
+    return render_template('meta/rdf.html')
 
 
 @ui_blueprint.route('/about')
