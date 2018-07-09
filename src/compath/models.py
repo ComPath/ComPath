@@ -166,7 +166,7 @@ class PathwayMapping(Base):
 
         :rtype: int
         """
-        return len(self.votes)
+        return self.votes.count()
 
     @property
     def count_creators(self):
@@ -174,7 +174,7 @@ class PathwayMapping(Base):
 
         :rtype: int
         """
-        return len(self.creators)
+        return self.creators.count()
 
     @property
     def count_up_votes(self):
