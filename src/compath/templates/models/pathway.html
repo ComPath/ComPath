@@ -7,7 +7,43 @@
 {% block title %}Pathway Details{% endblock %}
 {% block styles %}
     {{ super() }}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
+          integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/graph_explorer.css') }}">
+
     <style>
+
+
+
+        .param {
+            margin-bottom: 1em;
+        }
+
+        .full-width {
+            width: 100%;
+        }
+
+        .not-rounded {
+            border-radius: 0 !important;
+        }
+
+        .not-rounded2 {
+            border-radius: 0 !important;
+        }
+
+        p {
+            margin: 0.5em 0;
+        }
+
+        .param button {
+            width: 3em;
+            margin-right: 0.25em;
+        }
+
+        .slider {
+            display: block;
+        }
+
         .pathways ul {
             margin: 1em 0;
             padding: 0 0 0 40px;
@@ -178,8 +214,13 @@
                     <div class="panel-body">
 
                         <div id="chart"></div>
-                        <p>This plot shows the hierarchical relationship for the queried pathway.
+                        <p>The following plot represents the hierarchical landscape of '{{ pathway.name }}'.
                         </p>
+                        <div style="float:right">
+
+                            <a data-toggle="modal" data-target="#legend"><i
+                                    class="fa fa-map fa-lg" aria-hidden="false"></i></a>
+                        </div>
                         <div id="tree-container"></div>
 
                     </div>
@@ -218,6 +259,7 @@
     </div>
 
     <div class="loading_modal"><!-- Spinner div --></div>
+    {% include "visualization/dendrogram/legend.html" %}
 
     {% include "meta/footer.html" %}
 {% endblock %}
