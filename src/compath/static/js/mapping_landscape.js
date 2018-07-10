@@ -1,6 +1,6 @@
 // Set the dimensions and margins of the diagram
 var margin = {top: 20, right: 90, bottom: 30, left: 250},
-    width = $(".panel-body").width - margin.left - margin.right,
+    width = $(".panel-body").width() - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 
