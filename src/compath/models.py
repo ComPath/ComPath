@@ -137,6 +137,26 @@ class PathwayMapping(Base):
         )
 
     @staticmethod
+    def has_descendant_pathway_tuple(type, service_name, pathway_id, pathway_name):
+        """Return a filter to get all the descendants mappings matching a isPartOf relationship (the predicates), service and pathway name and id."""
+        return and_(
+                PathwayMapping.service_2_name == service_name,
+                PathwayMapping.service_2_pathway_id == pathway_id,
+                PathwayMapping.service_2_pathway_name == pathway_name,
+                PathwayMapping.type == type
+        )
+
+    @staticmethod
+    def has_ancestry_pathway_tuple(type, service_name, pathway_id, pathway_name):
+        """Return a filter to get all the ancestries mappings matching a isPartOf relationship (the subjects), service and pathway name and id."""
+        return and_(
+            PathwayMapping.service_1_name == service_name,
+            PathwayMapping.service_1_pathway_id == pathway_id,
+            PathwayMapping.service_1_pathway_name == pathway_name,
+            PathwayMapping.type == type
+        )
+
+    @staticmethod
     def has_pathway(service_name, pathway_id, pathway_name):
         """Return a filter to get all mappings matching service and pathway name and id."""
         return or_(

@@ -10,6 +10,7 @@ from flask_admin.contrib.sqla import ModelView
 from compath.constants import EQUIVALENT_TO, IS_PART_OF, STYLED_NAMES
 from compath.models import PathwayMapping, Vote
 from compath.utils import get_pathway_model_by_id
+from compath.visualization.d3_dendrogram import get_mapping_dendrogram
 
 log = logging.getLogger(__name__)
 model_blueprint = Blueprint('model', __name__)
@@ -123,6 +124,8 @@ def pathway_view(resource, identifier):
         else:
             raise ValueError('Error with mapping type')
 
+    d3_tree = get_mapping_dendrogram(current_app.manager, resource, identifier, pathway.name)
+
     return render_template(
         'models/pathway.html',
         pathway=pathway,
@@ -131,5 +134,6 @@ def pathway_view(resource, identifier):
         sub_pathways=sub_pathways,
         super_pathways=super_pathways,
         submitted_gene_set=request.args.get('gene_set'),
-        STYLED_NAMES=STYLED_NAMES
+        STYLED_NAMES=STYLED_NAMES,
+        dendrogram=d3_tree
     )

@@ -2,9 +2,9 @@
 
 """This module the database manager of ComPath."""
 
+import datetime
 import logging
 
-import datetime
 from bio2bel import get_connection
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
@@ -213,7 +213,7 @@ class Manager(object):
         """
         # Ensure maintaining the order of pathways if they belong to the same database
         if mapping_type == EQUIVALENT_TO and \
-                service_1_name == service_2_name \
+                        service_1_name == service_2_name \
                 and _flip_service_order(pathway_1_name, pathway_2_name):
             return self.get_or_create_mapping(
                 service_2_name,
@@ -347,6 +347,32 @@ class Manager(object):
         """
         return self.session.query(PathwayMapping).filter(
             PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
+
+    def get_decendents_mappings_from_pathway_with_is_part_of_relationship(self, service_name, pathway_id, pathway_name):
+        """Get all mappings matching pathway and service name.
+
+        :param str type: mapping type
+        :param str service_name: service name
+        :param str pathway_id: original pathway identifier
+        :param str pathway_name: pathway name
+        :rtype: list[PathwayMapping]
+        :return:
+        """
+        return self.session.query(PathwayMapping).filter(
+            PathwayMapping.has_descendant_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)).all()
+
+    def get_ancestry_mappings_from_pathway_with_is_part_of_relationship(self, service_name, pathway_id, pathway_name):
+        """Get all mappings matching pathway and service name.
+
+        :param str type: mapping type
+        :param str service_name: service name
+        :param str pathway_id: original pathway identifier
+        :param str pathway_name: pathway name
+        :rtype: list[PathwayMapping]
+        :return:
+        """
+        return self.session.query(PathwayMapping).filter(
+            PathwayMapping.has_ancestry_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)).all()
 
     def get_all_mappings_from_pathway(self, service_name, pathway_id, pathway_name):
         """Get all mappings matching pathway and service name.

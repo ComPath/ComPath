@@ -48,9 +48,48 @@
             display: block;
         }
 
+        .node {
+            cursor: pointer;
+        }
+
+        .overlay {
+            background-color: #EEE;
+        }
+
+        .node circle {
+            fill: #fff;
+            stroke: steelblue;
+            stroke-width: 1.5px;
+        }
+
+        .node text {
+            font-size: 10px;
+            font-family: sans-serif;
+        }
+
+        .link {
+            fill: none;
+            stroke: #ccc;
+            stroke-width: 1.5px;
+        }
+
+        .templink {
+            fill: none;
+            stroke: red;
+            stroke-width: 3px;
+        }
+
+        .ghostCircle.show {
+            display: block;
+        }
+
+        .ghostCircle, .activeDrag .ghostCircle {
+            display: none;
+        }
 
     </style>
 {% endblock %}
+
 
 
 
@@ -61,20 +100,30 @@
     <script type="text/javascript"
             src="{{ url_for('static', filename='js/pathway_controller.js', version='20181004') }}"></script>
 
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
+
+
+
     <script>
-        // Initializes popover
-        $(function () {
-            $('[data-toggle="popover"]').popover({
-                placement: 'top',
-                trigger: 'hover'
-            })
-        });
+        var treeData = {{ dendrogram|tojson }}
+
+            // Initializes popover
+            $(function () {
+                $('[data-toggle="popover"]').popover({
+                    placement: 'top',
+                    trigger: 'hover'
+                })
+            });
 
         var resource = "{{resource}}";
         var pathwayName = "{{ pathway.name }}";
         var pathwayId = "{{pathway.resource_id }}";
 
     </script>
+
+    <script type="text/javascript"
+            src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
+
 {% endblock %}
 
 {% import "meta/macros.html" as compath %}
@@ -124,6 +173,17 @@
                     </tbody>
                 </table>
 
+                <div class="panel panel-default">
+                    <div class="panel-heading">Hierarchy Landscape</div>
+                    <div class="panel-body">
+
+                        <div id="chart"></div>
+                        <p>This plot shows the hierarchical relationship for the queried pathway.
+                        </p>
+                        <div id="tree-container"></div>
+
+                    </div>
+                </div>
                 {{ compath.write_pathways(equivalent_pathways, "Equivalent Pathways") }}
                 {{ compath.write_pathways(super_pathways, "Super-Pathways") }}
                 {{ compath.write_pathways(sub_pathways, "Sub-Pathways") }}
@@ -152,8 +212,8 @@
                 <div class="row">
                     <table id="info-table" class="table table-bordered table-hover table-responsive"></table>
                 </div>
-
             </div>
+
         </div>
     </div>
 

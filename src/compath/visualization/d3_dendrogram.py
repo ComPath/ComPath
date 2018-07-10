@@ -12,8 +12,6 @@ import scipy.cluster
 import scipy.stats
 from scipy.spatial.distance import pdist
 
-from compath.constants import IS_PART_OF
-
 
 def _check_error_distance(distance_matrix, pathway_manager_dict, similarity_matrix):
     """Remove column and row in matrix after value error to proceed with clustering.
@@ -174,39 +172,107 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     return d3_dendrogram, len(pathways)
 
 
-def create_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
-    """Generates d3 dendrogram structure by using BFS.
+def get_descendants(manager, resource, pathway_id, pathway_name):
+    """Generates d3 dendrogram structure by using BFS starting from the starting from a parent (root) node to the last descendants.
 
     :param manager: ComPath manager
     :param str resource: resource name
     :param str pathway_id: pathway identifier in the resource
     :param str pathway_name: pathway name
-    :return:
+    :return: parent-children data structure
+    :rtype: list[dict]
     """
 
-    d3_dendrogram = dict(children=[], name=pathway_name, pathway_id=pathway_id, resource=resource)
+    # Create the entry dictionary of the pathway (node).
+    d3_dendrogram = dict(
+        children=[],
+        name=pathway_name.replace(' - Homo sapiens (human)', ''),  # Replace KEGG Suffixes
+        pathway_id=pathway_id,
+        resource=resource
+    )
 
-    hierarchical_mappings = manager.get_mappings_from_pathway_with_relationship(
-        IS_PART_OF,
+    # Get direct descendents for the pathway.
+    descendent_mappings = manager.get_decendents_mappings_from_pathway_with_is_part_of_relationship(
         resource,
         pathway_id,
         pathway_name
     )
 
-    if not hierarchical_mappings:
-        return []
+    # Return the entry dict with no children if the node got no descendants.
+    if not descendent_mappings:
+        return d3_dendrogram
 
-    root = [resource, pathway_id, pathway_name]
+    # Do the recusive call for each child.
+    for mapping in descendent_mappings:
+        pathway = mapping.get_complement_mapping_info(resource, pathway_id, pathway_name)
 
-    for mapping in hierarchical_mappings:
-
-        pathway = mapping.get_complement_mapping_info(root[0], root[1], root[2])
-
-        d3_dendrogram["children"].append(dict(resource=pathway[0], id=pathway[1], name=pathway[2], children=[]))
+        d3_dendrogram["children"].append(
+            get_descendants(
+                manager,
+                pathway[0],
+                pathway[1],
+                pathway[2]
+            )
+        )
 
     return d3_dendrogram
 
 
+def get_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
+    """Generates d3 dendrogram structure by using BFS starting from the queried node in both directions of the hierarchy.
+
+    :param manager: ComPath manager
+    :param str resource: resource name
+    :param str pathway_id: pathway identifier in the resource
+    :param str pathway_name: pathway name
+    :return: parent-children data structure
+    :rtype: list[dict]
+    """
+    ancestries_mappings = []
+    common_ancestries = []
+    root = [resource, pathway_id, pathway_name]
+
+    # Get direct progenitors for the pathway.
+    ancestry_mappings = manager.get_ancestry_mappings_from_pathway_with_is_part_of_relationship(
+        resource,
+        pathway_id,
+        pathway_name
+    )
+
+    # Set as root if there is some progenitor (parent)
+    if ancestry_mappings:
+        root = ancestry_mappings[0].get_complement_mapping_info(resource, pathway_id, pathway_name)
+
+    # If there are many progenitors, get the common ancestry of the progenitors (parents)
+    if len(ancestry_mappings) > 1:
+        for ancestry in ancestry_mappings:
+            pathway = ancestry.get_complement_mapping_info(resource, pathway_id, pathway_name)
+            mapping = manager.get_ancestry_mappings_from_pathway_with_is_part_of_relationship(
+                pathway[0],
+                pathway[1],
+                pathway[2]
+            )
+            if mapping:
+                ancestries_mappings.append(mapping)
+                if not common_ancestries:
+                    common_ancestries = set(mapping)
+                else:
+                    common_ancestries.intersection(set(mapping))
+
+    # Set as root if there is some ancestry (grandparent)
+    if common_ancestries:
+        root = list(common_ancestries)[0].get_complement_mapping_info(resource, pathway_id, pathway_name)
+
+    # If there are many ancestries, do a recursive call to get the ancestries (grandparents)
+    if len(common_ancestries) > 1:
+        get_mapping_dendrogram(
+            manager,
+            root[0],
+            root[1],
+            root[2]
+        )
+
+    return get_descendants(manager, root[0], root[1], root[2])
 
 
 def add_mapping_node(id_name_dict, name_manager_dict, cluster_to_x, tree):
@@ -239,9 +305,3 @@ def add_mapping_node(id_name_dict, name_manager_dict, cluster_to_x, tree):
     tree["y"] = cluster_to_x[childs[0], childs[1]]
 
     return result
-
-
-
-
-
-
