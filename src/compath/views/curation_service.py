@@ -46,12 +46,12 @@ def catalog():
     """Render the mapping catalog page."""
     if request.args.get(EQUIVALENT_TO):
         mappings = current_app.manager.get_mappings_by_type(EQUIVALENT_TO)
-        message = Markup("<h4>'You are now visualizing the catalog of equivalent mappings</h4>")
+        message = Markup("<h4>You are now visualizing the catalog of equivalent mappings</h4>")
         flash(message)
 
     elif request.args.get(IS_PART_OF):
         mappings = current_app.manager.get_mappings_by_type(IS_PART_OF)
-        message = Markup("<h4>'You are now visualizing the catalog of hierarchical mappings</h4>")
+        message = Markup("<h4>You are now visualizing the catalog of hierarchical mappings</h4>")
         flash(message)
 
     else:
@@ -132,7 +132,7 @@ def process_vote(mapping_id, type):
         current_app.manager.session.add(vote)
         current_app.manager.session.commit()
 
-        message = Markup("<h4>'The mapping you just voted had enough number of votes to be accepted</h4>")
+        message = Markup("<h4>The mapping you just voted had enough number of votes to be accepted</h4>")
         flash(message)
 
     return redirect(url_for('.catalog'))
