@@ -135,5 +135,5 @@ def pathway_view(resource, identifier):
         super_pathways=super_pathways,
         submitted_gene_set=request.args.get('gene_set'),
         STYLED_NAMES=STYLED_NAMES,
-        dendrogram=d3_tree
+        dendrogram=[] if d3_tree['children'] == [] else d3_tree
     )

@@ -12,9 +12,6 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/graph_explorer.css') }}">
 
     <style>
-
-
-
         .param {
             margin-bottom: 1em;
         }
@@ -157,8 +154,12 @@
 
     </script>
 
-    <script type="text/javascript"
-            src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
+
+    {% if dendrogram %}
+        <script type="text/javascript"
+                src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
+    {% endif %}
+
 
 {% endblock %}
 
@@ -209,22 +210,25 @@
                     </tbody>
                 </table>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">Hierarchy Landscape</div>
-                    <div class="panel-body">
+                {% if dendrogram %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">Hierarchy Landscape</div>
+                        <div class="panel-body">
 
-                        <div id="chart"></div>
-                        <p>The following plot represents the hierarchical landscape of '{{ pathway.name }}'.
-                        </p>
-                        <div style="float:right">
+                            <div id="chart"></div>
+                            <p>The following plot represents the hierarchical landscape of '{{ pathway.name }}'.
+                            </p>
+                            <div style="float:right">
 
-                            <a data-toggle="modal" data-target="#legend"><i
-                                    class="fa fa-map fa-lg" aria-hidden="false"></i></a>
+                                <a data-toggle="modal" data-target="#legend"><i
+                                        class="fa fa-map fa-lg" aria-hidden="false"></i></a>
+                            </div>
+                            <div id="tree-container"></div>
+
                         </div>
-                        <div id="tree-container"></div>
-
                     </div>
-                </div>
+                {% endif %}
+
                 {{ compath.write_pathways(equivalent_pathways, "Equivalent Pathways") }}
                 {{ compath.write_pathways(super_pathways, "Super-Pathways") }}
                 {{ compath.write_pathways(sub_pathways, "Sub-Pathways") }}
