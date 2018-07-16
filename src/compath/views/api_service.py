@@ -4,7 +4,7 @@
 
 import logging
 
-from flask import (Blueprint, current_app, jsonify, request)
+from flask import (abort, Blueprint, current_app, jsonify, request)
 
 from compath.constants import BLACK_LIST
 from compath.utils import (
@@ -14,12 +14,40 @@ from compath.utils import (
 log = logging.getLogger(__name__)
 api_blueprint = Blueprint('api', __name__)
 
+
+@api_blueprint.route('/api/installed_plugins')
+def installed_plugins():
+    """Returns the installed plugins"""
+    installed_plugins = [
+        resource_name
+        for resource_name in current_app.manager_dict.keys()
+    ]
+
+    if not installed_plugins:
+        abort(500, 'There are no plugins installed')
+
+    return jsonify(installed_plugins)
+
+
+@api_blueprint.route('/api/plugins_populated')
+def plugins_populated():
+    """Checks if all plugins are populated"""
+    installed_plugins = [
+        manager.is_populated()
+        for manager in current_app.manager_dict.values()
+    ]
+
+    if all(installed_plugins):
+        return jsonify(installed_plugins)
+
+    return abort(500, 'Not all plugins are populated')
+
+
 """Gene Autocompletion and Query"""
 
 
 @api_blueprint.route('/api/get_pathways_by_gene/<hgnc_symbol>')
 def api_get_gene_pathways(hgnc_symbol):
-
     """Query the pathways associated with a gene.
        ---
        tags:
