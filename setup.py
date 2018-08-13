@@ -20,8 +20,6 @@ CLASSIFIERS = [
     'License :: OSI Approved :: MIT License',
     'Operating System :: OS Independent',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.4',
-    'Programming Language :: Python :: 3.5',
     'Programming Language :: Python :: 3.6',
     'Topic :: Scientific/Engineering :: Bio-Informatics'
 ]
@@ -44,7 +42,7 @@ INSTALL_REQUIRES = [
     'tqdm',
     'numpy',
     'statsmodels',
-    'xlrd'
+    'xlrd',
 ]
 TESTS_REQUIRE = [
     'bio2bel_kegg',

@@ -5,7 +5,7 @@
 import datetime
 import logging
 
-from bio2bel import get_connection
+from bio2bel.utils import get_connection
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
@@ -198,7 +198,7 @@ class Manager(object):
 
     def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
                               pathway_2_name, mapping_type, user):
-        """Get or creates a mapping.
+        """Get or create a mapping.
 
         :param str service_1_name: manager name of the service 1
         :param str pathway_1_name: pathway 1 name
@@ -212,9 +212,12 @@ class Manager(object):
         :rtype: tuple[PathwayMapping,bool]
         """
         # Ensure maintaining the order of pathways if they belong to the same database
-        if mapping_type == EQUIVALENT_TO and \
-                        service_1_name == service_2_name \
-                and _flip_service_order(pathway_1_name, pathway_2_name):
+        flip_order = (
+            mapping_type == EQUIVALENT_TO and
+            service_1_name == service_2_name and
+            _flip_service_order(pathway_1_name, pathway_2_name)
+        )
+        if flip_order:
             return self.get_or_create_mapping(
                 service_2_name,
                 pathway_2_id,
