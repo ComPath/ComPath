@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""An interactive and extensible web application for comparative analysis of pathway databases. ComPath is available at http://compath.scai.fraunhofer.de/.
+"""An interactive and extensible web application for comparative analysis of pathway databases. ComPath is available at https://compath.scai.fraunhofer.de/.
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
