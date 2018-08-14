@@ -28,7 +28,7 @@ class TestServiceOrder(unittest.TestCase):
 
 
 class TestMapping(DatabaseMixin):
-    """Test Mapping in Database"""
+    """Test Mapping in Database."""
 
     def test_create_mapping(self):
         """Test simple mapping add it."""

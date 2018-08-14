@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+"""Test cascade"""
+
 from compath.constants import EQUIVALENT_TO
 from compath.models import User
 from tests.constants import DatabaseMixin, KEGG, REACTOME

@@ -129,7 +129,6 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     :rtype: tuple[dict,int]
     :return: json tree like structure
     """
-
     similarity_matrix = create_similarity_matrix(gene_sets)
 
     # Create the dissimilarity matrix for each row of the similarity matrix using 1-R where R is the pearson correlation
@@ -173,7 +172,7 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
 
 
 def get_descendants(manager, resource, pathway_id, pathway_name):
-    """Generates d3 dendrogram structure by using BFS starting from the starting from a parent (root) node to the last descendants.
+    """Generate d3 dendrogram structure by using BFS starting from the starting from a parent (root) node to the last descendants.
 
     :param manager: ComPath manager
     :param str resource: resource name
@@ -182,7 +181,6 @@ def get_descendants(manager, resource, pathway_id, pathway_name):
     :return: parent-children data structure
     :rtype: list[dict]
     """
-
     # Create the entry dictionary of the pathway (node).
     d3_dendrogram = dict(
         children=[],
@@ -219,7 +217,7 @@ def get_descendants(manager, resource, pathway_id, pathway_name):
 
 
 def get_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
-    """Generates d3 dendrogram structure by using BFS starting from the queried node in both directions of the hierarchy.
+    """Generate d3 dendrogram structure by using BFS starting from the queried node in both directions of the hierarchy.
 
     :param manager: ComPath manager
     :param str resource: resource name

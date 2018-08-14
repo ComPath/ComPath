@@ -20,6 +20,7 @@ model_blueprint = Blueprint('model', __name__)
 
 class MappingView(ModelView):
     """Mapping view in Flask-admin."""
+
     column_searchable_list = (
         PathwayMapping.service_1_name,
         PathwayMapping.service_1_pathway_id,
@@ -46,6 +47,7 @@ class MappingView(ModelView):
 
 class VoteView(ModelView):
     """Vote view in Flask-admin"""
+
     column_searchable_list = (
         Vote.mapping_id,
         Vote.changed,
