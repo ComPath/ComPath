@@ -69,7 +69,6 @@ def calculate_overlap():
          200:
            description: processed venn diagram.
     """
-
     pathways_list = request.args.getlist('pathways[]')
     resources_list = request.args.getlist('resources[]')
 

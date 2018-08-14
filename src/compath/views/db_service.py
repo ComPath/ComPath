@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains the user interface blueprint for the application"""
+"""This module contains the user interface blueprint for the application."""
 
 import datetime
 import logging
 
-from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
+from flask import abort, Blueprint, current_app, flash, jsonify, redirect, render_template, request, url_for
 from flask_security import roles_required
 
 from compath.constants import STYLED_NAMES

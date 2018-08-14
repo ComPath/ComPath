@@ -7,7 +7,7 @@ import logging
 from flask import (abort, Blueprint, current_app, jsonify, request)
 
 from compath.constants import BLACK_LIST
-from compath.utils import  get_gene_pathways
+from compath.utils import get_gene_pathways
 
 log = logging.getLogger(__name__)
 api_blueprint = Blueprint('api', __name__)

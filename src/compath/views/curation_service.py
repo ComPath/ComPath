@@ -300,7 +300,7 @@ def suggest_mappings_by_name(pathway_name):
       responses:
         200:
           description: The top 5 most similar pathways by name in JASON
-      """
+    """
     # Get all pathway names from each resource
     pathways_dict = {
         manager: external_manager.get_all_pathway_names()
@@ -361,9 +361,7 @@ def suggest_mappings_by_content(resource, pathway_id):
          responses:
            200:
              description: The top 5 most similar pathways by content in JASON
-         """
-
-
+    """
     reference_pathway = get_pathway_model_by_id(current_app, resource, pathway_id)
 
     if reference_pathway is None:
