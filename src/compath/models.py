@@ -5,7 +5,7 @@
 import datetime
 
 from flask_security import RoleMixin, UserMixin
-from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, and_, or_
+from sqlalchemy import and_, Boolean, Column, DateTime, ForeignKey, Integer, or_, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
@@ -59,6 +59,7 @@ class User(Base, UserMixin):
 
 class Role(Base, RoleMixin):
     """Role table."""
+
     __tablename__ = ROLE_TABLE_NAME
     id = Column(Integer, primary_key=True)
     name = Column(String(255), unique=True)
@@ -140,10 +141,10 @@ class PathwayMapping(Base):
     def has_descendant_pathway_tuple(type, service_name, pathway_id, pathway_name):
         """Return a filter to get all the descendants mappings matching a isPartOf relationship (the predicates), service and pathway name and id."""
         return and_(
-                PathwayMapping.service_2_name == service_name,
-                PathwayMapping.service_2_pathway_id == pathway_id,
-                PathwayMapping.service_2_pathway_name == pathway_name,
-                PathwayMapping.type == type
+            PathwayMapping.service_2_name == service_name,
+            PathwayMapping.service_2_pathway_id == pathway_id,
+            PathwayMapping.service_2_pathway_name == pathway_name,
+            PathwayMapping.type == type
         )
 
     @staticmethod

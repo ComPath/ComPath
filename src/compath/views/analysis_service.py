@@ -6,7 +6,7 @@ import itertools as itt
 import logging
 from io import StringIO
 
-from flask import (Blueprint, abort, current_app, flash, jsonify, make_response, redirect, render_template, request)
+from flask import (abort, Blueprint, current_app, flash, jsonify, make_response, redirect, render_template, request)
 
 from compath.constants import BLACK_LIST, STYLED_NAMES, EQUIVALENT_TO
 from compath.forms import GeneSetFileForm, GeneSetForm
@@ -264,7 +264,6 @@ def compare_pathways():
 
 @analysis_blueprint.route('/export/<resource>')
 def export_gene_set(resource):
-
     """Export gene set to excel.
        ---
        tags:

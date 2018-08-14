@@ -7,9 +7,7 @@ import logging
 from flask import (abort, Blueprint, current_app, jsonify, request)
 
 from compath.constants import BLACK_LIST
-from compath.utils import (
-    get_gene_pathways
-)
+from compath.utils import  get_gene_pathways
 
 log = logging.getLogger(__name__)
 api_blueprint = Blueprint('api', __name__)
@@ -17,7 +15,7 @@ api_blueprint = Blueprint('api', __name__)
 
 @api_blueprint.route('/api/installed_plugins')
 def installed_plugins():
-    """Returns the installed plugins"""
+    """Return the installed plugins."""
     installed_plugins = [
         resource_name
         for resource_name in current_app.manager_dict.keys()
@@ -31,7 +29,7 @@ def installed_plugins():
 
 @api_blueprint.route('/api/plugins_populated')
 def plugins_populated():
-    """Checks if all plugins are populated"""
+    """Check if all plugins are populated."""
     installed_plugins = [
         manager.is_populated()
         for manager in current_app.manager_dict.values()

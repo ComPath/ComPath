@@ -2,7 +2,7 @@
 
 """This module contains all the utils for curation processing."""
 
-from compath.utils import get_pathway_model_by_id, get_pathway_model_by_name
+from compath.utils import get_pathway_model_by_name
 
 
 def remove_star_from_pathway_name(pathway_name):

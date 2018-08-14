@@ -10,8 +10,8 @@ import numpy as np
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
 from statsmodels.sandbox.stats.multicomp import multipletests
-from compath.models import User
 
+from compath.models import User
 from .constants import BLACK_LIST
 
 log = logging.getLogger(__name__)
@@ -147,7 +147,8 @@ def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
 
 
 def _iterate_user_strings(manager_):
-    """Iterates over strings to print describing users
+    """Iterate over strings to print describing users.
+
     :param compath.manager.Manager manager_:
     :rtype: iter[str]
     """
@@ -160,7 +161,7 @@ def _iterate_user_strings(manager_):
 
 
 def get_genes_without_assigned_pathways(enrichment_results, genes_query):
-    """Returns the genes without any known pathway assigned.
+    """Return the genes without any known pathway assigned.
 
     :param dict gene_set: list of managers
     :param set[str] genes_query: gene set queried
@@ -193,6 +194,7 @@ def get_enriched_pathways(manager_list, gene_set):
         for manager_name, instance in manager_list.items()
         if manager_name not in BLACK_LIST
     }
+
 
 def get_gene_pathways(manager_list, gene):
     """Return the pathways associated with a gene for every registered manager.
@@ -349,7 +351,7 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
 
 
 def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe, apply_threshold=False, threshold=0.05):
-    """Perform hypergeometric tests
+    """Perform hypergeometric tests.
 
     :param set[str] gene_set: gene set to test against pathway
     :param dict[str,dict[str,dict]] manager_pathways_dict: manager to pathways

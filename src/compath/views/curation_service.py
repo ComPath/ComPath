@@ -96,7 +96,7 @@ def export_mappings():
 @curation_blueprint.route('/vote/<int:mapping_id>/<int:type>')
 @login_required
 def process_vote(mapping_id, type):
-    """Processes the vote.
+    """Process the vote.
     ---
     tags:
       - mappings
@@ -286,7 +286,6 @@ def process_mapping():
 
 @curation_blueprint.route('/suggest_mappings/name/<pathway_name>')
 def suggest_mappings_by_name(pathway_name):
-
     """Return list of top matches based on string similarity.
       ---
       tags:
