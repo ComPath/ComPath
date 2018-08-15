@@ -30,12 +30,12 @@ def installed_plugins():
 @api_blueprint.route('/api/plugins_populated')
 def plugins_populated():
     """Check if all plugins are populated."""
-    installed_plugins = [
-        manager.is_populated()
+    installed_plugins = {
+        manager: manager.is_populated()
         for manager in current_app.manager_dict.values()
-    ]
+    }
 
-    if all(installed_plugins):
+    if all(installed_plugins.values()):
         return jsonify(installed_plugins)
 
     return abort(500, 'Not all plugins are populated')
