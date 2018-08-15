@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-"""This module contains the flask-admin application."""
+"""This module contains the ComPath web application."""
 
 import logging
 import os
