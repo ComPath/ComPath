@@ -131,8 +131,11 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     if COMPATH_VIEWER:
         from compath_viewer.web.views import compath_viewer, PathwayView
         from compath_viewer.models import Pathway
+        from compath_viewer.manager import Manager
         app.register_blueprint(compath_viewer)
         admin.add_view(PathwayView(Pathway, app.manager.session))
+
+        app.compath_viewer = Manager.from_connection(connection=DEFAULT_CACHE_CONNECTION)
         log.info('ComPath viewer has been imported')
 
     app.manager_dict = {
