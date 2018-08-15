@@ -129,7 +129,7 @@ def create_app(connection=None, template_folder=None, static_folder=None):
 
     # If ComPath Viewer is installed, import its views
     if COMPATH_VIEWER:
-        from compath_viewer.views import compath_viewer
+        from compath_viewer.web.views import compath_viewer
         app.register_blueprint(compath_viewer)
         log.info('ComPath viewer has been imported')
 
