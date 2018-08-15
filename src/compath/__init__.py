@@ -37,12 +37,13 @@ has been already installed and populated. This package is required to perform th
 import logging
 
 from compath_utils import CompathManager
-from pkg_resources import iter_entry_points, UnknownExtra, VersionConflict
+from pkg_resources import DistributionNotFound, get_distribution, iter_entry_points, UnknownExtra, VersionConflict
 
 from compath.constants import MODULE_NAME
 
 log = logging.getLogger(__name__)
 
+# Load Bio2BEL ComPath managers
 managers = {}
 
 for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
@@ -67,6 +68,14 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
         log.warning('%s:%s is not a standard ComPath manager class', entry, ExternalManager)
 
     managers[entry] = ExternalManager
+
+# Check availability of ComPath Viewer
+try:
+    get_distribution('compath_viewer')
+    COMPATH_VIEWER = True
+
+except DistributionNotFound:
+    COMPATH_VIEWER = False
 
 __version__ = '0.1.1-dev'
 

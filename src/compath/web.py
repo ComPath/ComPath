@@ -2,10 +2,12 @@
 
 """This module contains the flask-admin application."""
 
-import time
-
 import logging
 import os
+import time
+from functools import reduce
+from operator import and_
+
 from bio2bel_hgnc.manager import Manager as HgncManager
 from flasgger import Swagger
 from flask import Flask
@@ -15,10 +17,8 @@ from flask_bootstrap import Bootstrap
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
-from functools import reduce
-from operator import and_
 
-from compath import managers
+from compath import managers, COMPATH_VIEWER
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
@@ -126,6 +126,12 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     app.register_blueprint(analysis_blueprint)
     app.register_blueprint(db_blueprint)
     app.register_blueprint(api_blueprint)
+
+    # If ComPath Viewer is installed, import its views
+    if COMPATH_VIEWER:
+        from compath_viewer.views import compath_viewer
+        app.register_blueprint(compath_viewer)
+        log.info('ComPath viewer has been imported')
 
     app.manager_dict = {
         resource_name: ExternalManager(connection=connection)
