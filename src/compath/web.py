@@ -92,7 +92,8 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     app.config.setdefault('SWAGGER', SWAGGER_CONFIG)
 
     # TODO: Change for deployment. Create a new with 'os.urandom(24)'
-    app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
+    # app.secret_key = 'a\x1c\xd4\x1b\xb1\x05\xac\xac\xee\xcb6\xd8\x9fl\x14%B\xd2W\x9fP\x06\xcb\xff'
+    app.secret_key = os.urandom(24)
 
     CSRFProtect(app)
     bootstrap.init_app(app)
