@@ -136,7 +136,7 @@ def create_app(connection=None, template_folder=None, static_folder=None):
         admin.add_view(PathwayView(Pathway, app.manager.session))
 
         app.compath_viewer = Manager.from_connection(connection=DEFAULT_CACHE_CONNECTION)
-        log.info('ComPath viewer has been imported')
+        log.info('PathMe plugin has been imported')
 
     app.manager_dict = {
         resource_name: ExternalManager(connection=connection)
