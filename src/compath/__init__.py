@@ -71,11 +71,11 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
 
 # Check availability of ComPath Viewer
 try:
-    get_distribution('compath_viewer')
-    COMPATH_VIEWER = True
+    get_distribution('pathme')
+    PATHME = True
 
 except DistributionNotFound:
-    COMPATH_VIEWER = False
+    PATHME = False
 
 __version__ = '0.1.1-dev'
 

@@ -18,7 +18,7 @@ from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
-from compath import managers, COMPATH_VIEWER
+from compath import managers, PATHME
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
@@ -128,10 +128,10 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     app.register_blueprint(api_blueprint)
 
     # If ComPath Viewer is installed, import its views
-    if COMPATH_VIEWER:
-        from compath_viewer.web.views import compath_viewer, PathwayView
-        from compath_viewer.models import Pathway
-        from compath_viewer.manager import Manager
+    if PATHME:
+        from pathme.web.views import compath_viewer, PathwayView
+        from pathme.models import Pathway
+        from pathme.manager import Manager
         app.register_blueprint(compath_viewer)
         admin.add_view(PathwayView(Pathway, app.manager.session))
 
