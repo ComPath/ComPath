@@ -54,12 +54,7 @@ def about():
         ('Deployed', time_instantiated)
     ]
 
-    return render_template(
-        'meta/about.html',
-        metadata=metadata,
-        db_version=current_app.database_date,
-        STYLED_NAMES=STYLED_NAMES,
-    )
+    return render_template('meta/about.html', metadata=metadata, )
 
 
 @ui_blueprint.route('/curation_protocol')
@@ -77,6 +72,7 @@ def overview():
         resource_overview=current_app.resource_overview,
         managers=current_app.manager_dict.keys(),
         distributions=current_app.resource_distributions,
+        db_version=current_app.database_date,
         BLACK_LIST=BLACK_LIST,
         STYLED_NAMES=STYLED_NAMES
 

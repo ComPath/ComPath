@@ -147,10 +147,15 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     log.info('Loading pathway database information')
 
     # Get the last time the database was populated
-    app.database_date = {
-        resource_name: get_last_action_in_module(resource_name, 'populate')
-        for resource_name in managers.keys()
-    }
+    app.database_date = {}
+
+    for resource_name in managers.keys():
+        action = get_last_action_in_module(resource_name, 'populate')
+
+        if not action:
+            app.database_date[resource_name] = 'Empty'
+        else:
+            app.database_date[resource_name] = action.created.strftime("%Y-%m-%d %H:%M:%S")
 
     log.info('Info: {}'.format(app.database_date))
 

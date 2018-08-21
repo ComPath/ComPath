@@ -380,6 +380,7 @@
                         <th class="first-row">Resource</th>
                         <th class="first-row">Pathways</th>
                         <th class="first-row">Genes</th>
+                        <th class="first-row">Version Date</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -389,6 +390,7 @@
                             <td> {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}</td>
                             <td>{{ number_of_pathways }}</td>
                             <td>{{ number_of_genes }}</td>
+                            <td>{{ db_version[resource] }}</td>
                         </tr>
                     {% endfor %}
 
