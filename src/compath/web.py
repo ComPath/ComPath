@@ -152,6 +152,8 @@ def create_app(connection=None, template_folder=None, static_folder=None):
         for resource_name in managers.keys()
     }
 
+    log.info('Info: {}'.format(app.database_date))
+
     log.info('Loading pathway distributions')
 
     app.resource_distributions = {

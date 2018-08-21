@@ -5,7 +5,7 @@
 import logging
 from collections import defaultdict
 from difflib import SequenceMatcher
-from sqlalchemy import and_
+from sqlalchemy import and_, desc
 
 import numpy as np
 from pandas import DataFrame, Series
@@ -338,7 +338,7 @@ def get_last_action_in_module(module_name, action):
     session = _make_session()
     return session.query(Action).filter(
         and_(Action.resource == module_name, Action.action == action)
-    ).order_by(Action.created).first()
+    ).order_by(Action.created.desc()).first()
 
 
 """Statistical utils"""
