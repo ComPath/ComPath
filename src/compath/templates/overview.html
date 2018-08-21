@@ -399,44 +399,6 @@
         </div>
 
         <div class="panel panel-default">
-            <div class="panel-heading">Pathway Knowledge Coverage and Ignorome</div>
-            <div class="panel-body">
-                <p>This Euler diagram shows the genetic coverage over all HGNC symbols known for all databases.</p>
-                <div id="coverage-venn-diagram">
-                </div>
-            </div>
-        </div>
-
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Pathway Database Distributions</div>
-            <div class="panel-body">
-                <p>
-                    Analyze the distribution of the pathways and genes for each individual database. By clicking in the
-                    button of the databases below, you can see analyze the gene promiscuity and pathway size for that
-                    particular database. The distributions below can be zoomed after going into the dedicated pathway
-                    database page.
-                </p>
-                <p>
-                    {% for resource in managers %}
-                        {% if resource not in BLACK_LIST %}
-                            <a href="{{ url_for('analysis.database_distributions', resource=resource) }}"
-                               class="btn btn-primary">
-                                {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
-                            </a>
-                        {% endif %}
-                    {% endfor %}
-                </p>
-
-                {% for resource in managers %}
-                    {% if resource not in BLACK_LIST %}
-                        <svg id="{{ resource }}-svg" width="300" height="300"></svg>
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </div>
-
-        <div class="panel panel-default">
             <div class="panel-heading">Pathway and Gene Information</div>
             <div class="panel-body">
                 <p>
@@ -474,6 +436,43 @@
                     </tbody>
                 </table>
 
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Pathway Knowledge Coverage and Ignorome</div>
+            <div class="panel-body">
+                <p>This Euler diagram shows the genetic coverage over all HGNC symbols known for all databases.</p>
+                <div id="coverage-venn-diagram">
+                </div>
+            </div>
+        </div>
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Pathway Database Distributions</div>
+            <div class="panel-body">
+                <p>
+                    Analyze the distribution of the pathways and genes for each individual database. By clicking in the
+                    button of the databases below, you can see analyze the gene promiscuity and pathway size for that
+                    particular database. The distributions below can be zoomed after going into the dedicated pathway
+                    database page.
+                </p>
+                <p>
+                    {% for resource in managers %}
+                        {% if resource not in BLACK_LIST %}
+                            <a href="{{ url_for('analysis.database_distributions', resource=resource) }}"
+                               class="btn btn-primary">
+                                {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
+                            </a>
+                        {% endif %}
+                    {% endfor %}
+                </p>
+
+                {% for resource in managers %}
+                    {% if resource not in BLACK_LIST %}
+                        <svg id="{{ resource }}-svg" width="300" height="300"></svg>
+                    {% endif %}
+                {% endfor %}
             </div>
         </div>
     </div>
