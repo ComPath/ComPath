@@ -22,7 +22,7 @@ from compath import managers, PATHME
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
-from compath.utils import simulate_pathway_enrichment
+from compath.utils import simulate_pathway_enrichment, get_last_action_in_module
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.api_service import api_blueprint
 from compath.views.curation_service import curation_blueprint
@@ -142,6 +142,14 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     app.manager_dict = {
         resource_name: ExternalManager(connection=connection)
         for resource_name, ExternalManager in managers.items()
+    }
+
+    log.info('Loading pathway database information')
+
+    # Get the last time the database was populated
+    app.database_date = {
+        resource_name: get_last_action_in_module(resource_name, 'populate')
+        for resource_name in managers.keys()
     }
 
     log.info('Loading pathway distributions')

@@ -5,11 +5,13 @@
 import logging
 from collections import defaultdict
 from difflib import SequenceMatcher
+from sqlalchemy import and_
 
 import numpy as np
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
 from statsmodels.sandbox.stats.multicomp import multipletests
+from bio2bel.models import Action, _make_session
 
 from compath.models import User
 from .constants import BLACK_LIST
@@ -325,6 +327,18 @@ def get_pathway_info(app, pathways):
         pathway_info.append((resource, pathway.resource_id, pathway.name))
 
     return pathway_info
+
+
+def get_last_action_in_module(module_name, action):
+    """Return the info about the last action in the given module.
+
+    :param str module_name:
+    :return:
+    """
+    session = _make_session()
+    return session.query(Action).filter(
+        and_(Action.resource == module_name, Action.action == action)
+    ).order_by(Action.created).first()
 
 
 """Statistical utils"""
