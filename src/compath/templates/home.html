@@ -10,6 +10,13 @@
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+
+    <style>
+        #autocompletion-box {
+            padding-top: 15px;
+            padding-left: 0px;
+        }
+    </style>
 {% endblock %}
 
 
@@ -28,8 +35,7 @@
             maxHeight = maxHeight > height ? maxHeight : height;
         });
         $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").height(maxHeight);
-    </script>
-    <script type="text/javascript">
+
         // Initialize popover in buttons
         $(function () {
             $('[data-toggle="popover"]').popover({
@@ -73,19 +79,11 @@
             delay: 100
         });
 
-        //Action go to pathway page
-        $("#pathway-button").on("click", function () {
+        /// Clear autocompletion when coming back
 
-            var selectedPathway = $("#pathway-autocompletion").val();
-
-            if (selectedPathway) {
-                window.location = selectedPathway;
-            }
-            else {
-                alert("Please select a pathway before")
-            }
+        $(window).bind("pageshow", function () {
+            $("#pathway-autocompletion").val("");
         });
-
 
     </script>
 {% endblock %}
@@ -96,17 +94,21 @@
 
         <div class="jumbotron">
             <h1>ComPath</h1>
-            <h4>An integrative and extensible web application for exploring, comparing, and curating
-                pathway databases.
+            <h4>An integrative and extensible web application for exploring, comparing,
+                and curating pathway databases.
             </h4>
-            <div class="form-inline">
-                <label for="pathway-autocompletion"></label>
-                <input id="pathway-autocompletion" type="text" class="form-control"
-                       placeholder="Search your favourite pathway..." style="max-width: 500px; min-width: 300px">
-                <button class="btn btn-default glyphicon glyphicon-search" type="submit" id="pathway-button">
-                </button>
+
+            <div class="input-group" id="autocompletion-box">
+                <span class="input-group-addon" id="addon" style="background-color: white;">
+                    <span class="glyphicon glyphicon-search"></span>
+                </span>
+                <input placeholder="Explore your favorite pathway..." id="pathway-autocompletion"
+                       class="wide form-control" aria-describedby="addon" type="text"
+                       style="max-width: 500px; min-width: 300px">
+
             </div>
-            <span class="examples">Examples: <a class="nounderline" href="/pathway/kegg/path:hsa04010">MAPK signaling pathway</a>,
+
+            <span>Examples: <a class="nounderline" href="/pathway/kegg/path:hsa04010">MAPK signaling pathway</a>,
                 <a class="nounderline" href="/pathway/wikipathways/WP534">Glycolysis and Gluconeogenesis</a>
             </span>
         </div>
