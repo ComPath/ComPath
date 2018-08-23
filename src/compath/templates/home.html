@@ -6,8 +6,21 @@
 
 {% block title %}ComPath{% endblock %}
 
-{% block scripts %}
+
+{% block styles %}
     {{ super() }}
+    <link rel="stylesheet" type="text/css" href='https://code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css'/>
+{% endblock %}
+
+
+{% block scripts %}
+
+    {{ super() }}
+    {% include "dependencies/common.html" %}
+
+    <script type="text/javascript"
+            src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+
     <script type="text/javascript">
         var maxHeight = 0;
         $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").each(function (idx, item) {
@@ -25,6 +38,55 @@
             })
         });
 
+        var databaseNames = {
+            'kegg': 'KEGG',
+            'reactome': 'Reactome',
+            'wikipathways': 'WikiPathways',
+            'neurommsig_ad': 'NeuroMMSig AD',
+            'neurommsig_pd': 'NeuroMMSig PD'
+        };
+        /////////////////////
+        // Pathway Search //
+        ////////////////////
+        $('#pathway-autocompletion').autocomplete({
+            source: function (request, response) {
+                $.getJSON("/api/autocompletion/pathway/" + request.term, function (data) {
+                    response($.map(data, function (pathwayInfo, key) {
+                        if (pathwayInfo[0] in databaseNames) {
+                            databaseName = databaseNames[pathwayInfo[0]]
+                        }
+                        else {
+                            databaseName = pathwayInfo[0]
+                        }
+
+                        return {
+                            label: pathwayInfo[1] + " (" + databaseName + ")",
+                            value: "/pathway/" + pathwayInfo[0] + "/" + pathwayInfo[2]
+                        }
+                    }));
+                });
+            },
+            select: function (e, ui) {
+                window.location.href = ui.item.value;
+            },
+            minLength: 3,
+            delay: 100
+        });
+
+        //Action go to pathway page
+        $("#pathway-button").on("click", function () {
+
+            var selectedPathway = $("#pathway-autocompletion").val();
+
+            if (selectedPathway) {
+                window.location = selectedPathway;
+            }
+            else {
+                alert("Please select a pathway before")
+            }
+        });
+
+
     </script>
 {% endblock %}
 
@@ -34,8 +96,19 @@
 
         <div class="jumbotron">
             <h1>ComPath</h1>
-            <p>An integrative and extensible web application for exploring, comparing, and curating pathway databases.
-            </p>
+            <h4>An integrative and extensible web application for exploring, comparing, and curating
+                pathway databases.
+            </h4>
+            <div class="form-inline">
+                <label for="pathway-autocompletion"></label>
+                <input id="pathway-autocompletion" type="text" class="form-control"
+                       placeholder="Search your favourite pathway..." style="max-width: 500px; min-width: 300px">
+                <button class="btn btn-default glyphicon glyphicon-search" type="submit" id="pathway-button">
+                </button>
+            </div>
+            <span class="examples">Examples: <a class="nounderline" href="/pathway/kegg/path:hsa04010">MAPK signaling pathway</a>,
+                <a class="nounderline" href="/pathway/wikipathways/WP534">Glycolysis and Gluconeogenesis</a>
+            </span>
         </div>
 
         {% if current_user.is_admin %}
@@ -78,7 +151,6 @@
                 </div>
             </div>
         {% endif %}
-
 
         <div class="panel panel-default">
             <div class="panel-body">
