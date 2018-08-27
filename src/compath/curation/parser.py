@@ -110,7 +110,7 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, cur
     :param Optional[list] curator_emails: email of the curators. Needs to be already in the database
     :param str connection: database connection
     """
-    df = pd.read_csv(path, index_col=0)
+    df = pd.read_csv(path)
 
     if not connection:
         connection = DEFAULT_CACHE_CONNECTION
