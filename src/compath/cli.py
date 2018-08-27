@@ -139,7 +139,7 @@ def load_mappings(connection):
     set_debug_param(2)
 
     parse_curation_template(
-        'https://github.com/ComPath/resources/raw/master/mappings/kegg_wikipathways.xlsx',
+        'https://github.com/ComPath/resources/raw/master/mappings/kegg_wikipathways.csv',
         'kegg',
         'wikipathways',
         curator_emails=[
@@ -150,7 +150,7 @@ def load_mappings(connection):
         connection=connection
     )
     parse_curation_template(
-        'https://github.com/ComPath/resources/raw/master/mappings/kegg_reactome.xlsx',
+        'https://github.com/ComPath/resources/raw/master/mappings/kegg_reactome.csv',
         'kegg',
         'reactome',
         curator_emails=[
@@ -161,7 +161,7 @@ def load_mappings(connection):
         connection=connection
     )
     parse_curation_template(
-        'https://github.com/ComPath/resources/raw/master/mappings/wikipathways_reactome.xlsx',
+        'https://github.com/ComPath/resources/raw/master/mappings/wikipathways_reactome.csv',
         'wikipathways',
         'reactome',
         curator_emails=[

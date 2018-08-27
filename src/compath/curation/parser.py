@@ -87,7 +87,6 @@ def parse_special_mappings(path, curator_emails=None, connection=None):
         pathway_2 = manager_dict[resource_2].get_pathway_by_id(pathway_2_id)
 
         for curator in curators:
-
             mapping, _ = compath_manager.get_or_create_mapping(
                 resource_1,
                 pathway_1.resource_id,
@@ -111,7 +110,7 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, cur
     :param Optional[list] curator_emails: email of the curators. Needs to be already in the database
     :param str connection: database connection
     """
-    df = pd.read_excel(path, index_col=0)
+    df = pd.read_csv(path, index_col=0)
 
     if not connection:
         connection = DEFAULT_CACHE_CONNECTION
@@ -129,102 +128,28 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, cur
     for index, row in tqdm(df.iterrows(), total=len(df.index),
                            desc='Loading mappings for {}-{}'.format(reference_pathway_db, compared_pathway_db)):
 
-        # Add equivalent mappings
-        equivalent_to_mappings = row['equivalentTo Mappings']
+        if row['Mapping Type'] not in MAPPING_TYPES:
+            raise ValueError('Unknown type {}'.format(row['Mapping Type']))
 
-        if not pd.isnull(equivalent_to_mappings):  # if equivalent pathway is found
+        valid_pathway_1 = is_valid_pathway_by_id(manager_dict, row['Source Resource'], row['Source ID'])
+        valid_pathway_2 = is_valid_pathway_by_id(manager_dict, row['Target Resource'], row['Target ID'])
 
-            for mapping_statement in equivalent_to_mappings.split("\n"):
+        if valid_pathway_1 is False:
+            raise ValueError("Not Valid Pathway Name: {} in {}".format(row['Source Name'], row['Source Resource']))
 
-                if mapping_statement == '':
-                    continue
+        if valid_pathway_2 is False:
+            raise ValueError("Not Valid Pathway Name: {} in {}".format(row['Target Name'], row['Target Resource']))
 
-                pathway_1, pathway_2 = get_pathways_from_statement(mapping_statement, "equivalentTo")
+        for curator in curators:
+            mapping, _ = compath_manager.get_or_create_mapping(
+                row['Source Resource'],
+                manager_dict[row['Source Resource']].get_pathway_by_id(row['Source ID']).name,
+                row['Source Name'],
+                row['Target Resource'],
+                row['Target ID'],
+                manager_dict[row['Target Resource']].get_pathway_by_id(row['Target ID']).name,
+                row['Mapping Type'],
+                curator
+            )
 
-                valid_pathway_1 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_1)
-                valid_pathway_2 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_2)
-
-                if valid_pathway_1 is False:
-                    raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, reference_pathway_db))
-
-                if valid_pathway_2 is False:
-                    raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_2, compared_pathway_db))
-
-                for curator in curators:
-
-                    mapping, _ = compath_manager.get_or_create_mapping(
-                        reference_pathway_db,
-                        manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).resource_id,
-                        pathway_1,
-                        compared_pathway_db,
-                        manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).resource_id,
-                        pathway_2,
-                        EQUIVALENT_TO,
-                        curator
-                    )
-
-                    mapping, _ = compath_manager.accept_mapping(mapping.id)
-
-        # Add hierarchical mappings
-        is_part_of_mappings = row['isPartOf Mappings']
-
-        if not pd.isnull(is_part_of_mappings):
-
-            for mapping_statement in is_part_of_mappings.split('\n'):
-
-                if mapping_statement == '':
-                    continue
-
-                pathway_1, pathway_2 = get_pathways_from_statement(mapping_statement, 'isPartOf')
-
-                if "*" in pathway_1:
-                    pathway_1 = remove_star_from_pathway_name(pathway_1)
-
-                    valid_pathway_1 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_1)
-                    valid_pathway_2 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_2)
-
-                    if valid_pathway_1 is False:
-                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, reference_pathway_db))
-
-                    if valid_pathway_2 is False:
-                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_2, compared_pathway_db))
-
-                    for curator in curators:
-                        mapping, _ = compath_manager.get_or_create_mapping(
-                            reference_pathway_db,
-                            manager_dict[reference_pathway_db].get_pathway_by_name(pathway_1).resource_id,
-                            pathway_1,
-                            compared_pathway_db,
-                            manager_dict[compared_pathway_db].get_pathway_by_name(pathway_2).resource_id,
-                            pathway_2,
-                            IS_PART_OF,
-                            curator
-                        )
-
-                        mapping, _ = compath_manager.accept_mapping(mapping.id)
-
-                else:
-                    pathway_2 = remove_star_from_pathway_name(pathway_2)
-
-                    valid_pathway_1 = is_valid_pathway_name(manager_dict, compared_pathway_db, pathway_1)
-                    valid_pathway_2 = is_valid_pathway_name(manager_dict, reference_pathway_db, pathway_2)
-
-                    if valid_pathway_1 is False:
-                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_1, compared_pathway_db))
-
-                    if valid_pathway_2 is False:
-                        raise ValueError("Not Valid Pathway Name: {} in {}".format(pathway_2, reference_pathway_db))
-
-                    for curator in curators:
-                        mapping, _ = compath_manager.get_or_create_mapping(
-                            compared_pathway_db,
-                            manager_dict[compared_pathway_db].get_pathway_by_name(pathway_1).resource_id,
-                            pathway_1,
-                            reference_pathway_db,
-                            manager_dict[reference_pathway_db].get_pathway_by_name(pathway_2).resource_id,
-                            pathway_2,
-                            IS_PART_OF,
-                            curator
-                        )
-
-                        mapping, _ = compath_manager.accept_mapping(mapping.id)
+            mapping, _ = compath_manager.accept_mapping(mapping.id)
