@@ -91,7 +91,7 @@ def parse_special_mappings(path, curator_emails=None, connection=None):
                 resource_1,
                 pathway_1.resource_id,
                 pathway_1.name,
-                resource_1,
+                resource_2,
                 pathway_2.resource_id,
                 pathway_2.name,
                 row['Mapping type'],
