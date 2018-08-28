@@ -11,7 +11,7 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 
 from . import managers
 from .constants import EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES, MODULE_NAME
-from .models import Base, PathwayMapping, User, Vote
+from .models import Base, PathwayMapping, User, Vote, mappings_users
 
 __all__ = [
     'Manager'
@@ -85,6 +85,13 @@ class Manager(object):
         :rtype: int
         """
         return self.session.query(User).count()
+
+    def count_mapping_user(self):
+        """Count the UsersMappings table in the database.
+
+        :rtype: int
+        """
+        return self.session.query(mappings_users).count()
 
     def get_all_mappings(self):
         """Get all mappings in the database.
