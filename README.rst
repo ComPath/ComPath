@@ -130,7 +130,7 @@ Deployment of ComPath with Docker
     docker run --name=compath --volumes-from compath-data --restart=always -d compath:latest
 
 
-For admin purposes and deploying ComPath inside Fraunhofer you can also run the following command:
+``For admin purposes and deploying ComPath inside Fraunhofer you can also run the following command``
 
 .. code-block:: sh
 
