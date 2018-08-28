@@ -143,8 +143,8 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, cur
         for curator in curators:
             mapping, _ = compath_manager.get_or_create_mapping(
                 row['Source Resource'],
+                row['Source ID'],
                 manager_dict[row['Source Resource']].get_pathway_by_id(row['Source ID']).name,
-                row['Source Name'],
                 row['Target Resource'],
                 row['Target ID'],
                 manager_dict[row['Target Resource']].get_pathway_by_id(row['Target ID']).name,
