@@ -54,7 +54,7 @@ def about():
         ('Deployed', time_instantiated)
     ]
 
-    return render_template('meta/about.html', metadata=metadata, )
+    return render_template('meta/about.html', metadata=metadata, db_version=current_app.database_date)
 
 
 @ui_blueprint.route('/curation_protocol')
