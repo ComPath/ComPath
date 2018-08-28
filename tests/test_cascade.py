@@ -61,9 +61,16 @@ class TestCascades(DatabaseMixin):
 
     def test_drop_mapping(self):
         """Test dropping a mapping."""
+        self.assertEqual(2, self.manager.count_users())
+        self.assertEqual(2, self.manager.count_mappings())
+        self.assertEqual(4, self.manager.count_votes())
+        self.assertEqual(2, self.manager.count_mapping_user())
+
         self.manager.session.delete(self.mapping_1)
         self.manager.session.commit()
 
         self.assertEqual(2, self.manager.count_users())
         self.assertEqual(1, self.manager.count_mappings())
         self.assertEqual(2, self.manager.count_votes())
+        self.assertEqual(1, self.manager.count_mapping_user())
+
