@@ -103,47 +103,52 @@ Make user admin.
     python3 -m compath manage --connection="sqlite:////data/bio2bel.db" users make_admin 'email'
 
 Docker Instructions
-~~~~~~~~~~~~~~~~~~~
+-------------------
 
-Build Docker Image
-------------------
+Deployment of ComPath with Docker
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+1. Build the container with compath as a name.
 
 .. code-block:: sh
 
     docker build -t compath:0.0.1 .
 
 
-Create Docker Containers
-------------------------
-
-Create docker container
+2. Create the data container in which the data will be located.
 
 .. code::
 
     docker create -v /data --name compath-data compath:0.0.1
 
-Run docker container
+
+
+3. Run docker container and connect it with the data container
 
 .. code::
 
     docker run --name=compath --volumes-from compath-data --restart=always -d compath:latest
 
 
-Alternatively, to build the container inside Fraunhofer. You have to run
+For admin purposes and deploying ComPath inside Fraunhofer you can also run the following command:
 
 .. code-block:: sh
 
     sh create_and_build_container.sh
 
 Load Data
----------
+~~~~~~~~~
+
+Loads the KEGG, Reactome, and WikiPathways modules into ComPath.
 
 .. code-block:: sh
 
     docker exec -t -it compath /opt/compath/src/bin/load_data.sh
 
 Restart Container
------------------
+~~~~~~~~~~~~~~~~~
+
+Restarts the compath container
 
 .. code-block:: sh
 
