@@ -68,8 +68,8 @@ STYLED_NAMES = {
     REACTOME: 'Reactome',
     WIKIPATHWAYS: 'WikiPathways',
     MSIG: 'MSig',
-    'neurommsig_ad': 'NeuroMMSig AD',
-    'neurommsig_pd': 'NeuroMMSig PD'
+    'compath_neurommsig_ad': 'NeuroMMSig AD',
+    'compath_neurommsig_pd': 'NeuroMMSig PD'
 
 }
 
