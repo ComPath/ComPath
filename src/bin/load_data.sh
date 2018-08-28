@@ -9,7 +9,7 @@ python3 -m pip install --user compath bio2bel_chebi bio2bel_kegg bio2bel_reactom
 
 # Load Pathway Data
 
-python3 -m bio2bel_hgnc populate
+python3 -m bio2bel_hgnc populate --skip-hcop
 
 python3 -m bio2bel_chebi populate
 
@@ -20,4 +20,3 @@ python3 -m bio2bel_kegg populate
 python3 -m bio2bel_reactome populate
 
 # python3 -m bio2bel_msig populate
-
