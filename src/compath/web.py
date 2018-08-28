@@ -132,15 +132,15 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     if PATHME:
         from pathme.web.views import pathme, PathwayView
         from pathme.models import Pathway
-        from pathme.manager import Manager
+        from pathme.manager import Manager as PathmeManager
         app.register_blueprint(pathme)
         admin.add_view(PathwayView(Pathway, app.manager.session))
 
-        app.pathme_manager = Manager.from_connection(connection=connection)
+        app.pathme_manager = PathmeManager(engine=db.engine, session=db.session)
         log.info('PathMe plugin has been imported')
 
     app.manager_dict = {
-        resource_name: ExternalManager(connection=connection)
+        resource_name: ExternalManager(engine=db.engine, session=db.session)
         for resource_name, ExternalManager in managers.items()
     }
 
