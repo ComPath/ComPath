@@ -116,16 +116,20 @@ Build Docker Image
 Create Docker Containers
 ------------------------
 
+Create docker container
+.. code-block:: sh
+
+    docker create -v /data --name compath-data compath:0.0.1
+    
+Run docker container
+
+.. code-block:: sh
+    docker run --name=compath --volumes-from compath-data --restart=always -d
+
+Alternatively, to build the container inside Fraunhofer. You have to run
 .. code-block:: sh
 
     sh create_and_build_container.sh
-
-Start Docker execution container
---------------------------------
-
-.. code-block:: sh
-
-    docker run --name=compath --volumes-from compath-data --restart=always -d -p 30050:5000 docker.arty.scai.fraunhofer.de/compath:latest
 
 Load Data
 ---------
