@@ -18,7 +18,7 @@ def installed_plugins():
     """Return the installed plugins."""
     installed_plugins = [
         resource_name
-        for resource_name in current_app.manager_dict.keys()
+        for resource_name in current_app.manager_dict
     ]
 
     if not installed_plugins:
@@ -31,8 +31,8 @@ def installed_plugins():
 def plugins_populated():
     """Check if all plugins are populated."""
     installed_plugins = {
-        manager: manager.is_populated()
-        for manager in current_app.manager_dict.values()
+        resource_name: manager.is_populated()
+        for resource_name, manager in current_app.manager_dict.items()
     }
 
     if all(installed_plugins.values()):
