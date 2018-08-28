@@ -81,13 +81,13 @@ Load mappings between pathways directly from the `ComPath Curation <https://gith
 
 .. code-block:: sh
 
-    python3 -m compath load_mappings
+    python3 -m compath load_mappings --connection="sqlite:////data/bio2bel.db"
 
 Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome).
 
 .. code-block:: sh
 
-    python3 -m compath load_hierarchies
+    python3 -m compath load_hierarchies --connection="sqlite:////data/bio2bel.db"
 
 
 Create a user.
