@@ -136,7 +136,7 @@ def create_app(connection=None, template_folder=None, static_folder=None):
         app.register_blueprint(pathme)
         admin.add_view(PathwayView(Pathway, app.manager.session))
 
-        app.pathme_manager = Manager.from_connection(connection=DEFAULT_CACHE_CONNECTION)
+        app.pathme_manager = Manager.from_connection(connection=connection)
         log.info('PathMe plugin has been imported')
 
     app.manager_dict = {
