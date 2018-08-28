@@ -31,6 +31,8 @@ def delete_db():
     """Destroy the database and recreates it."""
     log.info('Deleting the database')
     current_app.manager.drop_all()
+    current_app.manager.create_all()
+
     return jsonify(
         status=200,
         message='Database empty',

@@ -28,6 +28,16 @@
     <script type="text/javascript"
             src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
 
+    {% if current_user.is_admin %}
+        <script src="{{ url_for('static', filename='js/bootstrap-confirmation.min.js') }}"></script>
+        <script>
+            $('[data-toggle=confirmation]').confirmation({
+                rootSelector: '[data-toggle=confirmation]'
+                // other options
+            });
+        </script>
+    {% endif %}
+
     <script type="text/javascript">
         var maxHeight = 0;
         $(".panel-body").find(".row").find(".col-sm-6").find(".thumbnail").each(function (idx, item) {
@@ -42,6 +52,10 @@
                 placement: 'top',
                 trigger: 'hover'
             })
+        });
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
         });
 
         var databaseNames = {
@@ -133,7 +147,9 @@
                         View Users
                     </a>
                     <a class="btn btn-warning" href="{{ url_for('db.delete_mappings') }}"
-                       role="button">
+                       role="button" data-toggle="confirmation" data-btn-ok-icon="glyphicon glyphicon-share-alt"
+                       data-btn-ok-class="btn-success" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"
+                       data-btn-cancel-class="btn-danger">
                         Drop All Mappings
                     </a>
                     <a class="btn btn-info" href="{{ url_for('api.installed_plugins') }}"
