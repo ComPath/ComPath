@@ -6,7 +6,6 @@ omit =
     src/compath/cli.py
     tests/*
     docs/*
-    notebooks/*
 
 [paths]
 source =
