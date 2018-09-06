@@ -37,7 +37,7 @@ def set_debug_param(debug):
 
 @click.group(help='ComPath at {}'.format(DEFAULT_CACHE_CONNECTION))
 def main():
-    """Main click method."""
+    """Start main click method."""
     logging.basicConfig(level=20, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 

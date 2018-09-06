@@ -8,7 +8,7 @@ from io import StringIO
 
 from flask import (abort, Blueprint, current_app, flash, jsonify, make_response, redirect, render_template, request)
 
-from compath.constants import BLACK_LIST, STYLED_NAMES, EQUIVALENT_TO
+from compath.constants import BLACK_LIST, STYLED_NAMES
 from compath.forms import GeneSetFileForm, GeneSetForm
 from compath.utils import (
     dict_to_pandas_df,
@@ -16,7 +16,6 @@ from compath.utils import (
     get_gene_sets_from_pathway_names,
     get_genes_without_assigned_pathways,
     get_pathway_info,
-    get_pathway_model_by_id,
     perform_hypergeometric_test,
     process_form_gene_set
 )

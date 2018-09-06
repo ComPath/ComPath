@@ -4,7 +4,7 @@
 
 import logging
 
-from flask import (abort, Blueprint, current_app, jsonify, request)
+from flask import Blueprint, abort, current_app, jsonify, request
 
 from compath.constants import BLACK_LIST
 from compath.utils import get_gene_pathways

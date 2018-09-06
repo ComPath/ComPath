@@ -37,7 +37,7 @@ has been already installed and populated. This package is required to perform th
 import logging
 
 from compath_utils import CompathManager
-from pkg_resources import DistributionNotFound, get_distribution, iter_entry_points, UnknownExtra, VersionConflict
+from pkg_resources import DistributionNotFound, UnknownExtra, VersionConflict, get_distribution, iter_entry_points
 
 from compath.constants import MODULE_NAME
 

@@ -7,7 +7,7 @@ from collections import defaultdict
 from io import BytesIO, StringIO
 
 from flask import (
-    Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, send_file, url_for,
+    Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for, send_file
 )
 from flask import Markup
 from flask_security import current_user, login_required, roles_required
@@ -17,10 +17,10 @@ from compath.utils import (
     calculate_szymkiewicz_simpson_coefficient,
     get_mappings,
     get_most_similar_names,
-    get_pathway_model_by_name,
     get_pathway_model_by_id,
+    get_pathway_model_by_name,
     get_top_matches,
-    to_csv,
+    to_csv
 )
 
 log = logging.getLogger(__name__)

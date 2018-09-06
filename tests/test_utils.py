@@ -93,7 +93,6 @@ class TestUtils(unittest.TestCase):
 
     def test_order_results(self):
         """Test suggestion utils."""
-
         ordered_list = get_top_matches(self.example_list, 3)
 
         self.assertEqual(

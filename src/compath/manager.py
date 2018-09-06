@@ -49,6 +49,7 @@ class Manager(object):
 
     @staticmethod
     def from_connection(connection=None):
+        """Initialize manager from connection string"""
         connection = get_connection(MODULE_NAME, connection)
         engine = create_engine(connection)
         session_maker = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
@@ -221,9 +222,9 @@ class Manager(object):
         """
         # Ensure maintaining the order of pathways if they belong to the same database
         flip_order = (
-                mapping_type == EQUIVALENT_TO and
-                service_1_name == service_2_name and
-                _flip_service_order(pathway_1_name, pathway_2_name)
+            mapping_type == EQUIVALENT_TO and
+            service_1_name == service_2_name and
+            _flip_service_order(pathway_1_name, pathway_2_name)
         )
         if flip_order:
             return self.get_or_create_mapping(

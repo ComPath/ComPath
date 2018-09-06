@@ -5,13 +5,13 @@
 import logging
 from collections import defaultdict
 from difflib import SequenceMatcher
-from sqlalchemy import and_, desc
 
 import numpy as np
+from bio2bel.models import Action, _make_session
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
+from sqlalchemy import and_
 from statsmodels.sandbox.stats.multicomp import multipletests
-from bio2bel.models import Action, _make_session
 
 from compath.models import User
 from .constants import BLACK_LIST
@@ -116,7 +116,6 @@ def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
     :param runs: number of simulation
     :rtype: dict[list[tuple]]
     """
-
     # How many pathways each resource (Database) has
     total_pathways_by_resource = {
         resource: len(pathways_gene_sets)
@@ -416,7 +415,6 @@ def calculate_szymkiewicz_simpson_coefficient(set_1, set_2):
     :return: similarity of the two sets
     :rtype: float
     """
-
     intersection = len(set_1.intersection(set_2))
     smaller_set = min(len(set_1), len(set_2))
 

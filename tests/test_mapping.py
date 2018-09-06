@@ -4,11 +4,10 @@
 
 import unittest
 
-from tests.constants import DatabaseMixin, KEGG, REACTOME
-
 from compath.constants import EQUIVALENT_TO, IS_PART_OF
 from compath.manager import _flip_service_order
 from compath.models import User
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestServiceOrder(unittest.TestCase):
@@ -50,7 +49,6 @@ class TestMapping(DatabaseMixin):
 
     def test_create_double_mapping_same_users(self):
         """Test duplicate mappings for same users."""
-
         current_user = User()
 
         mapping_1, created_1 = self.manager.get_or_create_mapping(
@@ -162,7 +160,6 @@ class TestMapping(DatabaseMixin):
 
     def test_get_accepted_mappings(self):
         """Test duplicate mappings for different users."""
-
         user_1 = User(email='mycool@email.com')
         user_2 = User(email='myawesome@email.com')
 

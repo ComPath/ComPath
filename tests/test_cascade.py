@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-"""Test cascade"""
+"""Test cascade."""
 
+
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 from compath.constants import EQUIVALENT_TO
 from compath.models import User
-from tests.constants import DatabaseMixin, KEGG, REACTOME
-
 
 class TestCascades(DatabaseMixin):
     """Test that votes are cascaded properly."""
@@ -73,4 +73,3 @@ class TestCascades(DatabaseMixin):
         self.assertEqual(1, self.manager.count_mappings())
         self.assertEqual(2, self.manager.count_votes())
         self.assertEqual(1, self.manager.count_mapping_user())
-

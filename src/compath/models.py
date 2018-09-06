@@ -5,7 +5,7 @@
 import datetime
 
 from flask_security import RoleMixin, UserMixin
-from sqlalchemy import and_, Boolean, Column, DateTime, ForeignKey, Integer, or_, String, Table
+from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
@@ -92,7 +92,7 @@ class PathwayMapping(Base):
                             lazy='dynamic')
 
     def __str__(self):
-        """Return mapping info"""
+        """Return mapping info."""
         return '{} mapping from {}:{} to {}:{}'.format(
             self.type,
             self.service_1_name,

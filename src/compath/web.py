@@ -18,11 +18,11 @@ from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
 
-from compath import managers, PATHME
+from compath import PATHME, managers
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
 from compath.manager import Manager
 from compath.models import Base, PathwayMapping, Role, User, Vote
-from compath.utils import simulate_pathway_enrichment, get_last_action_in_module
+from compath.utils import get_last_action_in_module, simulate_pathway_enrichment
 from compath.views.analysis_service import analysis_blueprint
 from compath.views.api_service import api_blueprint
 from compath.views.curation_service import curation_blueprint
@@ -39,7 +39,7 @@ swagger = Swagger()
 
 
 class ComPathSQLAlchemy(SQLAlchemy):
-    """ComPath"""
+    """ComPath."""
 
     def init_app(self, app):
         """Overwrite init app method."""
