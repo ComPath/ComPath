@@ -69,9 +69,9 @@ for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
 
     managers[entry] = ExternalManager
 
-# Check availability of ComPath Viewer
+# Check availability of PathMe Viewer
 try:
-    get_distribution('pathme')
+    get_distribution('pathme_viewer')
     PATHME = True
 
 except DistributionNotFound:
