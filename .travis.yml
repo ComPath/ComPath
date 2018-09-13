@@ -8,8 +8,9 @@ matrix:
     - env: TOXENV=py
     - env: TOXENV=docs
     - env: TOXENV=manifest
-    - env: TOXENV=rst-lint
+    - env: TOXENV=readme
     - env: TOXENV=flake8
+    - env: TOXENV=doc8
   allow_failures:
     - env: TOXENV=flake8
 install:

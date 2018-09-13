@@ -10,5 +10,5 @@ include Dockerfile
 global-exclude *.py[cod] __pycache__ *.so *.dylib .DS_Store *.gpickle
 
 exclude .bumpversion.cfg
-include *.rst *.txt *.yml LICENSE tox.ini .coveragerc
+include *.rst *.txt *.yml LICENSE *.ini .coveragerc
 include *.sh
