@@ -41,10 +41,11 @@ swagger = Swagger()
 class ComPathSQLAlchemy(SQLAlchemy):
     """ComPath."""
 
+    manager = None
+
     def init_app(self, app):
         """Overwrite init app method."""
         super().init_app(app)
-
         self.manager = Manager(engine=self.engine, session=self.session)
 
 
