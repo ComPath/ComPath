@@ -3,6 +3,13 @@ var margin = {top: 20, right: 90, bottom: 30, left: 250},
     width = $(".panel-body").width() - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
+URLdict = {
+    'reactome': 'https://reactome.org/PathwayBrowser/#/',
+    'kegg': 'http://www.kegg.jp/kegg-bin/show_pathway?map=map',
+    'wikipathways': 'https://www.wikipathways.org/index.php/Pathway:',
+    'msig': 'http://www.broadinstitute.org/gsea/msigdb/cards/'
+};
+
 
 // append the svg object to the body of the page
 // appends a 'group' element to 'svg'
@@ -36,8 +43,8 @@ update(root);
 // Collapse the node and all it's children
 function collapse(d) {
     if (d.children) {
-        d._children = d.children
-        d._children.forEach(collapse)
+        d._children = d.children;
+        d._children.forEach(collapse);
         d.children = null
     }
 }
@@ -98,7 +105,19 @@ function update(source) {
         });
 
     // Add labels for the nodes
-    nodeEnter.append('text')
+    nodeEnter.append("a")
+        .attr("target", "_blank")
+        .attr("xlink:href", function (d) {
+            if (d.data.resource in URLdict) {
+                // Special case for kegg
+                if (d.data.resource === 'kegg') {
+                    return URLdict[d.data.resource] + d.data.pathway_id.replace('path:hsa', '');
+                }
+                // Rest add id to the url at the end
+                return URLdict[d.data.resource] + d.data.pathway_id;
+            }
+        })
+        .append('text')
         .attr("dy", ".35em")
         .attr("x", function (d) {
             return d.children || d._children ? -13 : 13;

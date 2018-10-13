@@ -112,6 +112,15 @@
             stroke-width: 3px;
         }
 
+        text a:visited {
+            fill: darkpurple;
+        }
+
+        text a:hover, text a:active {
+            text-decoration: underline;
+            fill: darkred;
+        }
+
         .ghostCircle.show {
             display: block;
         }
@@ -123,10 +132,6 @@
     </style>
 {% endblock %}
 
-
-
-
-
 {% block scripts %}
     {{ super() }}
     {% include "dependencies/common.html" %}
@@ -134,8 +139,6 @@
             src="{{ url_for('static', filename='js/pathway_controller.js', version='20181004') }}"></script>
 
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.13.0/d3.min.js"></script>
-
-
 
     <script>
         var treeData = {{ dendrogram|tojson }}
@@ -156,6 +159,7 @@
 
 
     {% if dendrogram %}
+        var Name2Id = "{{ name_to_id_dict }}";
         <script type="text/javascript"
                 src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
     {% endif %}
@@ -217,9 +221,9 @@
 
                             <div id="chart"></div>
                             <p>The following plot represents the hierarchical landscape of '{{ pathway.name }}'.
-                                The visualization allows to click on the pathways with children (black border) and
+                                The hierarchical tree allows to click on the pathways with children (black border) and
                                 continue the exploration. All nodes are colored by their source (click on the map for
-                                the legend).
+                                the legend) and cross-link to the original pathway page.
                             </p>
                             <div style="float:right">
 
