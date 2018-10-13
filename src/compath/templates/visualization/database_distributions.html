@@ -358,10 +358,30 @@
                     </thead>
                     <tbody>
 
-                    {% for pathway, size in pathway_data.items() %}
+                    {% for (name, identifier), size in pathway_data.items() %}
 
                         <tr>
-                            <td> {{ pathway }}</td>
+                            <td>
+                                {% if resource == "reactome" %}
+                                    <a href="https://reactome.org/PathwayBrowser/#/{{ identifier }}">
+                                        {{ name }}
+                                    </a>
+                                {% elif resource == "kegg" %}
+                                    <a href="http://www.kegg.jp/kegg-bin/show_pathway?map=map{{ identifier|remove_prefix('path:hsa') }}&show_description=show">
+                                        {{ name }}
+                                    </a>
+                                {% elif resource == "wikipathways" %}
+                                    <a href="https://www.wikipathways.org/index.php/Pathway:{{ identifier }}">
+                                        {{ name }}
+                                    </a>
+                                {% elif resource == "msig" %}
+                                    <a href="http://www.broadinstitute.org/gsea/msigdb/cards/{{ identifier }}">
+                                        {{ name }}
+                                    </a>
+                                {% else %}
+                                    {{ name }}
+                                {% endif %}
+                            </td>
                             <td>{{ size }}</td>
                         </tr>
 

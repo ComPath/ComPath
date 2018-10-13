@@ -112,7 +112,7 @@ def database_distributions(resource):
     return render_template(
         'visualization/database_distributions.html',
         pathway_data=current_app.resource_distributions[resource],
-        gene_data=current_app.resource_distributions[resource],
+        gene_data=current_app.gene_distributions[resource],
         resource=resource,
         STYLED_NAMES=STYLED_NAMES
     )
