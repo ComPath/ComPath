@@ -77,7 +77,7 @@ try:
 except DistributionNotFound:
     PATHME = False
 
-__version__ = '0.1.1'
+__version__ = '0.1.2-dev'
 
 __title__ = 'compath'
 __description__ = "A web application for exploring and comparing the overlaps across pathway resources"
