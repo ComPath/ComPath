@@ -87,7 +87,7 @@
 
             var histogramData = [];
             $.each(data, function (key, value) {
-                histogramData.push(value)
+                histogramData.push(value[1]);
             });
 
             var formatCount = d3.format(",.0f");
@@ -422,7 +422,9 @@
                     {% for gene, pathways_associated in gene_data.items() %}
 
                         <tr>
-                            <td> {{ gene }}</td>
+                            <td>
+                                <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ gene }}">{{ gene }}</a>
+                            </td>
                             <td>{{ pathways_associated }}</td>
                         </tr>
 
