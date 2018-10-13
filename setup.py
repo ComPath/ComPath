@@ -27,7 +27,7 @@ INSTALL_REQUIRES = [
     'click',
     'sqlalchemy',
     'bio2bel>=0.1.5',
-    'compath_utils>=0.1.0',
+    'compath_utils>=0.2.0',
     'bio2bel_hgnc>=0.1.0',
     'wtforms',
     'flask_wtf',
