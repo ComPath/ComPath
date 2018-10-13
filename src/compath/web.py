@@ -129,11 +129,11 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     app.register_blueprint(db_blueprint)
     app.register_blueprint(api_blueprint)
 
-    # If ComPath Viewer is installed, import its views
+    # If PathMe-Viewer is installed, import its views
     if PATHME:
-        from pathme.web.views import pathme, PathwayView
-        from pathme.models import Pathway
-        from pathme.manager import Manager as PathmeManager
+        from pathme_viewer.web.views import pathme, PathwayView
+        from pathme_viewer.models import Pathway
+        from pathme_viewer.manager import Manager as PathmeManager
         app.register_blueprint(pathme)
         admin.add_view(PathwayView(Pathway, app.manager.session))
 
