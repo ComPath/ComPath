@@ -16,6 +16,7 @@ from compath.utils import (
     get_gene_sets_from_pathway_names,
     get_genes_without_assigned_pathways,
     get_pathway_info,
+    get_pathway_model_by_name,
     perform_hypergeometric_test,
     process_form_gene_set
 )
@@ -78,12 +79,27 @@ def calculate_overlap():
 
     gene_sets, pathway_manager_dict = get_gene_sets_from_pathway_names(current_app, pathways)
 
+    # Get URLs to original pathways so it can be displayed in the info table
+    pathway_name_to_original = {}
+    pathway_name_to_mappings = {}
+    for pathway_name, resource in pathway_manager_dict.items():
+        pathway = get_pathway_model_by_name(current_app.manager_dict, resource, pathway_name)
+
+        if not pathway or not pathway.url:
+            continue
+
+        pathway_name_to_mappings[pathway_name] = 'https://compath.scai.fraunhofer.de/pathway/{}/{}'.format(
+            resource,
+            pathway.resource_id
+        )
+        pathway_name_to_original[pathway_name] = pathway.url
+
     if len(gene_sets) < 2:
         return abort(500, 'Only one valid set given')
 
     processed_venn_diagram = process_overlap_for_venn_diagram(gene_sets)
 
-    return jsonify(processed_venn_diagram)
+    return jsonify(processed_venn_diagram, pathway_name_to_original, pathway_name_to_mappings)
 
 
 @analysis_blueprint.route('/pathway_overlap')

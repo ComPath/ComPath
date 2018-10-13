@@ -118,6 +118,19 @@ function populateInfoTable(data) {
     if ("intersection" in data) {
         tableObject["Pathway(s)"] = data["intersection"];
     }
+    else if (data["label"] in window.urlExternal) {
+
+        // Add link to pathway page
+        if (data["label"] in window.urlMappingPage) {
+            tableObject["Pathway(s)"] = '<a href=' + window.urlExternal[data["label"]] + '>' + data["label"] + ' </a>' +
+                '(<a href=' + window.urlMappingPage[data["label"]] + '>ComPath Pathway Page <span class="glyphicon glyphicon-new-window"></span> </a>)';
+        }
+
+        // Only link to original resource
+        else {
+            tableObject["Pathway(s)"] = '<a href=' + window.urlExternal[data["label"]] + '>' + data["label"] + ' </a>';
+        }
+    }
     else {
         tableObject["Pathway(s)"] = data["label"];
     }
@@ -165,7 +178,13 @@ $(document).ready(function () {
                     Venndiv.attr("align", "center"); // Align center the diagram
 
                     var geneOverlap = venn.VennDiagram(); // Plot the Venn Diagram
-                    Venndiv.datum(data).call(geneOverlap); // Stick data
+                    Venndiv.datum(data[0]).call(geneOverlap); // Stick data
+
+                    // Object pathway name -> url external database
+                    window.urlExternal = data[1];
+
+                    // Object pathway name -> compath pathway page
+                    window.urlMappingPage = data[2];
 
                     // Add table creation
                     Venndiv.selectAll("g").on("dblclick", function (d, i) {
