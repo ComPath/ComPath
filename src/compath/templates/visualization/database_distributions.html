@@ -358,7 +358,7 @@
                     </thead>
                     <tbody>
 
-                    {% for (name, identifier), size in pathway_data.items() %}
+                    {% for identifier, (name, size) in pathway_data.items() %}
 
                         <tr>
                             <td>
