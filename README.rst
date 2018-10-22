@@ -13,6 +13,12 @@ packages:
 
 New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
 
+Citation
+--------
+If you use ComPath in your work, please cite:
+
+Domingo-Fernández, D., *et al.* (2018). ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases. bioRxiv 353235.
+
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
 ``compath`` can be installed easily from `PyPI <https://pypi.python.org/pypi/compath>`_ with the
