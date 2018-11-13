@@ -4,11 +4,12 @@
 
 import datetime
 import logging
+from typing import List, Optional
 
-from bio2bel.utils import get_connection
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from bio2bel.utils import get_connection
 from . import managers
 from .constants import EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES, MODULE_NAME
 from .models import Base, PathwayMapping, User, Vote, mappings_users
@@ -20,12 +21,11 @@ __all__ = [
 log = logging.getLogger(__name__)
 
 
-def _flip_service_order(service_1_name, service_2_name):
+def _flip_service_order(service_1_name: str, service_2_name: str) -> bool:
     """Decide whether the service order should be flipped (true if they should be).
 
-    :param str service_1_name:
-    :param str service_2_name:
-    :rtype: bool
+    :param service_1_name:
+    :param service_2_name:
     """
     if service_1_name == service_2_name:
         return False
@@ -56,92 +56,70 @@ class Manager(object):
         session = scoped_session(session_maker)
         return Manager(engine, session)
 
-    def create_all(self, check_first=True):
+    def create_all(self, check_first: bool = True):
         """Create tables for ComPath."""
         Base.metadata.create_all(self.engine, checkfirst=check_first)
 
-    def drop_all(self, check_first=True):
+    def drop_all(self, check_first: bool = True):
         """Drop all tables for ComPath."""
         Base.metadata.drop_all(self.engine, checkfirst=check_first)
 
     """Query methods"""
 
-    def count_votes(self):
-        """Count the votes in the database.
-
-        :rtype: int
-        """
+    def count_votes(self) -> int:
+        """Count the votes in the database."""
         return self.session.query(Vote).count()
 
-    def count_mappings(self):
-        """Count the mappings in the database.
-
-        :rtype: int
-        """
+    def count_mappings(self) -> int:
+        """Count the mappings in the database."""
         return self.session.query(PathwayMapping).count()
 
-    def count_users(self):
-        """Count the Users in the database.
-
-        :rtype: int
-        """
+    def count_users(self) -> int:
+        """Count the Users in the database."""
         return self.session.query(User).count()
 
-    def count_mapping_user(self):
+    def count_mapping_user(self) -> int:
         """Count the UsersMappings table in the database.
 
         :rtype: int
         """
         return self.session.query(mappings_users).count()
 
-    def get_all_mappings(self):
-        """Get all mappings in the database.
-
-        :rtype: list[PathwayMapping]
-        """
+    def get_all_mappings(self) -> List[PathwayMapping]:
+        """Get all mappings in the database."""
         return self.session.query(PathwayMapping).all()
 
-    def get_all_accepted_mappings(self):
-        """Get all accepted mappings in the database.
-
-        :rtype: list[PathwayMapping]
-        """
+    def get_all_accepted_mappings(self) -> List[PathwayMapping]:
+        """Get all accepted mappings in the database."""
         return self.session.query(PathwayMapping).filter(PathwayMapping.accepted == True).all()
 
-    def get_mappings_by_type(self, mapping_type):
+    def get_mappings_by_type(self, mapping_type: str) -> List[PathwayMapping]:
         """Get all mappings in the database.
 
-        :param str mapping_type: type of the mapping
-        :rtype: list[PathwayMapping]
+        :param mapping_type: type of the mapping
         """
         if mapping_type not in MAPPING_TYPES:
             raise ValueError('{} is not valid mapping mapping_type'.format(mapping_type))
 
         return self.session.query(PathwayMapping).filter(PathwayMapping.type == mapping_type).all()
 
-    def get_vote_by_id(self, vote_id):
+    def get_vote_by_id(self, vote_id: str) -> Optional[Vote]:
         """Get a vote by its id.
 
-        :param str vote_id: identifier
-        :rtype: Optional[Vote]
+        :param vote_id: identifier
         """
         return self.session.query(Vote).filter(Vote.id == vote_id).one_or_none()
 
-    def get_vote(self, user, mapping):
+    def get_vote(self, user: User, mapping: PathwayMapping) -> Optional[Vote]:
         """Get a vote.
 
-        :param User user: User instance
-        :param PathwayMapping mapping: Mapping instance
-        :rtype: Optional[Vote]
+        :param user: User instance
+        :param mapping: Mapping instance
         """
         return self.session.query(Vote).filter(and_(Vote.user == user, Vote.mapping == mapping)).one_or_none()
 
-    def get_user_by_email(self, email):
-        """Get a vote by its id.
-
-        :param str email: identifier
-        :rtype: Optional[User]
-        """
+    def get_user_by_email(self, email: str) -> Optional[User]:
+        """Get a user by their email address."""
         return self.session.query(User).filter(User.email == email).one_or_none()
 
     def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
@@ -169,11 +147,10 @@ class Manager(object):
 
         return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
 
-    def get_mapping_by_id(self, mapping_id):
+    def get_mapping_by_id(self, mapping_id: int) -> Optional[PathwayMapping]:
         """Get a mapping by its id.
 
-        :param int mapping_id: mapping id
-        :rtype: Optional[PathwayMapping]
+        :param mapping_id: mapping id
         """
         return self.session.query(PathwayMapping).filter(PathwayMapping.id == mapping_id).one_or_none()
 
