@@ -44,6 +44,13 @@ INSTALL_REQUIRES = [
     'statsmodels',
     'xlrd',
 ]
+EXTRAS_REQUIRE = {
+    'docs': [
+        'sphinx',
+        'sphinx-rtd-theme',
+        'sphinx-click',
+    ],
+}
 TESTS_REQUIRE = [
     'bio2bel_kegg',
     'bio2bel_reactome',
@@ -103,6 +110,7 @@ if __name__ == '__main__':
         package_dir={'': 'src'},
         include_package_data=True,
         install_requires=INSTALL_REQUIRES,
+        extras_require=EXTRAS_REQUIRE,
         tests_require=TESTS_REQUIRE,
         entry_points=ENTRY_POINTS,
     )
