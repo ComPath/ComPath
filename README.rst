@@ -17,7 +17,7 @@ Citation
 --------
 If you use ComPath in your work, please cite:
 
-Domingo-Fernández, D., *et al.* (2018). ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases. bioRxiv 353235.
+Domingo-Fernández, D., *et al.* (2019). ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases. *npj Syst Biol Appl.*, 5(1):3.
 
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
