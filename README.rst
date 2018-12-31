@@ -15,9 +15,9 @@ New pathway/gene signatures resources can be added by forking the `ComPath Templ
 
 Citation
 --------
-If you use ComPath in your work, please cite:
+If you use ComPath in your work, please cite [1]_:
 
-Domingo-Fernández, D., *et al.* (2019). ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases. *npj Syst Biol Appl.*, 5(1):3.
+.. [1] Domingo-Fernández, D., *et al.* (2019). `ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases <https://doi.org/10.1038/s41540-018-0078-8>`_. *npj Syst Biol Appl.*, 5(1):3.
 
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
