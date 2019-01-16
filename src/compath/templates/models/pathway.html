@@ -159,7 +159,9 @@
 
 
     {% if dendrogram %}
-        var Name2Id = "{{ name_to_id_dict }}";
+    <script>
+          var Name2Id = "{{ name_to_id_dict }}";
+    </script>
         <script type="text/javascript"
                 src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
     {% endif %}
