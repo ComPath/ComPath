@@ -3,9 +3,10 @@
 """Test cascade."""
 
 
-from tests.constants import DatabaseMixin, KEGG, REACTOME
 from compath.constants import EQUIVALENT_TO
 from compath.models import User
+from tests.constants import DatabaseMixin, KEGG, REACTOME
+
 
 class TestCascades(DatabaseMixin):
     """Test that votes are cascaded properly."""
@@ -14,8 +15,8 @@ class TestCascades(DatabaseMixin):
         """Create fakes emails."""
         super().setUp()
 
-        self.u1 = User(email='my_email')
-        self.u2 = User(email='my_email_fake')
+        self.u1 = User(email='my_email', id=1)
+        self.u2 = User(email='my_email_fake', id=2)
 
         self.manager.session.add_all([self.u1, self.u2])
         self.manager.session.commit()

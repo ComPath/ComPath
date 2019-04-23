@@ -31,7 +31,7 @@ class TestMapping(DatabaseMixin):
 
     def test_create_mapping(self):
         """Test simple mapping add it."""
-        current_user = User()
+        current_user = User(email='my_email', id=1)
 
         mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
@@ -49,7 +49,7 @@ class TestMapping(DatabaseMixin):
 
     def test_create_double_mapping_same_users(self):
         """Test duplicate mappings for same users."""
-        current_user = User()
+        current_user = User(email='my_email', id=1)
 
         mapping_1, created_1 = self.manager.get_or_create_mapping(
             KEGG,
@@ -122,8 +122,8 @@ class TestMapping(DatabaseMixin):
 
     def test_create_double_mapping_different_users(self):
         """Test duplicate mappings for different users."""
-        user_1 = User(email='mycool@email.com')
-        user_2 = User(email='myawesome@email.com')
+        user_1 = User(email='my_email1', id=1)
+        user_2 = User(email='my_email2', id=2)
 
         mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
@@ -160,8 +160,8 @@ class TestMapping(DatabaseMixin):
 
     def test_get_accepted_mappings(self):
         """Test duplicate mappings for different users."""
-        user_1 = User(email='mycool@email.com')
-        user_2 = User(email='myawesome@email.com')
+        user_1 = User(email='my_email1', id=1)
+        user_2 = User(email='my_email2', id=2)
 
         mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,

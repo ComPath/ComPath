@@ -2,10 +2,9 @@
 
 """This module contains tests for the data model of ComPath."""
 
-from tests.constants import DatabaseMixin, KEGG, REACTOME
-
 from compath.constants import EQUIVALENT_TO
 from compath.models import User
+from tests.constants import DatabaseMixin, KEGG, REACTOME
 
 
 class TestVotingSystem(DatabaseMixin):
@@ -23,7 +22,7 @@ class TestVotingSystem(DatabaseMixin):
 
     def test_vote_up(self):
         """Test if votes are adding."""
-        current_user = User()
+        current_user = User(email='my_email', id=1)
 
         mapping_1, _ = self.manager.get_or_create_mapping(
             KEGG,
@@ -43,7 +42,7 @@ class TestVotingSystem(DatabaseMixin):
 
     def test_vote_down(self):
         """Test if votes are adding."""
-        current_user = User()
+        current_user = User(email='my_email', id=1)
 
         mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
@@ -64,8 +63,8 @@ class TestVotingSystem(DatabaseMixin):
 
     def test_double_voting(self):
         """Test voting."""
-        current_user_1 = User()
-        current_user_2 = User()
+        current_user_1 = User(email='my_email1', id=1)
+        current_user_2 = User(email='my_email2', id=2)
 
         mapping_1, created = self.manager.get_or_create_mapping(
             KEGG,
