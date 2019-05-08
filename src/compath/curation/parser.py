@@ -135,10 +135,12 @@ def parse_curation_template(path, reference_pathway_db, compared_pathway_db, cur
         valid_pathway_2 = is_valid_pathway_by_id(manager_dict, row['Target Resource'], row['Target ID'])
 
         if valid_pathway_1 is False:
-            raise ValueError("Not Valid Pathway Name: {} in {}".format(row['Source Name'], row['Source Resource']))
+            print("Not Valid Pathway Name: {} in {}".format(row['Source Name'], row['Source Resource']))
+            continue
 
         if valid_pathway_2 is False:
-            raise ValueError("Not Valid Pathway Name: {} in {}".format(row['Target Name'], row['Target Resource']))
+            print("Not Valid Pathway Name: {} in {}".format(row['Target Name'], row['Target Resource']))
+            continue
 
         for curator in curators:
             mapping, _ = compath_manager.get_or_create_mapping(
