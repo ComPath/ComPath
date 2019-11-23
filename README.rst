@@ -113,13 +113,11 @@ Docker Instructions
 
 Deployment of ComPath with Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 1. Build the container with compath as a name.
 
 .. code-block:: sh
 
     docker build -t compath:0.0.1 .
-
 
 2. Create the data container in which the data will be located.
 
@@ -127,13 +125,24 @@ Deployment of ComPath with Docker
 
     docker create -v /data --name compath-data compath:0.0.1
 
-
-
 3. Run docker container and connect it with the data container
 
 .. code::
 
     docker run --name=compath --volumes-from compath-data --restart=always -d compath:0.0.1
+
+4. Loads the KEGG, Reactome, and WikiPathways modules into ComPath *(feel free to change the shell to add other
+databases)*
+
+.. code-block:: sh
+
+    docker exec -t -it compath /opt/compath/src/bin/load_data.sh
+
+4. Initialize ComPath inside the container
+
+.. code-block:: sh
+
+    docker exec -t -it compath /opt/compath/src/bin/bootstrap.sh
 
 
 ``For admin purposes and deploying ComPath inside Fraunhofer you can also run the following command``
@@ -142,18 +151,9 @@ Deployment of ComPath with Docker
 
     sh create_and_build_container.sh
 
-Load Data
-~~~~~~~~~
-
-Loads the KEGG, Reactome, and WikiPathways modules into ComPath.
-
-.. code-block:: sh
-
-    docker exec -t -it compath /opt/compath/src/bin/load_data.sh
 
 Restart Container
 ~~~~~~~~~~~~~~~~~
-
 Restarts the compath container
 
 .. code-block:: sh
