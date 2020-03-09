@@ -43,6 +43,7 @@ INSTALL_REQUIRES = [
     'numpy==1.16.3',
     'statsmodels==0.9.0',
     'xlrd==1.2.0',
+    'pybel==0.13.2',
 ]
 EXTRAS_REQUIRE = {
     'docs': [
