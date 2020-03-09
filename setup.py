@@ -30,7 +30,7 @@ INSTALL_REQUIRES = [
     'compath_utils>=0.2.0',
     'bio2bel_hgnc>=0.1.0',
     'wtforms==2.2.1',
-    'flask_wtf==0.14.2',
+    'flask_wtf==0.14.3',
     'flask==1.0.2',
     'flask-bootstrap==3.3.7.1',
     'flask_admin==1.5.3',
