@@ -26,7 +26,7 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     'click==7.0',
     'sqlalchemy==1.3.3',
-    'bio2bel==0.1.1',
+    'bio2bel==0.2.1',
     'compath_utils>=0.2.0',
     'bio2bel_hgnc>=0.1.0',
     'wtforms==2.2.1',
