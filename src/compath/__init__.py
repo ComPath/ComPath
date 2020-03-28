@@ -36,38 +36,15 @@ has been already installed and populated. This package is required to perform th
 
 import logging
 
-from compath_utils import CompathManager
-from pkg_resources import DistributionNotFound, UnknownExtra, VersionConflict, get_distribution, iter_entry_points
+from pkg_resources import DistributionNotFound, get_distribution
 
+from bio2bel.compath import get_compath_manager_classes
 from compath.constants import MODULE_NAME
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 # Load Bio2BEL ComPath managers
-managers = {}
-
-for entry_point in iter_entry_points(group=MODULE_NAME, name=None):
-    entry = entry_point.name
-
-    try:
-        bio2bel_module = entry_point.load()
-    except UnknownExtra:
-        log.warning('Unknown extra in %s', entry)
-        continue
-    except VersionConflict:
-        log.warning('Version conflict in %s', entry)
-        continue
-
-    try:
-        ExternalManager = bio2bel_module.Manager
-    except AttributeError:
-        log.warning('%s does not have a top-level Manager class', entry)
-        continue
-
-    if not issubclass(ExternalManager, CompathManager):
-        log.warning('%s:%s is not a standard ComPath manager class', entry, ExternalManager)
-
-    managers[entry] = ExternalManager
+managers = get_compath_manager_classes()
 
 # Check availability of PathMe Viewer
 try:
@@ -87,4 +64,4 @@ __author__ = 'Daniel Domingo-Fernández and Charles Tapley Hoyt'
 __email__ = 'daniel.domingo.fernandez@scai.fraunhofer.de'
 
 __license__ = 'MIT License'
-__copyright__ = 'Copyright (c) 2017-2018 Daniel Domingo-Fernández and Charles Tapley Hoyt'
+__copyright__ = 'Copyright (c) 2017-2020 Daniel Domingo-Fernández and Charles Tapley Hoyt'

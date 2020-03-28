@@ -21,29 +21,29 @@ CLASSIFIERS = [
     'Operating System :: OS Independent',
     'Programming Language :: Python',
     'Programming Language :: Python :: 3.6',
-    'Topic :: Scientific/Engineering :: Bio-Informatics'
+    'Programming Language :: Python :: 3.7',
+    'Topic :: Scientific/Engineering :: Bio-Informatics',
 ]
 INSTALL_REQUIRES = [
-    'click==7.0',
-    'sqlalchemy==1.3.3',
-    'bio2bel==0.2.1',
-    'compath_utils>=0.2.0',
-    'bio2bel_hgnc>=0.1.0',
-    'wtforms==2.2.1',
-    'flask_wtf==0.14.3',
-    'flask==1.0.2',
-    'flask-bootstrap==3.3.7.1',
-    'flask_admin==1.5.3',
-    'flask_security==3.0.0',
-    'flask_sqlalchemy==2.3.2',
-    'networkx==2.3',
-    'pandas==0.24.2',
-    'scipy==1.2.1',
-    'tqdm==4.31.1',
-    'numpy==1.16.3',
-    'statsmodels==0.9.0',
-    'xlrd==1.2.0',
-    'pybel==0.13.2',
+    'click',
+    'sqlalchemy',
+    'bio2bel',
+    'wtforms',
+    'flask_wtf',
+    'flask',
+    'flask-bootstrap',
+    'flask_admin',
+    'flask_security',
+    'flask_sqlalchemy',
+    'flasgger',
+    'networkx',
+    'pandas',
+    'scipy',
+    'tqdm',
+    'numpy',
+    'statsmodels',
+    'xlrd',
+    'pybel',
 ]
 EXTRAS_REQUIRE = {
     'docs': [
@@ -59,7 +59,7 @@ TESTS_REQUIRE = [
 ]
 ENTRY_POINTS = {
     'console_scripts': [
-        '{mname} = {mname}.cli:main'.format(mname=MODULE),
+        f'{MODULE} = {MODULE}.cli:main',
     ]
 }
 

@@ -304,10 +304,10 @@ def export_gene_set(resource):
     log.info("Querying the database")
 
     if resource == 'reactome':
-        genesets = dict_to_pandas_df(resource_manager.export_gene_sets(species='Homo sapiens'))
+        genesets = dict_to_pandas_df(resource_manager.get_pathway_name_to_symbols(species='Homo sapiens'))
 
     else:
-        genesets = dict_to_pandas_df(resource_manager.export_gene_sets())
+        genesets = dict_to_pandas_df(resource_manager.get_pathway_name_to_symbols())
 
     sio = StringIO()
 
