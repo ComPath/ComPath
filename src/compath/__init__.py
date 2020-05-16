@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 
-"""An interactive and extensible web application for comparative analysis of pathway databases. ComPath is available at https://compath.scai.fraunhofer.de/.
+"""An interactive and extensible web application for comparative analysis of pathway databases.
+
+ComPath is available at https://compath.scai.fraunhofer.de/.
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
@@ -15,23 +17,19 @@ New pathway/gene signatures resources can be added by forking the `ComPath Templ
 
 How to Use
 ----------
-
 1. Install and load the required packages
 
-- If you just cloned the repo, you can run the sh script "load_compath.sh" by typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the database.
-- If you have already installed the packages, but not loaded the data. First, load `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see next section). Next, load all individual pathway database packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that these packages are already installed in your Python environment. You can check the packages installed by running :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`, :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
+- If you just cloned the repo, you can run the sh script "load_compath.sh" by typing :code:`sh load_compath.sh` in
+  your terminal. This script will first install all packages and later populate the database.
+- If you have already installed the packages, but not loaded the data. Load all individual pathway database packages
+  KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that
+  these packages are already installed in your Python environment. You can check the packages installed by running
+  :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by
+  running: :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
+  :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
 
-2. The final step is to start the web application locally (runs by default on port 5000 -> http://localhost:5000) by running :code:`python3 -m compath web`
-
-Mapping across gene/protein identifiers
----------------------------------------
-
-In order to load the gene sets from default packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
-has been already installed and populated. This package is required to perform the mapping from multiple Protein/Gene identifiers to HGNC symbols. The following steps are needed to install Bio2BEL HGNC:
-
-1. :code:`python3 -m pip install bio2bel_hgnc`
-2. :code:`python3 -m bio2bel_hgnc populate`
-
+2. The final step is to start the web application locally (runs by default on port 5000 -> http://localhost:5000) by
+   running :code:`python3 -m compath web`
 """
 
 import logging
@@ -50,18 +48,5 @@ managers = get_compath_manager_classes()
 try:
     get_distribution('pathme_viewer')
     PATHME = True
-
 except DistributionNotFound:
     PATHME = False
-
-__version__ = '0.1.3-dev'
-
-__title__ = 'compath'
-__description__ = "A web application for exploring and comparing the overlaps across pathway resources"
-__url__ = 'https://github.com/ComPath/ComPath'
-
-__author__ = 'Daniel Domingo-Fernández and Charles Tapley Hoyt'
-__email__ = 'daniel.domingo.fernandez@scai.fraunhofer.de'
-
-__license__ = 'MIT License'
-__copyright__ = 'Copyright (c) 2017-2020 Daniel Domingo-Fernández and Charles Tapley Hoyt'

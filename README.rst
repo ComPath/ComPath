@@ -53,22 +53,12 @@ If you just cloned the repo and installed it from the source code, you can run t
 typing :code:`sh load_compath.sh` in your terminal. This script will first install all packages and later populate the
 database.
 
-If you have already installed the packages, but not loaded the data. First, load
-`Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_ (see 'Mapping across gene/protein identifiers' section). Next, load all individual pathway database
+If you have already installed the packages, but not loaded the data. Load all individual pathway database
 packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that
 these packages are already installed in your Python environment. You can check the packages installed by running
 :code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running:
 :code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
 :code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
-
-Mapping across gene/protein identifiers
----------------------------------------
-In order to load the gene sets from default packages, ComPath assumes that `Bio2BEL HGNC <https://github.com/bio2bel/hgnc>`_
-has been already installed and populated. This package is required to perform the mapping from multiple Protein/Gene identifiers to HGNC symbols. The following steps are needed to install Bio2BEL HGNC:
-
-1. :code:`python3 -m pip install bio2bel_hgnc`
-2. :code:`python3 -m bio2bel_hgnc populate`
-
 
 Running the Web Application
 ---------------------------
@@ -79,7 +69,6 @@ The application can be run simply with
     python3 -m compath web
 
 This command the Flask development server locally, by default on port 5000 (http://localhost:5000).
-
 
 Curation Interface
 ------------------
