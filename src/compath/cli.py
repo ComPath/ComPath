@@ -2,8 +2,6 @@
 
 """Command line interface."""
 
-from __future__ import print_function
-
 import datetime
 import logging
 import sys
@@ -19,12 +17,12 @@ from compath.manager import Manager
 from compath.models import Base, Role, User
 from compath.utils import _iterate_user_strings
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def set_debug(level):
     """Set debug."""
-    log.setLevel(level=level)
+    logger.setLevel(level=level)
 
 
 def set_debug_param(debug):
@@ -91,7 +89,7 @@ def populate(debug, connection, delete_first):
 
     for name, Manager in managers.items():
         m = Manager(connection=connection)
-        log.info('populating %s at %s', name, m.engine.url)
+        logger.info('populating %s at %s', name, m.engine.url)
 
         if delete_first:
             click.echo('deleting {}'.format(name))

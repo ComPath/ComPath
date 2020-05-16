@@ -1,5 +1,4 @@
 [flake8]
-ignore = E501,F405
 exclude =
     .tox,
     .git,
@@ -14,5 +13,8 @@ exclude =
     .eggs
 max-complexity = 10
 import-order-style = pycharm
-application-import-names = compath
+application-import-names =
+    compath
+    bio2bel
+    tests
 format = ${cyan}%(path)s${reset}:${yellow_bold}%(row)d${reset}:${green_bold}%(col)d${reset}: ${red_bold}%(code)s${reset} %(text)s

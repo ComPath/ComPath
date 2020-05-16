@@ -8,7 +8,6 @@ import time
 from functools import reduce
 from operator import and_
 
-from bio2bel_hgnc.manager import Manager as HgncManager
 from flasgger import Swagger
 from flask import Flask
 from flask_admin import Admin
@@ -17,6 +16,7 @@ from flask_bootstrap import Bootstrap
 from flask_security import SQLAlchemyUserDatastore, Security
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf.csrf import CSRFProtect
+from pyobo import get_id_name_mapping
 
 from compath import PATHME, managers
 from compath.constants import BLACK_LIST, DEFAULT_CACHE_CONNECTION, SWAGGER_CONFIG
@@ -169,7 +169,6 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     }
 
     log.info('Loading gene distributions')
-    # TODO @cthoyt too slow
     app.gene_distributions = {
         resource_name: dict(manager.get_gene_distribution())
         for resource_name, manager in app.manager_dict.items()
@@ -178,7 +177,7 @@ def create_app(connection=None, template_folder=None, static_folder=None):
 
     log.info('Loading gene sets')
     resource_gene_sets = {
-        resource_name: manager.export_gene_sets()
+        resource_name: manager.get_pathway_name_to_symbols()
         for resource_name, manager in app.manager_dict.items()
         if resource_name not in BLACK_LIST
     }
@@ -229,12 +228,9 @@ def create_app(connection=None, template_folder=None, static_folder=None):
     # Get the universe of all HGNC symbols from Bio2BEL_hgnc and close the session
     log.info('Loading gene universe from bio2BEL_hgnc ')
 
-    hgnc_manager = HgncManager(connection=connection)
+    hgnc_id_to_name = get_id_name_mapping('hgnc')
 
-    resource_all_genes['Gene Universe'] = hgnc_manager.get_all_hgnc_symbols()
-
-    app.gene_universe = resource_all_genes['Gene Universe']
-
+    app.gene_universe = resource_all_genes['Gene Universe'] = list(hgnc_id_to_name.values())
     if len(resource_all_genes['Gene Universe']) < 40000:
         log.warning(
             'The number of HGNC symbols loaded is smaller than 40000. Please check that HGNC database has been'
@@ -242,8 +238,6 @@ def create_app(connection=None, template_folder=None, static_folder=None):
         )
 
     app.manager_overlap = process_overlap_for_venn_diagram(gene_sets=resource_all_genes, skip_gene_set_info=True)
-
-    hgnc_manager.session.close()
 
     log.info('Done building %s in %.2f seconds', app, time.time() - t)
 
