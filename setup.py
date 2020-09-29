@@ -26,9 +26,13 @@ CLASSIFIERS = [
 INSTALL_REQUIRES = [
     'click==7.0',
     'sqlalchemy==1.3.3',
-    'bio2bel==0.2.1',
-    'compath_utils>=0.2.0',
-    'bio2bel_hgnc>=0.1.0',
+    'bio2bel==0.1.5',
+    'bio2bel-chebi==0.1.1',
+    'bio2bel-hgnc==0.1.2',
+    'bio2bel-kegg==0.1.2',
+    'bio2bel-reactome==0.1.5',
+    'bio2bel-wikipathways==0.1.4',
+    'compath_utils==0.2.0',
     'wtforms==2.2.1',
     'flask_wtf==0.14.3',
     'flask==1.0.2',
@@ -43,7 +47,8 @@ INSTALL_REQUIRES = [
     'numpy==1.16.3',
     'statsmodels==0.9.0',
     'xlrd==1.2.0',
-    'pybel==0.13.2',
+    'pybel==0.12.1',
+    'Werkzeug==0.14.1',
 ]
 EXTRAS_REQUIRE = {
     'docs': [

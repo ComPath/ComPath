@@ -1,11 +1,11 @@
 #!/bin/bash
 #© 2018 Fraunhofer Gesellschaft e.V., Munich, Germany. All rights reserved.
 
-read -p "Are you sure you want to use the latest version of ComPath (current version is 0.0.2)? (y/N) " -n 1 -r
+read -p "Are you sure you want to use the latest version of ComPath (current version is 0.1.3)? (y/N) " -n 1 -r
 echo    # (optional) move to a new line
 
 HOST="docker.arty.scai.fraunhofer.de"
-VERSION="0.0.2"
+VERSION="0.1.3"
 TAG="$HOST/compath"
 
 # Build this image
