@@ -8,14 +8,10 @@ import unittest
 import numpy as np
 
 from compath.utils import (
-    filter_results,
-    get_most_similar_names,
-    get_top_matches,
-    process_form_gene_set,
-    _prepare_hypergeometric_test
+    _prepare_hypergeometric_test, get_most_similar_names, get_top_matches, process_form_gene_set,
+    process_overlap_for_venn_diagram,
 )
 from compath.visualization.d3_dendrogram import create_similarity_matrix
-from compath.visualization.venn_diagram import process_overlap_for_venn_diagram
 
 
 class TestUtils(unittest.TestCase):

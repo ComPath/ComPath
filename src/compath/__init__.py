@@ -32,21 +32,4 @@ How to Use
    running :code:`python3 -m compath web`
 """
 
-import logging
 
-from pkg_resources import DistributionNotFound, get_distribution
-
-from bio2bel.compath import get_compath_manager_classes
-from compath.constants import MODULE_NAME
-
-logger = logging.getLogger(__name__)
-
-# Load Bio2BEL ComPath managers
-managers = get_compath_manager_classes()
-
-# Check availability of PathMe Viewer
-try:
-    get_distribution('pathme_viewer')
-    PATHME = True
-except DistributionNotFound:
-    PATHME = False

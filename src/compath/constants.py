@@ -6,11 +6,11 @@ This module contains all the string constants used in ComPath."""
 
 import os
 
-from bio2bel.utils import get_connection, get_data_dir
+from pkg_resources import DistributionNotFound, get_distribution
 
-MODULE_NAME = 'compath'
-DATA_DIR = get_data_dir(MODULE_NAME)
-DEFAULT_CACHE_CONNECTION = get_connection(MODULE_NAME)
+from bio2bel.utils import get_connection
+
+DEFAULT_CACHE_CONNECTION = get_connection()
 
 SWAGGER_CONFIG = {
     'title': 'ComPath API',
@@ -73,7 +73,7 @@ WIKIPATHWAYS_URL = 'https://www.wikipathways.org/index.php/Pathway:{}'
 HIERARCHY_MANAGERS = {REACTOME}
 
 #: Managers without pathway knowledge
-BLACK_LIST = {
+BLACKLIST = {
     'hgnc',
     'compath_hgnc',
 }
@@ -91,10 +91,17 @@ STYLED_NAMES = {
     WIKIPATHWAYS: 'WikiPathways',
     MSIG: 'MSig',
     'compath_neurommsig_ad': 'NeuroMMSig AD',
-    'compath_neurommsig_pd': 'NeuroMMSig PD'
-
+    'compath_neurommsig_pd': 'NeuroMMSig PD',
 }
 
 #: Possible mapping types between pathways
 EQUIVALENT_TO = 'equivalentTo'
 IS_PART_OF = 'isPartOf'
+
+# Check availability of PathMe Viewer
+try:
+    get_distribution('pathme_viewer')
+except DistributionNotFound:
+    PATHME = False
+else:
+    PATHME = True

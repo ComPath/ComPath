@@ -151,17 +151,17 @@
                 })
             });
 
-        var resource = "{{resource}}";
+        var resource = "{{ resource }}";
         var pathwayName = "{{ pathway.name }}";
-        var pathwayId = "{{pathway.resource_id }}";
+        var pathwayId = "{{ pathway.identifier }}";
 
     </script>
 
 
     {% if dendrogram %}
-    <script>
-          var Name2Id = "{{ name_to_id_dict }}";
-    </script>
+        <script>
+            var Name2Id = "{{ name_to_id_dict }}";
+        </script>
         <script type="text/javascript"
                 src="{{ url_for('static', filename='js/mapping_landscape.js') }}"></script>
     {% endif %}
@@ -171,51 +171,43 @@
 
 {% import "meta/macros.html" as compath %}
 
-
 {% block content %}
     <div class="container" style="margin-top: 50px">
         {{ util.flashed_messages(dismissible=True, container=False) }}
 
         <div class="panel panel-default">
             <div class="panel-heading">{{ pathway.name }} - Pathway Page</div>
+            <table id="pathway-info" class="table table-bordered table-striped table-hover">
+                <tbody>
+                <tr>
+                    <td>Resource</td>
+                    <td>
+                        {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Name</td>
+                    <td>
+                        <a href="{{ pathway.url }}">{{ pathway }}</a>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td> {{ pathway.proteins|length }}</td>
+                </tr>
+                <tr>
+                    <td>Genes</td>
+                    <td>
+                        {% for protein in pathway.proteins %}
+                            <a href="https://identifiers.org/hgnc:{{ protein.hgnc_id }}"
+                               {% if submitted_gene_set and protein.hgnc_symbol in submitted_gene_set %}style="color: red"{% endif %}>
+                                {{ protein.hgnc_symbol }}</a>
+                        {% endfor %}
+                    </td>
+                </tr>
+                </tbody>
+            </table>
             <div class="panel-body">
-
-                <table id="pathway-info" class="table table-bordered table-striped table-hover">
-                    <tbody>
-                    <tr>
-                        <td>Name</td>
-                        <td>
-                            <a href="{{ pathway.url }}">{{ pathway }}</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Resource</td>
-                        <td>
-                            {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Genes</td>
-                        <td>
-                            {% for hgnc_symbol in pathway.get_gene_set() %}
-
-                                {% if submitted_gene_set and hgnc_symbol in submitted_gene_set %}
-                                    <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}"
-                                       style="color: red;">{{ hgnc_symbol }}</a>
-                                {% else %}
-                                    <a href="https://www.ncbi.nlm.nih.gov/gene/?term={{ hgnc_symbol }}">{{ hgnc_symbol }}</a>
-                                {% endif %}
-                            {% endfor %}
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Size</td>
-                        <td> {{ pathway.get_gene_set()|length }}
-                        </td>
-                    </tr>
-                    </tbody>
-                </table>
-
                 {% if dendrogram %}
                     <div class="panel panel-default">
                         <div class="panel-heading">Hierarchy Landscape</div>

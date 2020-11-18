@@ -4,6 +4,7 @@
 
 import itertools as itt
 import math
+from typing import Any, Dict
 
 import numpy as np
 import pandas as pd
@@ -171,7 +172,7 @@ def get_dendrogram_tree(gene_sets, pathway_manager_dict):
     return d3_dendrogram, len(pathways)
 
 
-def get_descendants(manager, resource, pathway_id, pathway_name):
+def get_descendants(manager, resource, pathway_id, pathway_name) -> Dict[str, Any]:
     """Generate d3 dendrogram structure by using BFS starting from the starting from a parent (root) node to the last descendants.
 
     :param manager: ComPath manager
@@ -179,7 +180,6 @@ def get_descendants(manager, resource, pathway_id, pathway_name):
     :param str pathway_id: pathway identifier in the resource
     :param str pathway_name: pathway name
     :return: parent-children data structure
-    :rtype: list[dict]
     """
     # Create the entry dictionary of the pathway (node).
     d3_dendrogram = dict(
@@ -224,7 +224,6 @@ def get_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
     :param str pathway_id: pathway identifier in the resource
     :param str pathway_name: pathway name
     :return: parent-children data structure
-    :rtype: list[dict]
     """
     ancestries_mappings = []
     common_ancestries = []

@@ -9,16 +9,16 @@ from typing import List, Optional
 from sqlalchemy import and_, create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from bio2bel.compath import get_compath_manager_classes
 from bio2bel.utils import get_connection
-from . import managers
-from .constants import EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES, MODULE_NAME
+from .constants import EQUIVALENT_TO, IS_PART_OF, MAPPING_TYPES
 from .models import Base, PathwayMapping, User, Vote, mappings_users
 
 __all__ = [
     'Manager'
 ]
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def _flip_service_order(service_1_name: str, service_2_name: str) -> bool:
@@ -33,12 +33,12 @@ def _flip_service_order(service_1_name: str, service_2_name: str) -> bool:
     return service_1_name > service_2_name
 
 
-def _ensure_manager(name):
-    if name not in managers:
-        raise ValueError('Manager does not exist for {}. Available: {}'.format(name, managers))
+def _raise_for_missing_manager(name):
+    if name not in get_compath_manager_classes():
+        raise KeyError(f'Manager does not exist for {name}.')
 
 
-class Manager(object):
+class Manager:
     """Database manager."""
 
     def __init__(self, engine, session):
@@ -48,9 +48,9 @@ class Manager(object):
         self.create_all()
 
     @staticmethod
-    def from_connection(connection=None):
+    def from_connection(connection: Optional[str] = None):
         """Initialize manager from connection string"""
-        connection = get_connection(MODULE_NAME, connection)
+        connection = get_connection(connection=connection)
         engine = create_engine(connection)
         session_maker = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
         session = scoped_session(session_maker)
@@ -79,10 +79,7 @@ class Manager(object):
         return self.session.query(User).count()
 
     def count_mapping_user(self) -> int:
-        """Count the UsersMappings table in the database.
-
-        :rtype: int
-        """
+        """Count the UsersMappings table in the database."""
         return self.session.query(mappings_users).count()
 
     def get_all_mappings(self) -> List[PathwayMapping]:
@@ -122,20 +119,27 @@ class Manager(object):
         """Get a user by their email address."""
         return self.session.query(User).filter(User.email == email).one_or_none()
 
-    def get_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id, pathway_2_name,
-                    mapping_type):
+    def get_mapping(
+        self,
+        service_1_name: str,
+        pathway_1_id: str,
+        pathway_1_name: str,
+        service_2_name: str,
+        pathway_2_id: str,
+        pathway_2_name: str,
+        mapping_type: str,
+    ) -> Optional[PathwayMapping]:
         """Query mapping in the database.
 
-        :param str service_1_name: manager name of the service 1
-        :param str pathway_1_id: pathway 1 id
-        :param str pathway_1_name: pathway 1 name
-        :param str service_2_name: manager name of the service 1
-        :param str pathway_2_id: pathway 2 id
-        :param str pathway_2_name: pathway 2 name
-        :param str mapping_type: mapping type (isPartOf or equivalentTo)
-        :rtype: Optional[Mapping]
+        :param service_1_name: manager name of the service 1
+        :param pathway_1_id: pathway 1 id
+        :param pathway_1_name: pathway 1 name
+        :param service_2_name: manager name of the service 1
+        :param pathway_2_id: pathway 2 id
+        :param pathway_2_name: pathway 2 name
+        :param mapping_type: mapping type (isPartOf or equivalentTo)
         """
-        mapping_filter = and_(
+        _filter = and_(
             PathwayMapping.service_1_name == service_1_name,
             PathwayMapping.service_1_pathway_id == pathway_1_id,
             PathwayMapping.service_1_pathway_name == pathway_1_name,
@@ -144,8 +148,7 @@ class Manager(object):
             PathwayMapping.service_2_pathway_name == pathway_2_name,
             PathwayMapping.type == mapping_type,
         )
-
-        return self.session.query(PathwayMapping).filter(mapping_filter).one_or_none()
+        return self.session.query(PathwayMapping).filter(_filter).one_or_none()
 
     def get_mapping_by_id(self, mapping_id: int) -> Optional[PathwayMapping]:
         """Get a mapping by its id.
@@ -154,13 +157,12 @@ class Manager(object):
         """
         return self.session.query(PathwayMapping).filter(PathwayMapping.id == mapping_id).one_or_none()
 
-    def get_or_create_vote(self, user, mapping, vote_type=True):
+    def get_or_create_vote(self, user: User, mapping: PathwayMapping, vote_type: bool = True) -> Vote:
         """Get or create vote.
 
-        :param User user: User instance
-        :param PathwayMapping mapping: Mapping instance
-        :param Optional[Vote.type] vote_type: vote type
-        :rtype: Vote
+        :param user: User instance
+        :param mapping: Mapping instance
+        :param vote_type: vote type
         """
         vote = self.get_vote(user, mapping)
 
@@ -168,7 +170,7 @@ class Manager(object):
             vote = Vote(
                 user=user,
                 mapping=mapping,
-                type=vote_type
+                type=vote_type,
             )
 
             self.session.add(vote)
@@ -182,8 +184,17 @@ class Manager(object):
 
         return vote
 
-    def get_or_create_mapping(self, service_1_name, pathway_1_id, pathway_1_name, service_2_name, pathway_2_id,
-                              pathway_2_name, mapping_type, user):
+    def get_or_create_mapping(
+        self,
+        service_1_name,
+        pathway_1_id,
+        pathway_1_name,
+        service_2_name,
+        pathway_2_id,
+        pathway_2_name,
+        mapping_type,
+        user,
+    ):
         """Get or create a mapping.
 
         :param str service_1_name: manager name of the service 1
@@ -228,8 +239,8 @@ class Manager(object):
                 user
             )
 
-        _ensure_manager(service_1_name)
-        _ensure_manager(service_2_name)
+        _raise_for_missing_manager(service_1_name)
+        _raise_for_missing_manager(service_2_name)
 
         mapping = self.get_mapping(
             service_1_name=service_1_name,
@@ -274,12 +285,8 @@ class Manager(object):
         self.session.query(PathwayMapping).delete()
         self.session.commit()
 
-    def delete_mapping_by_id(self, mapping_id):
-        """Delete a mapping by its id.
-
-        :param int mapping_id: mapping id
-        :rtype: bool
-        """
+    def delete_mapping_by_id(self, mapping_id: int) -> bool:
+        """Delete a mapping by its identifier."""
         mapping = self.get_mapping_by_id(mapping_id)
 
         if mapping:
@@ -324,68 +331,61 @@ class Manager(object):
         self.session.commit()
         return mapping, True
 
-    def get_mappings_from_pathway_with_relationship(self, type, service_name, pathway_id, pathway_name):
+    def get_mappings_from_pathway_with_relationship(
+        self, type: str, service_name: str, pathway_id: str, pathway_name: str,
+    ) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param str type: mapping type
-        :param str service_name: service name
-        :param str pathway_id: original pathway identifier
-        :param str pathway_name: pathway name
-        :rtype: list[PathwayMapping]
-        :return:
+        :param type: mapping type
+        :param service_name: service name
+        :param pathway_id: original pathway identifier
+        :param pathway_name: pathway name
         """
-        return self.session.query(PathwayMapping).filter(
-            PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)).all()
+        _filter = PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)
+        return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_decendents_mappings_from_pathway_with_is_part_of_relationship(self, service_name, pathway_id, pathway_name):
+    def get_decendents_mappings_from_pathway_with_is_part_of_relationship(
+        self, service_name: str, pathway_id: str, pathway_name: str,
+    ) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param str type: mapping type
-        :param str service_name: service name
-        :param str pathway_id: original pathway identifier
-        :param str pathway_name: pathway name
-        :rtype: list[PathwayMapping]
-        :return:
+        :param type: mapping type
+        :param service_name: service name
+        :param pathway_id: original pathway identifier
+        :param pathway_name: pathway name
         """
-        return self.session.query(PathwayMapping).filter(
-            PathwayMapping.has_descendant_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)).all()
+        _filter = PathwayMapping.has_descendant_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)
+        return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_ancestry_mappings_from_pathway_with_is_part_of_relationship(self, service_name, pathway_id, pathway_name):
+    def get_ancestry_mappings_from_pathway_with_is_part_of_relationship(
+        self, service_name: str, pathway_id: str, pathway_name: str,
+    ) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param str type: mapping type
-        :param str service_name: service name
-        :param str pathway_id: original pathway identifier
-        :param str pathway_name: pathway name
-        :rtype: list[PathwayMapping]
-        :return:
+        :param type: mapping type
+        :param service_name: service name
+        :param pathway_id: original pathway identifier
+        :param pathway_name: pathway name
         """
-        return self.session.query(PathwayMapping).filter(
-            PathwayMapping.has_ancestry_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)).all()
+        _filter = PathwayMapping.has_ancestry_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)
+        return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_all_mappings_from_pathway(self, service_name, pathway_id, pathway_name):
+    def get_all_mappings_from_pathway(
+        self, service_name: str, pathway_id: str, pathway_name: str,
+    ) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param str service_name: service name
-        :param str pathway_id: original pathway identifier
-        :param str pathway_name: pathway name
-        :rtype: list[PathwayMapping]
-        :return:
+        :param service_name: service name
+        :param pathway_id: original pathway identifier
+        :param pathway_name: pathway name
         """
-        return self.session.query(PathwayMapping).filter(
-            PathwayMapping.has_pathway(service_name, pathway_id, pathway_name)).all()
+        _filter = PathwayMapping.has_pathway(service_name, pathway_id, pathway_name)
+        return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_all_pathways_from_db_with_mappings(self, pathway_database):
-        """Get all mappings that contain a pathway from a given database.
-
-        :param str service_name: service name
-        :param str pathway_id: original pathway identifer
-        :param str pathway_name: pathway name
-        :rtype: list[PathwayMapping]
-        :return:
-        """
-        return self.session.query(PathwayMapping).filter(
-            PathwayMapping.has_database_pathway(pathway_database)).all()
+    def get_all_pathways_from_db_with_mappings(self, pathway_database: str) -> List[PathwayMapping]:
+        """Get all mappings that contain a pathway from a given database."""
+        _filter = PathwayMapping.has_database_pathway(pathway_database)
+        return self.session.query(PathwayMapping).filter(_filter).all()
 
     def infer_hierarchy(self, resource, pathway_id, pathway_name):
         """Infer the possible hierarchy of a given pathway based on its equivalent mappings.

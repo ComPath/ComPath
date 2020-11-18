@@ -5,14 +5,16 @@
 import datetime
 import logging
 
-from flask import abort, Blueprint, current_app, flash, jsonify, redirect, render_template, request, url_for
+from flask import Blueprint, abort, current_app, flash, jsonify, redirect, render_template, request, url_for
 from flask_security import roles_required
 
-from compath.constants import STYLED_NAMES
-from compath.models import User
-from compath.utils import get_pathway_model_by_id, get_pathway_model_by_name
+from .utils import get_pathway_model_by_id
+from ..constants import STYLED_NAMES
+from ..models import User
+from ..state import bio2bel_managers, web_manager
+from ..utils import get_pathway_model_by_name
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 db_blueprint = Blueprint('db', __name__)
 time_instantiated = str(datetime.datetime.now())
@@ -29,9 +31,9 @@ def view_config():
 @roles_required('admin')
 def delete_db():
     """Destroy the database and recreates it."""
-    log.info('Deleting the database')
-    current_app.manager.drop_all()
-    current_app.manager.create_all()
+    logger.info('Deleting the database')
+    web_manager.drop_all()
+    web_manager.create_all()
 
     return jsonify(
         status=200,
@@ -43,7 +45,7 @@ def delete_db():
 @roles_required('admin')
 def delete_mapping(identifier):
     """Delete mapping by id."""
-    deleted = current_app.manager.delete_mapping_by_id(identifier)
+    deleted = web_manager.delete_mapping_by_id(identifier)
 
     if deleted is True:
         return jsonify(
@@ -64,7 +66,7 @@ def view_user(user_id):
 
     :param int user_id: The identifier of the user to summarize
     """
-    user = current_app.manager.session.query(User).get(user_id)
+    user = web_manager.session.query(User).get(user_id)
     return render_template('user/activity.html', user=user, STYLED_NAMES=STYLED_NAMES)
 
 
@@ -72,14 +74,14 @@ def view_user(user_id):
 @roles_required('admin')
 def view_users():
     """Render a list of users."""
-    return render_template('admin/users.html', users=current_app.manager.session.query(User))
+    return render_template('admin/users.html', users=web_manager.session.query(User))
 
 
 @db_blueprint.route('/admin/delete/mappings')
 @roles_required('admin')
 def delete_mappings():
     """Delete all mappings."""
-    current_app.manager.delete_all_mappings()
+    web_manager.delete_all_mappings()
 
     return jsonify(
         status=200,
@@ -109,7 +111,7 @@ def infer_hierarchy():
     if not resource:
         flash("Invalid request. Missing 'resource-1' arguments in the request", category='warning')
         return redirect(url_for('.curation'))
-    if resource not in current_app.manager_dict:
+    if resource not in bio2bel_managers:
         flash("'{}' does not exist or has not been loaded in ComPath".format(resource), category='warning')
         return redirect(url_for('.curation'))
 
@@ -123,12 +125,12 @@ def infer_hierarchy():
         flash("Missing pathway identifier", category='warning')
         return redirect(url_for('.curation'))
 
-    pathway_from_name = get_pathway_model_by_name(current_app.manager_dict, resource, pathway_name)
-    pathway_from_id = get_pathway_model_by_id(current_app, resource, pathway_id)
+    pathway_from_name = get_pathway_model_by_name(bio2bel_managers, resource, pathway_name)
+    pathway_from_id = get_pathway_model_by_id(resource, pathway_id)
 
     if pathway_from_name != pathway_from_id:
         abort(500, 'The identifier and the name do not point the same pathway')
 
-    inferred_hierarchies = current_app.manager.infer_hierarchy(resource, pathway_id, pathway_name)
+    inferred_hierarchies = web_manager.infer_hierarchy(resource, pathway_id, pathway_name)
 
     return jsonify(inferred_hierarchies)

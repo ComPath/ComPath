@@ -2,18 +2,21 @@
 
 """ComPath database model."""
 
+from __future__ import annotations
+
 import datetime
+from typing import Optional
 
 from flask_security import RoleMixin, UserMixin
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, and_, or_
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import backref, relationship
 
-from compath.constants import MODULE_NAME, VOTE_ACCEPTANCE
+from .constants import VOTE_ACCEPTANCE
 
 Base = declarative_base()
 
-TABLE_PREFIX = MODULE_NAME
+TABLE_PREFIX = 'compath'
 MAPPING_TABLE_NAME = '{}_mapping'.format(TABLE_PREFIX)
 VOTE_TABLE_NAME = '{}_vote'.format(TABLE_PREFIX)
 USER_TABLE_NAME = '{}_user'.format(TABLE_PREFIX)
@@ -111,9 +114,11 @@ class PathwayMapping(Base):
         :rtype: tuple[str,str,str]
         """
 
-        if self.service_1_name == service_name and \
-                self.service_1_pathway_id == pathway_id and \
-                self.service_1_pathway_name == pathway_name:
+        if (
+            self.service_1_name == service_name and
+            self.service_1_pathway_id == pathway_id and
+            self.service_1_pathway_name == pathway_name
+        ):
             return self.service_2_name, self.service_2_pathway_id, self.service_2_pathway_name
 
         else:
@@ -127,13 +132,13 @@ class PathwayMapping(Base):
                 PathwayMapping.service_1_name == service_name,
                 PathwayMapping.service_1_pathway_id == pathway_id,
                 PathwayMapping.service_1_pathway_name == pathway_name,
-                PathwayMapping.type == type
+                PathwayMapping.type == type,
             ),
             and_(
                 PathwayMapping.service_2_name == service_name,
                 PathwayMapping.service_2_pathway_id == pathway_id,
                 PathwayMapping.service_2_pathway_name == pathway_name,
-                PathwayMapping.type == type
+                PathwayMapping.type == type,
             )
         )
 
@@ -144,7 +149,7 @@ class PathwayMapping(Base):
             PathwayMapping.service_2_name == service_name,
             PathwayMapping.service_2_pathway_id == pathway_id,
             PathwayMapping.service_2_pathway_name == pathway_name,
-            PathwayMapping.type == type
+            PathwayMapping.type == type,
         )
 
     @staticmethod
@@ -154,7 +159,7 @@ class PathwayMapping(Base):
             PathwayMapping.service_1_name == service_name,
             PathwayMapping.service_1_pathway_id == pathway_id,
             PathwayMapping.service_1_pathway_name == pathway_name,
-            PathwayMapping.type == type
+            PathwayMapping.type == type,
         )
 
     @staticmethod
@@ -170,7 +175,7 @@ class PathwayMapping(Base):
                 PathwayMapping.service_2_name == service_name,
                 PathwayMapping.service_2_pathway_id == pathway_id,
                 PathwayMapping.service_2_pathway_name == pathway_name,
-            )
+            ),
         )
 
     @staticmethod
@@ -182,46 +187,31 @@ class PathwayMapping(Base):
         )
 
     @property
-    def count_votes(self):
-        """Return the number of votes for this mapping.
-
-        :rtype: int
-        """
+    def count_votes(self) -> int:
+        """Return the number of votes for this mapping."""
         return self.votes.count()
 
     @property
-    def count_creators(self):
-        """Return the number of creator that claimed this mapping.
-
-        :rtype: int
-        """
+    def count_creators(self) -> int:
+        """Return the number of creator that claimed this mapping."""
         return self.creators.count()
 
     @property
-    def count_up_votes(self):
-        """Return the number of up votes for this mapping.
-
-        :rtype: int
-        """
-        return self.votes.filter(Vote.type == True).count()
+    def count_up_votes(self) -> int:
+        """Return the number of up votes for this mapping."""
+        return self.votes.filter(Vote.type is True).count()
 
     @property
-    def count_down_votes(self):
-        """Return the number of down votes for this mapping.
-
-        :rtype: int
-        """
-        return self.votes.filter(Vote.type == False).count()
+    def count_down_votes(self) -> int:
+        """Return the number of down votes for this mapping."""
+        return self.votes.filter(Vote.type is False).count()
 
     @property
-    def is_acceptable(self):
-        """Return true if the mapping has enough votes to be accepted.
+    def is_acceptable(self) -> bool:
+        """Return true if the mapping has enough votes to be accepted."""
+        return self.votes.filter(Vote.type is True).count() >= VOTE_ACCEPTANCE
 
-        :rtype: bool
-        """
-        return self.votes.filter(Vote.type == True).count() >= VOTE_ACCEPTANCE
-
-    def get_user_vote(self, user):
+    def get_user_vote(self, user: User) -> Optional[Vote]:
         """Return votes given by the user."""
         return self.votes.filter(Vote.user == user).one_or_none()
 

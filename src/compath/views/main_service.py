@@ -6,16 +6,14 @@ import datetime
 import logging
 import sys
 
-from flask import (
-    Blueprint,
-    current_app,
-    render_template,
-)
+from flask import Blueprint, render_template
 from flask_security import current_user, login_required
 
-from compath.constants import BLACK_LIST, STYLED_NAMES
+from ..constants import BLACKLIST, STYLED_NAMES
+from ..state import bio2bel_managers, compath_state
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
+
 time_instantiated = str(datetime.datetime.now())
 ui_blueprint = Blueprint('ui', __name__)
 
@@ -51,14 +49,14 @@ def about():
     """Render About page."""
     metadata = [
         ('Python Version', sys.version),
-        ('Deployed', time_instantiated)
+        ('Deployed', time_instantiated),
     ]
 
     return render_template(
         'meta/about.html',
         metadata=metadata,
-        db_version=current_app.database_date,
-        STYLED_NAMES=STYLED_NAMES
+        db_version=compath_state.database_date,
+        STYLED_NAMES=STYLED_NAMES,
     )
 
 
@@ -73,14 +71,13 @@ def overview():
     """Render Overview page."""
     return render_template(
         'overview.html',
-        managers_overlap=current_app.manager_overlap,
-        resource_overview=current_app.resource_overview,
-        managers=current_app.manager_dict.keys(),
-        distributions=current_app.resource_distributions,
-        db_version=current_app.database_date,
-        BLACK_LIST=BLACK_LIST,
-        STYLED_NAMES=STYLED_NAMES
-
+        managers_overlap=compath_state.overlap,
+        resource_overview=compath_state.resource_overview,
+        managers=bio2bel_managers.keys(),
+        distributions=compath_state.resource_to_pathway_distribution,
+        db_version=compath_state.database_date,
+        BLACK_LIST=BLACKLIST,
+        STYLED_NAMES=STYLED_NAMES,
     )
 
 

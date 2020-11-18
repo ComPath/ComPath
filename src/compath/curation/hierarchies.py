@@ -3,14 +3,15 @@
 """This module loads the hierarchical pathway databases into ComPath."""
 
 import logging
+from typing import Optional
 
 from tqdm import tqdm
 
-from compath import managers
-from compath.constants import ADMIN_EMAIL, IS_PART_OF
-from compath.manager import Manager
+from bio2bel.compath import iter_compath_managers
+from ..constants import ADMIN_EMAIL, IS_PART_OF
+from ..manager import Manager
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def _reactome_wrapper(pathways):
@@ -40,17 +41,16 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
     mappings_created = 0
 
     for pathway in tqdm(pathways, desc='Loading hierarchies'):
-
         if not pathway.children:
             continue
 
         for children in pathway.children:
             mapping, created = compath_manager.get_or_create_mapping(
                 service_1_name=pathway_database,
-                pathway_1_id=children.resource_id,
+                pathway_1_id=children.identifier,
                 pathway_1_name=children.name,
                 service_2_name=pathway_database,
-                pathway_2_id=pathway.resource_id,
+                pathway_2_id=pathway.identifier,
                 pathway_2_name=pathway.name,
                 mapping_type=IS_PART_OF,
                 user=curator
@@ -62,11 +62,11 @@ def create_hierarchical_mappings(pathways, compath_manager, pathway_database, cu
     return mappings_created
 
 
-def load_hierarchy(*, connection=None, curator_email=None):
+def load_hierarchy(*, connection: Optional[str] = None, curator_email: Optional[str] = None):
     """Load the hierarchical relationships for the managers containing them.
 
-    :param Optional[str] connection:
-    :param Optional[str] curator_email: email of the admin
+    :param connection:
+    :param curator_email: email of the admin
     """
     compath_manager = Manager.from_connection(connection)
 
@@ -78,22 +78,22 @@ def load_hierarchy(*, connection=None, curator_email=None):
             'the command line interface of Compath'
         )
 
-    for pathway_database, ExternalManager in managers.items():
-
-        pathway_db_manager = ExternalManager()
-
-        if not hasattr(pathway_db_manager, 'has_hierarchy'):
+    for pathway_database, pathway_manager in iter_compath_managers(connection=connection):
+        if not hasattr(pathway_manager, 'has_hierarchy'):
             continue
 
-        log.info("Loading hierarchies for {}".format(pathway_database))
+        logger.info("Loading hierarchies for %s", pathway_database)
 
-        pathways = pathway_db_manager.get_all_pathways()
+        pathways = pathway_manager.list_pathways()
 
         if pathway_database == 'reactome':
             pathways = _reactome_wrapper(pathways)
 
-        log.info("Searching for hierarchical relationships in {} {} pathways".format(len(pathways), pathway_database))
+        logger.info(
+            "Searching for hierarchical relationships in %s %s pathways",
+            len(pathways), pathway_database,
+        )
 
         counter_mappings_created = create_hierarchical_mappings(pathways, compath_manager, pathway_database, curator)
 
-        log.info("{} hierarchical mappings created in {}".format(counter_mappings_created, pathway_database))
+        logger.info("{} hierarchical mappings created in {}".format(counter_mappings_created, pathway_database))

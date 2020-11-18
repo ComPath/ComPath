@@ -3,44 +3,35 @@
 """Command line interface."""
 
 import datetime
-import logging
 import sys
+from typing import Optional
 
 import click
 from flask_security import SQLAlchemyUserDatastore
 
-from compath import managers
-from compath.constants import ADMIN_EMAIL, DEFAULT_CACHE_CONNECTION
-from compath.curation.hierarchies import load_hierarchy
-from compath.curation.parser import parse_curation_template, parse_special_mappings
-from compath.manager import Manager
-from compath.models import Base, Role, User
-from compath.utils import _iterate_user_strings
+from bio2bel.compath import get_compath_manager_classes, get_compath_managers, iter_compath_managers
+from pyobo.cli_utils import verbose_option
+from .constants import ADMIN_EMAIL, DEFAULT_CACHE_CONNECTION
+from .curation.hierarchies import load_hierarchy
+from .curation.parser import parse_curation_template, parse_special_mappings
+from .manager import Manager
+from .models import Base, Role, User
+from .utils import _iterate_user_strings
 
-logger = logging.getLogger(__name__)
-
-
-def set_debug(level):
-    """Set debug."""
-    logger.setLevel(level=level)
-
-
-def set_debug_param(debug):
-    """Set parameter."""
-    if debug == 1:
-        set_debug(20)
-    elif debug == 2:
-        set_debug(10)
+connection_option = click.option(
+    '-c', '--connection',
+    default=DEFAULT_CACHE_CONNECTION,
+    show_default=True,
+)
 
 
 @click.group(help='ComPath at {}'.format(DEFAULT_CACHE_CONNECTION))
 def main():
     """Start main click method."""
-    logging.basicConfig(level=20, format="%(asctime)s - %(levelname)s - %(name)s - %(message)s")
 
 
 @main.group()
-@click.option('-c', '--connection', help='Cache connection. Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
+@connection_option
 @click.pass_context
 def manage(ctx, connection):
     """Manage the database."""
@@ -53,14 +44,23 @@ def manage(ctx, connection):
 @manage.group()
 def users():
     """User group."""
-    pass
 
 
 @main.command()
 def ls():
     """Display registered Bio2BEL pathway managers."""
-    for manager in managers:
+    for manager in get_compath_manager_classes():
         click.echo(manager)
+
+
+@main.command()
+@connection_option
+def summarize(connection: Optional[str]):
+    """Summarize the contents."""
+    for name, manager in iter_compath_managers(connection=connection):
+        click.secho(name, bold=True, fg='magenta')
+        for k, v in sorted(manager.summarize().items()):
+            click.echo(f'  {k}: {v}')
 
 
 @main.command()
@@ -68,74 +68,85 @@ def ls():
 @click.option('--port', type=int, default=5000, help='Flask port. Defaults to 5000')
 @click.option('--template-folder', help="Template folder. Defaults to 'templates'")
 @click.option('--static-folder', help="Template folder. Defaults to 'static'")
-@click.option('-v', '--debug', count=True, help="Turn on debugging.")
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def web(host, port, template_folder, static_folder, debug, connection):
+@verbose_option
+@connection_option
+def web(host, port, template_folder, static_folder, connection):
     """Run web service."""
-    set_debug_param(debug)
-
-    from compath.web import create_app
-    app = create_app(connection=connection, template_folder=template_folder, static_folder=static_folder)
+    from .web import create_app
+    app = create_app(
+        connection=connection,
+        template_folder=template_folder,
+        static_folder=static_folder,
+    )
     app.run(host=host, port=port)
 
 
 @main.command()
-@click.option('-v', '--debug', count=True, help="Turn on debugging.")
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
+@verbose_option
+@connection_option
 @click.option('-d', '--delete-first', is_flag=True)
-def populate(debug, connection, delete_first):
+def populate(connection: Optional[str], delete_first: bool):
     """Populate all registered Bio2BEL pathway packages."""
-    set_debug_param(debug)
+    for name, manager in iter_compath_managers(connection=connection):
+        click.echo(f'populating {name} at {manager.engine.url}')
 
-    for name, Manager in managers.items():
-        m = Manager(connection=connection)
-        logger.info('populating %s at %s', name, m.engine.url)
+        if manager.is_populated():
+            click.echo(f'already populated {name}')
+            continue
 
         if delete_first:
-            click.echo('deleting {}'.format(name))
-            m.drop_all()
-            m.create_all()
+            click.echo(f'deleting {name}')
+            manager.drop_all()
+            manager.create_all()
 
-        click.echo('populating {}'.format(name))
-        m.populate()
+        click.echo(f'populating {name}')
+        manager.populate()
 
 
 @main.command()
-@click.option('-v', '--debug', count=True, help="Turn on debugging.")
+@verbose_option
 @click.option('-y', '--yes', is_flag=True)
-@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
-def drop(debug, yes, connection):
+@connection_option
+def drop(yes: bool, connection: Optional[str]):
     """Drop ComPath DB."""
-    set_debug_param(debug)
-
     if yes or click.confirm('Do you really want to delete the ComPath DB'):
-        m = Manager.from_connection(connection=connection)
+        manager = Manager.from_connection(connection=connection)
         click.echo('Deleting ComPath DB')
-        m.drop_all()
-        m.create_all()
+        manager.drop_all()
+        manager.create_all()
 
 
 @main.command()
-@click.option('-v', '--debug', count=True, help="Turn on debugging.")
+@verbose_option
 @click.option('-y', '--yes', is_flag=True)
-@click.option('-c', '--connection', help='Defaults to {}'.format(DEFAULT_CACHE_CONNECTION))
-def drop_databases(debug, yes, connection):
+@connection_option
+def drop_databases(yes: bool, connection: Optional[str]):
     """Drop all databases."""
-    set_debug_param(debug)
-
+    managers = get_compath_managers(connection=connection)
     if yes or click.confirm('Do you really want to delete the databases for {}?'.format(', '.join(managers))):
-        for name, Manager in managers.items():
-            m = Manager(connection=connection)
-            click.echo('deleting {}'.format(name))
-            m.drop_all()
+        for name, manager in managers.items():
+            click.echo(f'deleting {name}')
+            manager.drop_all()
 
 
 @main.command()
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-def load_mappings(connection):
+@verbose_option
+@connection_option
+def load_mappings(connection: Optional[str]):
     """Load mappings from template."""
-    set_debug_param(2)
+    compath_manager = Manager.from_connection(connection=connection)
+    bio2bel_managers = get_compath_managers(connection=connection)
 
+    parse_special_mappings(
+        'https://github.com/ComPath/compath-resources/raw/master/mappings/special_mappings.csv',
+        curator_emails=[
+            'daniel.domingo.fernandez@scai.fraunhofer.de',
+            'carlos.bobis@scai.fraunhofer.de',
+            'josepmarinllao@gmail.com',
+        ],
+        compath_manager=compath_manager,
+        bio2bel_managers=bio2bel_managers,
+    )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_wikipathways.csv',
         'kegg',
@@ -143,9 +154,10 @@ def load_mappings(connection):
         curator_emails=[
             'daniel.domingo.fernandez@scai.fraunhofer.de',
             'carlos.bobis@scai.fraunhofer.de',
-            'josepmarinllao@gmail.com'
+            'josepmarinllao@gmail.com',
         ],
-        connection=connection
+        compath_manager=compath_manager,
+        bio2bel_managers=bio2bel_managers,
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/kegg_reactome.csv',
@@ -154,9 +166,10 @@ def load_mappings(connection):
         curator_emails=[
             'daniel.domingo.fernandez@scai.fraunhofer.de',
             'carlos.bobis@scai.fraunhofer.de',
-            'josepmarinllao@gmail.com'
+            'josepmarinllao@gmail.com',
         ],
-        connection=connection
+        compath_manager=compath_manager,
+        bio2bel_managers=bio2bel_managers,
     )
     parse_curation_template(
         'https://github.com/ComPath/resources/raw/master/mappings/wikipathways_reactome.csv',
@@ -165,31 +178,20 @@ def load_mappings(connection):
         curator_emails=[
             'daniel.domingo.fernandez@scai.fraunhofer.de',
             'carlos.bobis@scai.fraunhofer.de',
-            'josepmarinllao@gmail.com'
+            'josepmarinllao@gmail.com',
         ],
-        connection=connection
-    )
-
-    parse_special_mappings(
-        'https://github.com/ComPath/resources/raw/master/mappings/special_mappings.xlsx',
-        curator_emails=[
-            'daniel.domingo.fernandez@scai.fraunhofer.de',
-            'carlos.bobis@scai.fraunhofer.de',
-            'josepmarinllao@gmail.com'
-        ],
-        connection=connection,
+        compath_manager=compath_manager,
+        bio2bel_managers=bio2bel_managers,
     )
 
 
 @main.command()
-@click.option('-c', '--connection', help="Defaults to {}".format(DEFAULT_CACHE_CONNECTION))
-@click.option('-e', '--email', help="Default curator: {}".format(ADMIN_EMAIL))
-def load_hierarchies(connection, email):
+@connection_option
+@click.option('-e', '--email', default=ADMIN_EMAIL, show_default=True)
+@verbose_option
+def load_hierarchies(connection: Optional[str], email: str):
     """Load pathway databases with hierarchies."""
-    set_debug_param(2)
-
     # Example: python3 -m compath load_hierarchies --email='your@email.com'
-
     load_hierarchy(connection=connection, curator_email=email)
 
 

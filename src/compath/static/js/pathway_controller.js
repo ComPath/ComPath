@@ -44,7 +44,7 @@ function updateDynamicTable(tableId, rows) {
     var row = 1;
     $.each(rows, function (key, value) {
         insertRow(table, row, value);
-        row++
+        row++;
     });
 }
 
@@ -115,7 +115,9 @@ $(document).ready(function () {
     });
 
     $("#infer-mappings").on('click', function (e) {
-
+        if (pathwayId === "") {
+            console.log("pathwayId is not set")
+        }
         $.ajax({
             type: "GET",
             url: "/pathway/infer/hierarchy",
@@ -135,11 +137,9 @@ $(document).ready(function () {
                 updateDynamicTable('info-table', response);
             }
         });
-
     });
 
     $("#suggest-by-name").on('click', function (e) {
-
         $.ajax({
             type: "GET",
             url: "/suggest_mappings/name/" + pathwayName,
@@ -154,11 +154,12 @@ $(document).ready(function () {
                 updateDynamicTable('info-table', response);
             }
         });
-
     });
 
     $("#suggest-by-content").on('click', function (e) {
-
+        if (pathwayId === "") {
+            console.log("pathwayId is not set")
+        }
         $.ajax({
             type: "GET",
             url: "/suggest_mappings/content/" + resource + "/" + pathwayId,
@@ -173,8 +174,6 @@ $(document).ready(function () {
                 pathwaySimilarityTable('info-table', response);
             }
         });
-
     });
-
 });
 

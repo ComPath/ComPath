@@ -4,18 +4,18 @@
 
 import logging
 
-from flask import (Blueprint, abort, current_app, request, render_template)
+from flask import (Blueprint, abort, render_template, request)
 from flask_admin.contrib.sqla import ModelView
 
-from compath.constants import EQUIVALENT_TO, IS_PART_OF, STYLED_NAMES
-from compath.models import PathwayMapping, Vote
-from compath.utils import get_pathway_model_by_id
-from compath.visualization.d3_dendrogram import get_mapping_dendrogram
+from .utils import get_pathway_model_by_id
+from ..constants import EQUIVALENT_TO, IS_PART_OF, STYLED_NAMES
+from ..models import PathwayMapping, Vote
+from ..state import bio2bel_managers, web_manager
+from ..visualization.d3_dendrogram import get_mapping_dendrogram
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
+
 model_blueprint = Blueprint('model', __name__)
-
-"""Admin views"""
 
 
 class MappingView(ModelView):
@@ -56,7 +56,7 @@ class VoteView(ModelView):
 
     column_display_all_relations = [
         Vote.user,
-        Vote.mapping
+        Vote.mapping,
     ]
 
 
@@ -66,15 +66,15 @@ class VoteView(ModelView):
 @model_blueprint.route('/pathway/<resource>/<identifier>')
 def pathway_view(resource, identifier):
     """Render the pathway view page."""
-    if resource not in current_app.manager_dict:
+    if resource not in bio2bel_managers:
         abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))
 
-    pathway = get_pathway_model_by_id(current_app, resource, identifier)
+    pathway = get_pathway_model_by_id(resource, identifier)
 
     if not pathway:
         abort(404, 'Pathway not found for identifier "{}"'.format(identifier))
 
-    mappings = current_app.manager.get_all_mappings_from_pathway(resource, identifier, pathway.name)
+    mappings = web_manager.get_all_mappings_from_pathway(resource, identifier, pathway.name)
 
     super_pathways = []
 
@@ -83,50 +83,38 @@ def pathway_view(resource, identifier):
     equivalent_pathways = []
 
     for mapping in mappings:
-
         if mapping.type == EQUIVALENT_TO:
             if mapping.service_1_pathway_id == pathway.resource_id:
-                equivalent_pathways.append(
-                    (
-                        mapping.service_2_name,
-                        mapping.service_2_pathway_id,
-                        mapping.service_2_pathway_name
-                    )
-
-                )
-
+                equivalent_pathways.append((
+                    mapping.service_2_name,
+                    mapping.service_2_pathway_id,
+                    mapping.service_2_pathway_name,
+                ))
             else:
-                equivalent_pathways.append(
-                    (
-                        mapping.service_1_name,
-                        mapping.service_1_pathway_id,
-                        mapping.service_1_pathway_name
-                    )
-                )
+                equivalent_pathways.append((
+                    mapping.service_1_name,
+                    mapping.service_1_pathway_id,
+                    mapping.service_1_pathway_name,
+                ))
 
         elif mapping.type == IS_PART_OF:
             if mapping.service_1_pathway_id == pathway.resource_id:
-                super_pathways.append(
-                    (
-                        mapping.service_2_name,
-                        mapping.service_2_pathway_id,
-                        mapping.service_2_pathway_name
-                    )
-
-                )
+                super_pathways.append((
+                    mapping.service_2_name,
+                    mapping.service_2_pathway_id,
+                    mapping.service_2_pathway_name,
+                ))
 
             else:
-                sub_pathways.append(
-                    (
-                        mapping.service_1_name,
-                        mapping.service_1_pathway_id,
-                        mapping.service_1_pathway_name
-                    )
-                )
+                sub_pathways.append((
+                    mapping.service_1_name,
+                    mapping.service_1_pathway_id,
+                    mapping.service_1_pathway_name,
+                ))
         else:
             raise ValueError('Error with mapping type')
 
-    d3_tree = get_mapping_dendrogram(current_app.manager, resource, identifier, pathway.name)
+    d3_tree = get_mapping_dendrogram(web_manager, resource, identifier, pathway.name)
 
     return render_template(
         'models/pathway.html',

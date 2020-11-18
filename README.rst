@@ -1,6 +1,8 @@
 ComPath |build| |coverage| |docs| |zenodo|
 ==========================================
-An integrative and extensible web application for exploring, analyzing, and curating pathway databases. ComPath is publicly available at https://compath.scai.fraunhofer.de/.
+An integrative and extensible web application for exploring, analyzing, and curating pathway databases.
+
+A public instance of ComPath is available at https://compath.scai.fraunhofer.de.
 
 This package exposes the Bio2BEL pathway packages into a web application containing multiple built-in visualization and
 analytics tools allowing for their analysis and comparison. By default, this packages wraps the following default
@@ -11,13 +13,20 @@ packages:
 - `Bio2BEL WikiPathways <https://github.com/bio2bel/wikipathways>`_
 - `Bio2BEL MSig <https://github.com/bio2bel/msig>`_
 
-New pathway/gene signatures resources can be added by forking the `ComPath Template Repository <https://github.com/compath/compath_template>`_.
+New pathway/gene signatures resources can be added by forking the `ComPath Template
+Repository <https://github.com/compath/compath_template>`_.
+
+**Warning** This package creates ``partOf`` relationships in BEL from KEGG, WikiPathways, and other pathway
+databases. If you want to extract their mechanistic relationships, see the
+`PathMe project <https://github.com/pathwaymerger/pathme>`_.
 
 Citation
 --------
 If you use ComPath in your work, please consider citing:
 
-.. [1] Domingo-Fernández, D., *et al.* (2018). `ComPath: An ecosystem for exploring, analyzing, and curating mappings across pathway databases <https://doi.org/10.1038/s41540-018-0078-8>`_. *npj Syst Biol Appl.*, 4(1):43.
+.. [1] Domingo-Fernández, D., *et al.* (2018). `ComPath: An ecosystem for exploring, analyzing, and curating
+       mappings across pathway databases <https://doi.org/10.1038/s41540-018-0078-8>`_.
+       *npj Syst Biol Appl.*, __4__(1):43.
 
 Installation |pypi_version| |python_versions| |pypi_license|
 ------------------------------------------------------------
@@ -26,13 +35,13 @@ following code in your favorite terminal:
 
 .. code-block:: sh
 
-    python3 -m pip install compath
+    pip install compath
 
 or from the latest code on `GitHub <https://github.com/compath/compath>`_ with:
 
 .. code-block:: sh
 
-    python3 -m pip install git+https://github.com/bio2bel/compath.git@master
+    pip install git+https://github.com/bio2bel/compath.git
 
 Setup
 -----
@@ -42,7 +51,7 @@ After installing ``compath``, run from the command line:
 
 .. code-block:: sh
 
-    python3 -m compath populate
+    compath populate
 
 This command populates all of the relevant Bio2BEL repositories for the default list, and if any optional ComPath
 repositories have been registered with entry points, will also populated.
@@ -54,11 +63,11 @@ typing :code:`sh load_compath.sh` in your terminal. This script will first insta
 database.
 
 If you have already installed the packages, but not loaded the data. Load all individual pathway database
-packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`python3 -m compath populate`. This command assumes that
+packages KEGG, Reactome, WikiPathways, and MSigDB  with :code:`compath populate`. This command assumes that
 these packages are already installed in your Python environment. You can check the packages installed by running
-:code:`python3 -m compath ls` in your terminal. Alternatively, you can populate each package independently by running:
-:code:`python3 -m bio2bel_kegg populate`, :code:`python3 -m bio2bel_reactome populate`,
-:code:`python3 -m bio2bel_wikipathways populate`, or :code:`python3 -m bio2bel_msig populate`.
+:code:`compath ls` in your terminal. Alternatively, you can populate each package independently by running:
+:code:`bio2bel_kegg populate`, :code:`bio2bel_reactome populate`,
+:code:`bio2bel_wikipathways populate`, or :code:`bio2bel_msig populate`.
 
 Running the Web Application
 ---------------------------
@@ -66,7 +75,7 @@ The application can be run simply with
 
 .. code-block:: bash
 
-    python3 -m compath web
+    compath web
 
 This command the Flask development server locally, by default on port 5000 (http://localhost:5000).
 
@@ -76,33 +85,30 @@ Load mappings between pathways directly from the `ComPath Curation <https://gith
 
 .. code-block:: sh
 
-    python3 -m compath load_mappings --connection="sqlite:////data/bio2bel.db"
+    compath load_mappings --connection="sqlite:////data/bio2bel.db"
 
 Load hierarchical mappings from a pathway database already containing that information (e.g., Reactome).
 
 .. code-block:: sh
 
-    python3 -m compath load_hierarchies --connection="sqlite:////data/bio2bel.db"
-
+    compath load_hierarchies --connection="sqlite:////data/bio2bel.db"
 
 Create a user.
 
 .. code-block:: sh
 
-    python3 -m compath manage --connection="sqlite:////data/bio2bel.db" users make_user  'email' 'password'
+    compath manage --connection="sqlite:////data/bio2bel.db" users make_user  'email' 'password'
 
 Make user admin.
 
 .. code-block:: sh
 
-    python3 -m compath manage --connection="sqlite:////data/bio2bel.db" users make_admin 'email'
+    compath manage --connection="sqlite:////data/bio2bel.db" users make_admin 'email'
 
 Docker Instructions
 -------------------
-
 Deployment of ComPath with Docker
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
 1. Build the container with compath as a name.
 
 .. code-block:: sh
@@ -133,7 +139,6 @@ Deployment of ComPath with Docker
 
 Load Data
 ~~~~~~~~~
-
 Loads the KEGG, Reactome, and WikiPathways modules into ComPath.
 
 .. code-block:: sh
@@ -142,7 +147,6 @@ Loads the KEGG, Reactome, and WikiPathways modules into ComPath.
 
 Restart Container
 ~~~~~~~~~~~~~~~~~
-
 Restarts the compath container
 
 .. code-block:: sh
@@ -151,8 +155,8 @@ Restarts the compath container
  
 Disclaimer
 ----------
-ComPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty or guarantee of maintenance, support, or back-up of data.
-
+ComPath is a scientific software that has been developed in an academic capacity, and thus comes with no warranty
+or guarantee of maintenance, support, or back-up of data.
 
 .. |build| image:: https://travis-ci.org/ComPath/ComPath.svg?branch=master
     :target: https://travis-ci.org/ComPath/ComPath

@@ -4,27 +4,26 @@
 
 import logging
 
-from flask import Blueprint, abort, current_app, jsonify, request
+from flask import Blueprint, abort, jsonify, request
 
-from compath.constants import BLACK_LIST
-from compath.utils import get_gene_pathways
+from ..constants import BLACKLIST
+from ..state import bio2bel_managers
+from ..utils import get_gene_pathways
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
+
 api_blueprint = Blueprint('api', __name__)
 
 
 @api_blueprint.route('/api/installed_plugins')
 def installed_plugins():
     """Return the installed plugins."""
-    installed_plugins = [
-        resource_name
-        for resource_name in current_app.manager_dict
-    ]
+    _installed_plugins = list(bio2bel_managers)
 
-    if not installed_plugins:
+    if not _installed_plugins:
         abort(500, 'There are no plugins installed')
 
-    return jsonify(installed_plugins)
+    return jsonify(_installed_plugins)
 
 
 @api_blueprint.route('/api/plugins_populated')
@@ -32,7 +31,7 @@ def plugins_populated():
     """Check if all plugins are populated."""
     installed_plugins = {
         resource_name: manager.is_populated()
-        for resource_name, manager in current_app.manager_dict.items()
+        for resource_name, manager in bio2bel_managers.items()
     }
 
     if all(installed_plugins.values()):
@@ -60,7 +59,7 @@ def api_get_gene_pathways(hgnc_symbol):
          200:
            description: pathway dict in JSON.
     """
-    pathways = get_gene_pathways(current_app.manager_dict, hgnc_symbol)
+    pathways = get_gene_pathways(bio2bel_managers, hgnc_symbol)
 
     if all(value is None for value in pathways.values()):
         return jsonify({})
@@ -84,25 +83,12 @@ def api_gene_autocompletion_all_resources():
     if not q:
         return jsonify([])
 
-    hgnc_symbols = set()
-
-    for manager_name, manager in current_app.manager_dict.items():
-        if manager_name in BLACK_LIST:
-            continue
-
-        genes = manager.query_similar_hgnc_symbol(q)
-
-        if not genes:
-            continue
-
-        for gene in genes:
-            hgnc_symbols.add(gene.hgnc_symbol)
-
-    # Return empty json if no genes matching in the DB
-    if not hgnc_symbols:
-        return jsonify([])
-
-    return jsonify(list(hgnc_symbols))
+    return jsonify(list({
+        gene.hgnc_symbol
+        for manager_name, manager in bio2bel_managers.items()
+        if manager_name not in BLACKLIST
+        for gene in manager.search_genes(q)
+    }))
 
 
 """Pathway Autocompletion and Query"""
@@ -126,24 +112,23 @@ def api_pathway_autocompletion_resource_specific():
 
     resource = resource.lower()
 
-    manager = current_app.manager_dict.get(resource)
+    manager = bio2bel_managers.get(resource)
 
     if not manager:
         return jsonify([])
 
     # Special method for ComPath HGNC since it does not have a pathway model but gene families
     if resource == 'compath_hgnc':
-        return jsonify(manager.autocomplete_gene_families(q, 10))
+        return jsonify(manager.autocomplete_gene_families(q, limit=10))
 
     return jsonify(list({
         pathway.name
-        for pathway in manager.query_pathway_by_name(q, 10)  # Limits the results returned to 10
-        if pathway
+        for pathway in manager.search_pathways(q, limit=10)  # Limits the results returned to 10
     }))
 
 
 @api_blueprint.route('/api/autocompletion/pathway/<name>')
-def api_pathway_autocompletion_all_resources(name):
+def api_pathway_autocompletion_all_resources(name: str):
     """Pathway name autocompletion, looking at all databases/plugins installed.
        ---
        tags:
@@ -158,18 +143,9 @@ def api_pathway_autocompletion_all_resources(name):
            description: returns a list for the autocompletion of 10 pathway in JSON.
 
      """
-    similar_pathways = {}
-
-    for resource_name, ExternalManager in current_app.manager_dict.items():
-        if resource_name in BLACK_LIST:
-            continue
-
-        similar_pathways[resource_name] = ExternalManager.query_similar_pathways(name, top=5)
-
-    similar_pathways = [
-        (resource_name, pathway_id, pathway_name)
-        for resource_name, pathways in similar_pathways.items()
-        for pathway_name, pathway_id in pathways
-    ]
-
-    return jsonify(similar_pathways)
+    return jsonify([
+        (prefix, pathway.identifier, pathway.name)
+        for prefix, manager in bio2bel_managers.items()
+        if prefix not in BLACKLIST
+        for pathway in manager.search_pathways(name, limit=5)
+    ])

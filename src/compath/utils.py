@@ -5,25 +5,29 @@
 import logging
 from collections import defaultdict
 from difflib import SequenceMatcher
+from itertools import combinations
+from operator import itemgetter
+from typing import Any, Dict, Iterable, List, Mapping, Optional, Set, Tuple
 
 import numpy as np
-from bio2bel.models import Action, _make_session
 from pandas import DataFrame, Series
 from scipy.stats import fisher_exact
 from sqlalchemy import and_
 from statsmodels.sandbox.stats.multicomp import multipletests
 
-from compath.models import User
-from .constants import BLACK_LIST
+from bio2bel.compath import CompathManager, CompathPathwayMixin
+from bio2bel.models import Action, _make_session
+from .constants import BLACKLIST
+from .models import User
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 """General utils"""
 
 
 # modified from https://stackoverflow.com/questions/19736080/creating-dataframe-from-a-dictionary-where-entries-have-different-lengths
 
-def dict_to_pandas_df(d):
+def dict_to_pandas_df(d: Mapping[str, Iterable[str]]):
     """Transform pandas df into a dict.
 
     :param dict d:
@@ -36,11 +40,10 @@ def dict_to_pandas_df(d):
     })
 
 
-def process_form_gene_set(text):
+def process_form_gene_set(text: str) -> Set[str]:
     """Process the string containing gene symbols and returns a gene set.
 
-    :param str text: string to be processed
-    :rtype: set[str]
+    :param text: string to be processed
     :return: gene set
     """
     return {
@@ -57,91 +60,99 @@ have at least x genes in a pathway.
 """
 
 
-def calculate_relative_enrichments(results, total_pathways_by_resource):
+def calculate_relative_enrichments(
+    resource_to_enriched_pathways: Mapping[str, List[str]],
+    total_pathways_by_resource: Mapping[str, int],
+) -> Mapping[str, float]:
     """Calculate relative enrichment of pathways (enriched pathways/total pathways).
 
-    :param dict results: result enrichment
+    :param dict resource_to_enriched_pathways: result enrichment
     :param dict total_pathways_by_resource: resource to number of pathways
     :rtype: dict
     """
-    return {
-        resource: len(enriched_pathways) / total_pathways_by_resource[resource]
-        for resource, enriched_pathways in results.items()
-    }
+    rv = {}
+    for resource, pathways in resource_to_enriched_pathways.items():
+        n_enriched_pathways = len(pathways)
+        denom = total_pathways_by_resource[resource]
+        rv[resource] = n_enriched_pathways / denom
+    return rv
 
 
-def count_genes_in_pathway(pathways_gene_sets, genes):
+def count_genes_in_pathways(
+    pathways: Mapping[str, Set[str]],
+    query: Set[str],
+) -> Mapping[str, int]:
     """Calculate how many of the genes are associated to each pathway gene set.
 
-    :param dict pathways_gene_sets: pathways and their gene sets
-    :param set genes: genes queried
-    :rtype: dict
+    :param pathways: pathways and their gene sets
+    :param query: Set of HGNC gene symbols to be queried queried
     """
     return {
-        pathway: len(gene_set.intersection(genes))
-        for pathway, gene_set in pathways_gene_sets.items()
+        pathway: len(gene_set.intersection(query))
+        for pathway, gene_set in pathways.items()
     }
 
 
-def apply_filter(results, threshold):
+def apply_filter(
+    resource_to_pathway_to_hit_count: Mapping[str, Mapping[str, int]],
+    threshold: int,
+) -> Mapping[str, List[str]]:
     """Run one simulation with a given threshold.
 
-    :param dict results: resource with pathways
-    :param int threshold: necessary genes to enrich a pathway
+    :param resource_to_pathway_to_hit_count: resource with pathways
+    :param threshold: necessary genes to enrich a pathway
     :rtype: dict
     """
-    filtered_results = {}
+    filtered_results = defaultdict(list)
 
-    for database_name, pathways in results.items():
-
-        pathways_pass_filter = []
-
+    for database_name, pathways in resource_to_pathway_to_hit_count.items():
         for pathway_name, genes_mapped in pathways.items():
-
             if genes_mapped < threshold:
                 continue
-
-            pathways_pass_filter.append(pathway_name)
-
-        filtered_results[database_name] = pathways_pass_filter
+            filtered_results[database_name].append(pathway_name)
 
     return filtered_results
 
 
-def simulate_pathway_enrichment(resource_gene_sets, gene_set_query, runs=200):
+def simulate_pathway_enrichment(
+    resource_pathways: Mapping[str, Mapping[str, Set[str]]],
+    query: Set[str],
+    runs: int = 200,
+) -> Mapping[str, List[float]]:
     """Simulate pathway enrichment.
 
-    :param resource_gene_sets: resource and their gene sets
-    :param gene_set_query: shared genes between all resources
+    :param resource_pathways: resource and their gene sets
+    :param query: shared genes between all resources
     :param runs: number of simulation
     :rtype: dict[list[tuple]]
     """
     # How many pathways each resource (Database) has
-    total_pathways_by_resource = {
-        resource: len(pathways_gene_sets)
-        for resource, pathways_gene_sets in resource_gene_sets.items()
+    resource_to_pathway_count: Mapping[str, int] = {
+        resource: len(pathways)
+        for resource, pathways in resource_pathways.items()
     }
 
     # How many genes of the 'gene_set_query' are in each pathway
-    enriched_pathways = {
-        resource: count_genes_in_pathway(pathways_gene_sets, gene_set_query)
-        for resource, pathways_gene_sets in resource_gene_sets.items()
+    resource_to_pathway_to_hit_count: Mapping[str, Mapping[str, int]] = {
+        resource: count_genes_in_pathways(pathways, query)
+        for resource, pathways in resource_pathways.items()
     }
 
-    results = defaultdict(list)
+    results: Dict[str, List[float]] = defaultdict(list)
 
     # Calculate the percentage of pathways in the database with a minimum of genes in the pathway
     for threshold in range(1, runs):
-        filtered_results = apply_filter(enriched_pathways, threshold)
+        filtered_results: Mapping[str, List[str]] = apply_filter(resource_to_pathway_to_hit_count, threshold)
 
-        relative_enrichments = calculate_relative_enrichments(
-            filtered_results, total_pathways_by_resource
+        relative_enrichments: Mapping[str, float] = calculate_relative_enrichments(
+            filtered_results,
+            resource_to_pathway_count,
         )
 
         for resource, result in relative_enrichments.items():
             results[resource].append(round(result, 3))
 
-    return results
+    return dict(results)
 
 
 """Query utils"""
@@ -183,161 +194,55 @@ def get_genes_without_assigned_pathways(enrichment_results, genes_query):
     }
 
 
-def get_enriched_pathways(manager_list, gene_set):
+def get_enriched_pathways(managers: Mapping[str, CompathManager], hgnc_symbols: Set[str]):
     """Return the results of the queries for every registered manager.
 
-    :param dict[str, Manager] manager_list: list of managers
-    :param set[str] gene_set: gene set queried
+    :param managers: list of managers
+    :param hgnc_symbols: gene set queried
     :rtype: dict[str,dict[str,dict]]
     """
     return {
-        manager_name: instance.query_gene_set(gene_set)
-        for manager_name, instance in manager_list.items()
-        if manager_name not in BLACK_LIST
+        prefix: manager.query_hgnc_symbols(hgnc_symbols)
+        for prefix, manager in managers.items()
+        if prefix not in BLACKLIST
     }
 
 
-def get_gene_pathways(manager_list, gene):
+def get_gene_pathways(managers: Mapping[str, CompathManager], hgnc_symbol: str):
     """Return the pathways associated with a gene for every registered manager.
 
-    :param dict[str, Manager] manager_list: list of managers
-    :param str gene: HGNC symbol
+    :param managers: list of managers
+    :param hgnc_symbol: HGNC symbol
     :rtype: dict[str,dict[str,dict]]
     """
     return {
-        manager_name: instance.query_gene(gene)
-        for manager_name, instance in manager_list.items()
-        if manager_name not in BLACK_LIST
+        prefix: manager.query_hgnc_symbol(hgnc_symbol)
+        for prefix, manager in managers.items()
+        if prefix not in BLACKLIST
     }
 
 
-def get_mappings(compath_manager, only_accepted=True):
-    """Return a pandas dataframe with mappings information as an excel sheet file.
-
-    :param compath.manager.Manager compath_manager: ComPath Manager
-    :param bool only_accepted: only accepted (True) or all (False)
-    """
-    if only_accepted:
-        mappings = compath_manager.get_all_accepted_mappings()
-    else:
-        mappings = compath_manager.get_all_mappings()
-
-    return [
-        (
-            mapping.service_1_pathway_name,
-            mapping.service_1_pathway_id,
-            mapping.service_1_name,
-            mapping.type,
-            mapping.service_2_pathway_name,
-            mapping.service_2_pathway_id,
-            mapping.service_2_name
-        )
-        for mapping in mappings
-    ]
-
-
-def get_pathway_model_by_name(manager_dict, resource, pathway_name):
+def get_pathway_model_by_name(
+    manager_dict: Mapping[str, CompathManager],
+    resource: str,
+    pathway_name: str,
+) -> Optional[CompathPathwayMixin]:
     """Return the pathway object from the resource manager.
 
-    :param dict manager_dict: manager name to manager instances dictionary
-    :param str resource: name of the manager
-    :param str pathway_name: pathway name
-    :rtype: Optional[Pathway]
-    :return: pathway if exists
+    :param manager_dict: manager name to manager instances dictionary
+    :param resource: name of the manager
+    :param pathway_name: pathway name
     """
-    manager = manager_dict.get(resource.lower())
-
-    if not manager:
-        raise ValueError('Manager does not exist for {}'.format(resource.lower()))
-
+    manager: CompathManager = manager_dict[resource.lower()]
     return manager.get_pathway_by_name(pathway_name)
 
 
-def get_pathway_model_by_id(app, resource, pathway_id):
-    """Return the pathway object from the resource manager.
-
-    :param flask.Flask app: current app
-    :param str resource: name of the manager
-    :param str pathway_id: pathway id
-    :rtype: Optional[Pathway]
-    :return: pathway if exists
-    """
-    manager = app.manager_dict.get(resource.lower())
-
-    return manager.get_pathway_by_id(pathway_id)
-
-
-def get_gene_sets_from_pathway_names(app, pathways):
-    """Return the gene sets for a given pathway/resource tuple.
-
-    :param flask.Flask app: current app
-    :param list[tuple[str,str] pathways: pathway/resource tuples
-    :rtype: tuple[dict[str,set[str]],dict[str,str]]
-    :return: gene sets
-    """
-    gene_sets = {}
-
-    pathway_manager_dict = {}
-
-    for name, resource in pathways:
-
-        pathway = get_pathway_model_by_name(app.manager_dict, resource, name)
-
-        if not pathway:
-            log.warning('{} pathway not found'.format(name))
-            continue
-
-        # Ensure no duplicates are passed
-        if name in gene_sets:
-            name = "{}_{}".format(name, resource)
-
-        # Check if pathway has no genes
-        if not pathway.proteins:
-            continue
-
-        pathway_manager_dict[name] = resource
-
-        gene_sets[name] = {
-            protein.hgnc_symbol
-            for protein in pathway.proteins
-        }
-
-    return gene_sets, pathway_manager_dict
-
-
-def get_pathway_info(app, pathways):
-    """Return the gene sets for a given pathway/resource tuple.
-
-    :param flask.Flask app: current app
-    :param list[tuple[str,str] pathways: pathway/resource tuples
-    :rtype: list
-    :return: pathway info
-    """
-    pathway_info = []
-
-    for name, resource in pathways:
-
-        pathway = get_pathway_model_by_name(app.manager_dict, resource, name)
-
-        if not pathway:
-            log.warning('{} pathway not found'.format(name))
-            continue
-
-        pathway_info.append((resource, pathway.resource_id, pathway.name))
-
-    return pathway_info
-
-
-def get_last_action_in_module(module_name, action):
-    """Return the info about the last action in the given module.
-
-    :param str module_name:
-    :return:
-    """
-    session = _make_session()
-    return session.query(Action).filter(
-        and_(Action.resource == module_name, Action.action == action)
-    ).order_by(Action.created.desc()).first()
+def get_last_action_in_module(module_name: str, action: str, session=None):
+    """Return the info about the last action in the given module."""
+    if session is None:
+        session = _make_session()
+    _filter = and_(Action.resource == module_name, Action.action == action)
+    return session.query(Action).filter(_filter).order_by(Action.created.desc()).first()
 
 
 """Statistical utils"""
@@ -352,18 +257,25 @@ def _prepare_hypergeometric_test(query_gene_set, pathway_gene_set, gene_universe
     :rtype: numpy.ndarray
     :return: 2x2 matrix
     """
-    return np.array(
-        [[len(query_gene_set.intersection(pathway_gene_set)),
-          len(query_gene_set.difference(pathway_gene_set))
-          ],
-         [len(pathway_gene_set.difference(query_gene_set)),
-          gene_universe - len(pathway_gene_set.union(query_gene_set))
-          ]
-         ]
-    )
+    return np.array([
+        [
+            len(query_gene_set.intersection(pathway_gene_set)),
+            len(query_gene_set.difference(pathway_gene_set)),
+        ],
+        [
+            len(pathway_gene_set.difference(query_gene_set)),
+            gene_universe - len(pathway_gene_set.union(query_gene_set)),
+        ],
+    ])
 
 
-def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe, apply_threshold=False, threshold=0.05):
+def perform_hypergeometric_test(
+    gene_set,
+    manager_pathways_dict,
+    gene_universe,
+    apply_threshold=False,
+    threshold=0.05,
+):
     """Perform hypergeometric tests.
 
     :param set[str] gene_set: gene set to test against pathway
@@ -377,7 +289,6 @@ def perform_hypergeometric_test(gene_set, manager_pathways_dict, gene_universe, 
     manager_p_values = dict()
 
     for manager_name, pathways in manager_pathways_dict.items():
-
         for pathway_id, pathway_dict in pathways.items():
             test_table = _prepare_hypergeometric_test(gene_set, pathway_dict["pathway_gene_set"], gene_universe)
 
@@ -421,59 +332,50 @@ def calculate_szymkiewicz_simpson_coefficient(set_1, set_2):
     return intersection / smaller_set
 
 
-def calculate_similarity(name_1, name_2):
+def calculate_similarity(a: str, b: str) -> float:
     """Calculate the string based similarity between two names.
 
-    :param str name_1: name 1
-    :param str name_2: name 2
-    :rtype: float
     :return: Levenshtein similarity
     """
-    return SequenceMatcher(None, name_1, name_2).ratio()
+    return SequenceMatcher(None, a, b).ratio()
 
 
-def get_top_matches(matches, top):
+def get_top_matches(matches: List[Tuple], top: int) -> List[Tuple]:
     """Order list of tuples by second value and returns top values.
 
-    :param list[tuple[str,float]] matches: list of tuples
-    :param int top: top values to return
+    :param matches: list of tuples
+    :param top: top values to return
     """
-    sorted_names = sorted(matches, key=lambda x: x[1], reverse=True)
-
-    return sorted_names[0:top]
-
-
-def filter_results(results, threshold):
-    """Filter a tuple based iterator given a threshold.
-
-    :param list[tuple[str,float]] results: list of tuples
-    :param float threshold: thresholding
-    """
-    return [
-        (name, value)
-        for name, value in results
-        if value > threshold
-    ]
+    sorted_names = sorted(matches, key=itemgetter(1), reverse=True)
+    return sorted_names[:top]
 
 
-def get_most_similar_names(reference_name, names, threshold=0.4, top=5):
+def get_most_similar_names(
+    query: str,
+    entities: Iterable[Tuple[str, str, str]],
+    threshold: float = 0.4,
+    top: int = 5,
+) -> List[Tuple[str, str, str, float]]:
     """Return the most similar names based on string matching.
 
-    :param str reference_name:
-    :param list[str] names:
-    :param optional[float] threshold:
-    :param optional[int] top:
+    :param query:
+    :param entities:
+    :param threshold:
+    :param top:
     :return:
     """
-    string_matching = [
-        (name, calculate_similarity(reference_name, name))
-        for name in names
-    ]
-
-    most_similar_names = filter_results(string_matching, threshold)
-
-    # Order pathways by descendent similarity
-    return get_top_matches(most_similar_names, top)
+    string_matching = (
+        (prefix, identifier, name, calculate_similarity(query, name))
+        for prefix, identifier, name in entities
+    )
+    most_similar_names = (
+        (prefix, identifier, name, similarity)
+        for prefix, identifier, name, similarity in string_matching
+        if similarity >= threshold
+    )
+    # FIXME better algorithm for picking top N
+    most_similar_names = sorted(most_similar_names, key=itemgetter(3), reverse=True)
+    return most_similar_names[:top]
 
 
 """Export utils"""
@@ -488,3 +390,47 @@ def to_csv(triplets, file=None, sep='\t'):
     """
     for subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource in triplets:
         print(subj_name, subj_id, subj_resource, rel, obj_name, obj_id, obj_resource, sep=sep, file=file)
+
+
+def process_overlap_for_venn_diagram(
+    gene_sets: Mapping[str, Set[str]],
+    skip_gene_set_info: bool = False,
+) -> List[Mapping[str, Any]]:
+    """Calculate gene sets overlaps and process the structure to render venn diagram -> https://github.com/benfred/venn.js/.
+
+    :param gene_sets: pathway to gene sets dictionary
+    :param skip_gene_set_info: include gene set overlap data
+    """
+    # Creates future js array with gene sets' lengths
+    overlaps_venn_diagram = []
+
+    pathway_to_index = {}
+    for index, (name, gene_set) in enumerate(gene_sets.items()):
+        av = {
+            'sets': [index],
+            'size': len(gene_set),
+            'label': name.upper(),
+        }
+        if not skip_gene_set_info:
+            av['gene_set'] = list(gene_set)
+        overlaps_venn_diagram.append(av)
+        pathway_to_index[name] = index
+
+    # Perform intersection calculations
+    for (set_1_name, set_1_values), (set_2_name, set_2_values) in combinations(gene_sets.items(), r=2):
+        # Only minimum info is returned
+        if skip_gene_set_info:
+            overlaps_venn_diagram.append({
+                'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                'size': len(set_1_values.intersection(set_2_values)),
+            })
+        # Returns gene set overlap/intersection information as well
+        else:
+            overlaps_venn_diagram.append({
+                'sets': [pathway_to_index[set_1_name], pathway_to_index[set_2_name]],
+                'size': len(set_1_values.intersection(set_2_values)),
+                'gene_set': list(set_1_values.intersection(set_2_values)),
+                'intersection': set_1_name + ' &#8745 ' + set_2_name,
+            })
+
+    return overlaps_venn_diagram
