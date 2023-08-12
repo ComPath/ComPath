@@ -216,13 +216,13 @@ def get_descendants(manager, resource, pathway_id, pathway_name) -> Dict[str, An
     return d3_dendrogram
 
 
-def get_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
+def get_mapping_dendrogram(manager, resource: str, pathway_id: str, pathway_name: str):
     """Generate d3 dendrogram structure by using BFS starting from the queried node in both directions of the hierarchy.
 
     :param manager: ComPath manager
-    :param str resource: resource name
-    :param str pathway_id: pathway identifier in the resource
-    :param str pathway_name: pathway name
+    :param resource: resource name
+    :param pathway_id: pathway identifier in the resource
+    :param pathway_name: pathway name
     :return: parent-children data structure
     """
     ancestries_mappings = []
@@ -244,11 +244,7 @@ def get_mapping_dendrogram(manager, resource, pathway_id, pathway_name):
     if len(ancestry_mappings) > 1:
         for ancestry in ancestry_mappings:
             pathway = ancestry.get_complement_mapping_info(resource, pathway_id, pathway_name)
-            mapping = manager.get_ancestry_mappings_from_pathway_with_is_part_of_relationship(
-                pathway[0],
-                pathway[1],
-                pathway[2]
-            )
+            mapping = manager.get_ancestry_mappings_from_pathway_with_is_part_of_relationship(*pathway)
             if mapping:
                 ancestries_mappings.append(mapping)
                 if not common_ancestries:

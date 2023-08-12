@@ -63,18 +63,18 @@ class VoteView(ModelView):
 """Model views"""
 
 
-@model_blueprint.route('/pathway/<resource>/<identifier>')
-def pathway_view(resource, identifier):
+@model_blueprint.route('/pathway/<prefix>/<identifier>')
+def pathway_view(prefix: str, identifier: str):
     """Render the pathway view page."""
-    if resource not in bio2bel_managers:
-        abort(404, "'{}' does not exist or has not been loaded in ComPath".format(resource))
+    if prefix not in bio2bel_managers:
+        abort(404, f"'{prefix}' does not exist or has not been loaded in ComPath")
 
-    pathway = get_pathway_model_by_id(resource, identifier)
+    pathway = get_pathway_model_by_id(prefix, identifier)
 
     if not pathway:
-        abort(404, 'Pathway not found for identifier "{}"'.format(identifier))
+        abort(404, f'Pathway not found for identifier {prefix}:{identifier}')
 
-    mappings = web_manager.get_all_mappings_from_pathway(resource, identifier, pathway.name)
+    mappings = web_manager.get_all_mappings_from_pathway(prefix, identifier, pathway.name)
 
     super_pathways = []
 
@@ -84,7 +84,7 @@ def pathway_view(resource, identifier):
 
     for mapping in mappings:
         if mapping.type == EQUIVALENT_TO:
-            if mapping.service_1_pathway_id == pathway.resource_id:
+            if mapping.service_1_pathway_id == pathway.identifier:
                 equivalent_pathways.append((
                     mapping.service_2_name,
                     mapping.service_2_pathway_id,
@@ -96,9 +96,8 @@ def pathway_view(resource, identifier):
                     mapping.service_1_pathway_id,
                     mapping.service_1_pathway_name,
                 ))
-
         elif mapping.type == IS_PART_OF:
-            if mapping.service_1_pathway_id == pathway.resource_id:
+            if mapping.service_1_pathway_id == pathway.identifier:
                 super_pathways.append((
                     mapping.service_2_name,
                     mapping.service_2_pathway_id,
@@ -112,18 +111,17 @@ def pathway_view(resource, identifier):
                     mapping.service_1_pathway_name,
                 ))
         else:
-            raise ValueError('Error with mapping type')
+            raise ValueError(f'Unexpected mapping type: {mapping.type}')
 
-    d3_tree = get_mapping_dendrogram(web_manager, resource, identifier, pathway.name)
+    d3_tree = get_mapping_dendrogram(web_manager, prefix, identifier, pathway.name)
 
     return render_template(
         'models/pathway.html',
         pathway=pathway,
-        resource=resource,
         equivalent_pathways=equivalent_pathways,
         sub_pathways=sub_pathways,
         super_pathways=super_pathways,
         submitted_gene_set=request.args.get('gene_set'),
         STYLED_NAMES=STYLED_NAMES,
-        dendrogram=[] if d3_tree['children'] == [] else d3_tree
+        dendrogram=[] if not d3_tree['children'] else d3_tree
     )

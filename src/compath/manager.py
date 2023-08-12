@@ -332,16 +332,16 @@ class Manager:
         return mapping, True
 
     def get_mappings_from_pathway_with_relationship(
-        self, type: str, service_name: str, pathway_id: str, pathway_name: str,
+        self, mapping_type: str, service_name: str, pathway_id: str, pathway_name: str,
     ) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param type: mapping type
+        :param mapping_type: mapping type
         :param service_name: service name
         :param pathway_id: original pathway identifier
         :param pathway_name: pathway name
         """
-        _filter = PathwayMapping.has_pathway_tuple(type, service_name, pathway_id, pathway_name)
+        _filter = PathwayMapping.has_pathway_tuple(mapping_type, service_name, pathway_id, pathway_name)
         return self.session.query(PathwayMapping).filter(_filter).all()
 
     def get_decendents_mappings_from_pathway_with_is_part_of_relationship(
@@ -370,34 +370,31 @@ class Manager:
         _filter = PathwayMapping.has_ancestry_pathway_tuple(IS_PART_OF, service_name, pathway_id, pathway_name)
         return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_all_mappings_from_pathway(
-        self, service_name: str, pathway_id: str, pathway_name: str,
-    ) -> List[PathwayMapping]:
+    def get_all_mappings_from_pathway(self, prefix: str, identifier: str, name: str,) -> List[PathwayMapping]:
         """Get all mappings matching pathway and service name.
 
-        :param service_name: service name
-        :param pathway_id: original pathway identifier
-        :param pathway_name: pathway name
+        :param prefix: service name
+        :param identifier: original pathway identifier
+        :param name: pathway name
         """
-        _filter = PathwayMapping.has_pathway(service_name, pathway_id, pathway_name)
+        _filter = PathwayMapping.has_pathway(prefix, identifier, name)
         return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def get_all_pathways_from_db_with_mappings(self, pathway_database: str) -> List[PathwayMapping]:
+    def get_all_pathways_from_db_with_mappings(self, prefix: str) -> List[PathwayMapping]:
         """Get all mappings that contain a pathway from a given database."""
-        _filter = PathwayMapping.has_database_pathway(pathway_database)
+        _filter = PathwayMapping.has_database_pathway(prefix)
         return self.session.query(PathwayMapping).filter(_filter).all()
 
-    def infer_hierarchy(self, resource, pathway_id, pathway_name):
+    def infer_hierarchy(self, prefix: str, identifier: str, name: str):
         """Infer the possible hierarchy of a given pathway based on its equivalent mappings.
 
-        :param str type: mapping type
-        :param str resource: service name
-        :param str pathway_id: pathway original identifier
-        :param str pathway_name: pathway name
+        :param prefix: service name
+        :param identifier: pathway original identifier
+        :param name: pathway name
         :return:
         """
         matching_mappings = self.get_mappings_from_pathway_with_relationship(
-            EQUIVALENT_TO, resource, pathway_id, pathway_name
+            EQUIVALENT_TO, prefix, identifier, name
         )
 
         inferred_mappings = []
@@ -406,7 +403,7 @@ class Manager:
             # Get all hierarchical mappings from equivalent pathways
 
             complement_resource, complement_pathway_id, complement_pathway_name = mapping.get_complement_mapping_info(
-                resource, pathway_id, pathway_name
+                prefix, identifier, name
             )
 
             hierarchical_mappings_from_complement = self.get_mappings_from_pathway_with_relationship(
@@ -418,7 +415,7 @@ class Manager:
 
             for hierarchical_mapping in hierarchical_mappings_from_complement:
                 inferred_mappings.append(hierarchical_mapping.get_complement_mapping_info(
-                    resource, pathway_id, pathway_name
+                    prefix, identifier, name
                 ))
 
         return inferred_mappings

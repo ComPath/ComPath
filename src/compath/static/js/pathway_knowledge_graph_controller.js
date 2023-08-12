@@ -51,7 +51,7 @@ function displayNodeInfo(node) {
         nodeObject["Node"] = node.data('id') + " (ID: " + node.data('id') + ")";
     }
     if (node.data('name')) {
-        nodeObject["Pathway Name"] = "<a target='_blank' href='/pathway/" + node.data('resource') + "/" + node.data('resource_id') + "'>" + node.data('name') + "</a>";
+        nodeObject["Pathway Name"] = "<a target='_blank' href='/pathway/" + node.data('resource') + "/" + node.data('identifier') + "'>" + node.data('name') + "</a>";
     }
     if (node.data('url')) {
         nodeObject["Pathway Link"] = "<a target='_blank' href='" + node.data('url') + "'>" + node.data('resource').toUpperCase()+ "<span class=\"glyphicon glyphicon-new-window\"></span></a>" + "</a>";

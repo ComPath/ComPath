@@ -4,7 +4,7 @@
 {% import "bootstrap/fixes.html" as fixes %}
 {% import "bootstrap/utils.html" as util %}
 
-{% block title %}Pathway Details{% endblock %}
+{% block title %}Pathway Details - {{ pathway.name }}{% endblock %}
 {% block styles %}
     {{ super() }}
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css"
@@ -151,7 +151,7 @@
                 })
             });
 
-        var resource = "{{ resource }}";
+        var resource = "{{ pathway.prefix }}";
         var pathwayName = "{{ pathway.name }}";
         var pathwayId = "{{ pathway.identifier }}";
 
@@ -180,23 +180,25 @@
             <table id="pathway-info" class="table table-bordered table-striped table-hover">
                 <tbody>
                 <tr>
-                    <td>Resource</td>
+                    <td>Prefix</td>
                     <td>
-                        {{ compath.stylize_plugin_name(STYLED_NAMES, resource) }}
+                        {{ compath.stylize_plugin_name(STYLED_NAMES, pathway.prefix) }}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Identifier</td>
+                    <td>
+                        <a href="{{ pathway.url }}">{{ pathway.prefix }}:{{ pathway.identifier }}</a>
                     </td>
                 </tr>
                 <tr>
                     <td>Name</td>
                     <td>
-                        <a href="{{ pathway.url }}">{{ pathway }}</a>
+                        {{ pathway.name }}
                     </td>
                 </tr>
                 <tr>
-                    <td>Size</td>
-                    <td> {{ pathway.proteins|length }}</td>
-                </tr>
-                <tr>
-                    <td>Genes</td>
+                    <td>Genes ({{ pathway.proteins|length }})</td>
                     <td>
                         {% for protein in pathway.proteins %}
                             <a href="https://identifiers.org/hgnc:{{ protein.hgnc_id }}"
@@ -230,9 +232,9 @@
                     </div>
                 {% endif %}
 
-                {{ compath.write_pathways(equivalent_pathways, "Equivalent Pathways") }}
-                {{ compath.write_pathways(super_pathways, "Super-Pathways") }}
-                {{ compath.write_pathways(sub_pathways, "Sub-Pathways") }}
+                {{ compath.write_pathways(equivalent_pathways, "Equivalent Pathways", STYLED_NAMES) }}
+                {{ compath.write_pathways(super_pathways, "Super-Pathways", STYLED_NAMES) }}
+                {{ compath.write_pathways(sub_pathways, "Sub-Pathways", STYLED_NAMES) }}
 
                 <div class="row" id="button-row">
                     <div class="text-center">

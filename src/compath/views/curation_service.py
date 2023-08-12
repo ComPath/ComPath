@@ -233,23 +233,21 @@ def process_mapping():
     pathway_1_model = get_pathway_model_by_name(bio2bel_managers, resource_1, pathway_1)
     pathway_2_model = get_pathway_model_by_name(bio2bel_managers, resource_2, pathway_2)
 
+    if pathway_1_model is None:
+        return abort(500, f"Pathway 1 '{pathway_1}' not found in manager '{resource_1}'")
+    if pathway_2_model is None:
+        return abort(500, f"Pathway 2 '{pathway_2}' not found in manager '{resource_2}'")
     if pathway_1_model == pathway_2_model:
         message = Markup("<h4>Trying to establish a mapping between the same pathway</h4>")
         flash(message, category='warning')
         return redirect(url_for('.create_mapping'))
 
-    if pathway_1_model is None:
-        return abort(500, f"Pathway 1 '{pathway_1}' not found in manager '{resource_1}'")
-
-    if pathway_2_model is None:
-        return abort(500, f"Pathway 2 '{pathway_2}' not found in manager '{resource_2}'")
-
     mapping, created = web_manager.get_or_create_mapping(
         resource_1,
-        getattr(pathway_1_model, 'resource_id'),
+        pathway_1_model.identifier,
         pathway_1_model.name,
         resource_2,
-        getattr(pathway_2_model, 'resource_id'),
+        pathway_2_model.identifier,
         pathway_2_model.name,
         mapping_type,
         current_user,

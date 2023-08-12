@@ -5,7 +5,7 @@
 from __future__ import annotations
 
 import datetime
-from typing import Optional
+from typing import Optional, Tuple
 
 from flask_security import RoleMixin, UserMixin
 from sqlalchemy import Boolean, Column, DateTime, ForeignKey, Integer, String, Table, and_, or_
@@ -80,11 +80,11 @@ class PathwayMapping(Base):
 
     id = Column(Integer, primary_key=True)
 
-    service_1_name = Column(String(255), doc='service name (e.g., KEGG or Reactome')
+    service_1_name = Column(String(255), doc='Source prefix (e.g., KEGG or Reactome')
     service_1_pathway_id = Column(String(255), doc='pathway 1 id')
     service_1_pathway_name = Column(String(255), doc='pathway 1 name')
 
-    service_2_name = Column(String(255), doc='service name (e.g., KEGG or Reactome')
+    service_2_name = Column(String(255), doc='Target prefix (e.g., KEGG or Reactome')
     service_2_pathway_id = Column(String(255), doc='pathway 2 id')
     service_2_pathway_name = Column(String(255), doc='pathway 2 name')
 
@@ -96,94 +96,99 @@ class PathwayMapping(Base):
 
     def __str__(self):
         """Return mapping info."""
-        return '{} mapping from {}:{} to {}:{}'.format(
+        return '{} mapping from {}:{} ! {} to {}:{} ! {}'.format(
             self.type,
             self.service_1_name,
+            self.service_1_pathway_id,
             self.service_1_pathway_name,
             self.service_2_name,
-            self.service_2_pathway_name
+            self.service_2_pathway_id,
+            self.service_2_pathway_name,
         )
 
-    def get_complement_mapping_info(self, service_name, pathway_id, pathway_name):
+    def get_complement_mapping_info(
+        self,
+        prefix: str,
+        identifier: str,
+        name: str,
+    ) -> Tuple[str, str, str]:
         """Return the info corresponding to the other pathway in a mapping.
 
-        :param PathwayMapping mapping:
-        :param str service_name: reference service name
-        :param str pathway_id: reference pathway id
-        :param str pathway_name: reference pathway name
-        :rtype: tuple[str,str,str]
+        :param prefix: reference service name
+        :param identifier: reference pathway id
+        :param name: reference pathway name
         """
-
         if (
-            self.service_1_name == service_name and
-            self.service_1_pathway_id == pathway_id and
-            self.service_1_pathway_name == pathway_name
+            self.service_1_name == prefix and
+            self.service_1_pathway_id == identifier and
+            self.service_1_pathway_name == name
         ):
             return self.service_2_name, self.service_2_pathway_id, self.service_2_pathway_name
-
         else:
             return self.service_1_name, self.service_1_pathway_id, self.service_1_pathway_name
 
-    @staticmethod
-    def has_pathway_tuple(type, service_name, pathway_id, pathway_name):
+    @classmethod
+    def has_pathway_tuple(cls, mapping_type: str, prefix: str, identifier: str, name: str):
         """Return a filter to get all mappings matching type, service and pathway name and id."""
         return or_(
             and_(
-                PathwayMapping.service_1_name == service_name,
-                PathwayMapping.service_1_pathway_id == pathway_id,
-                PathwayMapping.service_1_pathway_name == pathway_name,
-                PathwayMapping.type == type,
+                cls.service_1_name == prefix,
+                cls.service_1_pathway_id == identifier,
+                cls.service_1_pathway_name == name,
+                cls.type == mapping_type,
             ),
             and_(
-                PathwayMapping.service_2_name == service_name,
-                PathwayMapping.service_2_pathway_id == pathway_id,
-                PathwayMapping.service_2_pathway_name == pathway_name,
-                PathwayMapping.type == type,
+                cls.service_2_name == prefix,
+                cls.service_2_pathway_id == identifier,
+                cls.service_2_pathway_name == name,
+                cls.type == mapping_type,
             )
         )
 
-    @staticmethod
-    def has_descendant_pathway_tuple(type, service_name, pathway_id, pathway_name):
-        """Return a filter to get all the descendants mappings matching a isPartOf relationship (the predicates), service and pathway name and id."""
+    @classmethod
+    def has_descendant_pathway_tuple(cls, mapping_type: str, prefix: str, identifier: str, name: str):
+        """Return a filter to get all the descendants mappings matching a isPartOf relationship (the predicates),
+        service and pathway name and id."""
         return and_(
-            PathwayMapping.service_2_name == service_name,
-            PathwayMapping.service_2_pathway_id == pathway_id,
-            PathwayMapping.service_2_pathway_name == pathway_name,
-            PathwayMapping.type == type,
+            cls.service_2_name == prefix,
+            cls.service_2_pathway_id == identifier,
+            cls.service_2_pathway_name == name,
+            cls.type == mapping_type,
         )
 
-    @staticmethod
-    def has_ancestry_pathway_tuple(type, service_name, pathway_id, pathway_name):
-        """Return a filter to get all the ancestries mappings matching a isPartOf relationship (the subjects), service and pathway name and id."""
+    @classmethod
+    def has_ancestry_pathway_tuple(cls, mapping_type: str, prefix: str, identifier: str, name: str):
+        """Return a filter to get all the ancestries mappings matching a isPartOf relationship (the subjects),
+        service and pathway name and id."""
         return and_(
-            PathwayMapping.service_1_name == service_name,
-            PathwayMapping.service_1_pathway_id == pathway_id,
-            PathwayMapping.service_1_pathway_name == pathway_name,
-            PathwayMapping.type == type,
+            cls.service_1_name == prefix,
+            cls.service_1_pathway_id == identifier,
+            cls.service_1_pathway_name == name,
+            cls.type == mapping_type,
         )
 
-    @staticmethod
-    def has_pathway(service_name, pathway_id, pathway_name):
+    @classmethod
+    def has_pathway(cls, prefix: str, identifier: str, name: str):
         """Return a filter to get all mappings matching service and pathway name and id."""
         return or_(
             and_(
-                PathwayMapping.service_1_name == service_name,
-                PathwayMapping.service_1_pathway_id == pathway_id,
-                PathwayMapping.service_1_pathway_name == pathway_name,
+                cls.service_1_name == prefix,
+                cls.service_1_pathway_id == identifier,
+                cls.service_1_pathway_name == name,
             ),
             and_(
-                PathwayMapping.service_2_name == service_name,
-                PathwayMapping.service_2_pathway_id == pathway_id,
-                PathwayMapping.service_2_pathway_name == pathway_name,
+                cls.service_2_name == prefix,
+                cls.service_2_pathway_id == identifier,
+                cls.service_2_pathway_name == name,
             ),
         )
 
-    @staticmethod
-    def has_database_pathway(service_name):
+    @classmethod
+    def has_database_pathway(cls, prefix: str):
         """Return a filter to get all mappings matching service a name."""
         return or_(
-            PathwayMapping.service_1_name == service_name,
-            PathwayMapping.service_2_name == service_name,
+            cls.service_1_name == prefix,
+            cls.service_2_name == prefix,
         )
 
     @property

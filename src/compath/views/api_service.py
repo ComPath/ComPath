@@ -88,6 +88,7 @@ def api_gene_autocompletion_all_resources():
         for manager_name, manager in bio2bel_managers.items()
         if manager_name not in BLACKLIST
         for gene in manager.search_genes(q)
+        if gene.hgnc_symbol
     }))
 
 

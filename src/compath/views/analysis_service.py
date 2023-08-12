@@ -5,6 +5,7 @@
 import itertools as itt
 import logging
 from io import StringIO
+from typing import Iterable, Tuple
 
 from flask import Blueprint, abort, current_app, flash, jsonify, make_response, redirect, render_template, request
 
@@ -76,15 +77,11 @@ def calculate_overlap():
     pathway_name_to_mappings = {}
     for pathway_name, resource in pathway_manager_dict.items():
         pathway = get_pathway_model_by_name(bio2bel_managers, resource, pathway_name)
-
-        if not pathway or not pathway.url:
+        if not pathway:
             continue
-
-        pathway_name_to_mappings[pathway_name] = 'https://compath.scai.fraunhofer.de/pathway/{}/{}'.format(
-            resource,
-            pathway.resource_id
-        )
-        pathway_name_to_original[pathway_name] = pathway.url
+        BASE_URL = 'https://compath.scai.fraunhofer.de/pathway'
+        pathway_name_to_mappings[pathway_name] = f'{BASE_URL}/{resource}/{pathway.identifier}'
+        pathway_name_to_original[pathway_name] = f'https://identifiers.org/{resource}:{pathway.identifier}'
 
     if len(gene_sets) < 2:
         return abort(500, 'Only one valid set given')
@@ -343,24 +340,20 @@ def get_gene_sets_from_pathway_names(pathways):
     return gene_sets, pathway_manager_dict
 
 
-def get_pathway_info(pathways):
+def get_pathway_info(pathways: Iterable[Tuple[str, str]]):
     """Return the gene sets for a given pathway/resource tuple.
 
-    :param flask.Flask app: current app
-    :param list[tuple[str,str] pathways: pathway/resource tuples
+    :param pathways: pathway/resource tuples
     :rtype: list
     :return: pathway info
     """
     pathway_info = []
 
-    for name, resource in pathways:
-
-        pathway = get_pathway_model_by_name(bio2bel_managers, resource, name)
-
+    for pathway_name, prefix in pathways:
+        pathway = get_pathway_model_by_name(bio2bel_managers, prefix, pathway_name)
         if not pathway:
-            logger.warning('%s pathway not found', name)
+            logger.warning('%s pathway not found', pathway_name)
             continue
-
-        pathway_info.append((resource, pathway.resource_id, pathway.name))
+        pathway_info.append((prefix, pathway.identifier, pathway.name))
 
     return pathway_info

@@ -1,19 +1,15 @@
-{% macro stylize_plugin_name(styled_names, resource) -%}
-    {% if resource in styled_names %}
-        {{ styled_names.get(resource) }}
-    {% else %}
-        {{ resource }}
-    {% endif %}
+{% macro stylize_plugin_name(styled_names, prefix) -%}
+    {{ styled_names.get(prefix, prefix) }}
 {%- endmacro %}
 
-{% macro write_label(resource) -%}
-    {% if resource == 'kegg' %}
+{% macro write_label(prefix) -%}
+    {% if prefix == 'kegg' %}
         label-success
-    {% elif resource == 'reactome' %}
+    {% elif prefix == 'reactome' %}
         label-danger
-    {% elif resource == 'wikipathways' %}
+    {% elif prefix == 'wikipathways' %}
         label-info
-    {% elif resource == 'msig' %}
+    {% elif prefix == 'msig' %}
         label-default
     {% else %}
         label-warning
@@ -22,27 +18,27 @@
 
 {% macro translate_relation(mapping_type) -%}
     {% if mapping_type == 'equivalentTo' %}
-        Equivalent
+        equivalent
     {% elif mapping_type == 'isPartOf' %}
-        Part Of
+        part of
     {% else %}
         -
     {% endif %}
 {%- endmacro %}
 
-{% macro write_pathways(pathways, title) -%}
+{% macro write_pathways(pathways, title, styled_names) -%}
     {% if pathways|length > 0 %}
         <div class="panel panel-default">
             <div class="panel-heading">{{ title }}</div>
             <div class="panel-body">
                 <ul class="pathways">
-                    {% for resource, identifier, name in pathways %}
+                    {% for prefix, identifier, name in pathways %}
                         <li class="pathways">
-                            <span class="label {{ write_label(resource) }}">
-                                {{ stylize_plugin_name(STYLED_NAMES, resource) }}
+                            <span class="label {{ write_label(prefix) }}">
+                                {{ stylize_plugin_name(styled_names, prefix) }}
                             </span>
                             &nbsp;
-                            <a href="{{ url_for('model.pathway_view', resource=resource, identifier=identifier) }}">
+                            <a href="{{ url_for('model.pathway_view', prefix=prefix, identifier=identifier) }}">
                                 {{ name }}
                             </a>
                         </li>

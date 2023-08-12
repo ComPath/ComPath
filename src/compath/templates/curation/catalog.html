@@ -88,7 +88,7 @@
                                     <span class="label {{ compath.write_label(mapping.service_1_name) }}">
                                         {{ compath.stylize_plugin_name(STYLED_NAMES, mapping.service_1_name) }}
                                     </span>
-                                    <a href="{{ url_for("model.pathway_view",resource=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
+                                    <a href="{{ url_for("model.pathway_view", prefix=mapping.service_1_name, identifier=mapping.service_1_pathway_id ) }}">
                                         {{ mapping.service_1_pathway_name }}
                                     </a>
                                 </td>
@@ -99,7 +99,7 @@
                                      <span class="label {{ compath.write_label(mapping.service_2_name) }}">
                                         {{ compath.stylize_plugin_name(STYLED_NAMES, mapping.service_2_name) }}
                                     </span>
-                                    <a href="{{ url_for("model.pathway_view",resource=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
+                                    <a href="{{ url_for("model.pathway_view", prefix=mapping.service_2_name, identifier=mapping.service_2_pathway_id ) }}">
                                         {{ mapping.service_2_pathway_name }}
                                     </a>
                                 </td>
@@ -128,11 +128,11 @@
 
                                         {% elif current_user.is_admin %}
                                             <a class="btn btn-default"
-                                               href="{{ url_for('curation.accept_mapping',mapping_id=mapping.id) }}">
+                                               href="{{ url_for('curation.accept_mapping', mapping_id=mapping.id) }}">
                                                 <span class="glyphicon glyphicon-remove"></span>
                                             </a>
                                             <a class="btn btn-default"
-                                               href="{{ url_for('db.delete_mapping',identifier=mapping.id) }}">
+                                               href="{{ url_for('db.delete_mapping', identifier=mapping.id) }}">
                                                 Delete Mapping
                                             </a>
                                         {% else %}
